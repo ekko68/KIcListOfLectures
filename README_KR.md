@@ -8,12 +8,13 @@
 ## 📋 목차
 
 - [과정 개요](#-과정-개요)
+- [분석 결과 요약](#-분석-결과-요약)
 - [커리큘럼 구성](#-커리큘럼-구성)
 - [폴더 구조](#-폴더-구조)
 - [기술 스택](#-기술-스택)
 - [프로젝트](#-프로젝트)
 - [NCS 평가](#-ncs-평가)
-- [English Version](#-english-version)
+- [English Version](./README.md)
 
 ---
 
@@ -27,6 +28,52 @@
 | **수료일** | 2017.04.24 (수료) |
 | **교육방식** | NCS 기반 이론 + 실습 + 프로젝트 |
 | **주요 목표** | Java 기반 Full-Stack 웹 개발자 양성 |
+
+---
+
+## 📊 분석 결과 요약
+
+### 커리큘럼 일정 분석
+
+| Phase | 주제 | 교육일수 | 비중 |
+|-------|------|:--------:|:----:|
+| 1 | 📊 Database (Oracle, SQL) | ~10일 | 8% |
+| 2 | 🌐 Client-Side (HTML5, CSS3, JS) | 8일 | 6% |
+| 3 | ☕ Java Programming | 29일 | 23% |
+| 4 | 🖥️ JSP/Servlet | 16일 | 13% |
+| 5 | 🔧 Git/GitHub | 2일 | 2% |
+| 6 | ⚡ Ajax, jQuery, Bootstrap | 12일 | 10% |
+| 7 | 🍃 Spring Framework (MVC, MyBatis, AOP) | 18일 | 14% |
+| 8 | 🚀 Modern Web (TypeScript, Angular, React) | 20일 | 16% |
+| 9 | 🔒 Secure Coding | 3일 | 2% |
+| 10 | 📱 Web Mobile (jQuery Mobile, Cordova) | 4일 | 3% |
+| — | 🏆 **최종 프로젝트** | **~35일 (7주)** | — |
+| | | **총 ~157일 + 프로젝트 7주** | |
+
+### 저장소 통계
+
+| 항목 | 수치 |
+|------|:----:|
+| 📁 총 폴더 수 | 27개 (메인 디렉터리) |
+| 📚 주요 커리큘럼 폴더 | 10개 (Phase 1~10) |
+| 📦 WAR 배포 파일 | 16개 (`8.4war파일/`) |
+| 📝 NCS 평가 항목 | 7종 |
+| 🏆 프로젝트 | 미니 5개 + 팀 2개 |
+| 🛠 기술 스택 | Back-End 5 · Front-End 7 · DevOps 5 · 보안 2 = **총 19개** |
+
+### 학습 경로 시각화
+
+```
+[DB 기초] → [HTML/CSS/JS] → [Java 심화] → [JSP/Servlet] → [Git]
+     ↓                                          ↓
+[Ajax/jQuery/Bootstrap] → [Spring/MyBatis] → [Modern Web]
+     ↓                           ↓               ↓
+[Secure Coding] → [Web Mobile] → [★ 최종 프로젝트 (7주) ★]
+```
+
+### 핵심 키워드
+
+> **Java** · **Spring MVC** · **MyBatis** · **Oracle** · **JSP/Servlet** · **jQuery** · **Bootstrap** · **Angular** · **React** · **TypeScript** · **Ajax** · **Git** · **Secure Coding** · **Cordova** · **NCS**
 
 ---
 

@@ -8,12 +8,13 @@
 ## 📋 Table of Contents
 
 - [Program Overview](#-program-overview)
+- [Analysis Summary](#-analysis-summary)
 - [Curriculum](#-curriculum)
 - [Directory Structure](#-directory-structure)
 - [Technology Stack](#-technology-stack)
 - [Projects](#-projects)
 - [NCS Assessments](#-ncs-assessments)
-- [한국어 버전 (Korean Version)](./README.md)
+- [한국어 버전 (Korean Version)](./README_KR.md)
 
 ---
 
@@ -27,6 +28,52 @@
 | **Completion Date** | April 24, 2017 |
 | **Methodology** | NCS-based Theory + Hands-on Labs + Team Projects |
 | **Objective** | Train Java-based Full-Stack Web Developers |
+
+---
+
+## 📊 Analysis Summary
+
+### Curriculum Schedule Analysis
+
+| Phase | Topic | Training Days | Weight |
+|-------|-------|:------------:|:------:|
+| 1 | 📊 Database (Oracle, SQL) | ~10 days | 8% |
+| 2 | 🌐 Client-Side (HTML5, CSS3, JS) | 8 days | 6% |
+| 3 | ☕ Java Programming | 29 days | 23% |
+| 4 | 🖥️ JSP/Servlet | 16 days | 13% |
+| 5 | 🔧 Git/GitHub | 2 days | 2% |
+| 6 | ⚡ Ajax, jQuery, Bootstrap | 12 days | 10% |
+| 7 | 🍃 Spring Framework (MVC, MyBatis, AOP) | 18 days | 14% |
+| 8 | 🚀 Modern Web (TypeScript, Angular, React) | 20 days | 16% |
+| 9 | 🔒 Secure Coding | 3 days | 2% |
+| 10 | 📱 Web Mobile (jQuery Mobile, Cordova) | 4 days | 3% |
+| — | 🏆 **Capstone Project** | **~35 days (7 weeks)** | — |
+| | | **Total: ~157 days + 7-week project** | |
+
+### Repository Statistics
+
+| Metric | Count |
+|--------|:-----:|
+| 📁 Total Directories | 27 (top-level) |
+| 📚 Core Curriculum Folders | 10 (Phase 1–10) |
+| 📦 WAR Deployment Files | 16 (`8.4war파일/`) |
+| 📝 NCS Assessment Categories | 7 |
+| 🏆 Projects | 5 mini + 2 team |
+| 🛠 Technology Stack | Back-End 5 · Front-End 7 · DevOps 5 · Security 2 = **19 total** |
+
+### Learning Path Visualization
+
+```
+[DB Basics] → [HTML/CSS/JS] → [Java Core] → [JSP/Servlet] → [Git]
+     ↓                                            ↓
+[Ajax/jQuery/Bootstrap] → [Spring/MyBatis] → [Modern Web]
+     ↓                           ↓               ↓
+[Secure Coding] → [Web Mobile] → [★ Capstone Project (7 weeks) ★]
+```
+
+### Key Technologies
+
+> **Java** · **Spring MVC** · **MyBatis** · **Oracle** · **JSP/Servlet** · **jQuery** · **Bootstrap** · **Angular** · **React** · **TypeScript** · **Ajax** · **Git** · **Secure Coding** · **Cordova** · **NCS**
 
 ---
 
