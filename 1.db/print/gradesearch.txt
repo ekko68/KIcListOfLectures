@@ -1,0 +1,6 @@
+select e.empno,e.ename,e.job,e.sal,s.grade,s.losal,s.hisal
+       from emp e,salgrade s
+      where e.sal between s.losal and s.hisal
+      and e.deptno=&deptno
+      order by s.grade desc
+/

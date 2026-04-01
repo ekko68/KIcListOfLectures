@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>태그의 내용을 변경(10).html </title>
+    <script>
+          function change(){
+            //태그의 id속성->1)스타일을 적용 2)div태그의 정보를 얻어오는 역할
+			//DOM->document.getElementById("id값") ->$("id")
+			//alert(document.getElementById("test"))
+			var ch=document.getElementById("test") //div
+			//alert(ch.innerHTML)
+			//태그정보.innerHTML(속성명)=변경할값,태그정보.속성명
+			ch.innerHTML="태그정보를 이용해서 값을 변경합니다"
+		  }
+	</script>
+ </head>
+ <body>
+    <div id="test">자바스크립트의 변수,제어문(if),함수</div>
+	<form>
+      <input type="button" value="변경" onclick="change()">
+	</form>
+ </body>
+</html>

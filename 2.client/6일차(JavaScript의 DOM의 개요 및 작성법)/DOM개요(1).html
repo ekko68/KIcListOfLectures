@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>DOM개요(1).html </title>
+  <script>
+    /*
+     DOM(Document object Model)->html문서 or xml문서를 읽어들여서 그 문서의
+	 구조(트리구조)대로 메모리(Ram)에 태그정보(=태그객체)를 만들어서 관리해주는
+	 API  =>태그(Element or Node)
+
+     태그이름으로 각 태그를 구분하는 경우->getElementsByTagName("태그이름")
+	*/
+	function test(){
+        var spans=document.getElementsByTagName("span")
+		//alert(spans) //태그.innerHTML속성
+		//alert(spans[0].innerHTML) //태그정보.속성=수정하고자하는 값
+         spans[0].innerHTML="DOM연습중"
+		 spans[1].innerHTML="span태그의 정보를 가져오기"
+	}
+
+  </script>
+ </head>
+ <body onload="test()">
+      <span>연습1</span>
+	  <span>연습2</span>
+	  <span>연습3</span>
+ </body>
+</html>

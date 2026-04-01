@@ -1,0 +1,4 @@
+select constraint_name,constraint_type,table_name,
+       status from user_constraints
+       where table_name=upper('&table_name')
+/

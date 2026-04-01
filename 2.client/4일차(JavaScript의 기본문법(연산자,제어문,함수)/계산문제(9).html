@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>계산문제(9).html </title>
+   <script>
+         function sum(){
+              //alert('sum()함수호출됨') 기본코딩 방식
+			  //형식)window.document.form객체명.kor.value
+			  //alert(document.myForm.kor.value)
+              var k=document.myForm.kor.value;//국어점수->"56" (문자열 상수)->56
+              var e=document.myForm.eng.value;//영어점수
+			  var m=document.myForm.math.value;//수학점수
+			  //~where ename=upper('allen')
+			  //56=Number("56")    parseFloat("12.5")=12.5(소수점으로 변환)
+			  var sum=Number(k)+Number(e)+Number(m)
+			  alert('sum='+sum)
+		 }
+   </script>
+ </head>
+ <body>
+    <form name="myForm" action="a.jsp">
+       국어:<input type="text"  placeholder="국어점수" name="kor" required><br>
+	   영어:<input type="text"  placeholder="영어점수" name="eng" required><br>
+	   수학:<input type="text"  placeholder="수학점수" name="math" required><br>
+	   <input type="button" value="등록" onclick="sum()">
+	</form>
+ </body>
+</html>

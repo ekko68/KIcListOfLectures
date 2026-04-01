@@ -1,0 +1,4 @@
+select empno,ename,sal
+      from emp
+      where ename='&ename'
+/

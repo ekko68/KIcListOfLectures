@@ -1,0 +1,46 @@
+7일차(미니프로젝트-1)
+-----------------------------------
+http://192.168.0.57/webtest/
+------------------------------------
+https://www.w3schools.com/
+
+1.ppt(화면캡처)
+2. 각각의 폴더 및 소스코드 제출
+  main.html
+=====================
+행번호 체크해주는 예제(행이 추가될때마다 rowIndex->0부터 적용)
+
+https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_tr_rowindex
+======================================
+ html5,css3,javascrip(dom)=>화면구현->html5+css3
+
+ java->jQuyery(javascript)->typescript(javascript)+객체
+
+1.드롭다운 상단메뉴->html,css파일
+
+  .dropdownmenu > li 바로 밑에 있는 li태그
+  .dropdownmenu  li ->li태그 전부
+=============================>
+ html5(시멘틱태그)==>전체적인 구조(main-2.html)작성
+ css/main.css
+       main-1.css(해상도에 따라서 보여주면 안되는 항목을 지정)
+                       display:none
+
+ 단위테스트->일정부분을 설정->확인(주석)
+=====================================
+<!-- media속성(반응형)웹의 크기를 지정할때 사용(해상도)
+        screen and (min-width:768px(최소해상도픽셀)->이하 main-1.css적용)
+  -->
+ <link href="css/main.css" rel="stylesheet" type="text/css"
+          media="screen and (min-width:768px)">
+<link href="css/main-1.css" rel="stylesheet" type="text/css"
+          media="screen and (max-width:767px)">
+
+=>해상도에 따른 웹의 배치,크기를 지정
+=====================================
+
+
+
+
+
+

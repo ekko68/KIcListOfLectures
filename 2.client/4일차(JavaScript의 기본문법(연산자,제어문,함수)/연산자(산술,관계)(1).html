@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>연산자(산술,관계)(1).html </title>
+   <script>
+       /* 함수를 선언,변수선언
+	     연산자->연산(계산)을 하기위한 기호
+		 1.산술연산자->+,-,*,/,%(나머지)->3+5(다항), 
+		                 (단항산술연산자)=>+5,-5(부호)->
+						  ++변수명,변수명++,--(증감연산자)
+		 2.관계연산자-> >,>=,<,<=,!=,==(비교)
+	   */
+   </script>
+ </head>
+ <body>
+   <script> //단순하고 ,반복적인 구문=>함수
+           document.write("산술,관계연산자<br>")
+           //변수->사용자로부터 값을 입력->데이터 저장,계산
+		   var res=20+30 //수식
+		   document.write("res=>"+res+"<br>")
+           //-
+          res=20-30  //변수에 중간에 계산결과에 따라서 값이 변동
+		   document.write("res=>"+res+"<br>")
+		   //
+          res=20*30
+		   document.write("res=>"+res+"<br>")
+		   //
+		  res=20%30
+		   document.write("res=>"+res+"<br>")
+          //관계연산자
+          a=10,b=5
+		  c=a > b //10 > 5 ->참(true) or 거짓(false)=>boolean(부울)값
+		  document.write("c=>"+c) //true
+          alert("c의 값은"+c)//변수의 값,계산,중간에 값저장 확인용
+		  c=5*(7+4) //연산자 우선순위->()
+		  alert("연산자 우선순위->"+c)
+		  // =(대입(배정)연산자),   ==(비교)
+		  c=a!=b //c=10!=5   c=a==b
+		  alert("c의 값=>"+c)
+   </script>
+ </body>
+</html>

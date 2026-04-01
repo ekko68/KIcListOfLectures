@@ -1,0 +1,958 @@
+9일차(오라클의 권한-시스템권한,객체권한)
+
+SQL활용=>7문제->14문제(부분점수->2개(5점),1개(3점)
+DB구현=>10문제->20문제(~기술하시오,비교설명~차이점~)
+                                     중요한 키워드 포함유무)
+====================================
+과제
+      DB구현,SQL활용->오라클 관리자의 역할->계정관리
+                                                              (생성,수정,삭제,권한부여)
+                                일반유저의 역할
+
+<문제>1.신입사원(홍길동)에 대한 사용자 계정을 생성하시오.
+         관리자의 고유권한->위임->sys
+
+     sql>conn sys/sys12345 as sysdba (role)
+     
+
+       계정명:hong 암호:h1234
+
+       DDL
+       create user hong identified by h1234;
+
+         11g 버전->resouce롤->create view,create synonym
+
+       2.관리자는 hong에서 접속권한,리소스권한 및 뷰생성,동의어생성
+       권한을 줄것.
+
+        10g이전
+
+        grant connect,resource to hong;
+
+        DCL
+        11g
+        sql>grant connect,resource,create view ,create synonym to hong
+
+       3.scott계정은 emp테이블의 백업테이블인 b_emp2를 생성할것.
+
+        conn scott/tiger
+        sql>create table b_emp2 as select * from emp;
+        
+       4.hong계정은 scott계정의 b_emp2테이블의 update,delete을 할 수 있도록
+         권한을 줄것.
+
+         sql>grant update,delete on b_emp2 to hong;
+
+       5.hong은 scott계정의 b_emp2테이블을 위한 자신만의 동의어인 
+         hongtest를 작성할것.
+
+         conn hong/h1234
+        
+        sql>delete from scott.b_emp2  where ename='ALLEN';
+        sql>create synonym hongtest  for scott.b_emp2;
+       
+       6.scott계정은 hong에게 준 권한중 delete만 권한회수 할것.
+
+        conn scott/tiger
+        sql>revoke delete on b_emp2 from hong;
+
+       7.hong계정은 hongtest동의어를 삭제할 것.
+          conn hong/h1234
+          sql>drop synonym hongtest;
+          관리자가 만든 공용동의어를 삭제?->sys로 로그인 한후
+
+          sql>drop public synonym  삭제시킬 공용동의어이름      
+----------------------------------------------------------------------
+ 권한->관리자가 각 계정별로 사용할 수있는 작업의 범위를 지정해주는 것
+
+1.시스템 권한->관리자가 주로 작업(계정관리(생성,수정,삭제,공용동의어 생성,,,)
+2.객체권한->각 계정이 관리(소유자)->테이블,뷰,시컨스,,,(사용권한)
+
+<문제1>계정 관리->생성,수정,삭제->이메일->로그인?-->암호를 수시로 변경
+sql>conn sys/sys12345 as sysdba
+
+ ->특정계정에서 암호를 변경하라고 권고?->alter 구문
+형식)alter user 수정할 계정명 password expire->새암호로 변경할 수밖에 없다
+
+  conn hong/h1234->통보->암호를 변경하도록 설정
+  create user hong identified by h1234;
+      권한주고 나서
+sql>alter user hong password expire;
+
+   conn hong/h1234
+
+SQL> conn hong/h1234
+ERROR:
+ORA-28001: the password has expired //암호가 만료되었기때문에 발생
+                                                           하는 에러메세지
+
+hong에 대한 비밀번호를 변경합니다.
+새 비밀번호:     ->1234                         
+새 비밀번호 다시 입력:->1234
+비밀번호가 변경되었습니다.
+연결되었습니다.
+===============================
+<문제2>그 계정을 사용하는 직원이 회사를 퇴직하거나, 잠시 휴가를 경우
+그 계정을 임시로 사용하지 못하게 하는 경우?(관리자)->락이 걸린 경우
+
+업무를 인수->그 계정을 다시 사용->암호만 변경해서 사용하는 경우
+
+scott,hr계정은 락을 X  ->hr/hr1234
+
+SQL> conn hr/hr1234
+ERROR:
+ORA-28000: the account is locked ->락이 걸린상태를 의미
+                                                     임시로 휴직,퇴직한 경우에 임시 사용X
+
+경고: 이제는 ORACLE에 연결되어 있지 않습니다.
+
+관리자가 락이 걸린 계정은 다시 사용->처리 락을 풀어준다.
+ conn sys/sys12345 as sysdba
+
+형식) alter user 락을 풀계정명 account unlock | lock (락걸기)
+     =>전에 계정을 이미 사용한 적이 있는 경우(로그인 한 적이 있는 경우)
+     =>conn hr/hr1234
+
+형식2)alter user 락을 풀계정명 identified by 새암호 account unlock
+     =>hr계정은 존재하는데 한번도 사용한 적이 없다.->새암호와 락을 동시 푸는경우
+
+sql>alter user hr identified by hr1234 account unlock;
+사용자가 변경되었습니다.
+
+sql>conn hr/hr1234
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+COUNTRIES                      TABLE
+DEPARTMENTS                    TABLE-->dept(부서정보)
+EMPLOYEES                      TABLE  ------>emp(사원정보)
+EMP_DETAILS_VIEW               VIEW
+JOBS                           TABLE
+JOB_HISTORY                    TABLE
+LOCATIONS                      TABLE
+REGIONS                        TABLE
+
+8 개의 행이 선택되었습니다.
+
+desc employees
+
+SQL> desc employees
+ 이름                                      널?      유형
+ ----------------------------------------- -------- -------------------
+
+ EMPLOYEE_ID                               NOT NULL NUMBER(6)
+ FIRST_NAME                                         VARCHAR2(20)
+ LAST_NAME                                 NOT NULL VARCHAR2(25)
+ EMAIL                                     NOT NULL VARCHAR2(25)
+ PHONE_NUMBER                                       VARCHAR2(20)
+ HIRE_DATE                                 NOT NULL DATE
+ JOB_ID                                    NOT NULL VARCHAR2(10)
+ SALARY                                             NUMBER(8,2)
+ COMMISSION_PCT                                     NUMBER(2,2)
+ MANAGER_ID                                         NUMBER(6)
+ DEPARTMENT_ID                                      NUMBER(4)
+
+SQL>
+
+<문3>특정 계정을 일시적으로 락을 걸기
+형식) alter user 락걸계정명 account lock;
+
+sql>alter user hong account lock;
+
+SQL> alter user hong account lock;
+alter user hong account lock
+*
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 ->관리자만이 사용이 가능
+
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> alter user hong account lock;
+
+사용자가 변경되었습니다.
+
+SQL> conn hong/1234
+ERROR:
+ORA-28000: the account is locked
+
+
+경고: 이제는 ORACLE에 연결되어 있지 않습니다.
+
+<문4>사원이 퇴사->그 사원이 사용했던 계정을 삭제?
+  관리자로 로그인을 해야 되는데 관리자의 암호를 잃어버린 경우->대처?
+
+=>conn  /  as sysdba
+
+->conn sys/sys1234 as sysdba
+->conn  /  as sysdba ->로컬
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> show user
+USER은 "SYS"입니다
+SQL>
+
+형식) drop user 삭제시킬 유저명->아무런 작업을 한 유저가 아닌경우
+        ->계정
+        ->select * from tab;//X->테이블,시노님,뷰,,,
+
+형식2) drop user 삭제시킬 유저명 [cascade] ->이 계정이 작업한 내용까지
+                                                                 같이 삭제하라
+          select * from tab;//테이블~여러개의 객체존재
+
+~cascade 옵션을 줘야됩니다.=>작업한 내용까지 같이 삭제하라는 에러메세지
+
+
+sql>drop user hong;
+사용자가 삭제되었습니다.
+
+<문제5> 권한의 종류->시스템 권한->system_privilege_map테이블
+sql>select * from system_privilege_map;
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+        -3 ALTER SYSTEM                                      0
+        -4 AUDIT SYSTEM                                      0
+          ===============
+        -5 CREATE SESSION     ->로그인 할때(connect(롤)와 연결)
+          ===============                               0
+        -6 ALTER SESSION                                     0
+        -7 RESTRICTED SESSION                                0
+       -10 CREATE TABLESPACE                                 0
+       -11 ALTER TABLESPACE                                  0
+       -12 MANAGE TABLESPACE                                 0
+       -13 DROP TABLESPACE                                   0
+       -15 UNLIMITED TABLESPACE                              0
+       -20 CREATE USER    (계정생성)                                   0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+       -21 BECOME USER                                       0
+       -22 ALTER USER (수정) ->락걸기,락풀기,암호새로 설정                                      0
+       -23 DROP USER  (삭제)                                       0
+       -30 CREATE ROLLBACK SEGMENT                           0
+       -31 ALTER ROLLBACK SEGMENT                            0
+       -32 DROP ROLLBACK SEGMENT                             0
+       -40 CREATE TABLE (테이블 생성)                                     0
+       -41 CREATE ANY TABLE                                  0
+       -42 ALTER ANY TABLE                                   0
+       -43 BACKUP ANY TABLE                                  0
+       -44 DROP ANY TABLE                                    0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+       -45 LOCK ANY TABLE                                    0
+       -46 COMMENT ANY TABLE                                 0
+       -47 SELECT ANY TABLE                                  0
+       -48 INSERT ANY TABLE                                  0
+       -49 UPDATE ANY TABLE                                  0
+       -50 DELETE ANY TABLE                                  0
+       -60 CREATE CLUSTER                                    0
+       -61 CREATE ANY CLUSTER                                0
+       -62 ALTER ANY CLUSTER                                 0
+       -63 DROP ANY CLUSTER                                  0
+       -71 CREATE ANY INDEX                                  0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+       -72 ALTER ANY INDEX                                   0
+       -73 DROP ANY INDEX                                    0
+       -80 CREATE SYNONYM(동의어 생성)                                    0
+       -81 CREATE ANY SYNONYM                                0
+       -82 DROP ANY SYNONYM    
+        ==================                              0
+       -83 SYSDBA (관리자 권한) 롤                                          0
+       ===================
+       -84 SYSOPER                                           0
+       -85 CREATE PUBLIC SYNONYM (공용동의어 생성)                            0
+       -86 DROP PUBLIC SYNONYM (공용동의어 삭제)                              0
+       -90 CREATE VIEW (뷰를 생성)                                     0
+       -91 CREATE ANY VIEW                                   0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+       -92 DROP ANY VIEW                                     0
+      -105 CREATE SEQUENCE  (시컨스 생성)                                 0
+      -106 CREATE ANY SEQUENCE                               0
+      -107 ALTER ANY SEQUENCE                                0
+      -108 DROP ANY SEQUENCE                                 0
+      -109 SELECT ANY SEQUENCE                               0
+      -115 CREATE DATABASE LINK                              0
+      -120 CREATE PUBLIC DATABASE LINK                       0
+      -121 DROP PUBLIC DATABASE LINK                         0
+       -------------------------
+      -125 CREATE ROLE   (롤을 생성할 수있는 권한)                                    0
+        ------------------------
+      -126 DROP ANY ROLE                                     0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -127 GRANT ANY ROLE                                    0
+      -128 ALTER ANY ROLE                                    0
+      -130 AUDIT ANY                                         0
+      -135 ALTER DATABASE                                    0
+      -138 FORCE TRANSACTION                                 0
+      -139 FORCE ANY TRANSACTION                             0
+      -140 CREATE PROCEDURE                                  0
+      -141 CREATE ANY PROCEDURE                              0
+      -142 ALTER ANY PROCEDURE                               0
+      -143 DROP ANY PROCEDURE                                0
+      -144 EXECUTE ANY PROCEDURE                             0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -151 CREATE TRIGGER                                    0
+      -152 CREATE ANY TRIGGER                                0
+      -153 ALTER ANY TRIGGER                                 0
+      -154 DROP ANY TRIGGER                                  0
+      -160 CREATE PROFILE                                    0
+      -161 ALTER PROFILE                                     0
+      -162 DROP PROFILE                                      0
+      -163 ALTER RESOURCE COST                               0
+      -165 ANALYZE ANY                                       0
+      -167 GRANT ANY PRIVILEGE                               0
+      -172 CREATE MATERIALIZED VIEW                          0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -173 CREATE ANY MATERIALIZED VIEW                      0
+      -174 ALTER ANY MATERIALIZED VIEW                       0
+      -175 DROP ANY MATERIALIZED VIEW                        0
+      -177 CREATE ANY DIRECTORY                              0
+      -178 DROP ANY DIRECTORY                                0
+      -180 CREATE TYPE                                       0
+              ->자료형(varchar2,number,,,->객체연관)
+      -181 CREATE ANY TYPE                                   0
+      -182 ALTER ANY TYPE                                    0
+      -183 DROP ANY TYPE                                     0
+      -184 EXECUTE ANY TYPE                                  0
+      -186 UNDER ANY TYPE                                    0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -188 CREATE LIBRARY                                    0
+      -189 CREATE ANY LIBRARY                                0
+      -190 ALTER ANY LIBRARY                                 0
+      -191 DROP ANY LIBRARY                                  0
+      -192 EXECUTE ANY LIBRARY                               0
+      -200 CREATE OPERATOR                                   0
+      -201 CREATE ANY OPERATOR                               0
+      -202 ALTER ANY OPERATOR                                0
+      -203 DROP ANY OPERATOR                                 0
+      -204 EXECUTE ANY OPERATOR                              0
+      -205 CREATE INDEXTYPE                                  0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -206 CREATE ANY INDEXTYPE                              0
+      -207 ALTER ANY INDEXTYPE                               0
+      -208 DROP ANY INDEXTYPE                                0
+      -209 UNDER ANY VIEW                                    0
+      -210 QUERY REWRITE                                     0
+      -211 GLOBAL QUERY REWRITE                              0
+      -212 EXECUTE ANY INDEXTYPE                             0
+      -213 UNDER ANY TABLE                                   0
+      -214 CREATE DIMENSION                                  0
+      -215 CREATE ANY DIMENSION                              0
+      -216 ALTER ANY DIMENSION                               0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -217 DROP ANY DIMENSION                                0
+      -218 MANAGE ANY QUEUE                                  1
+      -219 ENQUEUE ANY QUEUE                                 1
+      -220 DEQUEUE ANY QUEUE                                 1
+      -222 CREATE ANY CONTEXT                                0
+      -223 DROP ANY CONTEXT                                  0
+      -224 CREATE ANY OUTLINE                                0
+      -225 ALTER ANY OUTLINE                                 0
+      -226 DROP ANY OUTLINE                                  0
+      -227 ADMINISTER RESOURCE MANAGER                       1
+      -228 ADMINISTER DATABASE TRIGGER                       0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -233 MERGE ANY VIEW                                    0
+      -234 ON COMMIT REFRESH                                 0
+      -235 EXEMPT ACCESS POLICY                              0
+      -236 RESUMABLE                                         0
+      -237 SELECT ANY DICTIONARY                             0
+      -238 DEBUG CONNECT SESSION                             0
+      -241 DEBUG ANY PROCEDURE                               0
+      -243 FLASHBACK ANY TABLE                               0
+      -244 GRANT ANY OBJECT PRIVILEGE                        0
+      -245 CREATE EVALUATION CONTEXT                         1
+      -246 CREATE ANY EVALUATION CONTEXT                     1
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -247 ALTER ANY EVALUATION CONTEXT                      1
+      -248 DROP ANY EVALUATION CONTEXT                       1
+      -249 EXECUTE ANY EVALUATION CONTEXT                    1
+      -250 CREATE RULE SET                                   1
+      -251 CREATE ANY RULE SET                               1
+      -252 ALTER ANY RULE SET                                1
+      -253 DROP ANY RULE SET                                 1
+      -254 EXECUTE ANY RULE SET                              1
+      -255 EXPORT FULL DATABASE                              0
+      -256 IMPORT FULL DATABASE                              0
+      -257 CREATE RULE                                       1
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -258 CREATE ANY RULE                                   1
+      -259 ALTER ANY RULE                                    1
+      -260 DROP ANY RULE                                     1
+      -261 EXECUTE ANY RULE                                  1
+      -262 ANALYZE ANY DICTIONARY                            0
+      -263 ADVISOR                                           0
+      -264 CREATE JOB                                        0
+      -265 CREATE ANY JOB                                    0
+      -266 EXECUTE ANY PROGRAM                               0
+      -267 EXECUTE ANY CLASS                                 0
+      -268 MANAGE SCHEDULER                                  0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -269 SELECT ANY TRANSACTION                            0
+      -270 DROP ANY SQL PROFILE                              0
+      -271 ALTER ANY SQL PROFILE                             0
+      -272 ADMINISTER SQL TUNING SET                         0
+      -273 ADMINISTER ANY SQL TUNING SET                     0
+      -274 CREATE ANY SQL PROFILE                            0
+      -275 EXEMPT IDENTITY POLICY                            0
+      -276 MANAGE FILE GROUP                                 1
+      -277 MANAGE ANY FILE GROUP                             1
+      -278 READ ANY FILE GROUP                               1
+      -279 CHANGE NOTIFICATION                               0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -280 CREATE EXTERNAL JOB                               0
+      -281 CREATE ANY EDITION                                0
+      -282 DROP ANY EDITION                                  0
+      -283 ALTER ANY EDITION                                 0
+      -284 CREATE ASSEMBLY                                   0
+      -285 CREATE ANY ASSEMBLY                               0
+      -286 ALTER ANY ASSEMBLY                                0
+      -287 DROP ANY ASSEMBLY                                 0
+      -288 EXECUTE ANY ASSEMBLY                              0
+      -289 EXECUTE ASSEMBLY                                  0
+      -290 CREATE MINING MODEL                               0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -291 CREATE ANY MINING MODEL                           0
+      -292 DROP ANY MINING MODEL                             0
+      -293 SELECT ANY MINING MODEL                           0
+      -294 ALTER ANY MINING MODEL                            0
+      -295 COMMENT ANY MINING MODEL                          0
+      -301 CREATE CUBE DIMENSION                             0
+      -302 ALTER ANY CUBE DIMENSION                          0
+      -303 CREATE ANY CUBE DIMENSION                         0
+      -304 DELETE ANY CUBE DIMENSION                         0
+      -305 DROP ANY CUBE DIMENSION                           0
+      -306 INSERT ANY CUBE DIMENSION                         0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -307 SELECT ANY CUBE DIMENSION                         0
+      -308 CREATE CUBE                                       0
+      -309 ALTER ANY CUBE                                    0
+      -310 CREATE ANY CUBE                                   0
+      -311 DROP ANY CUBE                                     0
+      -312 SELECT ANY CUBE                                   0
+      -313 UPDATE ANY CUBE                                   0
+      -314 CREATE MEASURE FOLDER                             0
+      -315 CREATE ANY MEASURE FOLDER                         0
+      -316 DELETE ANY MEASURE FOLDER                         0
+      -317 DROP ANY MEASURE FOLDER                           0
+
+ PRIVILEGE NAME                                       PROPERTY
+---------- ---------------------------------------- ----------
+      -318 INSERT ANY MEASURE FOLDER                         0
+      -319 CREATE CUBE BUILD PROCESS                         0
+      -320 CREATE ANY CUBE BUILD PROCESS                     0
+      -321 DROP ANY CUBE BUILD PROCESS                       0
+      -322 UPDATE ANY CUBE BUILD PROCESS                     0
+      -326 UPDATE ANY CUBE DIMENSION                         0
+      -327 ADMINISTER SQL MANAGEMENT OBJECT                  0
+      -328 ALTER PUBLIC DATABASE LINK                        0
+      -329 ALTER DATABASE LINK                               0
+      -350 FLASHBACK ARCHIVE ADMINISTER                      0
+
+208 개의 행이 선택되었습니다.
+
+<문제6> role(롤)->권한을 줄때 이 롤을 사용(권한을 담아놓은 그릇)
+              리눅스->그룹과 비슷(단순,반복적인 권한을 롤을 이용->편리권한부여)
+ 시스템에서 현재 사용중인 롤을 조회하는 SQL작성?
+
+ 어떤 롤이 있는지?(dba_roles)->권한이 들어있는지 ?
+
+ dba_XXX,sys_XXXX,v$_XXX로 시작하는 테이블->관리자만 사용이 가능
+
+sql>select * from dba_roles;
+
+ROLE                           PASSWORD AUTHENTIC
+------------------------------ -------- ---------
+CONNECT  ->create session(접속권한)                      NO       NONE
+RESOURCE  ->create table권한외 ~                     NO       NONE
+DBA ->관리자롤                           NO       NONE
+===================================
+SELECT_CATALOG_ROLE            NO       NONE
+EXECUTE_CATALOG_ROLE           NO       NONE
+DELETE_CATALOG_ROLE            NO       NONE
+EXP_FULL_DATABASE              NO       NONE
+IMP_FULL_DATABASE              NO       NONE
+LOGSTDBY_ADMINISTRATOR         NO       NONE
+DBFS_ROLE                      NO       NONE
+AQ_ADMINISTRATOR_ROLE          NO       NONE
+
+ROLE                           PASSWORD AUTHENTIC
+------------------------------ -------- ---------
+AQ_USER_ROLE                   NO       NONE
+DATAPUMP_EXP_FULL_DATABASE     NO       NONE
+DATAPUMP_IMP_FULL_DATABASE     NO       NONE
+ADM_PARALLEL_EXECUTE_TASK      NO       NONE
+GATHER_SYSTEM_STATISTICS       NO       NONE
+JAVA_DEPLOY                    NO       NONE
+RECOVERY_CATALOG_OWNER         NO       NONE
+SCHEDULER_ADMIN                NO       NONE
+HS_ADMIN_SELECT_ROLE           NO       NONE
+HS_ADMIN_EXECUTE_ROLE          NO       NONE
+HS_ADMIN_ROLE                  NO       NONE
+
+ROLE                           PASSWORD AUTHENTIC
+------------------------------ -------- ---------
+GLOBAL_AQ_USER_ROLE            GLOBAL   GLOBAL
+OEM_ADVISOR                    NO       NONE
+OEM_MONITOR                    NO       NONE
+WM_ADMIN_ROLE                  NO       NONE
+JAVAUSERPRIV                   NO       NONE
+JAVAIDPRIV                     NO       NONE
+JAVASYSPRIV                    NO       NONE
+JAVADEBUGPRIV                  NO       NONE
+EJBCLIENT                      NO       NONE
+JMXSERVER                      NO       NONE
+JAVA_ADMIN                     NO       NONE
+
+ROLE                           PASSWORD AUTHENTIC
+------------------------------ -------- ---------
+CTXAPP                         NO       NONE
+XDBADMIN                       NO       NONE
+XDB_SET_INVOKER                NO       NONE
+AUTHENTICATEDUSER              NO       NONE
+XDB_WEBSERVICES                NO       NONE
+XDB_WEBSERVICES_WITH_PUBLIC    NO       NONE
+XDB_WEBSERVICES_OVER_HTTP      NO       NONE
+ORDADMIN                       NO       NONE
+OLAPI_TRACE_USER               NO       NONE
+OLAP_XS_ADMIN                  NO       NONE
+OWB_USER                       NO       NONE
+
+ROLE                           PASSWORD AUTHENTIC
+------------------------------ -------- ---------
+OLAP_DBA                       NO       NONE
+CWM_USER                       NO       NONE
+OLAP_USER                      NO       NONE
+SPATIAL_WFS_ADMIN              NO       NONE
+WFS_USR_ROLE                   YES      PASSWORD
+SPATIAL_CSW_ADMIN              YES      PASSWORD
+CSW_USR_ROLE                   YES      PASSWORD
+MGMT_USER                      NO       NONE
+APEX_ADMINISTRATOR_ROLE        NO       NONE
+OWB$CLIENT                     YES      PASSWORD
+OWB_DESIGNCENTER_VIEW          NO       NONE
+
+55 개의 행이 선택되었습니다.
+
+<문제7>특정롤에 부여된 시스템 권한의 종류를 확인하는 SQL구문을 작성?
+->save를 이용(뷰) =>dba_sys_privs;
+
+sql>create or replace view v_rolesearch
+as select * from dba_sys_privs
+where grantee='CONNECT';
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_rolesearch;
+
+GRANTEE(롤이름)                        PRIVILEGE(권한종류)
+------------------------------ ----------------------
+CONNECT                        CREATE SESSION
+
+ grant connect to 계정명,2,,,
+ grant create session to 계정명,2,,,
+
+sql>select * from dba_sys_privs
+      where grantee=upper('&grantee');  //resource
+
+SQL> select * from dba_sys_privs
+  2        where grantee=upper('&grantee');
+grantee의 값을 입력하십시오: resource
+구   2:       where grantee=upper('&grantee')
+신   2:       where grantee=upper('resource')
+
+GRANTEE                        PRIVILEGE
+------------------------------ -------------------
+RESOURCE                       CREATE TRIGGER
+RESOURCE                       CREATE SEQUENCE
+RESOURCE                       CREATE TYPE
+RESOURCE                       CREATE PROCEDURE
+RESOURCE                       CREATE CLUSTER
+RESOURCE                       CREATE OPERATOR
+RESOURCE                       CREATE INDEXTYPE
+RESOURCE                       CREATE TABLE=>중요
+                                   create view,create synonym가 누락
+
+8 개의 행이 선택되었습니다.
+
+롤을 이용해서 권한->한꺼번에 많은 권한을 부여할때 편리
+
+sql>save C:\webtest\1.db\print\prisearch.txt
+
+SQL> save C:\webtest\1.db\print\prisearch.txt
+file C:\webtest\1.db\print\prisearch.txt(이)가 생성되었습니다
+------------------------------------------------------------------
+<문제8>롤을 생성->관리자권한->로그인을 할 수있는 usercreate 롤을 생성->
+ scott,test1계정에게 권한을 부여?
+
+형식)create role 생성시킬 롤이름;
+sql>create role usercreate;
+
+롤이 생성되었습니다.
+
+SQL> select * from dba_roles;
+ ~
+OWB$CLIENT                     YES      PASSWORD
+OWB_DESIGNCENTER_VIEW          NO       NONE
+
+ROLE                           PASSWORD AUTHENTICAT
+------------------------------ -------- -----------
+USERCREATE                     NO       NONE
+
+56 개의 행이 선택되었습니다.
+
+<문제9>만들어진 롤에 권한을 넣어준 뒤 계정에게 권한을 롤을 이용->부여?
+      ->계정생성,계정수정
+
+동일한 권한을 여러개의 롤에게 동시에 부여가 가능하다.
+
+형식) grant 권한종류명,,,to 롤명1,롤명2,롤명3;
+sql>grant create user,alter user to usercreate; //권한 종류를 확인?
+
+sql>@C:\webtest\1.db\print\prisearch.txt
+grantee의 값을 입력하십시오: usercreate
+구   2:       where grantee=upper('&grantee')
+신   2:       where grantee=upper('usercreate')
+
+GRANTEE                        PRIVILEGE
+------------------------------ -----------------
+USERCREATE                     CREATE USER
+USERCREATE                     ALTER USER    +create session권한을 추가
+                                                              +create table권한 추가
+
+<문제10>권한이 부여된 롤->계정에게 부여->그 권한이 되는지 확인?
+형식)grant 롤명,,,to 계정명1,계정명2,,
+
+sql>grant usercreate to scott,test1;//scott->imsi계정생성/t1234부여확인
+===================================
+->sql>grant usercreate to scott,test1;
+sql>conn scott/tiger
+sql>create user imsi identified by t1234;
+-------------------------------------------------
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> create user imsi identified by t1234; //
+
+사용자가 생성되었습니다.
+
+sql> alter user imsi identified by imtest;  //t1234=>imtest로 변경
+sql> drop user imsi;
+
+SQL> drop user imsi;
+drop user imsi
+*
+1행에 오류:
+ORA-01031: 권한이 불충분합니다
+
+<문제11> 관리자가 usercreate롤을 생성->권한준뒤 ->scott,test1
+                           usercreate롤을 삭제->scott,test1 그 권한을 계속 사용?
+
+ sql>grant connect,resource to imsi;
+
+SQL> grant connect,resource to imsi;
+grant connect,resource to imsi
+*
+1행에 오류:
+ORA-01031: 권한이 불충분합니다
+
+ sql> conn  / as sysdba
+ 형식) drop role 삭제시킬 롤명
+ sql>drop role usercreate;
+
+롤이 삭제되었습니다.
+
+sql>conn scott/tiger
+sql>create user ktest identified by ktest;   // ktest/ktest
+
+연결되었습니다.
+SQL> create user ktest identified by ktest;
+create user ktest identified by ktest
+                                *
+1행에 오류:
+ORA-01031: 권한이 불충분합니다
+
+==>롤을 삭제-->이 롤을 통해서 권한을 부여받은 모든 계정들의 권한들은
+                        자동으로 회수하게 된다.
+
+ 롤을 이용하는 장점->한꺼번에 많은 권한을 계정들에게 부여할 수도 있고
+                             한꺼번에 부여된 권한을 회수할 수가 있다.
+===========================================
+
+<문제12>관리자가 권한 일부를 위임=>계정생성,,,[with admin option]
+
+ 시나리오
+             관리자->1.aaa,bbb,ccc계정을 생성(암호는 계정명과 동일하게)
+                         2.각자 로그인해서 자원을 생성할 수있는 권한 부여
+                            connect,resource
+                            ->ccc(로그인 X)
+                         3.bbb계정->ccc계정에게 권한을 임시줄 수있는 권한
+
+sql>conn / as sysdba
+sql>create user aaa identified by aaa;
+      grant connect,resource to aaa;
+
+      create user bbb identified by bbb;
+     grant connect,resource to bbb with admin option;
+     //부여받은 권한에 한해서만 다른 계정에게 권한을 줄 수가 있다.
+
+      create user ccc identified by ccc; //ccc->로그인 X
+===================================
+SQL> conn ccc/ccc
+ERROR:
+ORA-01045: user CCC lacks CREATE SESSION privilege; logon denied
+
+
+경고: 이제는 ORACLE에 연결되어 있지 않습니다. ccc->bbb(임시)
+
+sql> conn aaa/aaa
+       grant connect,resource to ccc; //X
+
+sql>conn bbb/bbb
+      grant connect,resource to ccc; //O ->with admin option의 유무차이
+
+sql>conn ccc/ccc
+      create table abc(id number);//O
+
+      SQL> insert into abc values(1);
+
+1 개의 행이 만들어졌습니다.
+
+   SQL> select * from abc;
+
+        ID
+----------
+         1
+
+<문제13>관리자->bbb(with admin option)->ccc( connect,resource)
+관리자->bbb(권한 회수(revoke))=>ccc의 계정의 권한?
+
+sql>conn /  as sysdba
+sql>revoke connect,resource  from bbb;
+
+SQL> revoke connect,resource  from bbb;
+
+권한이 취소되었습니다.
+
+SQL> conn ccc/ccc
+연결되었습니다.
+sql> create table abc2(id varchar2(10));
+---------------------------------------------
+SQL> create table abc2(id varchar2(10));
+
+테이블이 생성되었습니다.
+
+정리) 관리자가 계정을 생성할때 with admin option
+    ->생성된 계정은 자기가 부여받은 권한범위내에서 권한을 다른 계정에게 위임
+    ->권한을 회수당해도 위임받는 계정에게는 영향이 없다.(그대로 권한행사)
+=============================================
+
+<문제14>오라클의 객체 권한(테이블,뷰,시컨스,시노님,인덱스,,,)->계정우선
+                                                                                     (소유자)
+ 객체의 권한 종류를 조회하는 SQL?->table_privilege_map(테이블)
+                                                  system_privilege_map
+
+sql>select * from table_privilege_map;
+
+ PRIVILEGE NAME
+---------- -----------------------
+         0 ALTER
+         1 AUDIT
+         2 COMMENT->주석(테이블 설계할때 exerd)
+         3 DELETE->삭제
+         4 GRANT->권한부여
+         5 INDEX
+         6 INSERT
+         7 LOCK
+         8 RENAME->이름변경(테이블이름,필드명 변경)
+         9 SELECT
+        10 UPDATE
+
+ PRIVILEGE NAME
+---------- -----------------------
+        11 REFERENCES
+        12 EXECUTE  =>select to_char(~) from dual (실행권한)
+        16 CREATE
+        17 READ
+        18 WRITE
+        20 ENQUEUE
+        21 DEQUEUE
+        22 UNDER
+        23 ON COMMIT REFRESH
+        24 QUERY REWRITE
+        26 DEBUG
+
+ PRIVILEGE NAME
+---------- -----------------------
+        27 FLASHBACK =>데이터 복구에 관련된 명령어(flashback 기술)
+        28 MERGE VIEW
+        29 USE
+        30 FLASHBACK ARCHIVE
+
+26 개의 행이 선택되었습니다.
+
+권한줄때->테이블(DML(insert,update,delete),select,뷰(execute),,,,
+
+<문15> 관리자->test2(test2),test3(test3),test4(test4) 계정생성
+                    ->connect,resource
+
+형식) grant 권한종류,,,on 테이블명 to 계정명,, [with grant option] 위임
+        test3(test3)------------------>test4(유지 ?)
+        select ,insert,update
+
+관리자
+sql> create user test2 identified by test2;
+       create user test3 identified by test3;
+       create user test4 identified by test4;
+
+       grant connect,resource to test2,test3,test4;
+
+소유자-> conn scott/tiger
+      select count(*) from b_dept2;
+
+  COUNT(*)
+----------
+         9
+
+=>test3에게 권한주면서 위임시키자
+
+sql>grant select,insert,update on b_dept2 to test3 with grant option;
+=============================================
+    test2 ->insert
+    test3 (with grant option)->b_dept2(insert,update,select)
+    test4 ->select,update
+
+
+sql>conn test3/test3
+sql>grant insert on scott.b_dept2 to test2;
+      권한이 부여되었습니다.
+sql>grant select,update on scott.b_dept2 to test4;
+
+sql>conn test4/test4
+sql>select * from scott.b_dept2; //update
+
+    DEPTNO DNAME          LOC
+---------- -------------- -----------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        90 TESTING4       SEOUL3
+        50 SUPPORT        KWANGJU
+        60 TESTING        SEOUL ===>deptno=60->loc=DALLAS로 변경
+        70 TESTING2       PUSAN
+        80 TESTING3       SEOUL2
+
+9 개의 행이 선택되었습니다.
+==============================
+sql>update scott.b_dept2 set loc='DALLAS'
+      where deptno=60;
+
+1 행이 갱신되었습니다.
+===============================
+<문16>위임권한(=양도)
+  scott->test3에게 부여한 권한을 회수->test3로 부터 받은 권한
+                                                       test4의 권한유지?
+
+sql>conn scott/tiger
+sql>revoke select,insert,update on b_dept2 from test3;
+권한이 취소되었습니다.
+
+sql>conn test4/test4
+
+연결되었습니다.
+SQL> select * from  scott.b_dept2;
+select * from  scott.b_dept2
+                     *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+--------------------------------------------------------
+
+결론)
+
+ 소유자(scott)가 test3(select,insert,update)->test4라는 계정에게
+ 부여받은 권한의 일부(select,update)을 줘도 자기 권한(test3)을
+ 회수당하면 양도한 계정(test4)도 같이 회수를 당한다.
+=======================================
+  <--->시스템 권한과 반대
+
+ 오라클은 계정단위로 운영----->MySQL=>Database영역(폴더)(공간)
+   계정 -->테이블을 생성                                파일(테이블)             
+
+  오라클에서는 데이터를 저장할 수있는 공간(tablespace)
+==================================
+<문17>오라클을 설치하고 나서 오라클에 접속
+
+
+
+Copyright (c) 1982, 2010, Oracle.  All rights reserved.
+
+사용자명 입력: scott/tiger  //1) 락이 걸려있다.->관리자로 로그인 ->해결
+                    도스모드->sqlplus / as sysdba ->관리자의 암호인증
+                                                                  없이 로그인가능
+
+sql>alter user scott account unlock;
+=========================================
+
+                                        2)접속오류가 발생
+                                            ->서비스 ->oracle ~TNSListener
+                                                         ->oracle~orcl 
+                                                             서비스의 실행유무
+                                         서비스의 시작유형->수동으로 변경할것
+                                          컴퓨터 부팅->자동으로 설정이 되어있으면
+                                                            무조건 오라클 서비스가동
+==========================================
+ 
+ERROR:
+ORA-12560: TNS:프로토콜 어댑터 오류
+
+
+사용자명 입력:
+
+tablespace,데이터 삭제->복구(flashback)=>화면 구현
+
+
+
+
+
+
+
+
+
+
+
+
+
+

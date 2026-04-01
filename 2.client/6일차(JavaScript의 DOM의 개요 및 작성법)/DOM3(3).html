@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>DOM3(3).html(태그생성) </title>
+  <script>
+       window.onload=function(){
+          //1.h1태그를 생성->부모태그명.createElement("생성할 태그이름")
+         var header=document.createElement('h1') //<h1></h1>
+		 //alert(header)
+		 //2.태그내부에 존재하는 문자열->텍스트노드 생성
+		 //2.textNode->document.createTextNode('출력할 문자열')
+		 var textNode=document.createTextNode('Hello,DOM연습')//innerHTML
+		 //3.<h1>Hello,DOM연습</h1>->부모태그명.appendChild(자식태그명)
+         header.appendChild(textNode)
+		 //4.화면에 출력->body태그에 추가->document.body
+		 document.body.appendChild(header)
+	   }
+  </script>
+ </head>
+ <body>
+    <!-- <h1>Hello,DOM연습</h1> -->
+ </body>
+</html>

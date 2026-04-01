@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+ <head>
+ <!-- meta->한글처리(charset),페이지 이동(페이지 자동이동,게시판글쓰기)
+   http-equiv="refresh" (새로운 페이지가 보여질 수 있도록 새로고침하는 옵션)
+   content="3(초단위);url=http://www.naver.com(이동할 사이트 주소)
+                                         또는 이동할 페이지"
+			 ->페이지가 이동이 안되고 하얀게 표시(속성값을 확인할것)						  
+  -->
+  <meta charset="UTF-8">
+  <!-- <meta http-equiv="refresh" content="3;url=http://www.naver.com"> -->
+  <title>이미지,링크문자열(2).html </title>
+ </head>
+ <body>
+   <h3>이미지 삽입</h3>
+   <!-- <,>(웹상에서 특수문자열로 대치) -->
+   적절한 위치에 &lt;img&gt;태그를 부여<p>
+   <!-- 1.src(상대경로(.(현재폴더), ..(상위폴더) 포함해서 불러올 이미지파일명
+           2.width,height->이미지의 크기(픽셀->모니터에 출력하는 점의 갯수)
+		   3.border="테두리(선의 굵기)" 
+		   4.alt=>"툴팁" ->그림의 설명=>html5 ->figure,figcaption(이미지와 연결)
+   ) -->
+ <figure><!-- 이미지를 묶어주는 용도
+           mark->강조(html5에 새로 추가)->형광펜색으로 문자열을 칠하는 효과
+		  태그 내부에 또 다른 태그를 작성(대칭구조로 작성하라는 규정)
+		  <mark><figcaption><mark>~</mark></figcaption></mark>
+  -->
+ <img src="../images/fish.jpg" width="324" height="227" border="0" 
+          alt="망둥어">
+  <figcaption><mark>이미지에 대한  설명글을 부여(망둥어)</mark></figcaption>
+ </figure>
+ <hr><!-- 선을 그을때 사용(선의 속성은 html5에서는 사용X) -->
+ <figure>
+    <img src="../images/waiting.jpg" width="362" height="474" >
+    <img src="../images/Penguins.jpg" width="362" height="474">
+ </figure>
+ <hr>
+ <!-- 링크(a) href="이동하는 페이지 또는 사이트 주소" target="_blank" (새창)
+                              mailto:연결시킬 이메일 주소  =>이메일연결(프로그램존재)
+							  ex) outlook
+							   #키워드==>문서내부에서의 특정 위치로 이동
+  -->
+ <a href="http://www.naver.com">네이버</a><br>
+ <a href="http://www.daum.net" target="_blank">다음</a><br>
+ <a href="#">문서내부에서의 특정위치로 이동 </a>
+ <hr>
+  공부하시다가 문의가 있으시면 
+  <a href="mailto:nup49rok1@empas.com">저한테</a> 보내주세요
+ </body>
+</html>

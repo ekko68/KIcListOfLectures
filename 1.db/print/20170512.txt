@@ -1,0 +1,623 @@
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+EMP_DEPTNO                     TABLE                                            
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+SALGRADE                       TABLE                                            
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+V_SEARCH                       VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SEQUENCE_SEQ                 VIEW                                             
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+25 개의 행이 선택되었습니다.
+
+SQL> create table b_dept3 as select * from dept;
+create table b_dept3 as select * from dept
+                                      *
+1행에 오류:
+ORA-00959: 테이블스페이스 'ORADATA1'이(가) 존재하지 않습니다. 
+
+
+SQL> select count(*) from b_emp2;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         0                                                                      
+
+SQL> select count(*) from b_emp3;
+
+  COUNT(*)                                                                      
+----------                                                                      
+        14                                                                      
+
+SQL> SQL> select count(*) from b_emp3;
+SP2-0734: "SQL> selec..."(으)로 시작되는 알 수 없는 명령 - 나머지 줄은 무시되었습니다.
+SQL> 
+SQL>   COUNT(*)
+SP2-0042: 알 수 없는 명령어 "COUNT(*)" - 나머지 줄 무시.
+SQL> ----------
+SQL>      delete from b_emp3;
+
+14 행이 삭제되었습니다.
+
+SQL> desc b_emp3;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select count(*) from b_emp3;
+
+  COUNT(*)                                                                      
+----------                                                                      
+        14                                                                      
+
+SQL> truncate table  b_emp3;
+
+테이블이 잘렸습니다.
+
+SQL> select count(*) from b_emp3;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         0                                                                      
+
+SQL> desc b_emp3;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_emp3;
+
+선택된 레코드가 없습니다.
+
+SQL> drop table b_emp3;
+
+테이블이 삭제되었습니다.
+
+SQL> select * from b_emp3;
+select * from b_emp3
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_emp3;
+select * from b_emp3
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BIN$ZfcZY+AMR7237C5sUXwpYA==$0 TABLE                                            
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_EMP2                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+EMP_DEPTNO                     TABLE                                            
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+SALGRADE                       TABLE                                            
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+V_SEARCH                       VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SEQUENCE_SEQ                 VIEW                                             
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+25 개의 행이 선택되었습니다.
+
+SQL> desc user_recyclebin
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ OBJECT_NAME                               NOT NULL VARCHAR2(30)
+ ORIGINAL_NAME                                      VARCHAR2(32)
+ OPERATION                                          VARCHAR2(9)
+ TYPE                                               VARCHAR2(25)
+ TS_NAME                                            VARCHAR2(30)
+ CREATETIME                                         VARCHAR2(19)
+ DROPTIME                                           VARCHAR2(19)
+ DROPSCN                                            NUMBER
+ PARTITION_NAME                                     VARCHAR2(32)
+ CAN_UNDROP                                         VARCHAR2(3)
+ CAN_PURGE                                          VARCHAR2(3)
+ RELATED                                   NOT NULL NUMBER
+ BASE_OBJECT                               NOT NULL NUMBER
+ PURGE_OBJECT                              NOT NULL NUMBER
+ SPACE                                              NUMBER
+
+SQL> show recyclebin
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME          
+---------------- ------------------------------ ------------ -------------------
+B_EMP3           BIN$ZfcZY+AMR7237C5sUXwpYA==$0 TABLE        2017-05-12:10:05:43
+SQL> flashback table b_emp3 to before drop;
+
+플래시백이 완료되었습니다.
+
+SQL> select count(*) from b_emp3;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         0                                                                      
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+EMP_DEPTNO                     TABLE                                            
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+SALGRADE                       TABLE                                            
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+V_SEARCH                       VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SEQUENCE_SEQ                 VIEW                                             
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+25 개의 행이 선택되었습니다.
+
+SQL> drop table b_emp3 purge;
+
+테이블이 삭제되었습니다.
+
+SQL> show recyclebin
+SQL> ;
+  1* drop table b_emp3 purge
+SQL> show recyclebin;
+SQL> flashback table b_emp3 to before drop;
+flashback table b_emp3 to before drop
+*
+1행에 오류:
+ORA-38305: 객체가 RECYCLE BIN에 없음 
+
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_EMP2                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+EMP_DEPTNO                     TABLE                                            
+SALGRADE                       TABLE                                            
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+V_SEARCH                       VIEW                                             
+V_SEQUENCE_SEQ                 VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+24 개의 행이 선택되었습니다.
+
+SQL> create table t1(a number);
+create table t1(a number)
+*
+1행에 오류:
+ORA-00959: 테이블스페이스 'ORADATA1'이(가) 존재하지 않습니다. 
+
+
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> clear screen
+
+SQL> create table t1(a number);
+
+테이블이 생성되었습니다.
+
+SQL>       drop table t1;
+
+테이블이 삭제되었습니다.
+
+SQL> create table t1(a varchar2(10));
+
+테이블이 생성되었습니다.
+
+SQL>       drop table t1;
+
+테이블이 삭제되었습니다.
+
+SQL> create table t1(a date);
+
+테이블이 생성되었습니다.
+
+SQL>       drop table t1;
+
+테이블이 삭제되었습니다.
+
+SQL> create table t1(a number);
+
+테이블이 생성되었습니다.
+
+SQL>       drop table t1;
+
+테이블이 삭제되었습니다.
+
+SQL> show recyclebin
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME          
+---------------- ------------------------------ ------------ -------------------
+T1               BIN$j8DzVgfVQ92ZwmRBuj3cxg==$0 TABLE        2017-05-12:10:48:04
+T1               BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE        2017-05-12:10:47:29
+T1               BIN$ZIJJhLb+ScW+0XMXzk627w==$0 TABLE        2017-05-12:10:46:57
+T1               BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE        2017-05-12:10:45:42
+SQL> flashback table t1 to before drop;
+
+플래시백이 완료되었습니다.
+
+SQL> show recyclebin
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME          
+---------------- ------------------------------ ------------ -------------------
+T1               BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE        2017-05-12:10:47:29
+T1               BIN$ZIJJhLb+ScW+0XMXzk627w==$0 TABLE        2017-05-12:10:46:57
+T1               BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE        2017-05-12:10:45:42
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BIN$ZIJJhLb+ScW+0XMXzk627w==$0 TABLE                                            
+BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE                                            
+BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE                                            
+B_PRTEST                       TABLE                                            
+DEPT                           TABLE                                            
+PRTEST                         TABLE                                            
+SAWON                          TABLE                                            
+T1                             TABLE                                            
+
+8 개의 행이 선택되었습니다.
+
+SQL> flashback table  "BIN$ZIJJhLb+ScW+0XMXzk627w==$0"
+  2      to before drop rename to imsitest;
+
+플래시백이 완료되었습니다.
+
+SQL> desc imsitest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ A                                                  VARCHAR2(10)
+
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> clear screen
+
+SQL> 
+SQL> show user
+USER은 "SYS"입니다
+SQL> create tablespace oradata2 datafile
+  2          'C:\webtest\1.db\oradata2.dbf' size 10m;
+
+테이블스페이스가 생성되었습니다.
+
+SQL> select * from v$tablespace;
+
+       TS# NAME                           INC BIG FLA ENC                       
+---------- ------------------------------ --- --- --- ---                       
+         0 SYSTEM                         YES NO  YES                           
+         1 SYSAUX                         YES NO  YES                           
+         2 UNDOTBS1                       YES NO  YES                           
+         4 USERS                          YES NO  YES                           
+         3 TEMP                           NO  NO  YES                           
+         6 EXAMPLE                        YES NO  YES                           
+        10 ORADATA2                       YES NO  YES                           
+         8 SHOP                           YES NO  YES                           
+         9 TEMP2                          NO  NO  YES                           
+
+9 개의 행이 선택되었습니다.
+
+SQL> show user
+USER은 "SYS"입니다
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> create table t2(c1 number) tablespace oradata2;
+
+테이블이 생성되었습니다.
+
+SQL> create user kim2 identified by kim2 default tablespace oradata2;
+
+사용자가 생성되었습니다.
+
+SQL> grant connect,resource to kim2;
+
+권한이 부여되었습니다.
+
+SQL> conn kim2/kim2
+연결되었습니다.
+SQL> select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE                               
+------------------------------ ------------------------------                   
+KIM2                           ORADATA2                                         
+
+SQL> create table s1(id number);
+
+테이블이 생성되었습니다.
+
+SQL> select table_name,tablespace_name from user_tables;
+
+TABLE_NAME                     TABLESPACE_NAME                                  
+------------------------------ ------------------------------                   
+S1                             ORADATA2                                         
+
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE                               
+------------------------------ ------------------------------                   
+TEST1                          USERS                                            
+
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> alter user test1 default tablespace oradata2;
+
+사용자가 변경되었습니다.
+
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE                               
+------------------------------ ------------------------------                   
+TEST1                          ORADATA2                                         
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE                                            
+BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE                                            
+B_PRTEST                       TABLE                                            
+DEPT                           TABLE                                            
+IMSITEST                       TABLE                                            
+PRTEST                         TABLE                                            
+SAWON                          TABLE                                            
+T1                             TABLE                                            
+
+8 개의 행이 선택되었습니다.
+
+SQL> alter table t1 move tablespace oradata2;
+
+테이블이 변경되었습니다.
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE                                            
+BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE                                            
+B_PRTEST                       TABLE                                            
+DEPT                           TABLE                                            
+IMSITEST                       TABLE                                            
+PRTEST                         TABLE                                            
+SAWON                          TABLE                                            
+T1                             TABLE                                            
+
+8 개의 행이 선택되었습니다.
+
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> create tablespace shop2 datafile 'd:\data2\shop2.dbf' size 100m;
+
+테이블스페이스가 생성되었습니다.
+
+SQL> create user shopuser identified by t1234 default tablespace shop2;
+create user shopuser identified by t1234 default tablespace shop2
+            *
+1행에 오류:
+ORA-01920: 사용자명 'SHOPUSER'(이)가 다른 사용자나 롤 이름과 상충됩니다 
+
+
+SQL> create user shopuser2 identified by t1234 default tablespace shop2;
+
+사용자가 생성되었습니다.
+
+SQL> grant connect,resource to shopuser2;
+
+권한이 부여되었습니다.
+
+SQL> create temporary tablespace temp3 tempfile
+  2         'd:\data2\temp3.dbf' size 50m;
+
+테이블스페이스가 생성되었습니다.
+
+SQL> create user lee2 identified by lee2 default tablespace oradata2
+  2        temporary tablespace temp3;
+
+사용자가 생성되었습니다.
+
+SQL> select tablespace_name,file_name,autoextensible
+  2        from dba_data_files;
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+USERS                                                                           
+C:\ORACLE\ORADATA\ORCL\USERS01.DBF                                              
+YES                                                                             
+                                                                                
+UNDOTBS1                                                                        
+C:\ORACLE\ORADATA\ORCL\UNDOTBS01.DBF                                            
+YES                                                                             
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+                                                                                
+SYSAUX                                                                          
+C:\ORACLE\ORADATA\ORCL\SYSAUX01.DBF                                             
+YES                                                                             
+                                                                                
+SYSTEM                                                                          
+C:\ORACLE\ORADATA\ORCL\SYSTEM01.DBF                                             
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+YES                                                                             
+                                                                                
+EXAMPLE                                                                         
+C:\ORACLE\ORADATA\ORCL\EXAMPLE01.DBF                                            
+YES                                                                             
+                                                                                
+ORADATA2                                                                        
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+C:\WEBTEST\1.DB\ORADATA2.DBF                                                    
+NO                                                                              
+                                                                                
+SHOP                                                                            
+D:\DATA\SHOP1.DBF                                                               
+NO                                                                              
+                                                                                
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+SHOP2                                                                           
+D:\DATA2\SHOP2.DBF                                                              
+NO                                                                              
+                                                                                
+
+8 개의 행이 선택되었습니다.
+
+SQL> alter database datafile 'c:\webtest\1.db\oradata2.dbf'
+  2        autoextend on next 2m maxsize 200m;
+
+데이타베이스가 변경되었습니다.
+
+SQL> alter tablespace oradata2 add datafile
+  2        'c:\webtest\1.db\oradata3.dbf' size 200m;
+
+테이블스페이스가 변경되었습니다.
+
+SQL> drop tablespace shop2 including contents and datafiles;
+
+테이블스페이스가 삭제되었습니다.
+
+SQL> spool off

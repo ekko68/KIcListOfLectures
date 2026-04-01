@@ -1,0 +1,488 @@
+이연수
+
+문의 =>nup49rok1@empas.com
+
+과목->ncs평가=>주관식(단답형,기술)
+
+화면구현->6일(포트폴리오)
+오라클->장점,비교->
+============================
+
+ c:\webtest
+        1.db->
+        2.~
+
+        13...
+
+설치->64bit 11g
+데이터베이스 설치
+=======?
+고급설치=>
+
+Enterprise Edition(회사)
+
+Standard ~(부서)
+
+Personal Edition=>개인용
+
+동시접속수
+
+오라클 설치시 중간에 한글이 들어간
+폴더에 설치
+
+D:\app\kitcoop=>c:\oracle
+                           ======
+                          =>c:\oracle2
+
+c:\oracle\product\11.2.0\dbhome_1
+======
+
+전역 데이터베이스 이름:orcl
+sid=>네트워크상에서의 오라클을 구별하는
+        인자
+========================
+c:\oracle\oradata==>파일로 저장
+====== 
+
+모든 계정에 동일한 비밀번호 사용 체크
+oracle  / oracle
+
+경고=>6자리이상(대,소문자구분,특수기호를 요구)
+=============================
+system->system12345
+sys--->sys12345
+===================
+scott ->tiger /tiger
+hr
+...
+--->사용하고자하는 계정의 암호를
+부여X=>나중에 오라클 사용시 문제
+=>추가 작업
+------------------------------------
+오라클을 삭제(정상적으로)
+
+1.제어판=>서비스를 중지
+       오라클 중지
+
+2.오라클 인스톨 화면으로
+  제품 설치 해제=>제거
+
+3.시작/실행->regedit.exe
+==>없으면 생략
+
+HKEY_CLASS_ROOT->oracle폴더를 삭제
+HKEY_LOCAL_MACHINE
+                           software
+                               oracle등록=>삭제
+HKEY_LOCAL_MACHINE
+                            system
+                                controlset001->oracle폴더 삭제
+                                controlset002=>oracle폴더 삭제
+4.재부팅 후
+
+==>c:\oracle폴더->삭제
+=========================
+ppt로 처음부터 다시 시작
+
+ipconfig
+=========
+강사용에 접속
+
+==>시작/실행->\\192.168.0.57
+ =====================
+
+이더넷 어댑터 로컬 영역 연결:
+=========================
+개인용 DB->MySQL or Mariadb(개인용, 중소규모)
+규모->Oracle->Spring
+==============
+1일차(오라클의 설치및 사용법)
+   .txt ,ppt
+
+계정관리
+
+속성
+ 옵션탭->빠른 편집 모드 체크(copy)
+ 글꼴=>12*27 ->크게
+ 색=>배경색->흰색 글자색->검정색
+        -==================
+
+ERROR:
+ORA-01017: invalid username/password; logon denied
+
+암호인증 실패
+
+암호관리 skip->관리자로 따로 로그인
+ 작업
+======================
+일반계정
+
+
+
+   연결별 DNS 접미사. . . . :
+   링크-로컬 IPv6 주소 . . . . : fe80::80d4:9726:f6e0:b282%11
+   IPv4 주소 . . . . . . . . . : 192.168.0.57
+   =========================
+   서브넷 마스크 . . . . . . . : 255.255.255.0
+   기본 게이트웨이 . . . . . . : 192.168.0.1
+
+터널 어댑터 isatap.{21447CDD-CAF0-4C55-9A02-83294D8F9B1A}:
+
+   미디어 상태 . . . . . . . . : 미디어 연결 끊김
+   연결별 DNS 접미사. . . . :
+
+터널 어댑터 Teredo Tunneling Pseudo-Interface:
+
+   연결별 DNS 접미사. . . . :
+   IPv6 주소 . . . . . . . . . : 2001:0:9d38:6abd:24c6:1741:3f57:ffc6
+   링크-로컬 IPv6 주소 . . . . : fe80::24c6:1741:3f57:ffc6%13
+   기본 게이트웨이 . . . . . . : ::
+
+사용자명 입력:scott/tiger
+                   계정명/암호
+
+SQL>
+
+폴더-->파일명을 지정
+===
+데이터베이스(저장 공간)->테이블로 저장
+                                     (엑셀)표
+========================
+데이터베이스 
+-------------
+
+기업이 지속적으로 유지 관리해야 하는 방대한 양의 데이터를 편리하게 저장
+효율적으로 관리하고 검색할 수 있는 환경을 제공해주는 시스템 소프트웨어
+
+RDBMS의 구성
+
+기본적인 데이터 저장 단위는 테이블이다.
+로우(ROW)와 칼럼(COLUMN)으로 구성 
+로우는 하나의 레코드이다. (테이블의 가로)
+칼럼(필드)은 속성을 나타낸다
+==========================
+
+ 저장?->정보를 검색->활용
+------------------------------
+문1  현재 어떠한 계정으로 로그인해서 작업?
+
+SQLplus 명령어
+
+SQL명령어->전 세계 표준 DB언어
+
+대소문자 구분X ->오타 조심
+
+ user(오라클의 환경설정 변수)
+sql>show user
+SQL> show user
+USER은 "SCOTT"입니다
+SQL>
+
+문2) 현재 작업한 내용목록을 확인?
+=>문장끝에 ;을 입력하고 enter
+sql>select  *  from tab
+     형식)select  보고자하는 항목(*) from 테이블명
+                                                     (=>동의어)
+     
+  2
+
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+BONUS                          TABLE ==>파일
+DEPT                             TABLE
+EMP                              TABLE
+SALGRADE                    TABLE
+
+=>emp(회원정보)->사원정보
+
+sql>select * from emp;
+                          테이블명
+
+->14개의 행
+======================
+13:20~
+문3) 계정을 생성(test1)
+
+형식) create user 생성할 계정명 identified by 암호명
+
+SQL> create user test1 identified by t1234;
+create user test1 identified by t1234
+                                *
+1행에 오류:
+ORA-01031: 권한이 불충분합니다==>관리자만이 사용이 가능하다는 표시
+
+=>관리자로 로그인
+
+문4)
+형식) connect 접속계정명/암호-->일반계정만
+        connect 접속계정명/암호 as sysdba=>관리자로써 로그인
+                                          =======
+
+sql>connect sys/sys12345 as sysdba
+
+SQL> connec sys/sys12345
+ERROR:
+ORA-28009: connection as SYS should be as SYSDBA or SYSOPER
+
+
+경고: 이제는 ORACLE에 연결되어 있지 않습니다.
+SQL> connec sys/sys12345 as sysdba
+연결되었습니다.
+
+ clear screen ->화면을 지우기
+
+=>create user test1 identified by t1234;
+=>사용자가 생성되었습니다.
+
+sql>connect test1/t1234
+
+SQL> connect test1/t1234
+ERROR:
+ORA-01045: user TEST1 lacks CREATE SESSION privilege; logon denied
+
+
+경고: 이제는 ORACLE에 연결되어 있지 않습니다.
+
+=>로그인하는 권한이 없기때문에 접속X 에러 메세지  표시
+
+=>관리자로써의 기본역할===>1.계정을 생성->암호를 부여
+                                           2.적절한 업무에 해당하는 권한을 부여
+
+    형식) grant 권한종류,,,, to 계정명1,계정명2,,,,
+                          ~         to public ->모든 계정들에게 그룹개념
+========================================
+문5)
+sql>grant create session,resource to test1;
+      ----------------------
+      =>create session->로그인해주는 접속권한->connect와 동일(롤)
+     grant connect,resource to test1;
+              접속       리소스(테이블 뿐만아니라 다른 오라클객체)->오라클 객체
+
+     connect test1/t1234
+
+SQL> connect test1/t1234
+연결되었습니다.
+SQL> show user
+USER은 "TEST1"입니다
+SQL> select * from tab;
+
+선택된 레코드가 없습니다.
+======================================
+형식) revoke 회수할 권한종류명 from 계정명(test1)==>관리자가
+
+문6) 테이블을 생성(표를 작성)->데이터형식(숫자 (실수(몸무게)형태로 저장(나이)
+                                                            number(3,2), number(2)=23
+                                                              자릿수,소수점자릿수
+                                                               123.45
+                                                           문자형태로 저장(char->고정길이)
+                                                            영어(1byte),한글(2byte)->6byte
+                                                             varchar=>유동(=가변길이)
+                                                             주소->varchar(60)=>한글 30자
+                                                            clob
+
+                                                        ->계좌번호,메일주소,주민등록번호
+                                                                              @
+                                                       =>계산이 가능한지->숫자
+=========================================
+형식) create table 저장할테이블명
+         (필드명(=컬럼명)(저장 대상자) 자료형(문자 or 숫자) 제약조건,
+          필드명2~,
+          필드명3~);
+
+sql>create table prtest
+      (id number,name varchar2(10));
+
+SQL> create table prtest
+  2  (id number,name varchar2(10));
+
+테이블이 생성되었습니다.
+
+문7) 테이블의 구조(=스키마)을 확인하는 명령어->
+형식)describe  테이블명
+             ===
+ sql> desc prtest
+
+ 이름                                      널?      유형
+ ----------------------------------------- -------- -------------
+
+ ID                                                 NUMBER
+ NAME                                             VARCHAR2(10)
+
+문8) DML(insert,update,delete,select)->숫자는 그냥 그대로,문자열->'  '(빈문자열)
+                                                                                날짜->'2017-4-26'
+=>형식) insert into 테이블명 values(23,'홍길동'~);
+sql>
+
+ 1 개의 행이 만들어졌습니다.                                              
+
+ insert into prtest values(1,'홍길동');
+ insert into prtest values(2,'테스트');
+ insert into prtest values(3,'임시');
+ insert into prtest values(4,'임시2');
+ insert into prtest values(5,'테스트2');
+
+=>select  *  from 테이블명(prtest)
+             보고자하는 필드명
+
+SQL> select * from prtest;
+
+        ID NAME
+---------- ----------
+         1 홍길동
+         2 테스트->임시테스트
+         3 임시
+         4 임시2
+         5 테스트2
+
+문8)데이터 저장->주소변경,나이수정,,,=>update구문
+
+ 데이터 4만개->다 변경
+ 형식) 1.update 수정할t명 set 수정할 필드명=수정할값,수정필드명2=값2,,,
+         2.update 수정할t명 set 수정할 필드명=수정할값 where 조건식->조건에 만족
+                                                            회원수정할때
+                                          ->where 검색할 대상자(필드명) 연산자 찾을값
+                                                                                      ====
+sql>update prtest set name='임시테스트' where id=2;
+
+SQL> select * from prtest where id=2;
+
+        ID NAME
+---------- ----------
+         2 임시테스트
+
+========================================
+문9> 백업테이블을 생성(prtest--->b_prtest)
+
+   형식) create table 백업t명(b_테이블명)
+           as select * from 원본t명;  //full backup
+                                                //부분 backup
+
+          create table 백업t명(b_테이블명)
+           as select * from 원본t명 where 조건식;//부분 backup
+
+sql> create table b_prtest 
+       as select * from prtest;
+
+SQL> create table b_prtest
+  2         as select * from prtest;
+
+테이블이 생성되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+
+ ID                                                 NUMBER
+ NAME                                               VARCHAR2(10)
+
+SQL> select * from b_prtest;
+
+        ID NAME
+---------- ----------
+         1 홍길동
+         2 임시테스트
+         3 임시
+         4 임시2
+         5 테스트2
+
+SQL>
+
+문10>잘못 저장된 데이터를 삭제?
+
+형식)delete from 삭제할 테이블명;//모든 행 삭제
+       delete from 삭제할 테이블명 where 조건식->해당사항에 대한값만 삭제
+
+ ID NAME
+---------- ----------
+         1 홍길동
+         2 임시테스트
+         3 임시
+         4 임시2 --->id값이 4번인 데이터를 삭제1)
+         5 테스트2
+
+                         ->전부 삭제
+
+sql>delete from b_prtest where id=4;
+                         or
+      1 행이 삭제되었습니다.
+
+      delete from b_prtest where name='테스트2';  //where 필드명=숫자 or '찾을값'
+
+      delete from b_prtest; //모든 행 삭제 =>select * from b_prtest;
+                                                              레코드 없음~
+===========================================
+SQL> delete from b_prtest;
+
+4 행이 삭제되었습니다.
+
+SQL> select * from b_prtest;
+
+선택된 레코드가 없습니다.
+=========================================
+ http://www.oracleclub.com =>오라클의 정보를 제공사이트
+
+=>http://www.gurubee.net/ ==>자세한 정보 사이트
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==================================
+SQL활용=>SQL명령어
+
+1.DDL 문->테이블 생성(create table~),계정생성(create user~),=>수정,삭제
+                ============
+                Data Definition Language
+                      데이터 정의어->설계
+
+2.DML 문->Data Manipulation Language
+             ->insert(데이터 입력) p14, p16(update(수정))
+            ->delete(데이터 삭제)->개인정보
+            ->select(검색명령어)
+
+3.DCL 문->Data Control Language(권한명령어)->grant (권한주기)
+                                                                      revoke(권한회수)
+                   데이터 조절어
+
+오라클의 설치->계정로그인(scott)->
+
+p38 관리자 계정=>sys,system
+                      =>신입->계정생성->로그인(권한)주기
+
+       사용자 계정=>일반계정(scott)
+
+
+
+
+
+
+
+
+
+

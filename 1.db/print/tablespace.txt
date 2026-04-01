@@ -1,0 +1,315 @@
+관리자로 로그인을 한다.
+
+conn / as sysdba
+
+SQL> select * from v$tablespace;  //테이블스페이스의 목록을 확인하자.
+
+       TS# NAME                           INC BIG FLA ENC                       
+---------- ------------------------------ --- --- --- ---                       
+         0 SYSTEM                         YES NO  YES                           
+         1 SYSAUX                         YES NO  YES                           
+         2 UNDOTBS1                       YES NO  YES                           
+         4 USERS                          YES NO  YES    ==>default tablespace
+                                                                      =>계정을 만들면 자동으로 
+                                                                      =>연결된다.                       
+         3 TEMP                           NO  NO  YES                           
+         6 EXAMPLE                        YES NO  YES                           
+
+6 개의 행이 선택되었습니다.
+
+SQL> create tablespace oradata1 datafile 'C:\webtest\1.db\oradata1.dbf' size 10m;
+
+테이블스페이스가 생성되었습니다.
+
+관리자로 로그인한 상태에서 
+SQL> create table t1(c1 number, c varchar2(20)) tablespace oradata1;
+
+테이블이 생성되었습니다.
+
+=>kim/kim1계정을 생성하면서 oradata1테이블 스페이스에 연결시키겠다.
+SQL> create user kim identified by kim1 default tablespace oradata1;
+
+사용자가 생성되었습니다.
+
+SQL> grant connect, resource to kim;
+
+권한이 부여되었습니다.
+
+관리자로 로그인 한 경우에는 너무 많다.
+SQL> select table_name,tablespace_name from user_tables;
+
+ ....             
+------------------------------ ------------------------------                   
+OBJAUTH$                       SYSTEM                                           
+OBJERROR$                      SYSTEM                                           
+BOOTSTRAP$                     SYSTEM                                           
+CON$                           SYSTEM                                           
+PROXY_ROLE_DATA$               SYSTEM                                           
+PROXY_DATA$                    SYSTEM                                           
+OBJ$                           SYSTEM                                           
+FILE$                          SYSTEM                                           
+UNDO$                          SYSTEM                                           
+
+955 개의 행이 선택되었습니다.
+
+SQL> conn kim/kim1
+연결되었습니다.
+
+kim계정에서 설정된 테이블스페이스에 해당하는 테이블은 아직 없다.
+
+SQL> select table_name,tablespace_name from user_tables;
+
+선택된 레코드가 없습니다.
+
+계정에 해당하는 디폴트 테이블 스페이스에 대한 정보 조회
+SQL> select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE                               
+------------------------------ ------------------------------                   
+KIM                            ORADATA1                                         
+
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE                               
+------------------------------ ------------------------------                   
+SCOTT                          USERS  ==>계정은 기본적인 디폴트 테이블스페이스                                          
+
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> alter user scott default tablespace oradata1;
+
+사용자가 변경되었습니다.
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE                               
+------------------------------ ------------------------------                   
+SCOTT                          ORADATA1                                         
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_DEPT2                        TABLE                                            
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+EMP_DEPTNO                     TABLE                                            
+SALGRADE                       TABLE                                            
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SEARCH                       VIEW                                             
+V_SEQUENCE_SEQ                 VIEW                                             
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+26 개의 행이 선택되었습니다.
+
+SQL> show user
+USER은 "SCOTT"입니다
+
+scott계정이 가지고 있는 테이블중 b_dept2만 oradata1으로 이동시키자
+
+SQL> alter table b_dept2 move tablespace oradata1;
+
+테이블이 변경되었습니다.
+
+SQL> select count(*) from b_dept2;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         9                                                                      
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_DEPT2                        TABLE                                            
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+EMP_DEPTNO                     TABLE                                            
+SALGRADE                       TABLE                                            
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SEARCH                       VIEW                                             
+V_SEQUENCE_SEQ                 VIEW                                             
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+26 개의 행이 선택되었습니다.
+
+=>user_tables =>테이블스페이스에 할당된 테이블의 목록을 보고 싶다.
+
+SQL> select table_name,tablespace_name from user_tables;
+
+TABLE_NAME                     TABLESPACE_NAME                                  
+------------------------------ ------------------------------                   
+DEPT                           USERS                                            
+EMP                            USERS                                            
+BONUS                          USERS                                            
+SALGRADE                       USERS                                            
+EMP_DEPTNO                     USERS                                            
+B_EMP2                         USERS                                            
+B_EMP3                         USERS                                            
+B_EMP4                         USERS                                            
+TEST1                          USERS                                            
+B_DEPT2                        ORADATA1                                         
+
+10 개의 행이 선택되었습니다.
+
+SQL> conn / as sysdba;
+연결되었습니다.
+
+SQL> create tablespace shop datafile 'd:\data\shop1.dbf' size 100m;
+
+테이블스페이스가 생성되었습니다.
+
+SQL> create user shopuser identified by shopuser1234 default tablespace shop;
+
+사용자가 생성되었습니다.
+
+SQL> grant connect, resource to shopuser;
+
+권한이 부여되었습니다.
+
+주가 되는 테이블스페이스외에 부가적인 테이블스페이스 설정하는 경우
+
+SQL> create temporary tablespace temp2 tempfile 'D:\data\temp2.dbf' size 50m;
+
+테이블스페이스가 생성되었습니다.
+
+SQL> create user lee identified by lee1 default tablespace oradata1 temporary tablespace temp2;
+
+사용자가 생성되었습니다.
+
+SQL> conn / as sysdba
+연결되었습니다.
+
+dba_data_files=>테이블스페이스별로 실제로 설정되어있는 테이블의 목록
+
+SQL> select tablespace_name, file_name,autoextensible from dba_data_files;
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+USERS                                                                           
+C:\ORACLE\ORADATA\ORCL\USERS01.DBF                                              
+YES                                                                             
+                                                                                
+UNDOTBS1                                                                        
+C:\ORACLE\ORADATA\ORCL\UNDOTBS01.DBF                                            
+YES                                                                             
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+                                                                                
+SYSAUX                                                                          
+C:\ORACLE\ORADATA\ORCL\SYSAUX01.DBF                                             
+YES                                                                             
+                                                                                
+SYSTEM                                                                          
+C:\ORACLE\ORADATA\ORCL\SYSTEM01.DBF                                             
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+YES                                                                             
+                                                                                
+EXAMPLE                                                                         
+C:\ORACLE\ORADATA\ORCL\EXAMPLE01.DBF                                            
+YES                                                                             
+                                                                                
+ORADATA1                                                                        
+
+TABLESPACE_NAME                                                                 
+------------------------------                                                  
+FILE_NAME                                                                       
+--------------------------------------------------------------------------------
+AUT                                                                             
+---                                                                             
+C:\WEBTEST\1.DB\ORADATA1.DBF                                                    
+NO                                                                              
+                                                                                
+SHOP                                                                            
+D:\DATA\SHOP1.DBF                                                               
+NO                                                                              
+                                                                                
+
+7 개의 행이 선택되었습니다.
+
+기존의 테이블스페이스의 공간을 재 설정하는 방법
+(2M씩 증가해서 200m까지 확장하는 경우)
+
+SQL> alter database datafile 'C:\webtest\1.db\oradata1.dbf' autoextend on next 2m maxsize 200m;
+
+데이타베이스가 변경되었습니다.
+
+기존의 테이블스페이스 파일외에 또 다른 테이블스페이스와 연관이 있는 경우
+
+SQL> alter tablespace oradata1 add datafile 'C:\webtest\1.db\oradata2.dbf' size 200m;
+
+테이블스페이스가 변경되었습니다.
+
+테이블 스페이스 삭제하는 방법 ->내용및 관련파일 삭제
+SQL> drop tablespace oradata1 including contents and datafiles;
+
+테이블스페이스가 삭제되었습니다.
+
+SQL> spool off

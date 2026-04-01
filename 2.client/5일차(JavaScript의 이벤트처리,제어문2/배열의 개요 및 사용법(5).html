@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>배열의 개요 및 사용법(5).html </title>
+  <script>
+   /*
+  배열(array)=>같은 자료형의 변수들의 집합체(var name="홍길동"
+                                                                  var age=23)
+   ex)성적처리->과목수,총점,평균,석차,,(정수) ->var su=3,sum=23,,,
+        단점->변수의 갯수가 많아진다.,메모리에 랜덤(무작위로)하게 저장->속도느려짐
+		배열->장점(변수의 갯수(1개),메모리에 연속적으로 저장->속도향상
+   */
+   //형식) 배열이름(변수대표)=new Array(요소1,요소2,,,,)
+   //                     0          1         2        3
+    a=new Array("배열","인덱스","길이","추가")//4개
+	document.write("배열의 길이->"+a.length+"<br>") //배열명.length
+
+	a2=new Array("21c","자바스크립트 응용")//a.concat(a2)->합치는 경우
+	document.write("합친배열->"+a.concat(a2)+"<br>")
+   
+    a3=new Array(30,10,50,40,20) //정렬(sort())
+	document.write("sort="+a3.sort()+"<br>")
+    document.write("reverse=>"+a.reverse()+"<br>")
+     //	배열명[인덱스번호]->a3[1]
+	var a4=['포도','사과'] //형식) 배열명=[요소1,요소2,,,,]
+	document.write("a4[1]=>"+a4[1]+"<br>")
+  
+  </script>
+ </head>
+ <body>
+  
+ </body>
+</html>

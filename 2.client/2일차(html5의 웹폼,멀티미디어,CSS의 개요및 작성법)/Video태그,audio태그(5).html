@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Video태그,audio태그(5).html </title>
+ </head>
+ <body>
+  <!--
+    src=>동영상 파일의 경로를 지정
+	autoplay=>동영상을 자동으로 재생->모바일에서 잘 적용X
+	loop=n =>반복 재생 횟수 지정
+	controls=>동영상 화면에 컨트롤 막대를 추가할 수있다.
+    width->동영상의 넓이
+	height->동영상의 높이 지정
+    poster->동영상이 화면에 나오지 않을때 대신 표시할 그림을 지정하고 싶을때
+  -->
+  <video width="640" height="368" controls>
+      <source src="../screen/spring.mp4" type="video/mp4">
+  </video>
+  <p>
+  <!-- 영상 자동 실행(autoplay) -->
+   <video src="../screen/ThankYou.mp4" width="480" height="320" loop= n
+               controls autoplay  muted>
+   <hr>
+   <video src="../screen/birthday.mp4" width="480" height="320" 
+               autoplay poster="../images/poster.jpg" muted>
+   </video>
+   <hr>
+   <!-- 음악파일(audio) -->
+   <img src="../screen/landscape.jpg" width="500" height="380">
+   <p>
+   <audio controls autoplay>
+      <source src="../screen/old_melody.mp3"></source>
+   </audio>
+ </body>
+</html>

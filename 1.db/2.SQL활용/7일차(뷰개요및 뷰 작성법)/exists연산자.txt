@@ -1,0 +1,42 @@
+﻿EXISTS : 식의 연산하여 행이 존재하면 참, 행이 존재 하지 않으면 거짓을 반환한다. 
+
+ SELECT *  FROM EMP
+ WHERE 1 = 2;                 — 거짓
+
+ SELECT *  FROM EMP
+ WHERE 2 = 2;                 — 참
+
+ SELECT *  FROM EMP
+ WHERE EXISTS( SELECT * FROM DEPT
+                           WHERE DEPTNO = 10);    — 참
+
+  SELECT *   FROM EMP
+  WHERE NOT EXISTS( SELECT * FROM DEPT
+                           WHERE DEPTNO = 50);     — 거짓
+
+위의 결과는 참인 경우에는 EMP테이블이 보이게 되고 아닐 경우에는 WHERE 조건에 따라 정리되어 보이지 않는다.
+EMP 테이블에서 근무하고 있는 부서의 위치가 "NEW YORK”과 “DALLAS”인 사원의 사원번호, 사원명, 급여를 추출 하여보자.
+
+SELECT EMPNO, ENAME, SAL
+FROM EMP
+WHERE DEPTNO IN
+(  SELECT DEPTNO
+   FROM DEPT
+   WHERE LOC = 'NEW YORK' OR
+               LOC = 'DALLAS');
+
+SELECT EMPNO, ENAME, SAL
+FROM EMP
+WHERE DEPTNO IN
+   (SELECT DEPTNO
+   FROM DEPT
+   WHERE LOC IN('NEW YORK', 'DALLAS')  );
+
+위의 두 쿼리문는 같은 결과를 가져오는 쿼리문이다. 사용하기엔 IN이 직관적이고 쉽지만 속도는 OR가 빠르다. 
+IN을 쓰면 내부적으로 OR로 변환시켜서 사용하기 때문에 실제상 한번 더 연산을 하게 된다.
+서브쿼리에 사용되어지는 IN 연산자 대신에 EXISTS 연산자를 사용하여 나타낼 수 있다. 
+서브쿼리에서는 IN 연산자 보다 EXISTS 연산자를 사용하는 것이 속도가 조금 떠 빠르다고 하기 때문이다.
+
+
+
+

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>연산자3(대입(배정))(3).html</title>
+ </head>
+  <!-- 
+      대입(배정)연산자->자기자신의 변수에 값을 더하거나빼거나,,,축약해서 사용할수
+	                             있는 연산자
+								->연산속도가 빠르다(연산자가 하나)
+      a=b+c
+      a=a+2 ,b=b-2, c=c*2,d=d/2, e=e%2
+      a+=2   ,b-=2,   c*=2,  d/=2, e%=2;
+
+	  참고  a=a+1 ->a+=1,a++(대부분)
+  -->
+ <body>
+  <script>
+      result=20
+      //result=result+20
+	  result+=20;
+	  document.write("result=>"+result+"<br>")//40
+	  //result=result-20
+	  result-=20;
+	  document.write("result=>"+result+"<br>")//20
+	  //
+	  result*=20;//20*20
+	  document.write("result=>"+result+"<br>")//400
+	  //
+	  result/=20;
+	  document.write("result=>"+result+"<br>")//20
+  </script>
+ </body>
+</html>

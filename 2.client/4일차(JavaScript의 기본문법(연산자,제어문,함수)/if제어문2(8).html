@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>if제어문2(8).html </title>
+   <!-- 
+    if(조건식)  - 다중 if문
+	   실행1       
+	else
+	   실행2
+
+   if(조건식1)  - 다중 if문
+	   실행1
+  else if(조건식2)
+	   실행2
+  else if(조건식3)
+	   실행2
+   ...
+  else
+        실행n
+   -->
+ </head>
+ <body>
+   <script>
+      var qs
+	  qs=prompt("당신이 좋아하는 언어를 선택? 1.자바 2.자바스크립트 3.C언어","")
+	  //조건식이 많을 수록->실행속도가 느려진다.
+	  // (2>3) && (5<7)
+     if((qs=="자바") || (qs==1))
+	     document.write("자바를 좋아하시는 군요")
+     else if((qs=="자바스크립트") || (qs==2))
+	     document.write("자바스크립트를 좋아하시는 군요")
+	 else  //위의 조건식이 만족하지않으면 거짓->else이하 구문을 실행
+	     document.write("C언어를 좋아하시는 군요")
+   </script>
+ </body>
+</html>

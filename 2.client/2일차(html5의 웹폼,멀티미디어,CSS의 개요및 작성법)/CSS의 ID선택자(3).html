@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>CSS의 ID선택자(3).html </title>
+  <style type="text/css">
+	/*
+       id선택자->html문서 내부에 중복된 이름을 가질 수 없기때문에 문서
+	                  전체에 유일한 값
+	   형식)
+	   선택자(태그명)#id값{속성명:속성값~}
+	     #앞의 태그명을 생략해도 된다.
+		 text-indent:들여쓰기
+	*/
+      div#x {font-family:impact;font-size:50pt;background-color:lime; width:500px; display:block}
+	      #y {color:blue;text-indent:100px}
+  </style>
+ </head>
+ <body>
+  <h2>id값은 원칙적으로 유일한 값이기에 중복허용X</h2>
+   <h1>h1태그</h1>
+   <h1 id="y">h1태그(id=y)적용</h1>
+   <div>div태그</div>
+   <div id="x">div태그(id=x)적용</div>
+ </body>
+</html>

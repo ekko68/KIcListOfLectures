@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>html5에서 추가속성(2)(4).html </title>
+ </head>
+ <body>
+    <!-- 숫자를 입력받는 경우 -->
+   <form name="frm">
+     원하는 주문갯수를 설정해주세요<br>
+	 <!-- min(최소값),max(최대값),step(증가치) value(현재값) -->
+	 <input type="number" min="1" max="20" step="2" value="1"><br>
+	 <!-- range(bar를 움직이는 경우) -->
+	 <input type="range"    min="1" max="10" step="2" value="1"><br>
+	 <input type="search"><br>
+	  원하는 색깔을 선택하세요<br>
+	  <input type="color"><p>
+	  <!-- 1.placeholder 2.autofocus(커서입력) 3.required(필수입력)
+	      list=>연결시킬 datalist의 id값을 부여하시면  콤보박스형태로 출력
+	   -->
+	  과목:<input type="text" autofocus="autofocus" 
+	                    placeholder="과목을 반드시 입력하세요"
+						list="suggest">
+      
+	  <!-- 텍스트박스에 연결해서 보여줄 컴포넌트(datalist)태그 -->
+	  <datalist id="suggest">
+           <option value="자바"><!-- <option>자바</option> -->
+           <option value="웹프로그래밍">
+		   <option value="화면구현">
+	  </datalist>
+	  <br>
+	  <!-- 진행과정 -->
+	  <progress id="p" max="100" value="0"></progress>
+	  <span>0</span><br>
+	  <!-- 백분율 표시(min(최소값),max(최대값),value(현재값) -->
+	  <meter value="2" min="0" max="10">
+	       2 out of 10 </meter><br>
+	  <meter value="0.6">60%</meter>
+	  <input type="submit">
+   </form>
+ </body>
+</html>

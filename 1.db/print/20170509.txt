@@ -1,0 +1,1124 @@
+SQL>  SELECT *  FROM EMP
+  2   WHERE 1 = 2;
+
+선택된 레코드가 없습니다.
+
+SQL> SELECT *  FROM EMP
+  2   WHERE 2 = 2;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7369 SMITH      CLERK           7902 80/12/17        800                  
+        20                                                                      
+                                                                                
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300       
+        30                                                                      
+                                                                                
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500       
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7566 JONES      MANAGER         7839 81/04/02       2975                  
+        20                                                                      
+                                                                                
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400       
+        30                                                                      
+                                                                                
+      7698 BLAKE      MANAGER         7839 81/05/01       2850                  
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7782 CLARK      MANAGER         7839 81/06/09       2450                  
+        10                                                                      
+                                                                                
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                  
+        20                                                                      
+                                                                                
+      7839 KING       PRESIDENT            81/11/17       5000                  
+        10                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0       
+        30                                                                      
+                                                                                
+      7876 ADAMS      CLERK           7788 87/05/23       1100                  
+        20                                                                      
+                                                                                
+      7900 JAMES      CLERK           7698 81/12/03        950                  
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7902 FORD       ANALYST         7566 81/12/03       3000                  
+        20                                                                      
+                                                                                
+      7934 MILLER     CLERK           7782 82/01/23       1300                  
+        10                                                                      
+                                                                                
+
+14 개의 행이 선택되었습니다.
+
+SQL> SELECT *  FROM EMP
+  2   WHERE EXISTS( SELECT * FROM DEPT
+  3                             WHERE DEPTNO = 10);
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7369 SMITH      CLERK           7902 80/12/17        800                  
+        20                                                                      
+                                                                                
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300       
+        30                                                                      
+                                                                                
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500       
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7566 JONES      MANAGER         7839 81/04/02       2975                  
+        20                                                                      
+                                                                                
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400       
+        30                                                                      
+                                                                                
+      7698 BLAKE      MANAGER         7839 81/05/01       2850                  
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7782 CLARK      MANAGER         7839 81/06/09       2450                  
+        10                                                                      
+                                                                                
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                  
+        20                                                                      
+                                                                                
+      7839 KING       PRESIDENT            81/11/17       5000                  
+        10                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0       
+        30                                                                      
+                                                                                
+      7876 ADAMS      CLERK           7788 87/05/23       1100                  
+        20                                                                      
+                                                                                
+      7900 JAMES      CLERK           7698 81/12/03        950                  
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7902 FORD       ANALYST         7566 81/12/03       3000                  
+        20                                                                      
+                                                                                
+      7934 MILLER     CLERK           7782 82/01/23       1300                  
+        10                                                                      
+                                                                                
+
+14 개의 행이 선택되었습니다.
+
+SQL> SELECT *   FROM EMP
+  2    WHERE NOT EXISTS( SELECT * FROM DEPT
+  3                             WHERE DEPTNO = 50);
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7369 SMITH      CLERK           7902 80/12/17        800                  
+        20                                                                      
+                                                                                
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300       
+        30                                                                      
+                                                                                
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500       
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7566 JONES      MANAGER         7839 81/04/02       2975                  
+        20                                                                      
+                                                                                
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400       
+        30                                                                      
+                                                                                
+      7698 BLAKE      MANAGER         7839 81/05/01       2850                  
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7782 CLARK      MANAGER         7839 81/06/09       2450                  
+        10                                                                      
+                                                                                
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                  
+        20                                                                      
+                                                                                
+      7839 KING       PRESIDENT            81/11/17       5000                  
+        10                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0       
+        30                                                                      
+                                                                                
+      7876 ADAMS      CLERK           7788 87/05/23       1100                  
+        20                                                                      
+                                                                                
+      7900 JAMES      CLERK           7698 81/12/03        950                  
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7902 FORD       ANALYST         7566 81/12/03       3000                  
+        20                                                                      
+                                                                                
+      7934 MILLER     CLERK           7782 82/01/23       1300                  
+        10                                                                      
+                                                                                
+
+14 개의 행이 선택되었습니다.
+
+SQL> select e.ename,d.dname,d.deptno
+  2        from emp e, dept d
+  3        where e.deptno(+)=d.deptno and e.ename is null;
+
+ENAME      DNAME              DEPTNO                                            
+---------- -------------- ----------                                            
+           OPERATIONS             40                                            
+
+SQL> select deptno from emp
+  2  where ename='ALLEN';
+
+    DEPTNO                                                                      
+----------                                                                      
+        30                                                                      
+
+SQL> select ename from emp
+  2       where deptno=30;
+
+ENAME                                                                           
+----------                                                                      
+ALLEN                                                                           
+WARD                                                                            
+MARTIN                                                                          
+BLAKE                                                                           
+TURNER                                                                          
+JAMES                                                                           
+
+6 개의 행이 선택되었습니다.
+
+SQL>  select ename from emp
+  2       where deptno=(select deptno from emp
+  3                             where ename='ALLEN');
+
+ENAME                                                                           
+----------                                                                      
+ALLEN                                                                           
+WARD                                                                            
+MARTIN                                                                          
+BLAKE                                                                           
+TURNER                                                                          
+JAMES                                                                           
+
+6 개의 행이 선택되었습니다.
+
+SQL> select sal from emp
+  2        where ename=upper('&ename');
+ename의 값을 입력하십시오: scott
+구   2:       where ename=upper('&ename')
+신   2:       where ename=upper('scott')
+
+       SAL                                                                      
+----------                                                                      
+      3000                                                                      
+
+SQL> /
+ename의 값을 입력하십시오: martin
+구   2:       where ename=upper('&ename')
+신   2:       where ename=upper('martin')
+
+       SAL                                                                      
+----------                                                                      
+      1250                                                                      
+
+SQL>  select empno,ename,sal
+  2      from emp
+  3      where sal=(select sal from emp
+  4                         where ename=upper('&ename')) or
+  5                sal=(select sal from emp
+  6                         where ename=upper('&ename'));
+ename의 값을 입력하십시오: scott
+구   4:                        where ename=upper('&ename')) or
+신   4:                        where ename=upper('scott')) or
+ename의 값을 입력하십시오: martin
+구   6:                        where ename=upper('&ename'))
+신   6:                        where ename=upper('martin'))
+
+     EMPNO ENAME             SAL                                                
+---------- ---------- ----------                                                
+      7521 WARD             1250                                                
+      7654 MARTIN           1250                                                
+      7788 SCOTT            3000                                                
+      7902 FORD             3000                                                
+
+SQL> select max(sal) from emp
+  2  where deptno=30;
+
+  MAX(SAL)                                                                      
+----------                                                                      
+      2850                                                                      
+
+SQL> select empno,ename,sal,deptno
+  2      from emp
+  3      where deptno!=30
+  4      and sal > 2850;
+
+     EMPNO ENAME             SAL     DEPTNO                                     
+---------- ---------- ---------- ----------                                     
+      7566 JONES            2975         20                                     
+      7788 SCOTT            3000         20                                     
+      7839 KING             5000         10                                     
+      7902 FORD             3000         20                                     
+
+SQL> select empno,ename,sal,deptno
+  2      from emp
+  3      where deptno!=30
+  4      and sal > (select max(sal) from emp
+  5                      where deptno=30);
+
+     EMPNO ENAME             SAL     DEPTNO                                     
+---------- ---------- ---------- ----------                                     
+      7566 JONES            2975         20                                     
+      7788 SCOTT            3000         20                                     
+      7839 KING             5000         10                                     
+      7902 FORD             3000         20                                     
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename,sal,deptno
+  2      from emp
+  3      where deptno!=30
+  4      and sal > all (select sal from emp
+  5*                     where deptno=30)
+SQL> /
+
+     EMPNO ENAME             SAL     DEPTNO                                     
+---------- ---------- ---------- ----------                                     
+      7566 JONES            2975         20                                     
+      7788 SCOTT            3000         20                                     
+      7902 FORD             3000         20                                     
+      7839 KING             5000         10                                     
+
+SQL> select empno,ename from emp
+  2  where job='MANAGER';
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+      7566 JONES                                                                
+      7698 BLAKE                                                                
+      7782 CLARK                                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  union
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+      7499 ALLEN                                                                
+      7566 JONES                                                                
+      7698 BLAKE                                                                
+      7782 CLARK                                                                
+      7876 ADAMS                                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  minus
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+      7566 JONES                                                                
+      7698 BLAKE                                                                
+      7782 CLARK                                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  union all
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+      7566 JONES                                                                
+      7698 BLAKE                                                                
+      7782 CLARK                                                                
+      7499 ALLEN                                                                
+      7876 ADAMS                                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,job from emp
+  2  where job='MANAGER'
+  3  union all 
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+
+     EMPNO JOB                                                                  
+---------- ----------                                                           
+      7566 MANAGER                                                              
+      7698 MANAGER                                                              
+      7782 MANAGER                                                              
+      7499 ALLEN                                                                
+      7876 ADAMS                                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,sal from emp
+  2  where job='MANAGER'
+  3  union all 
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+select empno,sal from emp
+             *
+1행에 오류:
+ORA-01790: 대응하는 식과 같은 데이터 유형이어야 합니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,job,sal from emp
+  2  where job='MANAGER'
+  3  union all 
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+select empno,job,sal from emp
+*
+1행에 오류:
+ORA-01789: 질의 블록은 부정확한 수의 결과 열을 가지고 있습니다. 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  intersect
+  4  select empno,ename from emp
+  5* where ename like 'A%' or job='MANAGER'
+SQL> /
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+      7566 JONES                                                                
+      7698 BLAKE                                                                
+      7782 CLARK                                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  union all
+  4  select deptno,dname from dept
+  5* where dname like 'A%' 
+SQL> /
+
+     EMPNO ENAME                                                                
+---------- --------------                                                       
+      7566 JONES                                                                
+      7698 BLAKE                                                                
+      7782 CLARK                                                                
+        10 ACCOUNTING                                                           
+
+SQL> create view emp_20
+  2        as select * from b_emp3
+  3        where deptno=20;
+create view emp_20
+            *
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> grant create view,create synonym to scott,test1;
+
+권한이 부여되었습니다.
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> create view emp_20
+  2        as select * from b_emp3
+  3        where deptno=20;
+
+뷰가 생성되었습니다.
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+DEPT                           TABLE                                            
+EMP                            TABLE                                            
+EMP_20                         VIEW                                             
+EMP_DEPTNO                     TABLE                                            
+SALGRADE                       TABLE                                            
+
+8 개의 행이 선택되었습니다.
+
+SQL> select * from emp_20;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7369 SMITH      CLERK           7902 80/12/17        800                  
+        20                                                                      
+                                                                                
+      7566 JONES      MANAGER         7839 81/04/02       2975                  
+        20                                                                      
+                                                                                
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                  
+        20                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7876 ADAMS      CLERK           7788 87/05/23       1100                  
+        20                                                                      
+                                                                                
+      7902 FORD       ANALYST         7566 81/12/03       3000                  
+        20                                                                      
+                                                                                
+
+SQL> create view emp_name
+  2  as select empno,ename
+  3  from b_emp3
+  4  where ename like 'A%';
+
+뷰가 생성되었습니다.
+
+SQL> select * from emp_name;
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+      7499 ALLEN                                                                
+      7876 ADAMS                                                                
+
+SQL> alter table b_emp3 set unused column ename;
+
+테이블이 변경되었습니다.
+
+SQL> desc b_emp3
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> select * from emp_name;
+select * from emp_name
+              *
+1행에 오류:
+ORA-04063: view "SCOTT.EMP_NAME"에 오류가 있습니다 
+
+
+SQL> drop view emp_name;
+
+뷰가 삭제되었습니다.
+
+SQL> desc user_views
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ VIEW_NAME                                 NOT NULL VARCHAR2(30)
+ TEXT_LENGTH                                        NUMBER
+ TEXT                                               LONG
+ TYPE_TEXT_LENGTH                                   NUMBER
+ TYPE_TEXT                                          VARCHAR2(4000)
+ OID_TEXT_LENGTH                                    NUMBER
+ OID_TEXT                                           VARCHAR2(4000)
+ VIEW_TYPE_OWNER                                    VARCHAR2(30)
+ VIEW_TYPE                                          VARCHAR2(30)
+ SUPERVIEW_NAME                                     VARCHAR2(30)
+ EDITIONING_VIEW                                    VARCHAR2(1)
+ READ_ONLY                                          VARCHAR2(1)
+
+SQL> select view_name,text_length,text from user_views;
+
+VIEW_NAME                      TEXT_LENGTH                                      
+------------------------------ -----------                                      
+TEXT                                                                            
+--------------------------------------------------------------------------------
+EMP_20                                 101                                      
+select "EMPNO","ENAME","JOB","MGR","HIREDATE","SAL","COMM","DEPTNO" from b_emp3 
+                                                                                
+
+SQL> col view_name format a15
+SQL> col text_length format 99,990
+SQL> col text format a40
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select view_name,text_length,text from user_views
+SQL> /
+
+VIEW_NAME       TEXT_LENGTH TEXT                                                
+--------------- ----------- ----------------------------------------            
+EMP_20                  101 select "EMPNO","ENAME","JOB","MGR","HIRE            
+                            DATE","SAL","COMM","DEPTNO" from b_emp3             
+                                                                                
+
+SQL> create view v_search
+  2       as select view_name,text
+  3       from user_views;
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_search;
+
+VIEW_NAME       TEXT                                                            
+--------------- ----------------------------------------                        
+EMP_20          select "EMPNO","ENAME","JOB","MGR","HIRE                        
+                DATE","SAL","COMM","DEPTNO" from b_emp3                         
+                                                                                
+V_SEARCH        select view_name,text                                           
+                     from user_views                                            
+                                                                                
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+DEPT                           TABLE                                            
+EMP                            TABLE                                            
+EMP_20                         VIEW                                             
+EMP_DEPTNO                     TABLE                                            
+SALGRADE                       TABLE                                            
+V_SEARCH                       VIEW                                             
+
+9 개의 행이 선택되었습니다.
+
+SQL> select count(*) from b_emp2;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         0                                                                      
+
+SQL> create table b_emp4 as select * from emp;
+
+테이블이 생성되었습니다.
+
+SQL> create or replace view v_emp_10(employee_no,employee_name,
+  2      e_hiredate) as select empno,ename,hiredate from b_emp4
+  3      where deptno=10;
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_emp_10;
+
+EMPLOYEE_NO EMPLOYEE_N E_HIREDA                                                 
+----------- ---------- --------                                                 
+       7782 CLARK      81/06/09                                                 
+       7839 KING       81/11/17                                                 
+       7934 MILLER     82/01/23                                                 
+
+SQL> select * from v_search;
+
+VIEW_NAME       TEXT                                                            
+--------------- ----------------------------------------                        
+EMP_20          select "EMPNO","ENAME","JOB","MGR","HIRE                        
+                DATE","SAL","COMM","DEPTNO" from b_emp3                         
+                                                                                
+V_EMP_10        select empno,ename,hiredate from b_emp4                         
+                    where deptno=10                                             
+                                                                                
+V_SEARCH        select view_name,text                                           
+                     from user_views                                            
+                                                                                
+
+SQL> create or replace view V_EMP_10(id,job2,hire)
+  2        as select empno,job,hiredate from emp
+  3        where deptno=20 or ename like '%D%';
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_search;
+
+VIEW_NAME       TEXT                                                            
+--------------- ----------------------------------------                        
+EMP_20          select "EMPNO","ENAME","JOB","MGR","HIRE                        
+                DATE","SAL","COMM","DEPTNO" from b_emp3                         
+                                                                                
+V_EMP_10        select empno,job,hiredate from emp                              
+                      where deptno=20 or ename like '%D%                        
+                '                                                               
+                                                                                
+V_SEARCH        select view_name,text                                           
+                     from user_views                                            
+                                                                                
+
+SQL> select * from v_emp_10;
+
+        ID JOB2      HIRE                                                       
+---------- --------- --------                                                   
+      7369 CLERK     80/12/17                                                   
+      7521 SALESMAN  81/02/22                                                   
+      7566 MANAGER   81/04/02                                                   
+      7788 ANALYST   87/04/19                                                   
+      7876 CLERK     87/05/23                                                   
+      7902 ANALYST   81/12/03                                                   
+
+6 개의 행이 선택되었습니다.
+
+SQL> select * from v_search2;
+select * from v_search2
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> create view view_30 as
+  2  select ename,sal,deptno
+  3  from b_emp4
+  4  where deptno=30;
+
+뷰가 생성되었습니다.
+
+SQL> select * from view_30;
+
+ENAME             SAL     DEPTNO                                                
+---------- ---------- ----------                                                
+ALLEN            1600         30                                                
+WARD             1250         30                                                
+MARTIN           1250         30                                                
+BLAKE            2850         30                                                
+TURNER           1500         30                                                
+JAMES             950         30                                                
+
+6 개의 행이 선택되었습니다.
+
+SQL> update view_30 set sal=0
+  2        where ename='ALLEN';
+
+1 행이 갱신되었습니다.
+
+SQL> select * from view_30;
+
+ENAME             SAL     DEPTNO                                                
+---------- ---------- ----------                                                
+ALLEN               0         30                                                
+WARD             1250         30                                                
+MARTIN           1250         30                                                
+BLAKE            2850         30                                                
+TURNER           1500         30                                                
+JAMES             950         30                                                
+
+6 개의 행이 선택되었습니다.
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from view_30;
+
+ENAME             SAL     DEPTNO                                                
+---------- ---------- ----------                                                
+ALLEN            1600         30                                                
+WARD             1250         30                                                
+MARTIN           1250         30                                                
+BLAKE            2850         30                                                
+TURNER           1500         30                                                
+JAMES             950         30                                                
+
+6 개의 행이 선택되었습니다.
+
+SQL> create or replace view v_maxsal
+  2        as select deptno,max(sal)
+  3        from emp
+  4        group by deptno;
+      as select deptno,max(sal)
+                       *
+2행에 오류:
+ORA-00998: 이 식은 열의 별명과 함께 지정해야 합니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  create or replace view v_maxsal
+  2        as select deptno,max(sal) as "최대 급여"
+  3        from emp
+  4*       group by deptno
+SQL> /
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_maxsal;
+
+    DEPTNO  최대 급여                                                           
+---------- ----------                                                           
+        30       2850                                                           
+        20       3000                                                           
+        10       5000                                                           
+
+SQL> create or replace view v_dname
+  2  as select e.ename,d.dname
+  3  from emp e,dept d
+  4  where e.deptno=d.deptno;
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_dname;
+
+ENAME      DNAME                                                                
+---------- --------------                                                       
+SMITH      RESEARCH                                                             
+ALLEN      SALES                                                                
+WARD       SALES                                                                
+JONES      RESEARCH                                                             
+MARTIN     SALES                                                                
+BLAKE      SALES                                                                
+CLARK      ACCOUNTING                                                           
+SCOTT      RESEARCH                                                             
+KING       ACCOUNTING                                                           
+TURNER     SALES                                                                
+ADAMS      RESEARCH                                                             
+
+ENAME      DNAME                                                                
+---------- --------------                                                       
+JAMES      SALES                                                                
+FORD       RESEARCH                                                             
+MILLER     ACCOUNTING                                                           
+
+14 개의 행이 선택되었습니다.
+
+SQL> create or replace view v_smith
+  2       as select ename,sal,deptno from emp
+  3       where sal > (select sal from emp where ename='SMITH');
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_smith;
+
+ENAME             SAL     DEPTNO                                                
+---------- ---------- ----------                                                
+ALLEN            1600         30                                                
+WARD             1250         30                                                
+JONES            2975         20                                                
+MARTIN           1250         30                                                
+BLAKE            2850         30                                                
+CLARK            2450         10                                                
+SCOTT            3000         20                                                
+KING             5000         10                                                
+TURNER           1500         30                                                
+ADAMS            1100         20                                                
+JAMES             950         30                                                
+
+ENAME             SAL     DEPTNO                                                
+---------- ---------- ----------                                                
+FORD             3000         20                                                
+MILLER           1300         10                                                
+
+13 개의 행이 선택되었습니다.
+
+SQL> create or replace view emp30
+  2        as select * from b_emp4
+  3         where deptno=30
+  4        with check option constraint emp30_ck;
+
+뷰가 생성되었습니다.
+
+SQL> select * from emp30;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300       
+        30                                                                      
+                                                                                
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500       
+        30                                                                      
+                                                                                
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400       
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7698 BLAKE      MANAGER         7839 81/05/01       2850                  
+        30                                                                      
+                                                                                
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0       
+        30                                                                      
+                                                                                
+      7900 JAMES      CLERK           7698 81/12/03        950                  
+        30                                                                      
+                                                                                
+
+6 개의 행이 선택되었습니다.
+
+SQL> update emp30
+  2        set deptno=30
+  3        where empno=7566;
+
+0 행이 갱신되었습니다.
+
+SQL> create table test1(id number);
+
+테이블이 생성되었습니다.
+
+SQL> create view v_test1
+  2          as select * from test1
+  3          where id < 100
+  4         with check option constraint test1_ck;
+
+뷰가 생성되었습니다.
+
+SQL> insert into v_test1 values(1);
+
+1 개의 행이 만들어졌습니다.
+
+SQL>  insert into v_test1 values(2);
+
+1 개의 행이 만들어졌습니다.
+
+SQL>         insert into v_test1 values(3);
+
+1 개의 행이 만들어졌습니다.
+
+SQL>         insert into v_test1 values(4);
+
+1 개의 행이 만들어졌습니다.
+
+SQL>         insert into v_test1 values(5);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from v_test1;
+
+        ID                                                                      
+----------                                                                      
+         1                                                                      
+         2                                                                      
+         3                                                                      
+         4                                                                      
+         5                                                                      
+
+SQL> insert into v_test1 values(102);
+insert into v_test1 values(102)
+            *
+1행에 오류:
+ORA-01402: 뷰의 WITH CHECK OPTION의 조건에 위배 됩니다 
+
+
+SQL> create or replace view dept30
+  2        as
+  3        select deptno,dname from dept
+  4        where deptno=30
+  5        with read only;
+
+뷰가 생성되었습니다.
+
+SQL> delete from dept30;
+delete from dept30
+            *
+1행에 오류:
+ORA-42399: 읽기 전용 뷰에서는 DML 작업을 수행할 수 없습니다. 
+
+
+SQL> select * from dept30;
+
+    DEPTNO DNAME                                                                
+---------- --------------                                                       
+        30 SALES                                                                
+
+SQL> select empno,ename from emp;
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+      7369 SMITH                                                                
+      7499 ALLEN                                                                
+      7521 WARD                                                                 
+      7566 JONES                                                                
+      7654 MARTIN                                                               
+      7698 BLAKE                                                                
+      7782 CLARK                                                                
+      7788 SCOTT                                                                
+      7839 KING                                                                 
+      7844 TURNER                                                               
+      7876 ADAMS                                                                
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+      7900 JAMES                                                                
+      7902 FORD                                                                 
+      7934 MILLER                                                               
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select rownum,empno,ename from emp
+SQL> /
+
+    ROWNUM      EMPNO ENAME                                                     
+---------- ---------- ----------                                                
+         1       7369 SMITH                                                     
+         2       7499 ALLEN                                                     
+         3       7521 WARD                                                      
+         4       7566 JONES                                                     
+         5       7654 MARTIN                                                    
+         6       7698 BLAKE                                                     
+         7       7782 CLARK                                                     
+         8       7788 SCOTT                                                     
+         9       7839 KING                                                      
+        10       7844 TURNER                                                    
+        11       7876 ADAMS                                                     
+
+    ROWNUM      EMPNO ENAME                                                     
+---------- ---------- ----------                                                
+        12       7900 JAMES                                                     
+        13       7902 FORD                                                      
+        14       7934 MILLER                                                    
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select rownum empno,ename from emp
+SQL> /
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+         1 SMITH                                                                
+         2 ALLEN                                                                
+         3 WARD                                                                 
+         4 JONES                                                                
+         5 MARTIN                                                               
+         6 BLAKE                                                                
+         7 CLARK                                                                
+         8 SCOTT                                                                
+         9 KING                                                                 
+        10 TURNER                                                               
+        11 ADAMS                                                                
+
+     EMPNO ENAME                                                                
+---------- ----------                                                           
+        12 JAMES                                                                
+        13 FORD                                                                 
+        14 MILLER                                                               
+
+14 개의 행이 선택되었습니다.
+
+SQL> select rownum "num",ename,hiredate
+  2        from (
+  3                select ename,hiredate
+  4                from emp
+  5                order by hiredate desc
+  6       )
+  7       where rownum<=&num;
+num의 값을 입력하십시오: 5
+구   7:      where rownum<=&num
+신   7:      where rownum<=5
+
+       num ENAME      HIREDATE                                                  
+---------- ---------- --------                                                  
+         1 ADAMS      87/05/23                                                  
+         2 SCOTT      87/04/19                                                  
+         3 MILLER     82/01/23                                                  
+         4 JAMES      81/12/03                                                  
+         5 FORD       81/12/03                                                  
+
+SQL> /
+num의 값을 입력하십시오: 3
+구   7:      where rownum<=&num
+신   7:      where rownum<=3
+
+       num ENAME      HIREDATE                                                  
+---------- ---------- --------                                                  
+         1 ADAMS      87/05/23                                                  
+         2 SCOTT      87/04/19                                                  
+         3 MILLER     82/01/23                                                  
+
+SQL> spool off

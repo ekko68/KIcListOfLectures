@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>토글기능버튼(1).html</title>
+  <!-- 
+    태그를 구분->1.속성(name)--2.id(jQuery)
+	기본문법->
+  -->
+   <script>
+         function toggle(){
+           //document.form이름명.버튼이름(입력객체).속성->확인
+		   //document.form이름명.버튼이름(입력객체).속성=수정할값
+		   //alert(document.f.b_name.value)
+		   //var b_val=document.f.b_name.value
+		   var b_val=document.getElementById("b_name").value
+		   //alert(b_val)
+            //네이버->다음->if문
+			/* 삼항연산자->형식)변수명=(조건식)?실행1:실행2
+			        조건식이 참이면 실행1을 선택=>변수에 저장
+					조건식이 거짓이면 실행2을 선택=>변수에 저장
+            if(b_val=="네이버")
+			    document.f.b_name.value="다음"
+			else //다음
+			    document.f.b_name.value="네이버" 
+			*/
+           text=(b_val=="네이버")?"다음":"네이버"
+           document.f.b_name.value=text
+		 }
+   </script>
+ </head>
+ <body>
+        <h1>버튼을 눌러주세요</h1>
+  <form name="f">
+     <input type="button" value="네이버" name="b_name" id="b_name" onclick="toggle()">
+	 <input type="button" value="버튼연습" name="b_button" id="b_button"  >
+  </form>
+ </body>
+</html>

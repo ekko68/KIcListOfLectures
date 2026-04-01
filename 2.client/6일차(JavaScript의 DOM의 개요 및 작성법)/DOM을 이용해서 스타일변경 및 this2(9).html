@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>DOM을 이용해서 스타일변경 및 this2(9).html</title>
+  <style>
+        .foo-before {
+		          background-color:white;
+				  color:black;
+		      }
+        .foo-after {
+		          background-color:black;
+				  color:white;
+		      }
+  </style>
+  <script>
+          window.onload=function(){
+             var foo=document.getElementById('foo')
+			 //태그정보=>태그정보.style.하위속성명=값
+			 foo.onclick=function(){
+				 //변수명=(조건식)?참인명령어:거짓명령어->className속성을 이용
+             //foo.className=(foo.className=='foo-before')?'foo-after':'foo-before'
+             this.className=(this.className=='foo-before')?'foo-after':'foo-before'
+			 }
+		  }
+  </script>
+ </head>
+ <body>
+	 <div id="foo" class="foo-before">클릭</div>
+ </body>
+</html>

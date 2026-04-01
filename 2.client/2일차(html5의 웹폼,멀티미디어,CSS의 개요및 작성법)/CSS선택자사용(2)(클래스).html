@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>CSS선택자사용(2)(클래스).html </title>
+  <style type="text/css">
+  /* 태그명.클래스명=>선택자  
+      font-style:글꼴모양(italic~) 
+	  text-decoration(글꼴장식)=>underline,overline,line-through
+	  text-align:수평정렬(left,center,right),vertical-align:수직정렬(top,middle,bottom~)
+  */
+    div.a {color:brown;font-family:impact;font-weight:bold}
+	div.b {font-style:italic;font-family:돋움체}
+	/* 태그명 생략하면 모든 태그에 적용 */
+	    .c {text-align:center;text-decoration:overline}
+
+  </style>
+ </head>
+ <body>
+   <!-- 
+         클래스 선택자->클래스명(속성명)을 지정해서 부여
+          1.같은 태그이지만 서로 다른 스타일을 적용? 
+          2.서로 다른 태그인데 같은 스타일을 적용?-->
+   <div class="a">DIV태그</div>
+   <div class="b">DIV태그2</div>
+   <div class="c">DIV태그3</div>
+   <hr>
+   <h2>서로 다른 여러개의 태그에 공통의 스타일을 적용</h2>
+   <a class="c">A태그(class=c)적용</a><br>
+   <i  class="c">I태그(class=c)적용</i><br>
+   <h1 class="c">h1태그(class=c)적용</h1><br>
+   <div class="c">div태그(class=c)적용</div><br>
+   <span class="c">span태그(class=c)적용</span><br>
+ </body>
+</html>

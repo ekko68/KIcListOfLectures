@@ -1,0 +1,52 @@
+문제1) decode함수=>다중 if문
+   형식) decode(필드명 | 조건식,찾는조건 값1,
+                               찾는조건2 값2,,,,)
+
+->emp테이블에서 job이 ANALYST이면 급여를 10%인상
+                      CLERK->급여를      15%인상
+                      MANAGER=>급여를    20%인상
+                        X------------->인상X
+
+(이름,업무,급여,최종인상액순으로 출력)
+->switch ~case ->case~when절
+--------------------------------------------------
+sql>select ename,job,sal,decode(job,'ANALYST',sal*1.1,
+                                    'CLERK',sal*1.15,
+                                    'MANAGER',sal*1.2,sal) "최종금액"
+    from emp
+    order by sal desc;
+
+ENAME      JOB              SAL   최종금액
+---------- --------- ---------- ----------
+KING       PRESIDENT       5000       5000
+FORD       ANALYST         3000       3300
+SCOTT      ANALYST         3000       3300
+JONES      MANAGER         2975       3570
+BLAKE      MANAGER         2850       3420
+CLARK      MANAGER         2450       2940
+ALLEN      SALESMAN        1600       1600
+TURNER     SALESMAN        1500       1500
+MILLER     CLERK           1300       1495
+WARD       SALESMAN        1250       1250
+MARTIN     SALESMAN        1250       1250
+
+ENAME      JOB              SAL   최종금액
+---------- --------- ---------- ----------
+ADAMS      CLERK           1100       1265
+JAMES      CLERK            950     1092.5
+SMITH      CLERK            800        920
+
+14 개의 행이 선택되었습니다.
+
+ 과제=>case ~when절로 변경하시오.
+
+CASE 표현식 WHEN 조건1 THEN 결과1 
+WHEN 조건2 THEN 결과2 
+WHEN 조건3 THEN 결과3 
+ELSE 결과n 
+END
+===============================================
+<문제2>emp테이블에서 이름에 L자가 두개가 있고,부서가
+   30이거나 또는 관리자(mgr)가 7782인 사원의 모든
+  정보(*)를 출력하는 select구문을 작성하시오.
+

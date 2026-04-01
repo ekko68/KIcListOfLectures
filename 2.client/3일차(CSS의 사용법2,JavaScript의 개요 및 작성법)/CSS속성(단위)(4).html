@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>CSS속성(단위)(4).html</title>
+  <!-- 
+  CSS에서의 사용되는 단위
+
+    1.절대단위->pt,mm,cm
+	2.상대단위->px,%,em
+
+    기본단위:px =>글자를 기준->1em=100%=16px
+  -->
+    <style type="text/css">
+		div#test {
+            font-size:20px;
+			border:1px solid black;
+		}
+       div#test > p{
+            font-size:2em; /* 부모의 글자크기 2배(2em),4배(4em) */
+			text-decoration:overline; /*글자 위에 적용*/
+	   }
+    </style>
+ </head>
+ <body>
+    <div>단위 연습</div>
+	<div id="test">
+          여긴 상위 div
+		   <p>여기는 하위 p요소</p>
+	</div>
+ </body>
+</html>

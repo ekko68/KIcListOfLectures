@@ -1,0 +1,878 @@
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+DEPT                           TABLE                                            
+EMP                            TABLE                                            
+SALGRADE                       TABLE                                            
+
+SQL> desc emp
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(4)
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7369 SMITH      CLERK           7902 80/12/17        800                  
+        20                                                                      
+                                                                                
+      7499 ALLEN      SALESMAN        7698 81/02/20       1600        300       
+        30                                                                      
+                                                                                
+      7521 WARD       SALESMAN        7698 81/02/22       1250        500       
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7566 JONES      MANAGER         7839 81/04/02       2975                  
+        20                                                                      
+                                                                                
+      7654 MARTIN     SALESMAN        7698 81/09/28       1250       1400       
+        30                                                                      
+                                                                                
+      7698 BLAKE      MANAGER         7839 81/05/01       2850                  
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7782 CLARK      MANAGER         7839 81/06/09       2450                  
+        10                                                                      
+                                                                                
+      7788 SCOTT      ANALYST         7566 87/04/19       3000                  
+        20                                                                      
+                                                                                
+      7839 KING       PRESIDENT            81/11/17       5000                  
+        10                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7844 TURNER     SALESMAN        7698 81/09/08       1500          0       
+        30                                                                      
+                                                                                
+      7876 ADAMS      CLERK           7788 87/05/23       1100                  
+        20                                                                      
+                                                                                
+      7900 JAMES      CLERK           7698 81/12/03        950                  
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM       
+---------- ---------- --------- ---------- -------- ---------- ----------       
+    DEPTNO                                                                      
+----------                                                                      
+      7902 FORD       ANALYST         7566 81/12/03       3000                  
+        20                                                                      
+                                                                                
+      7934 MILLER     CLERK           7782 82/01/23       1300                  
+        10                                                                      
+                                                                                
+
+14 개의 행이 선택되었습니다.
+
+SQL> select empno,ename,job from emp;
+
+     EMPNO ENAME      JOB                                                       
+---------- ---------- ---------                                                 
+      7369 SMITH      CLERK                                                     
+      7499 ALLEN      SALESMAN                                                  
+      7521 WARD       SALESMAN                                                  
+      7566 JONES      MANAGER                                                   
+      7654 MARTIN     SALESMAN                                                  
+      7698 BLAKE      MANAGER                                                   
+      7782 CLARK      MANAGER                                                   
+      7788 SCOTT      ANALYST                                                   
+      7839 KING       PRESIDENT                                                 
+      7844 TURNER     SALESMAN                                                  
+      7876 ADAMS      CLERK                                                     
+
+     EMPNO ENAME      JOB                                                       
+---------- ---------- ---------                                                 
+      7900 JAMES      CLERK                                                     
+      7902 FORD       ANALYST                                                   
+      7934 MILLER     CLERK                                                     
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select empno,ename,job from emp
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select empno,ename as "사원이름",job 업무 from emp
+  2  ;
+
+     EMPNO 사원이름   업무                                                      
+---------- ---------- ---------                                                 
+      7369 SMITH      CLERK                                                     
+      7499 ALLEN      SALESMAN                                                  
+      7521 WARD       SALESMAN                                                  
+      7566 JONES      MANAGER                                                   
+      7654 MARTIN     SALESMAN                                                  
+      7698 BLAKE      MANAGER                                                   
+      7782 CLARK      MANAGER                                                   
+      7788 SCOTT      ANALYST                                                   
+      7839 KING       PRESIDENT                                                 
+      7844 TURNER     SALESMAN                                                  
+      7876 ADAMS      CLERK                                                     
+
+     EMPNO 사원이름   업무                                                      
+---------- ---------- ---------                                                 
+      7900 JAMES      CLERK                                                     
+      7902 FORD       ANALYST                                                   
+      7934 MILLER     CLERK                                                     
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select empno,ename as "사원  이름",job 업 무 from emp
+SQL> /
+select empno,ename as "사원  이름",job 업 무 from emp
+                                          *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다. 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select empno,ename as "사원  이름",job 업무 from emp
+SQL> /
+
+     EMPNO 사원  이름 업무                                                      
+---------- ---------- ---------                                                 
+      7369 SMITH      CLERK                                                     
+      7499 ALLEN      SALESMAN                                                  
+      7521 WARD       SALESMAN                                                  
+      7566 JONES      MANAGER                                                   
+      7654 MARTIN     SALESMAN                                                  
+      7698 BLAKE      MANAGER                                                   
+      7782 CLARK      MANAGER                                                   
+      7788 SCOTT      ANALYST                                                   
+      7839 KING       PRESIDENT                                                 
+      7844 TURNER     SALESMAN                                                  
+      7876 ADAMS      CLERK                                                     
+
+     EMPNO 사원  이름 업무                                                      
+---------- ---------- ---------                                                 
+      7900 JAMES      CLERK                                                     
+      7902 FORD       ANALYST                                                   
+      7934 MILLER     CLERK                                                     
+
+14 개의 행이 선택되었습니다.
+
+SQL> r
+  1* select empno,ename as "사원  이름",job 업무 from emp
+
+     EMPNO 사원  이름 업무                                                      
+---------- ---------- ---------                                                 
+      7369 SMITH      CLERK                                                     
+      7499 ALLEN      SALESMAN                                                  
+      7521 WARD       SALESMAN                                                  
+      7566 JONES      MANAGER                                                   
+      7654 MARTIN     SALESMAN                                                  
+      7698 BLAKE      MANAGER                                                   
+      7782 CLARK      MANAGER                                                   
+      7788 SCOTT      ANALYST                                                   
+      7839 KING       PRESIDENT                                                 
+      7844 TURNER     SALESMAN                                                  
+      7876 ADAMS      CLERK                                                     
+
+     EMPNO 사원  이름 업무                                                      
+---------- ---------- ---------                                                 
+      7900 JAMES      CLERK                                                     
+      7902 FORD       ANALYST                                                   
+      7934 MILLER     CLERK                                                     
+
+14 개의 행이 선택되었습니다.
+
+SQL> select ename,job,sal,sal*12 from emp;
+
+ENAME      JOB              SAL     SAL*12                                      
+---------- --------- ---------- ----------                                      
+SMITH      CLERK            800       9600                                      
+ALLEN      SALESMAN        1600      19200                                      
+WARD       SALESMAN        1250      15000                                      
+JONES      MANAGER         2975      35700                                      
+MARTIN     SALESMAN        1250      15000                                      
+BLAKE      MANAGER         2850      34200                                      
+CLARK      MANAGER         2450      29400                                      
+SCOTT      ANALYST         3000      36000                                      
+KING       PRESIDENT       5000      60000                                      
+TURNER     SALESMAN        1500      18000                                      
+ADAMS      CLERK           1100      13200                                      
+
+ENAME      JOB              SAL     SAL*12                                      
+---------- --------- ---------- ----------                                      
+JAMES      CLERK            950      11400                                      
+FORD       ANALYST         3000      36000                                      
+MILLER     CLERK           1300      15600                                      
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select ename,job,sal,sal*12 "연   봉" from emp
+SQL> /
+
+ENAME      JOB              SAL    연   봉                                      
+---------- --------- ---------- ----------                                      
+SMITH      CLERK            800       9600                                      
+ALLEN      SALESMAN        1600      19200                                      
+WARD       SALESMAN        1250      15000                                      
+JONES      MANAGER         2975      35700                                      
+MARTIN     SALESMAN        1250      15000                                      
+BLAKE      MANAGER         2850      34200                                      
+CLARK      MANAGER         2450      29400                                      
+SCOTT      ANALYST         3000      36000                                      
+KING       PRESIDENT       5000      60000                                      
+TURNER     SALESMAN        1500      18000                                      
+ADAMS      CLERK           1100      13200                                      
+
+ENAME      JOB              SAL    연   봉                                      
+---------- --------- ---------- ----------                                      
+JAMES      CLERK            950      11400                                      
+FORD       ANALYST         3000      36000                                      
+MILLER     CLERK           1300      15600                                      
+
+14 개의 행이 선택되었습니다.
+
+SQL> select ename || job as "이름 업무 결합" from emp;
+
+이름 업무 결합                                                                  
+-------------------                                                             
+SMITHCLERK                                                                      
+ALLENSALESMAN                                                                   
+WARDSALESMAN                                                                    
+JONESMANAGER                                                                    
+MARTINSALESMAN                                                                  
+BLAKEMANAGER                                                                    
+CLARKMANAGER                                                                    
+SCOTTANALYST                                                                    
+KINGPRESIDENT                                                                   
+TURNERSALESMAN                                                                  
+ADAMSCLERK                                                                      
+
+이름 업무 결합                                                                  
+-------------------                                                             
+JAMESCLERK                                                                      
+FORDANALYST                                                                     
+MILLERCLERK                                                                     
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select ename || ' '  || job as "이름 업무 결합" from emp
+SQL> /
+
+이름 업무 결합                                                                  
+--------------------                                                            
+SMITH CLERK                                                                     
+ALLEN SALESMAN                                                                  
+WARD SALESMAN                                                                   
+JONES MANAGER                                                                   
+MARTIN SALESMAN                                                                 
+BLAKE MANAGER                                                                   
+CLARK MANAGER                                                                   
+SCOTT ANALYST                                                                   
+KING PRESIDENT                                                                  
+TURNER SALESMAN                                                                 
+ADAMS CLERK                                                                     
+
+이름 업무 결합                                                                  
+--------------------                                                            
+JAMES CLERK                                                                     
+FORD ANALYST                                                                    
+MILLER CLERK                                                                    
+
+14 개의 행이 선택되었습니다.
+
+SQL> select ename,job,sal
+  2  from emp
+  3  where sal >= 3000;
+
+ENAME      JOB              SAL                                                 
+---------- --------- ----------                                                 
+SCOTT      ANALYST         3000                                                 
+KING       PRESIDENT       5000                                                 
+FORD       ANALYST         3000                                                 
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename,job,sal
+  2  from emp
+  3* where sal != 3000
+SQL> /
+
+ENAME      JOB              SAL                                                 
+---------- --------- ----------                                                 
+SMITH      CLERK            800                                                 
+ALLEN      SALESMAN        1600                                                 
+WARD       SALESMAN        1250                                                 
+JONES      MANAGER         2975                                                 
+MARTIN     SALESMAN        1250                                                 
+BLAKE      MANAGER         2850                                                 
+CLARK      MANAGER         2450                                                 
+KING       PRESIDENT       5000                                                 
+TURNER     SALESMAN        1500                                                 
+ADAMS      CLERK           1100                                                 
+JAMES      CLERK            950                                                 
+
+ENAME      JOB              SAL                                                 
+---------- --------- ----------                                                 
+MILLER     CLERK           1300                                                 
+
+12 개의 행이 선택되었습니다.
+
+SQL> select empno,ename,job
+  2  from emp
+  3  where job='Manager';
+
+선택된 레코드가 없습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename,job
+  2  from emp
+  3* where job='MANAGER'
+SQL> /
+
+     EMPNO ENAME      JOB                                                       
+---------- ---------- ---------                                                 
+      7566 JONES      MANAGER                                                   
+      7698 BLAKE      MANAGER                                                   
+      7782 CLARK      MANAGER                                                   
+
+SQL> select ename,job,sal
+  2  from emp
+  3  where sal between 1300 and 1800;
+
+ENAME      JOB              SAL                                                 
+---------- --------- ----------                                                 
+ALLEN      SALESMAN        1600                                                 
+TURNER     SALESMAN        1500                                                 
+MILLER     CLERK           1300                                                 
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename,job,sal
+  2  from emp
+  3* where sal not between 1300 and 1800
+SQL> /
+
+ENAME      JOB              SAL                                                 
+---------- --------- ----------                                                 
+SMITH      CLERK            800                                                 
+WARD       SALESMAN        1250                                                 
+JONES      MANAGER         2975                                                 
+MARTIN     SALESMAN        1250                                                 
+BLAKE      MANAGER         2850                                                 
+CLARK      MANAGER         2450                                                 
+SCOTT      ANALYST         3000                                                 
+KING       PRESIDENT       5000                                                 
+ADAMS      CLERK           1100                                                 
+JAMES      CLERK            950                                                 
+FORD       ANALYST         3000                                                 
+
+11 개의 행이 선택되었습니다.
+
+SQL> select ename,hiredate
+  2  from emp
+  3  where hiredate >='81/02/22';
+
+ENAME      HIREDATE                                                             
+---------- --------                                                             
+WARD       81/02/22                                                             
+JONES      81/04/02                                                             
+MARTIN     81/09/28                                                             
+BLAKE      81/05/01                                                             
+CLARK      81/06/09                                                             
+SCOTT      87/04/19                                                             
+KING       81/11/17                                                             
+TURNER     81/09/08                                                             
+ADAMS      87/05/23                                                             
+JAMES      81/12/03                                                             
+FORD       81/12/03                                                             
+
+ENAME      HIREDATE                                                             
+---------- --------                                                             
+MILLER     82/01/23                                                             
+
+12 개의 행이 선택되었습니다.
+
+SQL> clear screen
+
+SQL> save 'C:\webtest\1.db\print\datesearch.sql'
+file C:\webtest\1.db\print\datesearch.sql(이)가 생성되었습니다
+SQL> @C:\webtest\1.db\print\datesearch.sql
+
+ENAME      HIREDATE                                                             
+---------- --------                                                             
+WARD       81/02/22                                                             
+JONES      81/04/02                                                             
+MARTIN     81/09/28                                                             
+BLAKE      81/05/01                                                             
+CLARK      81/06/09                                                             
+SCOTT      87/04/19                                                             
+KING       81/11/17                                                             
+TURNER     81/09/08                                                             
+ADAMS      87/05/23                                                             
+JAMES      81/12/03                                                             
+FORD       81/12/03                                                             
+
+ENAME      HIREDATE                                                             
+---------- --------                                                             
+MILLER     82/01/23                                                             
+
+12 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename,hiredate
+  2  from emp
+  3* where hiredate >='81/02/22'
+SQL> get C:\webtest\1.db\print\datesearch.sql
+  1  select ename,hiredate
+  2  from emp
+  3* where hiredate >='81/02/22'
+SQL> /
+
+ENAME      HIREDATE                                                             
+---------- --------                                                             
+WARD       81/02/22                                                             
+JONES      81/04/02                                                             
+MARTIN     81/09/28                                                             
+BLAKE      81/05/01                                                             
+CLARK      81/06/09                                                             
+SCOTT      87/04/19                                                             
+KING       81/11/17                                                             
+TURNER     81/09/08                                                             
+ADAMS      87/05/23                                                             
+JAMES      81/12/03                                                             
+FORD       81/12/03                                                             
+
+ENAME      HIREDATE                                                             
+---------- --------                                                             
+MILLER     82/01/23                                                             
+
+12 개의 행이 선택되었습니다.
+
+SQL>  select ename,sal
+  2   from emp
+  3   where ename like 'A%';
+
+ENAME             SAL                                                           
+---------- ----------                                                           
+ALLEN            1600                                                           
+ADAMS            1100                                                           
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1   select ename,sal
+  2   from emp
+  3*  where ename not like 'A%'
+SQL> /
+
+ENAME             SAL                                                           
+---------- ----------                                                           
+SMITH             800                                                           
+WARD             1250                                                           
+JONES            2975                                                           
+MARTIN           1250                                                           
+BLAKE            2850                                                           
+CLARK            2450                                                           
+SCOTT            3000                                                           
+KING             5000                                                           
+TURNER           1500                                                           
+JAMES             950                                                           
+FORD             3000                                                           
+
+ENAME             SAL                                                           
+---------- ----------                                                           
+MILLER           1300                                                           
+
+12 개의 행이 선택되었습니다.
+
+SQL> select ename "사원명",sal as 급여
+  2   from emp
+  3   where sal >=1000  and sal <=3000;
+
+사원명           급여                                                           
+---------- ----------                                                           
+ALLEN            1600                                                           
+WARD             1250                                                           
+JONES            2975                                                           
+MARTIN           1250                                                           
+BLAKE            2850                                                           
+CLARK            2450                                                           
+SCOTT            3000                                                           
+TURNER           1500                                                           
+ADAMS            1100                                                           
+FORD             3000                                                           
+MILLER           1300                                                           
+
+11 개의 행이 선택되었습니다.
+
+SQL> l
+  1  select ename "사원명",sal as 급여
+  2   from emp
+  3*  where sal >=1000  and sal <=3000
+SQL> l 3
+  3*  where sal >=1000  and sal <=3000
+SQL> 3
+  3*  where sal >=1000  and sal <=3000
+SQL> c/and/or
+  3*  where sal >=1000  or sal <=3000
+SQL> /
+
+사원명           급여                                                           
+---------- ----------                                                           
+SMITH             800                                                           
+ALLEN            1600                                                           
+WARD             1250                                                           
+JONES            2975                                                           
+MARTIN           1250                                                           
+BLAKE            2850                                                           
+CLARK            2450                                                           
+SCOTT            3000                                                           
+KING             5000                                                           
+TURNER           1500                                                           
+ADAMS            1100                                                           
+
+사원명           급여                                                           
+---------- ----------                                                           
+JAMES             950                                                           
+FORD             3000                                                           
+MILLER           1300                                                           
+
+14 개의 행이 선택되었습니다.
+
+SQL> select ename,sal
+  2  from emp
+  3  where ename like '_L%';
+
+ENAME             SAL                                                           
+---------- ----------                                                           
+ALLEN            1600                                                           
+BLAKE            2850                                                           
+CLARK            2450                                                           
+
+SQL> select sal,sal*12 as 연봉
+  2  from emp
+  3  where empno=7782 or empno=7788 or empno=7844;
+
+       SAL       연봉                                                           
+---------- ----------                                                           
+      2450      29400                                                           
+      3000      36000                                                           
+      1500      18000                                                           
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select sal,sal*12 as 연봉
+  2  from emp
+  3* where empno in (7782,7788,7844)
+SQL> /
+
+       SAL       연봉                                                           
+---------- ----------                                                           
+      2450      29400                                                           
+      3000      36000                                                           
+      1500      18000                                                           
+
+SQL> select sal,comm from emp
+  2  where comm=NULL;
+
+선택된 레코드가 없습니다.
+
+SQL> select sal,comm from emp
+  2  where comm is null;
+
+       SAL       COMM                                                           
+---------- ----------                                                           
+       800                                                                      
+      2975                                                                      
+      2850                                                                      
+      2450                                                                      
+      3000                                                                      
+      5000                                                                      
+      1100                                                                      
+       950                                                                      
+      3000                                                                      
+      1300                                                                      
+
+10 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select sal,comm from emp
+  2* where comm is not null
+SQL> /
+
+       SAL       COMM                                                           
+---------- ----------                                                           
+      1600        300                                                           
+      1250        500                                                           
+      1250       1400                                                           
+      1500          0                                                           
+
+SQL> desc emp
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(4)
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> select job from emp;
+
+JOB                                                                             
+---------                                                                       
+CLERK                                                                           
+SALESMAN                                                                        
+SALESMAN                                                                        
+MANAGER                                                                         
+SALESMAN                                                                        
+MANAGER                                                                         
+MANAGER                                                                         
+ANALYST                                                                         
+PRESIDENT                                                                       
+SALESMAN                                                                        
+CLERK                                                                           
+
+JOB                                                                             
+---------                                                                       
+CLERK                                                                           
+ANALYST                                                                         
+CLERK                                                                           
+
+14 개의 행이 선택되었습니다.
+
+SQL> select distinct job from emp;
+
+JOB                                                                             
+---------                                                                       
+CLERK                                                                           
+SALESMAN                                                                        
+PRESIDENT                                                                       
+MANAGER                                                                         
+ANALYST                                                                         
+
+SQL> select  empno,ename,job,sal
+  2  from emp
+  3  where job='SALESMAN' or job='PRESIDENT' and sal >=1500;
+
+     EMPNO ENAME      JOB              SAL                                      
+---------- ---------- --------- ----------                                      
+      7499 ALLEN      SALESMAN        1600                                      
+      7521 WARD       SALESMAN        1250                                      
+      7654 MARTIN     SALESMAN        1250                                      
+      7839 KING       PRESIDENT       5000                                      
+      7844 TURNER     SALESMAN        1500                                      
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select  empno,ename,job,sal
+  2  from emp
+  3* where (job='SALESMAN' or job='PRESIDENT') and sal >=1500
+SQL> /
+
+     EMPNO ENAME      JOB              SAL                                      
+---------- ---------- --------- ----------                                      
+      7499 ALLEN      SALESMAN        1600                                      
+      7839 KING       PRESIDENT       5000                                      
+      7844 TURNER     SALESMAN        1500                                      
+
+SQL> select ename as "사원명",sal 급여,sal*12 연봉
+  2   from emp
+  3   order by 연봉 desc;
+
+사원명           급여       연봉                                                
+---------- ---------- ----------                                                
+KING             5000      60000                                                
+FORD             3000      36000                                                
+SCOTT            3000      36000                                                
+JONES            2975      35700                                                
+BLAKE            2850      34200                                                
+CLARK            2450      29400                                                
+ALLEN            1600      19200                                                
+TURNER           1500      18000                                                
+MILLER           1300      15600                                                
+WARD             1250      15000                                                
+MARTIN           1250      15000                                                
+
+사원명           급여       연봉                                                
+---------- ---------- ----------                                                
+ADAMS            1100      13200                                                
+JAMES             950      11400                                                
+SMITH             800       9600                                                
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename as "사원명",sal 급여,sal*12 연봉
+  2   from emp
+  3*  order by 연봉 desc,ename desc
+SQL> /
+
+사원명           급여       연봉                                                
+---------- ---------- ----------                                                
+KING             5000      60000                                                
+SCOTT            3000      36000                                                
+FORD             3000      36000                                                
+JONES            2975      35700                                                
+BLAKE            2850      34200                                                
+CLARK            2450      29400                                                
+ALLEN            1600      19200                                                
+TURNER           1500      18000                                                
+MILLER           1300      15600                                                
+WARD             1250      15000                                                
+MARTIN           1250      15000                                                
+
+사원명           급여       연봉                                                
+---------- ---------- ----------                                                
+ADAMS            1100      13200                                                
+JAMES             950      11400                                                
+SMITH             800       9600                                                
+
+14 개의 행이 선택되었습니다.
+
+SQL> select ename,sal,deptno
+  2   from emp
+  3   where deptno=10
+  4   order by 2 desc;
+
+ENAME             SAL     DEPTNO                                                
+---------- ---------- ----------                                                
+KING             5000         10                                                
+CLARK            2450         10                                                
+MILLER           1300         10                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename,sal,deptno
+  2   from emp
+  3   where deptno=&deptno
+  4*  order by 2 desc
+SQL> /
+deptno의 값을 입력하십시오: 20
+구   3:  where deptno=&deptno
+신   3:  where deptno=20
+
+ENAME             SAL     DEPTNO                                                
+---------- ---------- ----------                                                
+SCOTT            3000         20                                                
+FORD             3000         20                                                
+JONES            2975         20                                                
+ADAMS            1100         20                                                
+SMITH             800         20                                                
+
+SQL> /
+deptno의 값을 입력하십시오: 30
+구   3:  where deptno=&deptno
+신   3:  where deptno=30
+
+ENAME             SAL     DEPTNO                                                
+---------- ---------- ----------                                                
+BLAKE            2850         30                                                
+ALLEN            1600         30                                                
+TURNER           1500         30                                                
+WARD             1250         30                                                
+MARTIN           1250         30                                                
+JAMES             950         30                                                
+
+6 개의 행이 선택되었습니다.
+
+SQL> select empno,ename,sal
+  2        from emp
+  3        where ename='SCOTT';
+
+     EMPNO ENAME             SAL                                                
+---------- ---------- ----------                                                
+      7788 SCOTT            3000                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename,sal
+  2        from emp
+  3*       where ename=&ename
+SQL> /
+ename의 값을 입력하십시오: ALLEN
+구   3:       where ename=&ename
+신   3:       where ename=ALLEN
+      where ename=ALLEN
+                  *
+3행에 오류:
+ORA-00904: "ALLEN": 부적합한 식별자 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename,sal
+  2        from emp
+  3*       where ename='&ename'
+SQL> /
+ename의 값을 입력하십시오: ALLEN
+구   3:       where ename='&ename'
+신   3:       where ename='ALLEN'
+
+     EMPNO ENAME             SAL                                                
+---------- ---------- ----------                                                
+      7499 ALLEN            1600                                                
+
+SQL> save 'C:\webtest\1.db\print\namesearch.txt'
+file C:\webtest\1.db\print\namesearch.txt(이)가 생성되었습니다
+SQL> @'C:\webtest\1.db\print\namesearch.txt'
+ename의 값을 입력하십시오: TURNER
+구   3:       where ename='&ename'
+신   3:       where ename='TURNER'
+
+     EMPNO ENAME             SAL                                                
+---------- ---------- ----------                                                
+      7844 TURNER           1500                                                
+
+SQL> spool off

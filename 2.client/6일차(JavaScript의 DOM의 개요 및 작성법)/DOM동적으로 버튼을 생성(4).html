@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>DOM동적으로 버튼을 생성(4).html</title>
+  <script>
+     //변수 2종류->함수내부에서 사용되는 지역변수,함수밖에서 사용되는 전역변수
+      var count=0;//div태그를 생성->구분할 수 있는 번호체크
+
+     function appendItem(){  //버튼을 눌렀을때 동적으로 계속해서 생성
+        count++//1,2,3,4,~
+		//1.<div></div>
+        var newItem=document.createElement('div')
+		//2.<div id="" size="">속성명을 생성(태그명.setAttribute(속성명,속성값)
+        newItem.setAttribute("id","item_"+count)//<div id="item_1"></div>
+        //3.텍스트노드 생성->innerHTML or createTextNode
+		// '' + '' +''
+        var html='새로 추가된 아이템['+count+']'+
+		'<input type="button" value="삭제"'+
+		'onclick="removeItem('+count+')" />'
+		//4.부착->newItem.innerHTML='값'
+		newItem.innerHTML=html //<div id="item_1">새로 추가된 아이템~</div>
+        //5.부모의 정보->
+		var itemListNode=document.getElementById("itemList")//부모
+		//6.부모태그명.appendChild(자식태그명)
+        itemListNode.appendChild(newItem)
+	 }
+
+	 function removeItem(idCount){ //삭제시키는 함수(삭제시킬 id값전달)
+       //삭제시킬 태그정보->
+	   var item=document.getElementById("item_"+idCount)//item_1
+	   //appendChild()<-->부모태그명.removeChild(삭제시킬 태그명)
+       //부모태그를 얻어오는 방법2->자식태그정보명.parentNode->부모태그정보
+       item.parentNode.removeChild(item)
+	 }
+  </script>
+ </head>
+ <body>
+    <input type="button" value="추가" onclick="appendItem()">
+	<div id="itemList">
+         <!-- 
+		 <div id="item_1">새로 추가된 아이템1[삭제]</div>
+		 <div id="item_2">새로 추가된 아이템2[삭제]
+		 .. -->
+	</div>
+ </body>
+</html>

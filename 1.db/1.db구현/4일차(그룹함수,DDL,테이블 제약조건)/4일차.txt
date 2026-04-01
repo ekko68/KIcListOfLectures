@@ -1,0 +1,772 @@
+4일차(그룹함수,DDL,테이블 제약조건)
+
+과제
+
+case 적용대상필드명  when 조건식 then 결과1
+                              when 조건식2 then 결과2
+                              ...
+                              else 결과 n
+ end
+==============================
+사전평가->테스트(26문제)->객관식,주관식
+
+<문1> spool 기능->파일저장, save->파일저장 차이점?
+
+sql>spool C:\webtest\1.db\print\20170501.txt
+
+=>작업한 내용 모두를 파일로 저장(인쇄목적)->책교재
+=>SQLPlus명령어->오라클에서만 사용하는 명령어->메모리(SQL Buffer)
+                                                                         기록
+
+@C:\webtest\1.db\print\20170501.txt=>사용불가
+
+save C:\webtest\1.db\print\~.txt =>저장->현재 SQL명령어만 저장
+                                                               실행목적
+@C:\webtest\1.db\print\~.txt=>실행
+  
+@C:\webtest\1.db\print\2017428.txt
+
+SP2-0734: "SQL> selec..."(으)로 시작되는 알 수 없는 명령 - 나머지 줄은 무시되었
+습니다.
+SP2-0044: 명령어 목록을 보려면 HELP를
+빠져나가려면 EXIT를 입력하시오.
+
+실행할 SQL문장 만 존재하는 것이 아니라 다른 문자열도 있기때문에 안된다.
+--------------------------------------------------------------------------
+
+<문2>과제 ->job(업무)->급여->decode함수(조건식->처리)
+ 구문->case ~end
+
+형식) case 적용시킬 필드명(표현식) when 조건식 then 실행문장
+                                                when 조건식2 then 실행문장2
+                                                ,,,else 조건에 해당X 실행n
+        end "별칭명"
+
+sql>select empno,ename,job,sal, case job when 'ANALYST' then sal*1.1
+                                                             when 'CLERK' then sal*1.15        
+                                                             when 'MANAGER' then sal*1.2
+                                                             else sal
+                                                             end "최종 금액"
+from emp
+order by sal desc;
+
+SQL> select empno,ename,job,sal, case job when 'ANALYST' then sal*1.1
+  2                                                               when 'CLERK' t
+hen sal*1.15
+  3                                                               when 'MANAGER'
+ then sal*1.2
+  4                                                               else sal
+  5                                                               end "최종 금액
+"
+  6  from emp
+  7  order by sal desc;
+
+OFF이고이것은SELECT문장다음에있는첫번째소수의문자입니다
+OFF이고이것은NULL입니다.
+     EMPNO ENAME      JOB              SAL  최종 금액
+---------- ---------- --------- ---------- ----------
+      7839 KING       PRESIDENT       5000       5000
+      7902 FORD       ANALYST         3000       3300
+      7788 SCOTT      ANALYST         3000       3300
+      7566 JONES      MANAGER         2975       3570
+      7698 BLAKE      MANAGER         2850       3420
+      7782 CLARK      MANAGER         2450       2940
+      7499 ALLEN      SALESMAN        1600       1600
+      7844 TURNER     SALESMAN        1500       1500
+OFF이고이것은SELECT문장다음에있는첫번째소수의문자입니다
+
+OFF이고이것은SELECT문장다음에있는첫번째소수의문자입니다
+     EMPNO ENAME      JOB              SAL  최종 금액
+---------- ---------- --------- ---------- ----------
+      7934 MILLER     CLERK           1300       1495
+      7521 WARD       SALESMAN        1250       1250
+      7654 MARTIN     SALESMAN        1250       1250
+      7876 ADAMS      CLERK           1100       1265
+      7900 JAMES      CLERK            950     1092.5
+      7369 SMITH      CLERK            800        920
+OFF이고이것은NULL입니다.
+
+OFF이고이것은SELECT문장다음에있는첫번째소수의문자입니다
+
+14 개의 행이 선택되었습니다.
+
+<문3>emp테이블에서 이름에 L자가 두개가 있고,부서가 30이거나 또는 관리자가
+                                                          and                         or
+               ->ALLEN       =>%LL%->'%L%L%'   부서번호(deptno=30 mgr
+ 
+       7782인 사원의 모든정보(*)를 출력?
+
+sql>select * from emp
+      where ename like '%LL%' and (deptno=30 or mgr=7782);
+
+그룹함수=>통계 처리 함수
+
+레코드갯수=>count(*)  or count(필드명)->필드에 들어가 있는 갯수를 체크
+                                       필드에 null은 배제(갯수에 포함X)
+
+count(*)->null까지 계산에 포함
+min(필드명)->최소값,max(필드명)=>최대값,avg(필드명)=>평균, 
+sum(필드명)->합계
+
+sum(sal)->숫자->문자로 변환해서 출력하되 $999,999에 맞춰서 출력하라
+sql>select count(*),trunc(avg(sal)),max(sal),min(sal),
+       to_char(sum(sal),'$999,999')
+      from emp;
+
+  COUNT(*) TRUNC(AVG(SAL))   MAX(SAL)   MIN(SAL) TO_CHAR(S
+---------- --------------- ---------- ---------- ---------
+        14            2073       5000        800   $29,025
+=====================================
+
+ed
+<문4> 그룹함수의 성격
+
+  1  select ename,count(*),trunc(avg(sal)),max(sal),min(sal),
+  2         to_char(sum(sal),'$999,999')
+  3*       from emp
+SQL> /
+select ename,count(*),trunc(avg(sal)),max(sal),min(sal),
+       *
+1행에 오류:
+ORA-00937: 단일 그룹의 그룹 함수가 아닙니다
+
+==>그룹함수를 select와 from 사이에 쓸때에는 주의->기존의 필드와
+      같이 사용하지 못한다.
+
+==>일반필드와 그룹함수를 같이 select~from사이에 사용가능?
+
+형식)
+
+ select  필드(ename),,,그룹함수
+ from
+ where
+ ======
+ group by 그룹을 지어줄 필드명(ename)
+======
+ order by
+
+  1  select ename,count(*),trunc(avg(sal)),max(sal),min(sal),
+  2         to_char(sum(sal),'$999,999')
+  3        from emp
+  4* group by ename  //사원명만 해당
+SQL> /
+
+ENAME        COUNT(*) TRUNC(AVG(SAL))   MAX(SAL)   MIN(SAL) TO_CHAR(S
+---------- ---------- --------------- ---------- ---------- ---------
+ALLEN               1            1600       1600       1600    $1,600
+JONES               1            2975       2975       2975    $2,975
+FORD                1            3000       3000       3000    $3,000
+CLARK               1            2450       2450       2450    $2,450
+MILLER              1            1300       1300       1300    $1,300
+SMITH               1             800        800        800      $800
+WARD                1            1250       1250       1250    $1,250
+MARTIN              1            1250       1250       1250    $1,250
+SCOTT               1            3000       3000       3000    $3,000
+TURNER              1            1500       1500       1500    $1,500
+ADAMS               1            1100       1100       1100    $1,100
+
+ENAME        COUNT(*) TRUNC(AVG(SAL))   MAX(SAL)   MIN(SAL) TO_CHAR(S
+---------- ---------- --------------- ---------- ---------- ---------
+BLAKE               1            2850       2850       2850    $2,850
+KING                1            5000       5000       5000    $5,000
+JAMES               1             950        950        950      $950
+
+14 개의 행이 선택되었습니다.
+
+<문5>emp테이블에서 급여가 3000이상인 사원수를 구하시오
+                                                         count(*)
+ select count(*) from emp
+ where sal >=3000;
+
+  COUNT(*)
+----------
+         3
+
+ed
+
+  1  select ename,count(*) from emp
+  2   where sal >=3000
+  3* group by ename
+SQL> /
+
+ENAME        COUNT(*)
+---------- ----------
+FORD                1
+SCOTT               1
+KING                1
+
+<문6>count(*),sum,min,max,avg=>숫자화된 데이터만 사용이 가능
+=>날짜,문자데이터도 사용이 가능하다.
+
+
+min(hiredate)=>오래 장기 근무자
+max(hiredate)=>날짜가 크다->2017에 가까운 날짜(최근에 입사한날짜)
+
+sql>select min(ename),max(ename),min(hiredate),max(hiredate),
+min(sal),max(sal) from emp;
+
+MIN(ENAME) MAX(ENAME) MIN(HIRE MAX(HIRE   MIN(SAL)   MAX(SAL)
+---------- ---------- -------- -------- ---------- ----------
+ADAMS      WARD       80/12/17 87/05/23        800       5000
+
+문자 데이터(A~Z)->알파벳의 나오는 순서(A에 가까운 경우 적다
+                                                        Z에 가까운 경우 크다)
+
+<문7>부서별로 사원의 수가 4명 이상인 사원의 정보를 찾아서 출력하되
+    10,20,30,40~  =>group by deptno
+ 부서번호,급여의 합계를 구하시오(모든 직원 X)
+  deptno  sum(sal) "급여합계"
+
+sql>select deptno, sum(sal) "급여합계"
+     from emp
+     where count(*) >=4
+     group by deptno;
+     
+SQL> select deptno, sum(sal) "급여합계"
+  2       from emp
+  3       where count(*) >=4
+  4       group by deptno;
+     where count(*) >=4
+           *
+3행에 오류:
+ORA-00934: 그룹 함수는 허가되지 않습니다
+
+where count(*) >=4  //where 조건식->그룹함수를 사용하는 구문
+                                                         사용불가
+
+조건식의 종류
+
+1.where 조건식=>일반적인 검색(default)
+2.모든 부서를 그룹별로 검색->직원의 수가 4명이상(그룹의 조건식)
+  having 조건식
+==========
+
+ select
+ from
+ where
+ group by
+ having 조건식
+ order by
+           
+ed
+
+  1  select deptno, sum(sal) "급여합계"
+  2       from emp
+  3       group by deptno
+  4  having count(*) >=4
+  5* order by sum(sal) desc
+SQL> /
+
+    DEPTNO   급여합계
+---------- ----------
+        20      10875
+        30       9400
+
+<문8>그룹함수도 중첩이 가능하다->2단계까지
+
+부서별로 평균값 중에서도 최대 평균 급여?=>  max(avg(sal))
+                                                                      --------1)
+                                                              ------2)
+부서별로 합계 중에서도 최대 급여?=>  max(sum(sal)) =>인건비
+부서별로 합계 중에서도 최소 급여?=>  min(sum(sal))
+
+sql>select max(avg(sal)),max(sum(sal)),min(min(sal)),
+      max(max(sal)) from emp
+      group by deptno;
+
+MAX(AVG(SAL)) MAX(SUM(SAL)) MIN(MIN(SAL)) MAX(MAX(SAL))
+------------- ------------- ------------- -------------
+   2916.66667         10875           800          5000
+
+<문9>emp테이블에서 업무가 MANAGER가 아닌 사원에 대한 
+                                    where 
+ 부서별로 급여의 합이 2500 이상인 부서의 정보를 출력하시오.
+  group by deptno having 조건식
+(단 부서번호,급여의 합계 순으로 출력하시오, 급여의 합계가 높은순
+      deptno,sum(sal)                               order by sum(sal) desc
+으로 정렬해서)
+
+select deptno,sum(sal) "부서별 급여합계"
+from emp
+where job <>upper('manager')
+group by deptno
+having sum(sal) >=2500
+order by sum(sal) desc;
+
+    DEPTNO 부서별 급여합계
+---------- ---------------
+        20            7900
+        30            6550
+        10            6300
+===================================
+하나의 테이블을 검색하는 모든 방법을 다 배운것=>26개의 테이블검색
+
+한개 이상의 테이블을 검색?=>emp(부서번호->부서이름?)
+====================================
+=>얼마나 효율적으로 데이터를 저장 관점(테이블을 생성->설계목적)
+ 모델링->exerd(설계)
+ create,alter구문 위주로 
+
+sql>conn test1/t1234
+
+연결되었습니다.
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+B_PRTEST                       TABLE
+PRTEST                           TABLE
+
+create table ->테이블(행(레코드),열(=필드(컬럼)
+desc b_prtest  //직원 정보
+
+이름                                      널?      유형
+----------------------------------------- -------- -------------
+
+ID                                                 NUMBER=>숫자
+NAME                                             VARCHAR2(10)=>문자
+
+
+select count(*) from b_prtest
+
+  COUNT(*)
+----------
+         0
+
+테이블을 설계=>작성(필드 누락,필드 자료형 체크,)->
+
+ 1,홍길동
+ 1,홍길동
+=============>필드(primary key)   복합키
+ id,name,name(X) 필드명->문자로 시작,한글 또는 
+ 예약어->필드명으로 사용불가
+  number,varchar,varchar2,,,(X)
+
+<문10> 데이터를 저장하는 방법을 ->DDL(create,alter,drop~)
+ 필드를 누락해서 테이블을 만든 경우->수정만 하는 경우
+
+ 형식) alter table 수정t명 add (추가할 필드명 자료형 제약조건)
+
+ 제약조건->올바른 값만 입력을 받을 수 있도록 규칙을 정해주는 것
+---------------------------------------------------------------------
+sql> alter table b_prtest add (tel varchar2(15) not null);
+
+ 제약조건을 줄때 에러유발->이미 데이터가 들어가 있는 경우
+ not null 생략-> 무조건 null->입력 또는 입력X
+
+테이블이 변경되었습니다.
+
+sql>desc b_prtest
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- --------------
+
+ ID                                                 NUMBER
+ NAME                                               VARCHAR2(10)
+ TEL                                       NOT NULL VARCHAR2(15)
+
+alter table b_prtest add (tel varchar2(15) not null);
+ ->null이 비어있지 않다.(데이터가 들어가 있는 경우)
+ ->varchar2<->number 변경불가,제약조건 설정X
+ ->varchar2(15)-->varchar2(30) 가능
+     varchar2(30)-->varchar2(15) 불가
+=================================
+
+alter table b_prtest add (tel varchar2(15));
+<문11> 변경(modify)
+형식) alter table 수정t modify(수정할 필드명 데이터형 제약조건)
+
+sql>alter table b_prtest modify (name varchar2(30));
+
+SQL> alter table b_prtest modify (name varchar2(30));
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- --------------
+
+ ID                                                 NUMBER
+ NAME                                               VARCHAR2(30)
+ TEL                                       NOT NULL VARCHAR2(15)
+
+<문12>불필요로하는 컬럼 존재->삭제
+형식) alter table 수정t drop column (삭제할 필드명)
+
+sql> alter table b_prtest drop column tel;
+
+ 이름                                      널?      유형
+ ----------------------------------------- -------- -------------
+
+ ID                                                 NUMBER
+ NAME                                            VARCHAR2(30)
+====================================
+<문13>
+
+필드명을 변경-
+->형식) alter table 수정t rename column 수정전 필드명 to 수정후 필드명
+sql>alter table b_prtest rename column name to irum;
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ------------
+
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(30)
+
+11g의 경우 사용시 가능(데이터가 들어있어도 가능)
+alter table prtest rename column name to irum;
+
+SQL> alter table prtest rename column name to irum;
+
+테이블이 변경되었습니다.
+
+SQL> desc prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- --------------
+
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(10)
+
+<문14>제약조건->10장 ppt 정리
+
+->DB관리=>1.어떻게 올바른 값을 저장?(설계)목적=>제약조건이 필요한 이유
+  ename->'abasdad'
+
+                  2.어떻게 하면 원하는 자료를 마음대로 검색->통계처리->출력
+
+p6(제약조건의 종류  및 설정)
+==================
+  primary key(기본 키)=>1.테이블의 행을 구분하는 키워드로 사용(개요)
+                                    2.중복되면 안되는 필드에 부여
+                                     (empno(사번),계좌번호,주민등록번호,,,)
+                                    3.not null+unique index 키 자동으로 설정
+                                      (중복이 되면 안된는 필드에 부여)
+                                      ->인덱스키->내부에서 먼저 검색->검색속도증가됨
+                                                        책갈피(=북마크)
+                                  ename(중복 허용) 성별,직책->X
+
+ 1,'홍길동'
+ 2,'홍길동'
+     
+ 형식) alter table 수정t명 add constraint 제약조건이름 제약조건종류(적용필드명)
+                                                                           ========
+                                                                            primary key(id)
+ 제약조건이름=>aabad (X)=>시스템 테이블(기록->레코드로)
+                     sys~==>테이블명_제약조건약어(pk)_적용필드명
+                                   b_prtest_pk_id
+
+sql>alter table b_prtest add constraint b_prtest_pk_id primary key(id);
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- --------------
+
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(30)
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ---------------
+
+ ID                                        NOT NULL NUMBER
+ IRUM                                               VARCHAR2(30)
+
+sql>insert into b_prtest values(1,'홍길동');
+
+SQL> insert into b_prtest values(1,'홍길동');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> insert into b_prtest values(1,'홍길동');
+insert into b_prtest values(1,'홍길동')
+*
+1행에 오류:
+ORA-00001: 무결성 제약 조건(TEST1.B_PRTEST_PK_ID)에 위배됩니다
+
+ed
+  1* insert into b_prtest values(2,'홍길동')
+SQL> /
+
+1 개의 행이 만들어졌습니다.=>올바른 값만 입력허용
+
+<문15>unique 제약조건->중복되면 안되는 필드에 부여=>pk와 기능이 동일
+
+   pk->not null+unique key같이 부여
+   unique key->중복허용 X에 부여(not null 부여 X)
+
+형식)alter table 수정t명 add constraint 제약조건이름 제약조건종류(필드명)
+                                                        ==========uk
+
+sql>alter table b_prtest add constraint b_prtest_uk_id unique(id);
+
+alter table b_prtest add constraint b_prtest_uk_id unique(id)
+                                                   *
+1행에 오류:
+ORA-02261: 고유 키 또는 기본 키가 이미 존재하고 있습니다
+
+pk->이미 id에 unique키가 부여된 상태이기때문에 또 부여할 수가 없다는 에러
+       메세지
+==============================================
+<문제16>제약조건을 삭제(drop constraint)
+
+형식)alter table 수정t명 drop constraint 삭제시킬 제약조건이름
+
+sql>alter table b_prtest drop constraint b_prtest_pk_id;
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- -------------
+
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(30)
+
+제약조건 활성화(설정하는 경우)<-->비활성화(설정 부분을 해제)
+
+sql> desc b_prtest
+
+<문제17>check 제약조건->데이터를 저장시킬때 과연 올바른 값이 들어왔는지
+                                      를 체크(숫자->범위지정,문자->특정한 값 등록)
+
+sql>alter table b_prtest add (age number);
+      alter table b_prtest add (addr varchar2(80));
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- -------------
+
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(30)
+ AGE                                                NUMBER
+ ADDR                                               VARCHAR2(80)
+===================================
+  형식)~  제약조건이름 check(age >=20 and age <=65)
+                                          제약조건 규칙
+                               check in ('사원','대리','계장','과장','부장',~)
+
+ sql>alter table b_prtest add constraint b_prtest_ck_age 
+        check (age>=20 and age<=65);
+      ~check (age between 20 and 65);
+
+ insert into b_prtest values(3,'김길수',123,'서울시 강남구 대현빌딩');
+                                                      ===
+ insert into b_prtest values(3,'김길수',123,'서울시 강남구 대현빌딩')
+*
+1행에 오류:
+ORA-02290: 체크 제약조건(TEST1.B_PRTEST_CK_AGE)이 위배되었습니다
+
+ed
+
+  1* insert into b_prtest values(3,'김길수',23,'서울시 강남구 대현빌딩')
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+---------------------------------------------------------------
+<문제18> 제약조건 5가지->
+               default(디폴트)->값을 저장시킬때 '저장할값' ,23 언급하지 않아도
+                                        자동으로 값이 들어가는 경우
+
+         1 홍길동
+
+
+         2 홍길동
+
+
+         3 김길수                                 23
+서울시 강남구 대현빌딩
+
+ 입사일,회원등록 날짜
+sql> alter table b_prtest add (hiredate date default sysdate);
+                                                        자료형 default 적용시킬 값
+
+테이블이 변경되었습니다.
+
+sql> desc b_prtest
+이름                                      널?      유형
+----------------------------------------- -------- --------------
+
+ID                                                 NUMBER
+IRUM                                               VARCHAR2(30)
+AGE                                                NUMBER
+ADDR                                               VARCHAR2(80)
+HIREDATE                                           DATE --------->default적용
+
+==========================================
+
+형식)
+->반드시 필드의 수를 맞춰야 된다.
+ insert into 테이블명 values( 필드명,'저장할값','2017-05-01',,,);
+
+ insert into b_prtest values(4,'테스트',45,'서울시');
+
+insert into b_prtest values(4,'테스트',45,'서울시')
+            *
+1행에 오류:
+ORA-00947: 값의 수가 충분하지 않습니다==>필드갯수가 부족
+
+ed
+
+  1* insert into b_prtest values(4,'테스트',45,'서울시','2017-05-01')
+                                                                            ====수동===
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(5,'테스트2',25,'대전시 중구',sysdate)
+                                                                                     =====
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(5,'테스트2',25,'대전시 중구',default)
+                                                                           ===sysdate반영
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(6,'테스트3',35,'부산시',default)
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(7,'테스트4',27,'부산시',null)
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_prtest;
+
+        ID IRUM                                  AGE
+---------- ------------------------------ ----------
+ insert into 구문2
+                                      not null인 필드만 부여
+ 형식) insert into 테이블명(필드명1,필드명2,,,) values(값1,값2,,,)
+                                     필드명을 생략하는 경우->null을 허용해주는 필드
+                                                                       또는 default가 적용된
+                                                                      필드
+8번 데이터를 입력->addr(null), hiredate->default적용->2번째 방법이 편리
+  
+insert into b_prtest(id,irum,age)values(8,'테스트5',43);
+
+SQL> select * from b_prtest where id=8;
+
+HIREDATE
+--------
+         8 테스트5                                43
+
+17/05/01
+
+  =========================================
+  ->insert into dept(deptno,dname) values(70,'TECH');->2번째방법
+
+ ->insert into dept_salses
+     select~============>서브쿼리(SQL문장 내부에 또 다른 SQL구문)
+                                                   
+ pk,uk,ck,nn,fk,default
+                   =====
+
+ 제약조건->pk,uk,ck,not null =>하나의 테이블에 설정이 가능
+                ===========
+                fk=>관계형 데이터베이스의 테이블간 정의를 위해
+                       ====한개->두개로 만들어서 관리
+                        모든 데이터->한테이블에 저장 가능(필드수가 25~)
+                                          5만개->저장하기 힘들고->검색속도가 느리다.
+
+                       서로 다른 한개이상의 테이블사이의 관계(
+                       (한개 이상의 테이블에서 설정하는 방법)
+
+=>sawon,dept
+
+1.테이블을 작성하는 유형
+
+ 테이블을 처음에 만들면서 제약조건을 한꺼번에 부여->테이블 지정방식
+sql>create table dept
+      (deptno number primary key,
+        dname varchar2(20) not null,
+        loc varchar2(15) not null);
+
+ insert into dept values(10,'영업부','서울');
+ insert into dept values(20,'개발부','대전');
+ insert into dept values(30,'총무부','마산');
+
+SQL> select * from dept;
+
+    DEPTNO DNAME                LOC
+---------- -------------------- --------
+        10 영업부               서울
+        20 개발부               대전
+        30 총무부               마산
+
+  sql>create table sawon(
+           id number primary key,
+           name varchar2(20) not null,
+           deptno number);
+
+   sql>insert into sawon values(1,'홍길동',10);
+         insert into sawon values(2,'테스트',40);
+
+ foreign key(외래키)->테이블에 값을 저장할려고 할때
+                               특정 필드와 연결이 되어있는 다른
+                               테이블의 필드값을 검사(존재 체크)
+                            ->값을 저장을 시켜준다.
+                            ->존재X-->저장X
+                               참조 무결성 강화규칙에 위배
+                               ==(dept의 deptno)
+===================================
+<문20>형식)
+                 sawon
+alter table 수정t명 add constraint 관계설정할 이름 foreign key(자기테이블의
+                                                                                        필드명)
+references 상대방의 테이블명(연결시키고자하는 필드명)
+=======================================
+sql>alter table sawon add constraint sawon_fk_deptno foreign key(deptno)
+      references dept(deptno);
+
+sql>insert into sawon values(3,'테스트2',20);  //정상적으로 입력됨
+sql>insert into sawon values(4,'테스트3',900); //에러유발
+
+SQL> insert into sawon values(4,'테스트3',900);
+insert into sawon values(4,'테스트3',900)
+*
+1행에 오류:
+ORA-02291: 무결성 제약조건(TEST1.SAWON_FK_DEPTNO)이 위배되었습니다- 부모 키가
+없습니다
+===========================================
+sql>spool off
+
+ 10장을 마무리->조인~
+
+
+
+
+
+
+
+
+
+
+2.테이블을 만들고 나서 ->나중에 제약조건을 따로 설정
+
+      create table dept
+      (deptno number ,
+        dname varchar2(20) ,
+        loc varchar2(15));
+
+  --> alter table add constaraint ~제약조건~
+
+  
+
+
+

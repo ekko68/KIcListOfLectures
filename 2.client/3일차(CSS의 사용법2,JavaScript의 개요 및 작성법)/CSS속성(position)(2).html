@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <!-- 
+   postion->영역을 설정할때 사용하는 속성->1.default(static) 문서의 위치
+                 특별하게 위치값을 가지고 있다.->순차적으로 써준순서대로 화면에 보임
+  -->
+  <title>CSS속성(position)(2).html </title>
+  <style type="text/css">
+	 .rel1 {position:absolute;top:100px;left:100px;} /* 2.상대적인 좌표배치 방법(left,top을 부여X
+	                                           static과 결과가 동일 */
+       /* left->오른쪽 이동(양수),음수(왼쪽) x좌표 
+	       top->아래로 이동(양수),음수(위로) y좌표
+	   */
+	 .rel2 {position:relative;top:10px;left:10px;}
+	  /* 3.absolute->기준점(브라우저의 좌측 상단)을 ->left,top,width,height  */
+	 .rel3 {position:absolute;top:100px;left:100px;} 
+	 /* 4.fixed ->고정된 위치에서 움직이지 않는 속성 
+	                   위,아래 스크롤해도 항상 고정된 위치에 있는것(ex footer)
+	  */
+	  .fix {
+              position:fixed;
+			  bottom:0;right:0; /* 아래쪽 스크롤바 있는 쪽 하단에 위치 (고정)*/
+			  width:200px;
+			  border:3px solid #FDC72F;
+			  background-color:white;font-size:12px;
+	  }
+  </style>
+ </head>
+ <body>
+  <div style="background:red;width:30px;height:30px;"></div>
+  <div style="position:static;background:blue;width:30px;height:30px;"></div>
+  <p>
+  <div class="fix">fixed된 문자열 연습입니다.</div>
+  <p>
+ <div class="rel1" style="background:black;width:50px;height:50px;"></div>
+ <div class="rel2" style="background:blue;width:30px;height:30px;"></div>
+ <div class="rel3" style="background:green;width:30px;height:30px;"></div>
+ </body>
+</html>
+
+
+
+
+
+

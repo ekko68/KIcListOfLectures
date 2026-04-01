@@ -1,0 +1,256 @@
+*{   
+           margin: 0; padding: 0;
+           background-color: azure; /* 하늘색 */
+   }
+ 
+ .wrap{
+            width: 1000px;
+            margin: 0 auto;
+			/* 0 이 의미하는 것은 위쪽과, 아래쪽의 여백을 0으로 준것이다.(border밖의 여백)
+			    한번에 동일한 크기를 줄때, 한번만 써주는 것입니다.
+				auto->auto는 좌우의 여백을 똑같이 배분한 것
+				그래서 브라우저 화면 가운데에 위치하게 됩니다.
+		   */
+    } 
+.hd2,.sc2,.sc3{display: none;} 
+
+ h1{
+            float: left;
+            position: relative;
+            left: 3%; top: 30px;
+        } 
+.nv1{
+            width: 60%; height: 50px;
+            border: 1px solid black;
+            float: left;
+            position: relative;
+            left: 5%; top: 30px;
+            z-index: 5;
+        }
+
+ ul{
+            list-style-type: none;
+        }
+
+ .main1:hover{
+    background-color: mediumpurple;
+    color: white;
+}
+.main2:hover{
+    background-color: mediumpurple;
+    color: white;
+}
+.main3:hover{
+    background-color: mediumpurple;
+    color: white;
+}
+
+/* nv1범위 테두리 내에서의 배치 설정 */
+.main1{
+            position: absolute;
+            left: 14%;  /* 왼쪽으로부터 전체의 14%정도 떨어져 있음 */
+            top: 10px; /* 테두리 위로부터의 10px 정도 떨어져 있음 */
+          }
+.main2{
+           position: absolute;
+           left: 43%;
+           top: 10px;
+}
+.main3{
+           position: absolute;
+           right: 17%;
+           top: 10px;
+}
+
+.sub{
+    display: none; /*유형별 제품 화면에 나오지 않게 설정 */
+    position: absolute;
+    top: 40px;  /* 위치 지정 */
+    left: 77px;
+}
+
+.sub li,.sub li a{  /* 유형별 제품의 항목의 색깔은 purple */
+    z-index: 15;
+    color: purple;
+}
+
+.sub1{
+    display: none;
+    float: right;    /*오른쪽에 배치 */
+    position: relative;
+}
+
+.nv1 div a{  
+            /* 옆으로 일렬로 배치가 되면서 block속성처럼 너비와 높이를 지정이 가능(혼합)*/
+            display: inline-block; /* http://elren.blog.me/220857327692 */
+            padding:10px ; /* 메뉴의 위,오른쪽,아래,왼쪽 모두 10px 안쪽 여백 적용) */
+   }
+
+.nv2{
+            width: 13%; height: 50px; /*넓이,높이 지정*/
+            border: 1px solid black; /* 테두리 설정 */
+            float: right; /* 오른쪽에 배치*/
+            position: relative;
+            top: 30px; right: 3%; /*위치 지정*/
+  }
+ 
+  .nv2 ul>li{
+            float:left;   /* 왼쪽 에 배치 */
+            margin-left: 10%; /* 바깥여백 */
+            margin-top: 20px;
+            font-size: 11px; /* 글자 크기 */
+   }
+
+   .nv2 ul li a{
+            display: inline-block;
+            padding:5px ; 
+   }
+
+.nv2 ul li a:hover{
+    background-color: mediumpurple;
+    color: white;
+}
+
+.cycle-slideshow{
+            position: relative;
+            top: 100px; /* 위에서 부터 100px 만큼 위치 */
+            z-index: 1;
+}
+
+ .cycle-slideshow img{
+            height: 350px; /* 이미지 높이 350px로 지정 */
+   }
+
+   /* 베스트 셀러에 해당하는 전체 설정 */
+  .at1{
+            width: 60%; height: 250px; /* 넓이,높이 지정 */
+            border: 1px solid black; /* 테두리 설정 */
+            float: left; /* 왼쪽부터 배치 */
+            position: relative;
+            left: 3%; top: 100px; /* 처음 이미지 위치 지정 */
+            z-index: 3;
+        }
+
+.d1>figure>img{
+    width: 200px; height: 200px; /* 이미지의 크기 지정 */
+    border: 1px solid black; /* 테두리 설정 */
+    display: inline-block; /* 일렬로 정렬 */
+    position: absolute;
+    top: 50px; /* 위에서 부터 50px 위치 */
+    z-index: 6;
+}
+
+.d2>figure>img{
+    width: 200px; height: 200px;
+    border: 1px solid black;
+    display: inline-block;
+    position: absolute;
+    top: 50px;left: 200px; /* 왼쪽부터 200px 떨어진 위치에 위치 */
+    z-index: 6;
+}
+.d3>figure>img{
+    width: 200px; height: 200px;
+    border: 1px solid black;
+    display: inline-block;
+    position: absolute;
+    top: 50px;left: 400px; /* 왼쪽부터 400px 떨어진 위치에 위치 */
+    z-index: 6;
+}
+
+.fc1{
+    font-size: 11px; /*글자 크기 11px */
+    float: left; /*왼쪽부터 정렬 */
+    position: relative;
+    left: 5px; /* 왼쪽으로부터 5px 위치 */
+}
+
+.fc2{
+    font-size: 11px;
+    float: left;
+    position: relative;
+    left: 18px; /* 왼쪽으로부터 18px 위치 */
+}
+.fc3{
+    font-size: 11px;
+    float: left;
+    position: relative;
+    left: 50px; /*왼쪽으로부터 50px 위치 */
+}
+
+.at2{
+            width: 33%; height: 250px; /* 이미지의 크기 지정 */
+            border: 1px solid black; /* 테두리 설정 */
+            float: right; /* 오른쪽에 배치 */
+            position: relative;
+            top: 100px;
+ }
+.at2>img{
+    width: 170px; height: 200px; /* 이미지 크기 지정*/
+    position: relative;
+    top: 20px;  /*위에서 20px 아래로 위치 */
+    z-index: 1;
+    display: inline-block; /* 정렬 지정 */
+}
+
+#dv1{
+    z-index: 5;
+    position: relative; /* 이미지 기준으로 relative */
+    left: 130px;   /* 왼쪽기준 130px에 위치 */
+    top: -190px; /* 이미지 보다 위로 배치 시키기위해서 */
+    display: inline-block; /* 일렬로 정렬 */
+}
+
+.at3>embed{
+    position: relative;
+    top: 100px;
+    width: 450px; height: 300px; /* 동영상의 크기 지정 */
+    margin: 50px;   /* 밖의 여백 전부 50px (위,오른쪽,아래,왼쪽) */ 
+}
+
+.at4>img{
+    float: right;  /* 오른쪽에 배치 */
+    width: 450px; height: 300px; /* 이미지 크기 지정 */
+    position: relative;
+    top: -255px; right: 20px; /* 오른쪽에 20px 위치*/
+}
+
+.ft1{
+            clear: both; /* 위에서 설정한 배치 속성 초기화 ->float속성 */
+            border: 1px solid black; /* 테두리 설정 */
+            height: 100px;  /* 높이 설정 */
+            margin: 0 auto; /* 밖의 여백 자동 설정 */
+            position: relative;
+            top: -150px;
+        }
+.nv3{
+            position: relative;
+            top: 20px; /* 위에서 20px 아래로 위치 */
+   }
+   
+   .nv3 ul>li{
+            float:left; /* 항목을 왼쪽부터 배치 */
+            margin-left: 4.3%; /* 밖의 왼쪽여백 4.3% 정도 */
+  }
+
+  .nv3 ul li a{
+            display: inline-block;
+            padding:10px ; 
+  }
+  /*
+  .l1{
+        padding:10px 0px ;/* 안쪽여백 설정*/
+  /* }  */
+   
+  .nv4{
+            position: relative;
+            top: 40px; /* 위에서 40px 내려옴 */
+   }
+  .nv4 ul{
+            list-style-type: none; /* mark 해제 */
+        }
+  .nv4 ul>li{
+            float:left; /* 왼쪽 정렬 */
+            margin-left: 3%; /* 밖의 왼쪽여백 3% */
+            font-size: 11px; /* 글자 크기 지정 */
+     }
+}

@@ -1,0 +1,1066 @@
+7일차(뷰개요및 뷰 작성법)
+
+<문제1>다음의 결과처럼 사원이 존재하지 않는 부서를 조회하는 구문을
+       작성하세요(조인)->inner join  ->40부서
+
+ emp e             dept    d              dept
+----------------------------------------------
+ENAME      DNAME              DEPTNO
+---------- -------------- ----------
+           OPERATIONS             40
+
+ outer join=>null(emp,dept)=>e.deptno(+)
+
+sql>select e.ename,d.dname,d.deptno
+      from emp e, dept d
+      where e.deptno(+)=d.deptno and e.ename is null;
+
+
+<문제2>
+(ALLEN과 같이 근무하는 사원의 사원명단을 출력하시오.)
+
+1)ALLEN과 같이 근무하는 사원?->deptno과 같은 것을 찾아라
+
+select deptno from emp
+where ename='ALLEN';
+
+    DEPTNO
+----------
+        30  =>단일행
+
+ 2) select ename from emp
+     where deptno=30;
+
+ 3) 1)+2)
+
+     select ename from emp
+     where deptno=(select deptno from emp
+                           where ename='ALLEN');
+
+ENAME
+----------
+ALLEN
+WARD
+MARTIN
+BLAKE
+TURNER
+JAMES
+
+6 개의 행이 선택되었습니다.
+
+===========================================
+<문제3> 'SCOTT' 이나 'MARTIN'과 동일한 급여를 받는 사원의
+                3000           1250
+사번,이름, 급여를 조회하시오.
+
+1)'SCOTT' 이나 'MARTIN'이 받는 급여?
+
+sql>select sal from emp
+      where ename=upper('&ename');
+
+ename의 값을 입력하십시오: scott
+구   2:       where ename=upper('&ename')
+신   2:       where ename=upper('scott')
+
+       SAL
+----------
+      3000
+
+SQL> /
+ename의 값을 입력하십시오: martin
+구   2:       where ename=upper('&ename')
+신   2:       where ename=upper('martin')
+
+       SAL
+----------
+      1250
+
+2) select empno,ename,sal
+    from emp
+    where sal=3000 or sal=1250;
+
+    select empno,ename,sal
+    from emp
+    where sal=(select sal from emp
+                       where ename=upper('&ename')) or
+              sal=(select sal from emp
+                       where ename=upper('&ename'));
+
+----------------------------------------------------------------
+SQL>  select empno,ename,sal
+  2      from emp
+  3      where sal=(select sal from emp
+  4                         where ename=upper('&ename')) or
+  5                sal=(select sal from emp
+  6                         where ename=upper('&ename'));
+ename의 값을 입력하십시오: scott
+구   4:                        where ename=upper('&ename')) or
+신   4:                        where ename=upper('scott')) or
+ename의 값을 입력하십시오: martin
+구   6:                        where ename=upper('&ename'))
+신   6:                        where ename=upper('martin'))
+
+     EMPNO ENAME             SAL
+---------- ---------- ----------
+      7521 WARD             1250
+      7654 MARTIN           1250
+      7788 SCOTT            3000
+      7902 FORD             3000
+
+-------------------------------------------------------------------
+<문제4>급여가 30번부서의 최고급여보다 많은 사원의 사번,이름,급여를
+조회하시오.->2850보다 많이 받는 사원을 검색?
+
+1)30번부서의 최고급여?
+
+select max(sal) from emp
+where deptno=30;
+
+  MAX(SAL)
+----------
+      2850
+
+2) select empno,ename,sal,deptno
+    from emp
+    where deptno!=30
+    and sal > 2850;
+
+3) 1)+2)
+
+    select empno,ename,sal,deptno
+    from emp
+    where deptno!=30
+    and sal > (select max(sal) from emp
+                    where deptno=30);
+
+
+     EMPNO ENAME             SAL     DEPTNO
+---------- ---------- ---------- ----------
+      7566 JONES            2975         20
+      7788 SCOTT            3000         20
+      7839 KING             5000         10
+      7902 FORD             3000         20
+============================
+ =>다중행(물리적인것)->in ,논리적인 행(any,all)
+
+~ > (max(sal)~)=>   > all (sal) =>최대값보다 큰값을 구하되
+                                                    오름차순으로 정렬하면서
+~ > (min(sal)~) =>   > any( sal)
+
+ed
+
+     EMPNO ENAME             SAL     DEPTNO
+---------- ---------- ---------- ----------
+      7566 JONES            2975         20
+      7788 SCOTT            3000         20
+      7902 FORD             3000         20
+      7839 KING             5000         10
+=======================================
+ 집합연산자(union,union all ->시큐어코딩)
+
+<문1>
+집합연산자->서로 다른 두개의 SQL문장의 실행결과
+                  ->하나로 합쳐서 결과보여준다.
+                  (union,union all,intersect,minus~)
+
+emp테이블에서 업무가 MANAGER인 사원의 사번,이름을 구하시오.
+
+select empno,ename from emp
+where job='MANAGER';  --->1
+
+     EMPNO ENAME
+---------- ----------
+      7566 JONES
+      7698 BLAKE
+      7782 CLARK
+
+ed
+  union->합집합(서로 같은 테이블이면서 서로 같은 필드와 자료형을 사용한
+                        경우)
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  union
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+
+     EMPNO ENAME
+---------- ----------
+      7499 ALLEN
+      7566 JONES
+      7698 BLAKE
+      7782 CLARK
+      7876 ADAMS
+
+ed
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  minus ==>차집합(A-B)=>A에 해당하는 SQL구문만 출력
+                ==>MS-SQL 차집합(except)
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+
+     EMPNO ENAME
+---------- ----------
+      7566 JONES
+      7698 BLAKE
+      7782 CLARK
+
+SQL>
+
+ed
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  union all
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+
+ union all->합집합인데 둘다 있는 그대로 다 보여준다.
+ -----------------------------------------------------
+     EMPNO ENAME
+---------- ----------
+      7566 JONES
+      7698 BLAKE             A
+      7782 CLARK
+     ------------------------>
+      7499 ALLEN
+      7876 ADAMS            B
+
+집합연산자의 주의할점
+
+1.서로 다른 필드를 사용해도 상관없다.
+2.합쳐지는 필드의 자료형은 반드시 같아야 된다.
+3.합쳐지는 필드의 갯수는 서로 같아야 된다.
+
+  1  select empno,job from emp
+  2  where job='MANAGER'
+  3  union all
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+
+     EMPNO JOB
+---------- ----------
+      7566 MANAGER
+      7698 MANAGER
+      7782 MANAGER
+      7499 ALLEN
+      7876 ADAMS
+
+  1  select empno,sal from emp
+  2  where job='MANAGER'
+  3  union all
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+select empno,sal from emp
+             *
+1행에 오류:
+ORA-01790: 대응하는 식과 같은 데이터 유형이어야 합니다
+
+sal=>숫자, ename->문자(서로 다르다(자료형)
+
+ed
+
+  1  select empno,job,sal from emp
+  2  where job='MANAGER'
+  3  union all
+  4  select empno,ename from emp
+  5* where ename like 'A%'
+SQL> /
+select empno,job,sal from emp
+*
+1행에 오류:
+ORA-01789: 질의 블록은 부정확한 수의 결과 열을 가지고 있습니다.
+
+ed
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  intersect
+  4  select empno,ename from emp
+  5* where ename like 'A%' or job='MANAGER'
+SQL> /
+
+     EMPNO ENAME
+---------- ----------
+      7566 JONES
+      7698 BLAKE
+      7782 CLARK
+
+================================
+ed
+
+  1  select empno,ename from emp
+  2  where job='MANAGER'
+  3  union all
+  4  select deptno,dname from dept
+  5* where dname like 'A%'
+SQL> /
+
+     EMPNO ENAME
+---------- --------------
+      7566 JONES
+      7698 BLAKE
+      7782 CLARK
+        10 ACCOUNTING
+
+<문2>오라클 객체->테이블,뷰,시컨스,시노님(동의어),인덱스,,,권한종류,복구,,
+뷰의 개요->가상의 테이블(실제 존재하는 테이블X)->실행->테이블처럼 보임
+                저장공간이 없다.-->텍스트로 저장
+
+테이블로 저장->뷰로 저장
+
+뷰를 사용목적:1.편리성 추구->복잡한 SQL구문을 쉽게 실행할 수가 있다.
+                   2.보안 때문에
+
+emp테이블에서 20번 부서에 근무하는 사원의 정보를 검색할 수있는 SQL를
+뷰로 작성하시오.(자주 사용,반복)
+
+형식) create view 뷰이름(v_xxx)
+        as SQL구문
+
+sql>create view emp_20
+      as select * from b_emp3
+      where deptno=20;
+
+SQL> create view emp_20
+  2        as select * from b_emp3
+  3        where deptno=20;
+create view emp_20
+            *
+1행에 오류:
+ORA-01031: 권한이 불충분합니다
+
+10g이후 뷰를 작성할때 권한(create view)이 없으면 작성X
+                                      create synonym
+
+sql>conn sys/sys12345 as sysdba
+sql>grant create view,create synonym to scott,test1;
+
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> grant create view,create synonym to scott,test1;
+
+권한이 부여되었습니다.
+
+관리자가 계정을 하나 생성(test2)->뷰,시노님의 권한을 만약에 같이 준다면
+
+sql>grant connect,resource,create view ,create synonym to test2;
+               ------------------
+sql>conn scott/tiger
+
+SQL> create view emp_20
+  2        as select * from b_emp3
+  3        where deptno=20;
+
+뷰가 생성되었습니다.
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+BONUS                          TABLE
+B_EMP2                         TABLE
+B_EMP3                         TABLE
+DEPT                           TABLE
+EMP                            TABLE
+EMP_20                         VIEW
+EMP_DEPTNO                     TABLE
+SALGRADE                       TABLE
+
+8 개의 행이 선택되었습니다.
+
+뷰를 실행->형식) select * from 실행시키고자하는 뷰명;
+
+select * from emp_20; //정해진 SQL구문만 실행(정보 보호),편리성 추구
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM
+---------- ---------- --------- ---------- -------- ---------- ----------
+    DEPTNO
+----------
+      7369 SMITH      CLERK           7902 80/12/17        800
+        20
+
+      7566 JONES      MANAGER         7839 81/04/02       2975
+        20
+
+      7788 SCOTT      ANALYST         7566 87/04/19       3000
+        20
+
+
+     EMPNO ENAME      JOB              MGR HIREDATE        SAL       COMM
+---------- ---------- --------- ---------- -------- ---------- ----------
+    DEPTNO
+----------
+      7876 ADAMS      CLERK           7788 87/05/23       1100
+        20
+
+      7902 FORD       ANALYST         7566 81/12/03       3000
+        20
+
+<문3>뷰를 사용할때 주의할점->뷰가 실행이 안되는 경우
+                             뷰를 통해서 만들어진 테이블의 구조에 문제 발생
+
+create view emp_name
+as select empno,ename
+from b_emp3
+where ename like 'A%';
+
+SQL> select * from emp_name;
+
+     EMPNO ENAME
+---------- ----------
+      7499 ALLEN
+      7876 ADAMS
+
+<문제4>오라클에서 임의로 특정테이블의 필드를  사용(X)
+->쓸모없어진 백업테이블에다 사용할것.(원본 테이블 사용X)
+
+형식)alter table 수정t set unused column 사용하지 못하게 필드명
+sql>alter table b_emp3 set unused column ename;
+테이블이 변경되었습니다.
+
+sql>desc b_emp3
+
+ 이름                                      널?      유형
+ ----------------------------------------- -------- -----------------
+
+ EMPNO                                              NUMBER(4)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+sql>select * from emp_name;
+
+select * from emp_name
+              *
+1행에 오류:
+ORA-04063: view "SCOTT.EMP_NAME"에 오류가 있습니다
+
+<문제5> 더이상 불필요로하는 뷰를 삭제->drop view 삭제시킬 뷰이름
+->create view 권한->뷰를 수정,삭제할 수가 있다.
+
+sql>drop view emp_name;
+
+뷰가 삭제되었습니다.
+
+<문제6>데이터 딕셔너리->user_views(시스템 테이블)->저장
+뷰를 생성->텍스트로 저장(SQL구문)
+
+desc user_views
+
+ 이름                                      널?      유형
+ ----------------------------------------- -------- -----------------
+
+ VIEW_NAME(뷰이름)                                 NOT NULL VARCHAR2(30)
+ TEXT_LENGTH(뷰의 문자열 길이)                                        NUMBER
+ TEXT(뷰의 내용->텍스트)                                               LONG
+ TYPE_TEXT_LENGTH                                   NUMBER
+ TYPE_TEXT                                          VARCHAR2(4000)
+ OID_TEXT_LENGTH                                    NUMBER
+ OID_TEXT                                           VARCHAR2(4000)
+ VIEW_TYPE_OWNER                                    VARCHAR2(30)
+ VIEW_TYPE                                          VARCHAR2(30)
+ SUPERVIEW_NAME                                     VARCHAR2(30)
+ EDITIONING_VIEW                                    VARCHAR2(1)
+ READ_ONLY(읽기전용)확인                                          VARCHAR2(1)
+
+sql>select view_name,text_length,text from user_views;
+
+VIEW_NAME                      TEXT_LENGTH
+------------------------------ -----------
+TEXT
+--------------------------------------------------------------------------------
+
+EMP_20                                 101
+select "EMPNO","ENAME","JOB","MGR","HIREDATE","SAL","COMM","DEPTNO" from b_emp3
+
+---------------------------------------------------------------------
+
+sql>col view_name format a15
+sql>col text_length format 99,990
+sql>col text format a40
+sql>
+
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select view_name,text_length,text from user_views
+SQL> /
+
+VIEW_NAME       TEXT_LENGTH TEXT
+--------------- ----------- ----------------------------------------
+EMP_20                  101 select "EMPNO","ENAME","JOB","MGR","HIRE
+                            DATE","SAL","COMM","DEPTNO" from b_emp3
+
+=>user_views 테이블을 조회하는 뷰를 작성
+
+sql>create view v_search
+     as select view_name,text 
+     from user_views;
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_search;
+
+VIEW_NAME       TEXT
+--------------- ----------------------------------------
+EMP_20          select "EMPNO","ENAME","JOB","MGR","HIRE
+                DATE","SAL","COMM","DEPTNO" from b_emp3
+
+V_SEARCH        select view_name,text
+                     from user_views
+
+<문7>만들어진 뷰를 나중에 다시 수정하고 싶다->수정X
+
+뷰를 작성할때 처음부터 수정까지 하기를 원하다면
+
+형식) create [or replace] view 뷰이름 as sql구문
+
+create table b_emp4 as select * from emp;
+테이블이 생성되었습니다.
+
+b_emp4테이블에서 부서번호가 10번인 데이터를 찾아서 그 사원의 사번,이름
+입사일만 출력 뷰를 작성하시오.(단 employee_no,employee_name,e_hiredate)
+필드이름을 임의로 변경해서
+
+sql>create or replace view v_emp_10(employee_no,employee_name,
+    e_hiredate) as select empno,ename,hiredate from b_emp4
+    where deptno=10;
+
+sql>select * from v_emp_10;
+
+EMPLOYEE_NO EMPLOYEE_N E_HIREDA
+----------- ---------- --------
+       7782 CLARK      81/06/09
+       7839 KING       81/11/17
+       7934 MILLER     82/01/23
+
+sql>select * from v_search;//만들어진 뷰확인
+
+VIEW_NAME       TEXT
+--------------- ----------------------------------------
+EMP_20          select "EMPNO","ENAME","JOB","MGR","HIRE
+                DATE","SAL","COMM","DEPTNO" from b_emp3
+
+V_EMP_10     select empno,ename,hiredate from b_emp4->emp
+                    where deptno=10 ==>20 or ename like~
+
+V_SEARCH        select view_name,text
+                     from user_views
+=========================================
+뷰를 수정하는지 체크?
+
+sql>create or replace view V_EMP_10(id,job2,hire)
+      as select empno,job,hiredate from emp
+      where deptno=20 or ename like '%D%';
+
+sql>select * from v_search;
+
+VIEW_NAME       TEXT
+--------------- ----------------------------------------
+EMP_20          select "EMPNO","ENAME","JOB","MGR","HIRE
+                DATE","SAL","COMM","DEPTNO" from b_emp3
+
+V_EMP_10        select empno,job,hiredate from emp
+                      where deptno=20 or ename like '%D%
+                '
+
+V_SEARCH        select view_name,text
+                     from user_views
+
+SQL> select * from v_emp_10;
+
+        ID JOB2      HIRE
+---------- --------- --------
+      7369 CLERK     80/12/17
+      7521 SALESMAN  81/02/22
+      7566 MANAGER   81/04/02
+      7788 ANALYST   87/04/19
+      7876 CLERK     87/05/23
+      7902 ANALYST   81/12/03
+
+6 개의 행이 선택되었습니다.
+
+<문8>뷰의 종류,뷰를 테이블관리(insert,update,delete)가능?
+
+단순뷰->하나의 테이블로 만들어진 뷰,DML이 가능
+            그룹함수,distinct사용 불가
+
+복합뷰->여러개의 테이블로 만들어진 뷰,DML이 불가
+            그룹함수,distinct사용 가능
+
+  ppt 참조해서 정리
+===============================
+b_emp4->DML
+
+부서번호가 30인 사원의 이름,급여,부서번호만 보여주는 뷰를 작성?
+(view_30)
+
+create view view_30 as
+select ename,sal,deptno
+from b_emp4
+where deptno=30;
+
+뷰가 생성되었습니다.
+
+SQL> select * from view_30;  //수정
+
+ENAME             SAL     DEPTNO
+---------- ---------- ----------
+ALLEN            1600         30  // ALLEN->1개월 감봉(1600->0)
+WARD             1250         30
+MARTIN           1250         30
+BLAKE            2850         30
+TURNER           1500         30
+JAMES             950         30
+
+6 개의 행이 선택되었습니다.
+
+형식) update 수정t set 수정할필드명=수정할값,,,
+                   ===>뷰이름
+        where 조건식
+     
+sql>update view_30 set sal=0
+      where ename='ALLEN';
+
+1 행이 갱신되었습니다.
+
+SQL> select * from view_30;
+
+ENAME             SAL     DEPTNO
+---------- ---------- ----------
+ALLEN               0         30
+WARD             1250         30
+MARTIN           1250         30
+BLAKE            2850         30
+TURNER           1500         30
+JAMES             950         30
+
+6 개의 행이 선택되었습니다.
+
+-->ALLEN->0->1600
+
+sql>rollback; //작업한 내용을 실행취소(insert,update,delete)
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from view_30;
+
+ENAME             SAL     DEPTNO
+---------- ---------- ----------
+ALLEN            1600         30
+WARD             1250         30
+MARTIN           1250         30
+BLAKE            2850         30
+TURNER           1500         30
+JAMES             950         30
+
+6 개의 행이 선택되었습니다.
+
+<문9>단순뷰에서도 그룹함수 사용이 가능
+ 부서별로 최대급여를 조회할 수있는 뷰를 작성하시오
+  group by deptno   (부서번호,최대급여)
+(뷰의 내용도 수정이 가능하게 설정할것)
+
+sql>create or replace view v_maxsal
+      as select deptno,max(sal)
+      from emp
+      group by deptno;
+      
+SQL> create or replace view v_maxsal
+  2        as select deptno,max(sal)
+  3        from emp
+  4        group by deptno;
+      as select deptno,max(sal)
+                       *
+2행에 오류:
+ORA-00998: 이 식은 열의 별명과 함께 지정해야 합니다
+
+=>뷰를 작성할때 실행시킬 SQL구문의 일반필드 상관X,가상필드(계산필드)
+=>필드 존재X->필드에 대한 별칭을 부여
+
+ed
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  create or replace view v_maxsal
+  2        as select deptno,max(sal) as "최대 급여"
+  3        from emp
+  4*       group by deptno
+SQL> /
+
+뷰가 생성되었습니다.
+
+sql>select * from v_maxsal;
+
+----------------------------------->뷰에서 그룹함수를 사용이
+                                                가능하지만 별칭을 부여
+                                               해야 된다.(단순뷰에서만)
+    DEPTNO  최대 급여
+---------- ----------
+        30       2850
+        20       3000
+        10       5000
+--------------------------------------------------------------
+<문 10>복합뷰(조인,서브쿼리)->편리성 추구,DML X
+사원의 이름과 부서명을 출력시켜주는 뷰를 작성(v_dname)
+    ename      dname
+
+create or replace view v_dname 
+as select e.ename,d.dname
+from emp e,dept d
+where e.deptno=d.deptno;
+
+SQL> create or replace view v_dname
+  2  as select e.ename,d.dname
+  3  from emp e,dept d
+  4  where e.deptno=d.deptno;
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_dname;
+
+ENAME      DNAME
+---------- --------------
+SMITH      RESEARCH
+ALLEN      SALES
+WARD       SALES
+JONES      RESEARCH
+MARTIN     SALES
+BLAKE      SALES
+CLARK      ACCOUNTING
+SCOTT      RESEARCH
+KING       ACCOUNTING
+TURNER     SALES
+ADAMS      RESEARCH
+
+ENAME      DNAME
+---------- --------------
+JAMES      SALES
+FORD       RESEARCH
+MILLER     ACCOUNTING
+
+14 개의 행이 선택되었습니다.
+
+<문11> 복합뷰(서브쿼리)
+SMITH보다 많은 급여를 받는 사원의 이름,급여,부서번호를 조회할수
+있는 SQL작성(단 뷰의 이름 v_smith, 경우에 따라서는 뷰의내용도 수정)
+
+sql>create or replace view v_smith
+     as select ename,sal,deptno from emp
+     where sal > (select sal from emp where ename='SMITH');
+
+sql>select * from v_smith;
+
+ENAME             SAL     DEPTNO
+---------- ---------- ----------
+ALLEN            1600         30
+WARD             1250         30
+JONES            2975         20
+MARTIN           1250         30
+BLAKE            2850         30
+CLARK            2450         10
+SCOTT            3000         20
+KING             5000         10
+TURNER           1500         30
+ADAMS            1100         20
+JAMES             950         30
+
+ENAME             SAL     DEPTNO
+---------- ---------- ----------
+FORD             3000         20
+MILLER           1300         10
+
+13 개의 행이 선택되었습니다.
+
+단순뷰->DML이 가능=>예외조항
+
+1.delete가 안되는 경우->그룹함수,group by,distinct를 사용하는 경우
+2.insert,update가 안되는 경우
+  ->그룹함수,group by,distinct를 사용하는 경우
+  ->별칭부여-> 가상필드(->계산필드)부여->select
+ ->rownum을 사용
+================================
+정리=>존재하지않은 가상필드를 이용하는 경우
+         ->insert,update,delete 실행이 안된다.
+--------------------------------------------------------
+<문12> [with check option]->뷰에 제약조건을 부여하는 경우
+ 제약조건 이유->정해진 규칙에 따라서 insert,update,delete 적용
+
+b_emp4 테이블을 이용해서 emp30(30번 부서만 가진)뷰를 작성
+with check option을 부여해서 작성하시오.(모든 정보 *)
+
+sql>create or replace view emp30
+      as select * from b_emp4
+       where deptno=30     //제약조건에 해당
+      with check option constraint emp30_ck;
+
+ //형식)~ with check option constraint 제약조건이름;
+ //수정은 되는데 수정이 안되는 경우
+  empno->7566->deptno->10,20,30번은 아니다.
+  부서번호를 30번으로 변경하는 SQL작성?(수정 되는지 체크?)
+ 
+ sql>update emp30
+      set deptno=30
+      where empno=7566;
+
+SQL> update emp30
+  2        set deptno=30
+  3        where empno=7566;
+
+0 행이 갱신되었습니다.
+
+<문13>데이터를 입력하는데 id값이 100이하인 경우에만 입력을
+           허용해주는 뷰를 작성(v_test1)
+
+  sql>create table test1(id number);  //id>=1 and id<100
+  
+  ex)insert into test1 values(1);~
+      뷰를 통해서 데이터를 입력
+
+  sql>create view v_test1 
+        as select * from test1
+        where id < 100
+       with check option constraint test1_ck;
+                                 ==============>생략가능
+
+  sql>insert into v_test1 values(1);
+        insert into v_test1 values(2);
+        insert into v_test1 values(3);
+        insert into v_test1 values(4);
+        insert into v_test1 values(5);
+
+SQL> select * from v_test1;
+
+        ID
+----------
+         1
+         2
+         3
+         4
+         5
+
+  insert into v_test1 values(102);
+
+SQL> insert into v_test1 values(102);
+insert into v_test1 values(102)
+            *
+1행에 오류:
+ORA-01402: 뷰의 WITH CHECK OPTION의 조건에 위배 됩니다
+
+ id < 100
+
+<문 14>뷰를 작성할때 with read only를 부여하는 경우
+(읽기전용 뷰)->수정 X (부서번호 30번인 부서이름을 출력)
+=>delete 
+
+sql>create or replace view dept30
+      as 
+      select deptno,dname from dept
+      where deptno=30
+      with read only; //읽기전용 뷰
+
+sql> 형식) delete from 뷰이름명;
+sql> delete from dept30;
+
+delete from dept30
+            *
+1행에 오류:
+ORA-42399: 읽기 전용 뷰에서는 DML 작업을 수행할 수 없습니다.
+
+sql>select * from dept30;
+                          ====
+
+    DEPTNO DNAME
+---------- --------------
+        30 SALES
+==============================
+오라클의 페이징 처리하는 기법
+==================
+테이블에 데이터가 많은 상태->화면 구현(페이지당 10개~20개)
+
+1.rownum
+
+sql>select empno,ename from emp;
+
+     EMPNO ENAME
+---------- ----------
+      7369 SMITH
+      7499 ALLEN
+      7521 WARD
+      7566 JONES
+      7654 MARTIN
+      7698 BLAKE
+      7782 CLARK
+      7788 SCOTT
+      7839 KING
+      7844 TURNER
+      7876 ADAMS
+
+     EMPNO ENAME
+---------- ----------
+      7900 JAMES
+      7902 FORD
+      7934 MILLER
+
+14 개의 행이 선택되었습니다.
+
+  1* select rownum,empno,ename from emp
+SQL> /
+
+   rownum=>내부적으로 각각의 행을 구분해서 번호를 매기면서
+                   출력시켜주는 오라클의 예약어(내부적인 구분자)
+
+    ROWNUM      EMPNO ENAME
+---------- ---------- ----------
+         1       7369 SMITH
+         2       7499 ALLEN
+         3       7521 WARD
+         4       7566 JONES
+         5       7654 MARTIN
+         6       7698 BLAKE
+         7       7782 CLARK
+         8       7788 SCOTT
+         9       7839 KING
+        10       7844 TURNER
+        11       7876 ADAMS
+
+    ROWNUM      EMPNO ENAME
+---------- ---------- ----------
+        12       7900 JAMES
+        13       7902 FORD
+        14       7934 MILLER
+
+14 개의 행이 선택되었습니다.
+
+ ed
+==============>별칭 부여
+  1* select rownum empno,ename from emp
+SQL> /
+
+     EMPNO ENAME
+---------- ----------
+         1 SMITH
+         2 ALLEN
+         3 WARD
+         4 JONES
+         5 MARTIN
+         6 BLAKE
+         7 CLARK
+         8 SCOTT
+         9 KING
+        10 TURNER
+        11 ADAMS
+
+     EMPNO ENAME
+---------- ----------
+        12 JAMES
+        13 FORD
+        14 MILLER
+
+14 개의 행이 선택되었습니다.
+
+======================
+SELECT * FROM
+(
+
+    필드를 출력하되 앞에 번호를 매기면서 출력하라
+    SELECT ROWNUM AS RNUM, GET.* FROM 
+
+    (             
+
++ query + (이곳에 데이터를 불러오는 쿼리문이 들어간다.)
+
+
+
+    ) GET(테이블의 별칭)
+
+   ORDER BY ROWNUM desc
+
+)
+
+WHERE RNUM BETWEEN 1 AND 10 ORDER BY RNUM ASC;
+
+
+페이징 처리를 하기 위해선 전체 줄 수도 알아야 하기 때문에, 그를 알기위한 쿼리문
+
+
+SELECT COUNT(*) CNT FROM ( + query + ) 
+
+
+
+출처: http://notpeelbean.tistory.com/36 [Storm Of Two Yellow Beans]
+======================================
+<문15>emp테이블에서 가장 최근에 입사한 5명의 사원의 이름과 입사일을
+출력하시오.=>내부적으로 순위를 매기면서 출력(Top-N)->N->5
+
+공식) select rownum "별칭명",필드명,,,테이블별칭.*
+        from (
+          select 필드명,,,
+          from 테이블명
+          order by top-N 필드명(정렬이 되는 필드명) desc ->가장 최근
+       ) 별칭
+       where 조건식(rownum<=top-N) ->에 맞는 값을 부여
+
+sql>select rownum "num",ename,hiredate
+      from (
+              select ename,hiredate
+              from emp
+              order by hiredate desc
+     )
+     where rownum<=&num;
+
+SQL> select rownum "num",ename,hiredate
+  2        from (
+  3                select ename,hiredate
+  4                from emp
+  5                order by hiredate desc
+  6       )
+  7       where rownum<=&num;
+num의 값을 입력하십시오: 5
+구   7:      where rownum<=&num
+신   7:      where rownum<=5
+
+       num ENAME      HIREDATE
+---------- ---------- --------
+         1 ADAMS      87/05/23
+         2 SCOTT      87/04/19
+         3 MILLER     82/01/23
+         4 JAMES      81/12/03
+         5 FORD       81/12/03
+
+SQL> /
+num의 값을 입력하십시오: 3
+구   7:      where rownum<=&num
+신   7:      where rownum<=3
+
+       num ENAME      HIREDATE
+---------- ---------- --------
+         1 ADAMS      87/05/23
+         2 SCOTT      87/04/19
+         3 MILLER     82/01/23
+
+SQL>spool off
+===========================
+트랜잭션 ? (ppt),동의어(시노님)
+
+
+
+
+
+
+
+
+

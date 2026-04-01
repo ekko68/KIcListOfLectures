@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Radio(6).html</title>
+  <script>
+       function test(){
+		   //만약에 1.gif을 선택했다면->.checked==true은 생략이 가능
+          if(document.myform.ok[0].checked)
+		      alert("1번 그림이 맘에 드시는 군요!")
+		  else if(document.myform.ok[1].checked)
+		      alert("2번 그림이 맘에 드시는 군요!")
+		  else if(document.myform.ok[2].checked)
+		      alert("3번 그림이 맘에 드시는 군요!")
+		  else
+		      alert("3개의 그림중 하나는 무조건 선택해야 합니다.")
+	   }
+  </script>
+ </head>
+ <body>
+  <form name="myform">
+     맘에 드시는 그림을 선택하세요<p>
+      <!-- 같은 태그가 여러번 반복해서 화면 디자인(배열)
+	      ok=new Array(1.gif,2.gif,3.gif) ->ok[0],ok[1],ok[2]
+		   checkBox,radio->checked속성->true
+	  -->
+	 <input type="radio" name="ok">1.<img src="../images/1.gif"><p>
+	 <input type="radio" name="ok">2.<img src="../images/2.gif"><p>
+	 <input type="radio" name="ok">3.<img src="../images/3.gif"><p>
+
+	 <input type="button" value="확인" onclick="test()">
+  </form>
+ </body>
+</html>

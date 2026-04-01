@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>테이블태그를 이용한 병합(1).html </title>
+ </head>
+ <body>
+  <table  align="center" width="70%" height="70%" border="1"
+              cellspacing="0" cellpadding="0">
+	  <caption>참가자 목록</caption>
+     <tr bgcolor="yellow">
+	 <!-- 가로로 병합(colspan="병합할 갯수") -->
+         <!-- 
+		 <th>이름</th>
+		 <th>나이</th> -->
+		 <th colspan="2">회원</th>
+		 <th>성별</th>
+	 </tr>
+	 <tr>
+        <td>홍길동</td>
+		<td>23</td>
+		<!-- rowspan="병합할 수(세로로 합칠수)" 
+		   테이블 (가로로 정렬->align=left|center|right),
+		              세로로 정렬->valign="top|middle|bottom")
+		 -->
+		<td rowspan="2" align="center" valign="middle">남자</td>
+	 </tr>
+	 <tr>
+        <td>테스트</td>
+		<td>35</td>
+		<!-- <td>남자</td> -->
+	 </tr>
+  </table>
+ </body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>DOM을 이용해서 스타일변경 및 this(8).html</title>
+  <script>
+          window.onload=function(){
+             var header=document.getElementById('header')
+			 //태그정보=>태그정보.style.하위속성명=값
+			 header.onclick=function(){
+				 /*
+				  현재 이벤트를 발생시킨 컴포넌트(태그정보)를 구분하는 예약어->this
+                  header.style.color='orange'
+				  header.style.border='2px solid black'
+				  header.style.fontFamily='Helvertica'
+				  header.style.background='yellow' */
+
+				  this.style.color='orange'
+				  this.style.border='2px solid black'
+				  this.style.fontFamily='Helvertica'
+				  this.style.background='yellow'
+			 }
+		  }
+  </script>
+ </head>
+ <body>
+    <!-- <h1 id="header" style="color:orange;background=yellow">클릭</h1> -->
+	 <h1 id="header">클릭</h1>
+	<h1 id="header2">클릭2</h1>
+ </body>
+</html>

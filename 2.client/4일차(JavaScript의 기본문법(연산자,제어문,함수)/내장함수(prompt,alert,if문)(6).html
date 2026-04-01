@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>내장함수(prompt,alert,if문)(6).html </title>
+  <!-- 
+     문장->제어문(조건에 따라서 실행 O or 실행X 되는 문장)
+	           평문(순서대로 실행되는 문장),탈출문
+     형식)if문->조건(둘중에 하나를 체크)에 따라서 실행
+
+	 if(조건식) //변수,수식(계산식->논리,관계)
+	    수행1(참)
+	 else
+	    수행2(거짓)
+  -->
+ </head>
+ <body>
+  <script>
+     //document.write(~)->객체명.함수명(~) 속성(특징),함수(처리결과 기능)
+	 //window.alert("경고성 문구를 출력시킬때 사용")
+	 //alert("두줄을 나누\n어서 출력\n함")
+	 //이름을 입력?->prompt
+	 name=prompt("당신의 이름을 입력하세요?")
+     //if문(참),거짓->null(값이 들어가 있지 않은 상태)
+	 if(name!="") //자바에서의 코딩 ->if(name!=null)
+	    alert("당신의 이름은"+name+"이군요")
+	 else //""
+	    alert("이름을 먼저 입력하세요");
+
+  </script>
+ </body>
+</html>

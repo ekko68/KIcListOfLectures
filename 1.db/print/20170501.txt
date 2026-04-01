@@ -1,0 +1,526 @@
+SQL> select count(*),trunc(avg(sal)),max(sal),min(sal),
+  2         to_char(sum(sal),'$999,999')
+  3        from emp;
+
+  COUNT(*) TRUNC(AVG(SAL))   MAX(SAL)   MIN(SAL) TO_CHAR(S                      
+---------- --------------- ---------- ---------- ---------                      
+        14            2073       5000        800   $29,025                      
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename,count(*),trunc(avg(sal)),max(sal),min(sal),
+  2         to_char(sum(sal),'$999,999')
+  3*       from emp
+SQL> /
+select ename,count(*),trunc(avg(sal)),max(sal),min(sal),
+       *
+1행에 오류:
+ORA-00937: 단일 그룹의 그룹 함수가 아닙니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename,count(*),trunc(avg(sal)),max(sal),min(sal),
+  2         to_char(sum(sal),'$999,999')
+  3        from emp
+  4* group by ename
+SQL> /
+
+ENAME        COUNT(*) TRUNC(AVG(SAL))   MAX(SAL)   MIN(SAL) TO_CHAR(S           
+---------- ---------- --------------- ---------- ---------- ---------           
+ALLEN               1            1600       1600       1600    $1,600           
+JONES               1            2975       2975       2975    $2,975           
+FORD                1            3000       3000       3000    $3,000           
+CLARK               1            2450       2450       2450    $2,450           
+MILLER              1            1300       1300       1300    $1,300           
+SMITH               1             800        800        800      $800           
+WARD                1            1250       1250       1250    $1,250           
+MARTIN              1            1250       1250       1250    $1,250           
+SCOTT               1            3000       3000       3000    $3,000           
+TURNER              1            1500       1500       1500    $1,500           
+ADAMS               1            1100       1100       1100    $1,100           
+
+ENAME        COUNT(*) TRUNC(AVG(SAL))   MAX(SAL)   MIN(SAL) TO_CHAR(S           
+---------- ---------- --------------- ---------- ---------- ---------           
+BLAKE               1            2850       2850       2850    $2,850           
+KING                1            5000       5000       5000    $5,000           
+JAMES               1             950        950        950      $950           
+
+14 개의 행이 선택되었습니다.
+
+SQL> select count(*) from emp
+  2   where sal >=3000;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         3                                                                      
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename,count(*) from emp
+  2   where sal >=3000
+  3* group by ename
+SQL> /
+
+ENAME        COUNT(*)                                                           
+---------- ----------                                                           
+FORD                1                                                           
+SCOTT               1                                                           
+KING                1                                                           
+
+SQL> select min(ename),max(ename),min(hiredate),max(hiredate),
+  2  min(sal),max(sal) from emp;
+
+MIN(ENAME) MAX(ENAME) MIN(HIRE MAX(HIRE   MIN(SAL)   MAX(SAL)                   
+---------- ---------- -------- -------- ---------- ----------                   
+ADAMS      WARD       80/12/17 87/05/23        800       5000                   
+
+SQL> select deptno, sum(sal) "급여합계"
+  2       from emp
+  3       where count(*) >=4
+  4       group by deptno;
+     where count(*) >=4
+           *
+3행에 오류:
+ORA-00934: 그룹 함수는 허가되지 않습니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select deptno, sum(sal) "급여합계"
+  2       from emp
+  3       group by deptno
+  4  having count(*) >=4
+  5* order by sum(sal) desc
+SQL> /
+
+    DEPTNO   급여합계                                                           
+---------- ----------                                                           
+        20      10875                                                           
+        30       9400                                                           
+
+SQL> select max(avg(sal)),max(sum(sal)),min(min(sal)),
+  2        max(max(sal)) from emp
+  3        group by deptno;
+
+MAX(AVG(SAL)) MAX(SUM(SAL)) MIN(MIN(SAL)) MAX(MAX(SAL))                         
+------------- ------------- ------------- -------------                         
+   2916.66667         10875           800          5000                         
+
+SQL> select deptno,sum(sal) "부서별 급여합계"
+  2  from emp
+  3  where job <>upper('manager')
+  4  group by deptno
+  5  having sum(sal) >=2500
+  6  order by sum(sal) desc;
+
+    DEPTNO 부서별 급여합계                                                      
+---------- ---------------                                                      
+        20            7900                                                      
+        30            6550                                                      
+        10            6300                                                      
+
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+B_PRTEST                       TABLE                                            
+PRTEST                         TABLE                                            
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ NAME                                               VARCHAR2(10)
+
+SQL> select count(*) from b_prtest;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         0                                                                      
+
+SQL> alter table b_prtest add (tel varchar2(15) not null);
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ NAME                                               VARCHAR2(10)
+ TEL                                       NOT NULL VARCHAR2(15)
+
+SQL> alter table b_prtest modify (name varchar2(30));
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ NAME                                               VARCHAR2(30)
+ TEL                                       NOT NULL VARCHAR2(15)
+
+SQL> alter table b_prtest drop column tel;
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ NAME                                               VARCHAR2(30)
+
+SQL> alter table b_prtest rename column name to irum;
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(30)
+
+SQL> select * prtest;
+select * prtest
+         *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다. 
+
+
+SQL> select * from prtest;
+
+        ID NAME                                                                 
+---------- ----------                                                           
+         1 홍길동                                                               
+         2 임시테스트                                                           
+         3 임시                                                                 
+         4 임시2                                                                
+         5 테스트2                                                              
+
+SQL> alter table prtest rename column name to irum;
+
+테이블이 변경되었습니다.
+
+SQL> desc prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(10)
+
+SQL> alter table b_prtest add constraint b_prtest_pk_id primary key(id);
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                        NOT NULL NUMBER
+ IRUM                                               VARCHAR2(30)
+
+SQL> insert into b_prtest values(1,'홍길동');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> insert into b_prtest values(1,'홍길동');
+insert into b_prtest values(1,'홍길동')
+*
+1행에 오류:
+ORA-00001: 무결성 제약 조건(TEST1.B_PRTEST_PK_ID)에 위배됩니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(2,'홍길동')
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> alter table b_prtest add constraint b_prtest_uk_id unique(id);
+alter table b_prtest add constraint b_prtest_uk_id unique(id)
+                                                   *
+1행에 오류:
+ORA-02261: 고유 키 또는 기본 키가 이미 존재하고 있습니다 
+
+
+SQL> alter table b_prtest drop constraint b_prtest_pk_id;
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(30)
+
+SQL> alter table b_prtest add (age number);
+
+테이블이 변경되었습니다.
+
+SQL> alter table b_prtest add (addr varchar2(80));
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(30)
+ AGE                                                NUMBER
+ ADDR                                               VARCHAR2(80)
+
+SQL> alter table b_prtest add constraint b_prtest_ck_age
+  2          check (age>=20 and age<=65);
+
+테이블이 변경되었습니다.
+
+SQL> insert into b_prtest values(3,'김길수',123,'서울시 강남구 대현빌딩');
+insert into b_prtest values(3,'김길수',123,'서울시 강남구 대현빌딩')
+*
+1행에 오류:
+ORA-02290: 체크 제약조건(TEST1.B_PRTEST_CK_AGE)이 위배되었습니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(3,'김길수',23,'서울시 강남구 대현빌딩')
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_prtest;
+
+        ID IRUM                                  AGE                            
+---------- ------------------------------ ----------                            
+ADDR                                                                            
+--------------------------------------------------------------------------------
+         1 홍길동                                                               
+                                                                                
+                                                                                
+         2 홍길동                                                               
+                                                                                
+                                                                                
+         3 김길수                                 23                            
+서울시 강남구 대현빌딩                                                          
+                                                                                
+
+SQL> alter table b_prtest add (hiredate date default sysdate);
+
+테이블이 변경되었습니다.
+
+SQL> desc b_prtest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ID                                                 NUMBER
+ IRUM                                               VARCHAR2(30)
+ AGE                                                NUMBER
+ ADDR                                               VARCHAR2(80)
+ HIREDATE                                           DATE
+
+SQL> insert into b_prtest values(4,'테스트',45,'서울시');
+insert into b_prtest values(4,'테스트',45,'서울시')
+            *
+1행에 오류:
+ORA-00947: 값의 수가 충분하지 않습니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(4,'테스트',45,'서울시','2017-05-01')
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(5,'테스트2',25,'대전시 중구',sysdate)
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(5,'테스트2',25,'대전시 중구',default)
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(6,'테스트3',35,'부산시',default)
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* insert into b_prtest values(7,'테스트4',27,'부산시',null)
+SQL> /
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_prtest;
+
+        ID IRUM                                  AGE                            
+---------- ------------------------------ ----------                            
+ADDR                                                                            
+--------------------------------------------------------------------------------
+HIREDATE                                                                        
+--------                                                                        
+         4 테스트                                 45                            
+서울시                                                                          
+17/05/01                                                                        
+                                                                                
+         5 테스트2                                25                            
+대전시 중구                                                                     
+17/05/01                                                                        
+
+        ID IRUM                                  AGE                            
+---------- ------------------------------ ----------                            
+ADDR                                                                            
+--------------------------------------------------------------------------------
+HIREDATE                                                                        
+--------                                                                        
+                                                                                
+         6 테스트3                                35                            
+부산시                                                                          
+17/05/01                                                                        
+                                                                                
+         7 테스트4                                27                            
+부산시                                                                          
+
+        ID IRUM                                  AGE                            
+---------- ------------------------------ ----------                            
+ADDR                                                                            
+--------------------------------------------------------------------------------
+HIREDATE                                                                        
+--------                                                                        
+                                                                                
+                                                                                
+         1 홍길동                                                               
+                                                                                
+17/05/01                                                                        
+                                                                                
+         2 홍길동                                                               
+
+        ID IRUM                                  AGE                            
+---------- ------------------------------ ----------                            
+ADDR                                                                            
+--------------------------------------------------------------------------------
+HIREDATE                                                                        
+--------                                                                        
+                                                                                
+17/05/01                                                                        
+                                                                                
+         3 김길수                                 23                            
+서울시 강남구 대현빌딩                                                          
+17/05/01                                                                        
+                                                                                
+
+7 개의 행이 선택되었습니다.
+
+SQL> insert into b_prtest(id,irum,age)values(8,'테스트5',43);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_prtest where id=8;
+
+        ID IRUM                                  AGE                            
+---------- ------------------------------ ----------                            
+ADDR                                                                            
+--------------------------------------------------------------------------------
+HIREDATE                                                                        
+--------                                                                        
+         8 테스트5                                43                            
+                                                                                
+17/05/01                                                                        
+                                                                                
+
+SQL> show user;
+USER은 "TEST1"입니다
+SQL> clear screen
+
+SQL> 
+SQL> create table dept
+  2        (deptno number primary key,
+  3          dname varchar2(20) not null,
+  4          loc varchar2(15) not null);
+
+테이블이 생성되었습니다.
+
+SQL> create table dept
+  2        (deptno number primary key,
+  3          dname varchar2(20) not null,
+  4          loc varchar2(15) not null);
+create table dept
+             *
+1행에 오류:
+ORA-00955: 기존의 객체가 이름을 사용하고 있습니다. 
+
+
+SQL> insert into dept values(10,'영업부','서울');
+
+1 개의 행이 만들어졌습니다.
+
+SQL>  insert into dept values(20,'개발부','대전');
+
+1 개의 행이 만들어졌습니다.
+
+SQL>  insert into dept values(30,'총무부','마산');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from dept;
+
+    DEPTNO DNAME                LOC                                             
+---------- -------------------- ---------------                                 
+        10 영업부               서울                                            
+        20 개발부               대전                                            
+        30 총무부               마산                                            
+
+SQL> create table sawon(
+  2             id number primary key,
+  3             name varchar2(20) not null,
+  4             deptno number);
+
+테이블이 생성되었습니다.
+
+SQL> insert into sawon values(1,'홍길동',10);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> insert into sawon values(2,'테스트',40);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> update sawon set deptno=30 where id=2;
+
+1 행이 갱신되었습니다.
+
+SQL> alter table sawon add constraint sawon_fk_deptno foreign key(deptno)
+  2        references dept(deptno);
+
+테이블이 변경되었습니다.
+
+SQL> insert into sawon values(3,'테스트2',20);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> insert into sawon values(4,'테스트3',900);
+insert into sawon values(4,'테스트3',900)
+*
+1행에 오류:
+ORA-02291: 무결성 제약조건(TEST1.SAWON_FK_DEPTNO)이 위배되었습니다- 부모 키가
+없습니다 
+
+
+SQL> spool off

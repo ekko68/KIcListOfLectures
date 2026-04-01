@@ -1,0 +1,1208 @@
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> show user
+USER은 "SYS"입니다
+SQL> create user hong identified by h1234;
+
+사용자가 생성되었습니다.
+
+SQL> grant connect,resource,create view ,create synonym to hong;
+
+권한이 부여되었습니다.
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_DEPT2                        TABLE                                            
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+EMP_DEPTNO                     TABLE                                            
+SALGRADE                       TABLE                                            
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SEARCH                       VIEW                                             
+V_SEQUENCE_SEQ                 VIEW                                             
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+26 개의 행이 선택되었습니다.
+
+SQL> grant update,delete on b_emp2 to hong;
+
+권한이 부여되었습니다.
+
+SQL> conn hong/h1234
+연결되었습니다.
+SQL> delete from scott.b_emp2  where ename='ALLEN';
+
+0 행이 삭제되었습니다.
+
+SQL> create synonym hongtest  for scott.b_emp2;
+
+동의어가 생성되었습니다.
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> revoke delete on b_emp2 from hong;
+
+권한이 취소되었습니다.
+
+SQL> conn hong/h1234
+연결되었습니다.
+SQL> drop synonym hongtest;
+
+동의어가 삭제되었습니다.
+
+SQL> show user
+USER은 "HONG"입니다
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> alter user hong password expire;
+
+사용자가 변경되었습니다.
+
+SQL> conn hong/h1234
+ERROR:
+ORA-28001: the password has expired 
+
+
+hong에 대한 비밀번호를 변경합니다.
+비밀번호가 변경되었습니다.
+연결되었습니다.
+SQL> conn hr/hr1234
+ERROR:
+ORA-28000: the account is locked 
+
+
+경고: 이제는 ORACLE에 연결되어 있지 않습니다.
+SQL> alter user hr identified by hr1234 account unlock;
+SP2-0640: 연결되지 않았습니다.
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> alter user hr identified by hr1234 account unlock;
+
+사용자가 변경되었습니다.
+
+SQL> conn hr/hr1234
+연결되었습니다.
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+COUNTRIES                      TABLE                                            
+DEPARTMENTS                    TABLE                                            
+EMPLOYEES                      TABLE                                            
+EMP_DETAILS_VIEW               VIEW                                             
+JOBS                           TABLE                                            
+JOB_HISTORY                    TABLE                                            
+LOCATIONS                      TABLE                                            
+REGIONS                        TABLE                                            
+
+8 개의 행이 선택되었습니다.
+
+SQL> desc employees
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPLOYEE_ID                               NOT NULL NUMBER(6)
+ FIRST_NAME                                         VARCHAR2(20)
+ LAST_NAME                                 NOT NULL VARCHAR2(25)
+ EMAIL                                     NOT NULL VARCHAR2(25)
+ PHONE_NUMBER                                       VARCHAR2(20)
+ HIRE_DATE                                 NOT NULL DATE
+ JOB_ID                                    NOT NULL VARCHAR2(10)
+ SALARY                                             NUMBER(8,2)
+ COMMISSION_PCT                                     NUMBER(2,2)
+ MANAGER_ID                                         NUMBER(6)
+ DEPARTMENT_ID                                      NUMBER(4)
+
+SQL> alter user hong account lock;
+alter user hong account lock
+*
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> alter user hong account lock;
+
+사용자가 변경되었습니다.
+
+SQL> conn hong/1234
+ERROR:
+ORA-28000: the account is locked 
+
+
+경고: 이제는 ORACLE에 연결되어 있지 않습니다.
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> show user
+USER은 "SYS"입니다
+SQL> drop user hong;
+
+사용자가 삭제되었습니다.
+
+SQL> select * from system_privilege_map;
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+        -3 ALTER SYSTEM                                      0                  
+        -4 AUDIT SYSTEM                                      0                  
+        -5 CREATE SESSION                                    0                  
+        -6 ALTER SESSION                                     0                  
+        -7 RESTRICTED SESSION                                0                  
+       -10 CREATE TABLESPACE                                 0                  
+       -11 ALTER TABLESPACE                                  0                  
+       -12 MANAGE TABLESPACE                                 0                  
+       -13 DROP TABLESPACE                                   0                  
+       -15 UNLIMITED TABLESPACE                              0                  
+       -20 CREATE USER                                       0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+       -21 BECOME USER                                       0                  
+       -22 ALTER USER                                        0                  
+       -23 DROP USER                                         0                  
+       -30 CREATE ROLLBACK SEGMENT                           0                  
+       -31 ALTER ROLLBACK SEGMENT                            0                  
+       -32 DROP ROLLBACK SEGMENT                             0                  
+       -40 CREATE TABLE                                      0                  
+       -41 CREATE ANY TABLE                                  0                  
+       -42 ALTER ANY TABLE                                   0                  
+       -43 BACKUP ANY TABLE                                  0                  
+       -44 DROP ANY TABLE                                    0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+       -45 LOCK ANY TABLE                                    0                  
+       -46 COMMENT ANY TABLE                                 0                  
+       -47 SELECT ANY TABLE                                  0                  
+       -48 INSERT ANY TABLE                                  0                  
+       -49 UPDATE ANY TABLE                                  0                  
+       -50 DELETE ANY TABLE                                  0                  
+       -60 CREATE CLUSTER                                    0                  
+       -61 CREATE ANY CLUSTER                                0                  
+       -62 ALTER ANY CLUSTER                                 0                  
+       -63 DROP ANY CLUSTER                                  0                  
+       -71 CREATE ANY INDEX                                  0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+       -72 ALTER ANY INDEX                                   0                  
+       -73 DROP ANY INDEX                                    0                  
+       -80 CREATE SYNONYM                                    0                  
+       -81 CREATE ANY SYNONYM                                0                  
+       -82 DROP ANY SYNONYM                                  0                  
+       -83 SYSDBA                                            0                  
+       -84 SYSOPER                                           0                  
+       -85 CREATE PUBLIC SYNONYM                             0                  
+       -86 DROP PUBLIC SYNONYM                               0                  
+       -90 CREATE VIEW                                       0                  
+       -91 CREATE ANY VIEW                                   0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+       -92 DROP ANY VIEW                                     0                  
+      -105 CREATE SEQUENCE                                   0                  
+      -106 CREATE ANY SEQUENCE                               0                  
+      -107 ALTER ANY SEQUENCE                                0                  
+      -108 DROP ANY SEQUENCE                                 0                  
+      -109 SELECT ANY SEQUENCE                               0                  
+      -115 CREATE DATABASE LINK                              0                  
+      -120 CREATE PUBLIC DATABASE LINK                       0                  
+      -121 DROP PUBLIC DATABASE LINK                         0                  
+      -125 CREATE ROLE                                       0                  
+      -126 DROP ANY ROLE                                     0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -127 GRANT ANY ROLE                                    0                  
+      -128 ALTER ANY ROLE                                    0                  
+      -130 AUDIT ANY                                         0                  
+      -135 ALTER DATABASE                                    0                  
+      -138 FORCE TRANSACTION                                 0                  
+      -139 FORCE ANY TRANSACTION                             0                  
+      -140 CREATE PROCEDURE                                  0                  
+      -141 CREATE ANY PROCEDURE                              0                  
+      -142 ALTER ANY PROCEDURE                               0                  
+      -143 DROP ANY PROCEDURE                                0                  
+      -144 EXECUTE ANY PROCEDURE                             0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -151 CREATE TRIGGER                                    0                  
+      -152 CREATE ANY TRIGGER                                0                  
+      -153 ALTER ANY TRIGGER                                 0                  
+      -154 DROP ANY TRIGGER                                  0                  
+      -160 CREATE PROFILE                                    0                  
+      -161 ALTER PROFILE                                     0                  
+      -162 DROP PROFILE                                      0                  
+      -163 ALTER RESOURCE COST                               0                  
+      -165 ANALYZE ANY                                       0                  
+      -167 GRANT ANY PRIVILEGE                               0                  
+      -172 CREATE MATERIALIZED VIEW                          0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -173 CREATE ANY MATERIALIZED VIEW                      0                  
+      -174 ALTER ANY MATERIALIZED VIEW                       0                  
+      -175 DROP ANY MATERIALIZED VIEW                        0                  
+      -177 CREATE ANY DIRECTORY                              0                  
+      -178 DROP ANY DIRECTORY                                0                  
+      -180 CREATE TYPE                                       0                  
+      -181 CREATE ANY TYPE                                   0                  
+      -182 ALTER ANY TYPE                                    0                  
+      -183 DROP ANY TYPE                                     0                  
+      -184 EXECUTE ANY TYPE                                  0                  
+      -186 UNDER ANY TYPE                                    0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -188 CREATE LIBRARY                                    0                  
+      -189 CREATE ANY LIBRARY                                0                  
+      -190 ALTER ANY LIBRARY                                 0                  
+      -191 DROP ANY LIBRARY                                  0                  
+      -192 EXECUTE ANY LIBRARY                               0                  
+      -200 CREATE OPERATOR                                   0                  
+      -201 CREATE ANY OPERATOR                               0                  
+      -202 ALTER ANY OPERATOR                                0                  
+      -203 DROP ANY OPERATOR                                 0                  
+      -204 EXECUTE ANY OPERATOR                              0                  
+      -205 CREATE INDEXTYPE                                  0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -206 CREATE ANY INDEXTYPE                              0                  
+      -207 ALTER ANY INDEXTYPE                               0                  
+      -208 DROP ANY INDEXTYPE                                0                  
+      -209 UNDER ANY VIEW                                    0                  
+      -210 QUERY REWRITE                                     0                  
+      -211 GLOBAL QUERY REWRITE                              0                  
+      -212 EXECUTE ANY INDEXTYPE                             0                  
+      -213 UNDER ANY TABLE                                   0                  
+      -214 CREATE DIMENSION                                  0                  
+      -215 CREATE ANY DIMENSION                              0                  
+      -216 ALTER ANY DIMENSION                               0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -217 DROP ANY DIMENSION                                0                  
+      -218 MANAGE ANY QUEUE                                  1                  
+      -219 ENQUEUE ANY QUEUE                                 1                  
+      -220 DEQUEUE ANY QUEUE                                 1                  
+      -222 CREATE ANY CONTEXT                                0                  
+      -223 DROP ANY CONTEXT                                  0                  
+      -224 CREATE ANY OUTLINE                                0                  
+      -225 ALTER ANY OUTLINE                                 0                  
+      -226 DROP ANY OUTLINE                                  0                  
+      -227 ADMINISTER RESOURCE MANAGER                       1                  
+      -228 ADMINISTER DATABASE TRIGGER                       0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -233 MERGE ANY VIEW                                    0                  
+      -234 ON COMMIT REFRESH                                 0                  
+      -235 EXEMPT ACCESS POLICY                              0                  
+      -236 RESUMABLE                                         0                  
+      -237 SELECT ANY DICTIONARY                             0                  
+      -238 DEBUG CONNECT SESSION                             0                  
+      -241 DEBUG ANY PROCEDURE                               0                  
+      -243 FLASHBACK ANY TABLE                               0                  
+      -244 GRANT ANY OBJECT PRIVILEGE                        0                  
+      -245 CREATE EVALUATION CONTEXT                         1                  
+      -246 CREATE ANY EVALUATION CONTEXT                     1                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -247 ALTER ANY EVALUATION CONTEXT                      1                  
+      -248 DROP ANY EVALUATION CONTEXT                       1                  
+      -249 EXECUTE ANY EVALUATION CONTEXT                    1                  
+      -250 CREATE RULE SET                                   1                  
+      -251 CREATE ANY RULE SET                               1                  
+      -252 ALTER ANY RULE SET                                1                  
+      -253 DROP ANY RULE SET                                 1                  
+      -254 EXECUTE ANY RULE SET                              1                  
+      -255 EXPORT FULL DATABASE                              0                  
+      -256 IMPORT FULL DATABASE                              0                  
+      -257 CREATE RULE                                       1                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -258 CREATE ANY RULE                                   1                  
+      -259 ALTER ANY RULE                                    1                  
+      -260 DROP ANY RULE                                     1                  
+      -261 EXECUTE ANY RULE                                  1                  
+      -262 ANALYZE ANY DICTIONARY                            0                  
+      -263 ADVISOR                                           0                  
+      -264 CREATE JOB                                        0                  
+      -265 CREATE ANY JOB                                    0                  
+      -266 EXECUTE ANY PROGRAM                               0                  
+      -267 EXECUTE ANY CLASS                                 0                  
+      -268 MANAGE SCHEDULER                                  0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -269 SELECT ANY TRANSACTION                            0                  
+      -270 DROP ANY SQL PROFILE                              0                  
+      -271 ALTER ANY SQL PROFILE                             0                  
+      -272 ADMINISTER SQL TUNING SET                         0                  
+      -273 ADMINISTER ANY SQL TUNING SET                     0                  
+      -274 CREATE ANY SQL PROFILE                            0                  
+      -275 EXEMPT IDENTITY POLICY                            0                  
+      -276 MANAGE FILE GROUP                                 1                  
+      -277 MANAGE ANY FILE GROUP                             1                  
+      -278 READ ANY FILE GROUP                               1                  
+      -279 CHANGE NOTIFICATION                               0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -280 CREATE EXTERNAL JOB                               0                  
+      -281 CREATE ANY EDITION                                0                  
+      -282 DROP ANY EDITION                                  0                  
+      -283 ALTER ANY EDITION                                 0                  
+      -284 CREATE ASSEMBLY                                   0                  
+      -285 CREATE ANY ASSEMBLY                               0                  
+      -286 ALTER ANY ASSEMBLY                                0                  
+      -287 DROP ANY ASSEMBLY                                 0                  
+      -288 EXECUTE ANY ASSEMBLY                              0                  
+      -289 EXECUTE ASSEMBLY                                  0                  
+      -290 CREATE MINING MODEL                               0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -291 CREATE ANY MINING MODEL                           0                  
+      -292 DROP ANY MINING MODEL                             0                  
+      -293 SELECT ANY MINING MODEL                           0                  
+      -294 ALTER ANY MINING MODEL                            0                  
+      -295 COMMENT ANY MINING MODEL                          0                  
+      -301 CREATE CUBE DIMENSION                             0                  
+      -302 ALTER ANY CUBE DIMENSION                          0                  
+      -303 CREATE ANY CUBE DIMENSION                         0                  
+      -304 DELETE ANY CUBE DIMENSION                         0                  
+      -305 DROP ANY CUBE DIMENSION                           0                  
+      -306 INSERT ANY CUBE DIMENSION                         0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -307 SELECT ANY CUBE DIMENSION                         0                  
+      -308 CREATE CUBE                                       0                  
+      -309 ALTER ANY CUBE                                    0                  
+      -310 CREATE ANY CUBE                                   0                  
+      -311 DROP ANY CUBE                                     0                  
+      -312 SELECT ANY CUBE                                   0                  
+      -313 UPDATE ANY CUBE                                   0                  
+      -314 CREATE MEASURE FOLDER                             0                  
+      -315 CREATE ANY MEASURE FOLDER                         0                  
+      -316 DELETE ANY MEASURE FOLDER                         0                  
+      -317 DROP ANY MEASURE FOLDER                           0                  
+
+ PRIVILEGE NAME                                       PROPERTY                  
+---------- ---------------------------------------- ----------                  
+      -318 INSERT ANY MEASURE FOLDER                         0                  
+      -319 CREATE CUBE BUILD PROCESS                         0                  
+      -320 CREATE ANY CUBE BUILD PROCESS                     0                  
+      -321 DROP ANY CUBE BUILD PROCESS                       0                  
+      -322 UPDATE ANY CUBE BUILD PROCESS                     0                  
+      -326 UPDATE ANY CUBE DIMENSION                         0                  
+      -327 ADMINISTER SQL MANAGEMENT OBJECT                  0                  
+      -328 ALTER PUBLIC DATABASE LINK                        0                  
+      -329 ALTER DATABASE LINK                               0                  
+      -350 FLASHBACK ARCHIVE ADMINISTER                      0                  
+
+208 개의 행이 선택되었습니다.
+
+SQL> select * from dba_roles;
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+CONNECT                        NO       NONE                                    
+RESOURCE                       NO       NONE                                    
+DBA                            NO       NONE                                    
+SELECT_CATALOG_ROLE            NO       NONE                                    
+EXECUTE_CATALOG_ROLE           NO       NONE                                    
+DELETE_CATALOG_ROLE            NO       NONE                                    
+EXP_FULL_DATABASE              NO       NONE                                    
+IMP_FULL_DATABASE              NO       NONE                                    
+LOGSTDBY_ADMINISTRATOR         NO       NONE                                    
+DBFS_ROLE                      NO       NONE                                    
+AQ_ADMINISTRATOR_ROLE          NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+AQ_USER_ROLE                   NO       NONE                                    
+DATAPUMP_EXP_FULL_DATABASE     NO       NONE                                    
+DATAPUMP_IMP_FULL_DATABASE     NO       NONE                                    
+ADM_PARALLEL_EXECUTE_TASK      NO       NONE                                    
+GATHER_SYSTEM_STATISTICS       NO       NONE                                    
+JAVA_DEPLOY                    NO       NONE                                    
+RECOVERY_CATALOG_OWNER         NO       NONE                                    
+SCHEDULER_ADMIN                NO       NONE                                    
+HS_ADMIN_SELECT_ROLE           NO       NONE                                    
+HS_ADMIN_EXECUTE_ROLE          NO       NONE                                    
+HS_ADMIN_ROLE                  NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+GLOBAL_AQ_USER_ROLE            GLOBAL   GLOBAL                                  
+OEM_ADVISOR                    NO       NONE                                    
+OEM_MONITOR                    NO       NONE                                    
+WM_ADMIN_ROLE                  NO       NONE                                    
+JAVAUSERPRIV                   NO       NONE                                    
+JAVAIDPRIV                     NO       NONE                                    
+JAVASYSPRIV                    NO       NONE                                    
+JAVADEBUGPRIV                  NO       NONE                                    
+EJBCLIENT                      NO       NONE                                    
+JMXSERVER                      NO       NONE                                    
+JAVA_ADMIN                     NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+CTXAPP                         NO       NONE                                    
+XDBADMIN                       NO       NONE                                    
+XDB_SET_INVOKER                NO       NONE                                    
+AUTHENTICATEDUSER              NO       NONE                                    
+XDB_WEBSERVICES                NO       NONE                                    
+XDB_WEBSERVICES_WITH_PUBLIC    NO       NONE                                    
+XDB_WEBSERVICES_OVER_HTTP      NO       NONE                                    
+ORDADMIN                       NO       NONE                                    
+OLAPI_TRACE_USER               NO       NONE                                    
+OLAP_XS_ADMIN                  NO       NONE                                    
+OWB_USER                       NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+OLAP_DBA                       NO       NONE                                    
+CWM_USER                       NO       NONE                                    
+OLAP_USER                      NO       NONE                                    
+SPATIAL_WFS_ADMIN              NO       NONE                                    
+WFS_USR_ROLE                   YES      PASSWORD                                
+SPATIAL_CSW_ADMIN              YES      PASSWORD                                
+CSW_USR_ROLE                   YES      PASSWORD                                
+MGMT_USER                      NO       NONE                                    
+APEX_ADMINISTRATOR_ROLE        NO       NONE                                    
+OWB$CLIENT                     YES      PASSWORD                                
+OWB_DESIGNCENTER_VIEW          NO       NONE                                    
+
+55 개의 행이 선택되었습니다.
+
+SQL> create or replace view v_rolesearch
+  2  as select * from dba_sys_privs
+  3  where grantee='CONNECT';
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_rolesearch;
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+CONNECT                        CREATE SESSION                           NO      
+
+SQL> select * from dba_sys_privs
+  2        where grantee=upper('&grantee');
+grantee의 값을 입력하십시오: resource
+구   2:       where grantee=upper('&grantee')
+신   2:       where grantee=upper('resource')
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+RESOURCE                       CREATE TRIGGER                           NO      
+RESOURCE                       CREATE SEQUENCE                          NO      
+RESOURCE                       CREATE TYPE                              NO      
+RESOURCE                       CREATE PROCEDURE                         NO      
+RESOURCE                       CREATE CLUSTER                           NO      
+RESOURCE                       CREATE OPERATOR                          NO      
+RESOURCE                       CREATE INDEXTYPE                         NO      
+RESOURCE                       CREATE TABLE                             NO      
+
+8 개의 행이 선택되었습니다.
+
+SQL> /
+grantee의 값을 입력하십시오: dba
+구   2:       where grantee=upper('&grantee')
+신   2:       where grantee=upper('dba')
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            DROP ANY CUBE BUILD PROCESS              YES     
+DBA                            CREATE CUBE                              YES     
+DBA                            ALTER ANY CUBE DIMENSION                 YES     
+DBA                            ALTER ANY MINING MODEL                   YES     
+DBA                            DROP ANY MINING MODEL                    YES     
+DBA                            DROP ANY EDITION                         YES     
+DBA                            CHANGE NOTIFICATION                      YES     
+DBA                            ADMINISTER ANY SQL TUNING SET            YES     
+DBA                            ALTER ANY SQL PROFILE                    YES     
+DBA                            CREATE RULE                              YES     
+DBA                            EXPORT FULL DATABASE                     YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            EXECUTE ANY EVALUATION CONTEXT           YES     
+DBA                            DEQUEUE ANY QUEUE                        YES     
+DBA                            DROP ANY INDEXTYPE                       YES     
+DBA                            ALTER ANY INDEXTYPE                      YES     
+DBA                            EXECUTE ANY LIBRARY                      YES     
+DBA                            CREATE ANY LIBRARY                       YES     
+DBA                            CREATE ANY DIRECTORY                     YES     
+DBA                            ALTER PROFILE                            YES     
+DBA                            EXECUTE ANY PROCEDURE                    YES     
+DBA                            CREATE ROLE                              YES     
+DBA                            SELECT ANY SEQUENCE                      YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            DROP ANY INDEX                           YES     
+DBA                            UPDATE ANY TABLE                         YES     
+DBA                            INSERT ANY TABLE                         YES     
+DBA                            SELECT ANY TABLE                         YES     
+DBA                            DROP ROLLBACK SEGMENT                    YES     
+DBA                            BECOME USER                              YES     
+DBA                            DROP TABLESPACE                          YES     
+DBA                            ALTER SESSION                            YES     
+DBA                            CREATE SESSION                           YES     
+DBA                            DROP ANY MEASURE FOLDER                  YES     
+DBA                            SELECT ANY CUBE                          YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            ALTER ANY CUBE                           YES     
+DBA                            CREATE ANY ASSEMBLY                      YES     
+DBA                            ALTER ANY EDITION                        YES     
+DBA                            ANALYZE ANY DICTIONARY                   YES     
+DBA                            ALTER ANY RULE SET                       YES     
+DBA                            CREATE RULE SET                          YES     
+DBA                            DEBUG ANY PROCEDURE                      YES     
+DBA                            CREATE DIMENSION                         YES     
+DBA                            ALTER ANY LIBRARY                        YES     
+DBA                            UNDER ANY TYPE                           YES     
+DBA                            DROP ANY MATERIALIZED VIEW               YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            DROP ANY TRIGGER                         YES     
+DBA                            ALTER ANY PROCEDURE                      YES     
+DBA                            FORCE ANY TRANSACTION                    YES     
+DBA                            ALTER DATABASE                           YES     
+DBA                            DELETE ANY TABLE                         YES     
+DBA                            ALTER ROLLBACK SEGMENT                   YES     
+DBA                            UPDATE ANY CUBE DIMENSION                YES     
+DBA                            CREATE ANY CUBE BUILD PROCESS            YES     
+DBA                            CREATE CUBE DIMENSION                    YES     
+DBA                            ALTER ANY ASSEMBLY                       YES     
+DBA                            CREATE ASSEMBLY                          YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE ANY EDITION                       YES     
+DBA                            EXECUTE ANY PROGRAM                      YES     
+DBA                            EXECUTE ANY RULE                         YES     
+DBA                            IMPORT FULL DATABASE                     YES     
+DBA                            EXECUTE ANY RULE SET                     YES     
+DBA                            CREATE ANY RULE SET                      YES     
+DBA                            FLASHBACK ANY TABLE                      YES     
+DBA                            RESUMABLE                                YES     
+DBA                            ADMINISTER DATABASE TRIGGER              YES     
+DBA                            CREATE ANY OUTLINE                       YES     
+DBA                            ALTER ANY DIMENSION                      YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE ANY DIMENSION                     YES     
+DBA                            EXECUTE ANY OPERATOR                     YES     
+DBA                            CREATE TYPE                              YES     
+DBA                            CREATE TRIGGER                           YES     
+DBA                            GRANT ANY ROLE                           YES     
+DBA                            DROP ANY VIEW                            YES     
+DBA                            CREATE VIEW                              YES     
+DBA                            LOCK ANY TABLE                           YES     
+DBA                            ALTER USER                               YES     
+DBA                            CREATE USER                              YES     
+DBA                            ALTER TABLESPACE                         YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE TABLESPACE                        YES     
+DBA                            RESTRICTED SESSION                       YES     
+DBA                            UPDATE ANY CUBE BUILD PROCESS            YES     
+DBA                            DROP ANY CUBE                            YES     
+DBA                            INSERT ANY CUBE DIMENSION                YES     
+DBA                            CREATE MINING MODEL                      YES     
+DBA                            CREATE ANY JOB                           YES     
+DBA                            CREATE JOB                               YES     
+DBA                            CREATE ANY RULE                          YES     
+DBA                            DROP ANY EVALUATION CONTEXT              YES     
+DBA                            CREATE ANY EVALUATION CONTEXT            YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE EVALUATION CONTEXT                YES     
+DBA                            GRANT ANY OBJECT PRIVILEGE               YES     
+DBA                            SELECT ANY DICTIONARY                    YES     
+DBA                            DROP ANY DIMENSION                       YES     
+DBA                            UNDER ANY TABLE                          YES     
+DBA                            CREATE INDEXTYPE                         YES     
+DBA                            CREATE ANY OPERATOR                      YES     
+DBA                            DROP ANY LIBRARY                         YES     
+DBA                            ANALYZE ANY                              YES     
+DBA                            ALTER ANY ROLE                           YES     
+DBA                            CREATE ANY SEQUENCE                      YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE ANY INDEX                         YES     
+DBA                            CREATE ANY TABLE                         YES     
+DBA                            DELETE ANY MEASURE FOLDER                YES     
+DBA                            CREATE ANY MEASURE FOLDER                YES     
+DBA                            SELECT ANY MINING MODEL                  YES     
+DBA                            CREATE ANY MINING MODEL                  YES     
+DBA                            MANAGE FILE GROUP                        YES     
+DBA                            MANAGE SCHEDULER                         YES     
+DBA                            ADMINISTER RESOURCE MANAGER              YES     
+DBA                            ALTER ANY OUTLINE                        YES     
+DBA                            DROP ANY CONTEXT                         YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            EXECUTE ANY INDEXTYPE                    YES     
+DBA                            UNDER ANY VIEW                           YES     
+DBA                            DROP ANY TYPE                            YES     
+DBA                            ALTER ANY TYPE                           YES     
+DBA                            ALTER ANY MATERIALIZED VIEW              YES     
+DBA                            CREATE PROFILE                           YES     
+DBA                            DROP PUBLIC DATABASE LINK                YES     
+DBA                            ALTER ANY INDEX                          YES     
+DBA                            CREATE CLUSTER                           YES     
+DBA                            COMMENT ANY TABLE                        YES     
+DBA                            DROP ANY TABLE                           YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE ROLLBACK SEGMENT                  YES     
+DBA                            UNLIMITED TABLESPACE                     YES     
+DBA                            AUDIT SYSTEM                             YES     
+DBA                            ALTER SYSTEM                             YES     
+DBA                            SELECT ANY CUBE DIMENSION                YES     
+DBA                            DELETE ANY CUBE DIMENSION                YES     
+DBA                            CREATE ANY CUBE DIMENSION                YES     
+DBA                            COMMENT ANY MINING MODEL                 YES     
+DBA                            EXECUTE ASSEMBLY                         YES     
+DBA                            EXECUTE ANY ASSEMBLY                     YES     
+DBA                            MANAGE ANY FILE GROUP                    YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            EXECUTE ANY CLASS                        YES     
+DBA                            DROP ANY RULE SET                        YES     
+DBA                            DEBUG CONNECT SESSION                    YES     
+DBA                            ON COMMIT REFRESH                        YES     
+DBA                            ENQUEUE ANY QUEUE                        YES     
+DBA                            CREATE ANY INDEXTYPE                     YES     
+DBA                            ALTER ANY OPERATOR                       YES     
+DBA                            CREATE ANY TYPE                          YES     
+DBA                            DROP ANY DIRECTORY                       YES     
+DBA                            ALTER RESOURCE COST                      YES     
+DBA                            CREATE ANY PROCEDURE                     YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE PROCEDURE                         YES     
+DBA                            FORCE TRANSACTION                        YES     
+DBA                            ALTER ANY SEQUENCE                       YES     
+DBA                            CREATE SEQUENCE                          YES     
+DBA                            CREATE ANY VIEW                          YES     
+DBA                            DROP PUBLIC SYNONYM                      YES     
+DBA                            DROP ANY SYNONYM                         YES     
+DBA                            CREATE ANY CLUSTER                       YES     
+DBA                            BACKUP ANY TABLE                         YES     
+DBA                            CREATE TABLE                             YES     
+DBA                            ADMINISTER SQL MANAGEMENT OBJECT         YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            INSERT ANY MEASURE FOLDER                YES     
+DBA                            UPDATE ANY CUBE                          YES     
+DBA                            ADMINISTER SQL TUNING SET                YES     
+DBA                            MERGE ANY VIEW                           YES     
+DBA                            DROP ANY OUTLINE                         YES     
+DBA                            CREATE OPERATOR                          YES     
+DBA                            CREATE LIBRARY                           YES     
+DBA                            GRANT ANY PRIVILEGE                      YES     
+DBA                            DROP PROFILE                             YES     
+DBA                            ALTER ANY TRIGGER                        YES     
+DBA                            CREATE ANY TRIGGER                       YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            DROP ANY PROCEDURE                       YES     
+DBA                            AUDIT ANY                                YES     
+DBA                            DROP ANY ROLE                            YES     
+DBA                            DROP ANY SEQUENCE                        YES     
+DBA                            CREATE PUBLIC SYNONYM                    YES     
+DBA                            CREATE SYNONYM                           YES     
+DBA                            DROP ANY CLUSTER                         YES     
+DBA                            ALTER ANY TABLE                          YES     
+DBA                            FLASHBACK ARCHIVE ADMINISTER             YES     
+DBA                            CREATE CUBE BUILD PROCESS                YES     
+DBA                            CREATE MEASURE FOLDER                    YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE ANY CUBE                          YES     
+DBA                            DROP ANY CUBE DIMENSION                  YES     
+DBA                            DROP ANY ASSEMBLY                        YES     
+DBA                            CREATE EXTERNAL JOB                      YES     
+DBA                            READ ANY FILE GROUP                      YES     
+DBA                            CREATE ANY SQL PROFILE                   YES     
+DBA                            DROP ANY SQL PROFILE                     YES     
+DBA                            SELECT ANY TRANSACTION                   YES     
+DBA                            ADVISOR                                  YES     
+DBA                            DROP ANY RULE                            YES     
+DBA                            ALTER ANY RULE                           YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            ALTER ANY EVALUATION CONTEXT             YES     
+DBA                            CREATE ANY CONTEXT                       YES     
+DBA                            MANAGE ANY QUEUE                         YES     
+DBA                            GLOBAL QUERY REWRITE                     YES     
+DBA                            QUERY REWRITE                            YES     
+DBA                            DROP ANY OPERATOR                        YES     
+DBA                            EXECUTE ANY TYPE                         YES     
+DBA                            CREATE ANY MATERIALIZED VIEW             YES     
+DBA                            CREATE MATERIALIZED VIEW                 YES     
+DBA                            CREATE PUBLIC DATABASE LINK              YES     
+DBA                            CREATE DATABASE LINK                     YES     
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+DBA                            CREATE ANY SYNONYM                       YES     
+DBA                            ALTER ANY CLUSTER                        YES     
+DBA                            DROP USER                                YES     
+DBA                            MANAGE TABLESPACE                        YES     
+
+202 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select * from dba_sys_privs
+  2*       where grantee=upper('&grantee')
+SQL> save C:\webtest\1.db\print\prisearch.txt
+file C:\webtest\1.db\print\prisearch.txt(이)가 생성되었습니다
+SQL> create role usercreate;
+
+롤이 생성되었습니다.
+
+SQL> select * from dba_roles;
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+CONNECT                        NO       NONE                                    
+RESOURCE                       NO       NONE                                    
+DBA                            NO       NONE                                    
+SELECT_CATALOG_ROLE            NO       NONE                                    
+EXECUTE_CATALOG_ROLE           NO       NONE                                    
+DELETE_CATALOG_ROLE            NO       NONE                                    
+EXP_FULL_DATABASE              NO       NONE                                    
+IMP_FULL_DATABASE              NO       NONE                                    
+LOGSTDBY_ADMINISTRATOR         NO       NONE                                    
+DBFS_ROLE                      NO       NONE                                    
+AQ_ADMINISTRATOR_ROLE          NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+AQ_USER_ROLE                   NO       NONE                                    
+DATAPUMP_EXP_FULL_DATABASE     NO       NONE                                    
+DATAPUMP_IMP_FULL_DATABASE     NO       NONE                                    
+ADM_PARALLEL_EXECUTE_TASK      NO       NONE                                    
+GATHER_SYSTEM_STATISTICS       NO       NONE                                    
+JAVA_DEPLOY                    NO       NONE                                    
+RECOVERY_CATALOG_OWNER         NO       NONE                                    
+SCHEDULER_ADMIN                NO       NONE                                    
+HS_ADMIN_SELECT_ROLE           NO       NONE                                    
+HS_ADMIN_EXECUTE_ROLE          NO       NONE                                    
+HS_ADMIN_ROLE                  NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+GLOBAL_AQ_USER_ROLE            GLOBAL   GLOBAL                                  
+OEM_ADVISOR                    NO       NONE                                    
+OEM_MONITOR                    NO       NONE                                    
+WM_ADMIN_ROLE                  NO       NONE                                    
+JAVAUSERPRIV                   NO       NONE                                    
+JAVAIDPRIV                     NO       NONE                                    
+JAVASYSPRIV                    NO       NONE                                    
+JAVADEBUGPRIV                  NO       NONE                                    
+EJBCLIENT                      NO       NONE                                    
+JMXSERVER                      NO       NONE                                    
+JAVA_ADMIN                     NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+CTXAPP                         NO       NONE                                    
+XDBADMIN                       NO       NONE                                    
+XDB_SET_INVOKER                NO       NONE                                    
+AUTHENTICATEDUSER              NO       NONE                                    
+XDB_WEBSERVICES                NO       NONE                                    
+XDB_WEBSERVICES_WITH_PUBLIC    NO       NONE                                    
+XDB_WEBSERVICES_OVER_HTTP      NO       NONE                                    
+ORDADMIN                       NO       NONE                                    
+OLAPI_TRACE_USER               NO       NONE                                    
+OLAP_XS_ADMIN                  NO       NONE                                    
+OWB_USER                       NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+OLAP_DBA                       NO       NONE                                    
+CWM_USER                       NO       NONE                                    
+OLAP_USER                      NO       NONE                                    
+SPATIAL_WFS_ADMIN              NO       NONE                                    
+WFS_USR_ROLE                   YES      PASSWORD                                
+SPATIAL_CSW_ADMIN              YES      PASSWORD                                
+CSW_USR_ROLE                   YES      PASSWORD                                
+MGMT_USER                      NO       NONE                                    
+APEX_ADMINISTRATOR_ROLE        NO       NONE                                    
+OWB$CLIENT                     YES      PASSWORD                                
+OWB_DESIGNCENTER_VIEW          NO       NONE                                    
+
+ROLE                           PASSWORD AUTHENTICAT                             
+------------------------------ -------- -----------                             
+USERCREATE                     NO       NONE                                    
+
+56 개의 행이 선택되었습니다.
+
+SQL> grant create user,alter user to usercreate;
+
+권한이 부여되었습니다.
+
+SQL> @C:\webtest\1.db\print\prisearch.txt
+grantee의 값을 입력하십시오: usercreate
+구   2:       where grantee=upper('&grantee')
+신   2:       where grantee=upper('usercreate')
+
+GRANTEE                        PRIVILEGE                                ADM     
+------------------------------ ---------------------------------------- ---     
+USERCREATE                     CREATE USER                              NO      
+USERCREATE                     ALTER USER                               NO      
+
+SQL> grant usercreate to scott,test1;
+
+권한이 부여되었습니다.
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> create user imsi identified by t1234;
+
+사용자가 생성되었습니다.
+
+SQL> alter user imsi identified by imtest;
+
+사용자가 변경되었습니다.
+
+SQL> drop user imsi;
+drop user imsi
+*
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL> grant connect,resource to imsi;
+grant connect,resource to imsi
+*
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL> conn  / as sysdba
+연결되었습니다.
+SQL> drop role usercreate;
+
+롤이 삭제되었습니다.
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> create user ktest identified by ktest;
+create user ktest identified by ktest
+                                *
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> create user aaa identified by aaa;
+
+사용자가 생성되었습니다.
+
+SQL>       grant connect,resource to aaa;
+
+권한이 부여되었습니다.
+
+SQL> create user bbb identified by bbb;
+
+사용자가 생성되었습니다.
+
+SQL>      grant connect,resource to bbb with admin option;
+
+권한이 부여되었습니다.
+
+SQL> 
+SQL>       create user ccc identified by ccc;
+
+사용자가 생성되었습니다.
+
+SQL> conn ccc/ccc
+ERROR:
+ORA-01045: user CCC lacks CREATE SESSION privilege; logon denied 
+
+
+경고: 이제는 ORACLE에 연결되어 있지 않습니다.
+SQL> conn aaa/aaa
+연결되었습니다.
+SQL>        grant connect,resource to ccc;
+       grant connect,resource to ccc
+*
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL> conn bbb/bbb
+연결되었습니다.
+SQL>       grant connect,resource to ccc;
+
+권한이 부여되었습니다.
+
+SQL> conn ccc/ccc
+연결되었습니다.
+SQL> create table abc(id number);
+
+테이블이 생성되었습니다.
+
+SQL> insert into abc values(1);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from abc;
+
+        ID                                                                      
+----------                                                                      
+         1                                                                      
+
+SQL> conn /  as sysdba
+연결되었습니다.
+SQL> revoke connect,resource  from bbb;
+
+권한이 취소되었습니다.
+
+SQL> conn ccc/ccc
+연결되었습니다.
+SQL> create table abc2(id varchar2(10));
+
+테이블이 생성되었습니다.
+
+SQL> select * from table_privilege_map;
+
+ PRIVILEGE NAME                                                                 
+---------- ----------------------------------------                             
+         0 ALTER                                                                
+         1 AUDIT                                                                
+         2 COMMENT                                                              
+         3 DELETE                                                               
+         4 GRANT                                                                
+         5 INDEX                                                                
+         6 INSERT                                                               
+         7 LOCK                                                                 
+         8 RENAME                                                               
+         9 SELECT                                                               
+        10 UPDATE                                                               
+
+ PRIVILEGE NAME                                                                 
+---------- ----------------------------------------                             
+        11 REFERENCES                                                           
+        12 EXECUTE                                                              
+        16 CREATE                                                               
+        17 READ                                                                 
+        18 WRITE                                                                
+        20 ENQUEUE                                                              
+        21 DEQUEUE                                                              
+        22 UNDER                                                                
+        23 ON COMMIT REFRESH                                                    
+        24 QUERY REWRITE                                                        
+        26 DEBUG                                                                
+
+ PRIVILEGE NAME                                                                 
+---------- ----------------------------------------                             
+        27 FLASHBACK                                                            
+        28 MERGE VIEW                                                           
+        29 USE                                                                  
+        30 FLASHBACK ARCHIVE                                                    
+
+26 개의 행이 선택되었습니다.
+
+SQL> create user test2 identified by test2;
+create user test2 identified by test2
+                                *
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL>        create user test3 identified by test3;
+       create user test3 identified by test3
+                                       *
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL>        create user test4 identified by test4;
+       create user test4 identified by test4
+                                       *
+1행에 오류:
+ORA-01031: 권한이 불충분합니다 
+
+
+SQL> 
+SQL> show user;
+USER은 "CCC"입니다
+SQL> conn / as sysdba
+연결되었습니다.
+SQL> create user test2 identified by test2;
+
+사용자가 생성되었습니다.
+
+SQL>        create user test3 identified by test3;
+
+사용자가 생성되었습니다.
+
+SQL>        create user test4 identified by test4;
+
+사용자가 생성되었습니다.
+
+SQL> 
+SQL>        grant connect,resource to test2,test3,test4;
+
+권한이 부여되었습니다.
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_DEPT2                        TABLE                                            
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+EMP_DEPTNO                     TABLE                                            
+SALGRADE                       TABLE                                            
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SEARCH                       VIEW                                             
+V_SEQUENCE_SEQ                 VIEW                                             
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+26 개의 행이 선택되었습니다.
+
+SQL> select count(*) from b_dept2;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         9                                                                      
+
+SQL> grant select,insert,update on b_dept2 to test3 with grant option;
+
+권한이 부여되었습니다.
+
+SQL> conn test3/test3
+연결되었습니다.
+SQL> grant insert on scott.b_dept2 to test2;
+
+권한이 부여되었습니다.
+
+SQL> grant select,update on scott.b_dept2 to test4;
+
+권한이 부여되었습니다.
+
+SQL> conn test4/test4
+연결되었습니다.
+SQL> select * from scott.b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        90 TESTING4       SEOUL3                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+        80 TESTING3       SEOUL2                                                
+
+9 개의 행이 선택되었습니다.
+
+SQL> update scott.b_dept2 set loc='DALLAS'
+  2        where deptno=60;
+
+1 행이 갱신되었습니다.
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> revoke select,insert,update on b_dept2 from test3;
+
+권한이 취소되었습니다.
+
+SQL> conn test4/test4
+연결되었습니다.
+SQL> select * from  scott.b_dept2;
+select * from  scott.b_dept2
+                     *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> spool off

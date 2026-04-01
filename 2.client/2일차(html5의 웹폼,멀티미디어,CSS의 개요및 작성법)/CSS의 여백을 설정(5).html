@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>CSS의 여백을 설정(5).html </title>
+  <style>
+       ul {
+	         background:green;
+			 margin:10px 10px 10px 10px; /* top->right->bottom->left */
+			 padding:10px 10px 10px 10px;
+	      }
+       li {color:red;  /* 글자색 */
+	       background:yellow; /*배경색*/
+		   /* margin:밖의 여백,padding:안쪽 여백  */
+		   margin:10px; /* margin-top,margin-right,margin-bottom,margin-left */
+		   padding:10px;
+	       list-style:none; /* 리스트 항목의 마커제거 */
+	      }
+
+	   li.withborder{
+            border-style:dashed; /* 테두리의 선의 종류 지정*/
+            border-width:medium; /*테두리의 크기를 지정 */
+			border-color:black; /* 테두리 색깔 지정 */
+	     }
+  </style>
+ </head>
+ <body>
+     <ul>
+		<li>테두리가 없는 경우</li>
+		<li class="withborder">테두리가 있는 경우</li>
+     </ul>
+ </body>
+</html>

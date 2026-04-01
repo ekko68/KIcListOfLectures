@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>select(8).html </title>
+  <script>
+     function fg_color(form){ //form=document.f_list.form
+          //var list=document.f_list.form.selectedIndex //option항목의 인덱스번호
+		  var list=form.selectedIndex
+		  //alert(list) 인덱스번호
+          //document.fgColor(글자색)bgColor(배경색)=선택한 항목의 색깔
+		  //document.f_list.form.option[내가 선택한 인덱스번호].text(겉의항목)
+		  //document.f_list.form.option[내가 선택한 인덱스번호].value(내부항목)
+		  //alert(document.f_list.form.options[f_list.form.selectedIndex].value)
+		  //document.fgColor=document.f_list.form.options[f_list.form.selectedIndex].value
+		  document.fgColor=form.options[list].value
+
+	 }
+  </script>
+ </head>
+ <body>
+   <!-- 
+       option->selected속성->기본적으로 선택되어져서 나오는 항목을 지정
+	   size=n(항목수)속성을 부여->listbox ,multiple(다중선택할때 사용)
+   -->
+     <h3>글자색 바꾸기</h3>
+	    원하시는 색상을 선택하시면 글자의 색깔이 변경됩니다.<p>
+
+   <form name="f_list">
+       <!-- <select name="form" size="4" multiple> listbox을 사용하는 경우-->
+	    <select name="form" onchange="fg_color(document.f_list.form)">
+		<option value="blue" >파랑색</option>
+		<!-- <option>파랑색</option> -->
+		<option value="green" selected>초록색</option>
+		<option value="orange">오렌지색</option>
+		<option value="gray">회색</option>
+       </select>
+   </form>
+ </body>
+</html>

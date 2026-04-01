@@ -1,0 +1,606 @@
+SQL> create table b_dept2
+  2       as select * from dept;
+
+테이블이 생성되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+
+SQL> insert into b_dept2 values (50,'SUPPORT','KWANGJU');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+
+SQL> commit;
+
+커밋이 완료되었습니다.
+
+SQL> update b_dept2 set dname='TEST',loc='SUWON'
+  2         where deptno=50;
+
+1 행이 갱신되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 TEST           SUWON                                                 
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+
+SQL> clear screen
+
+SQL> insert into b_dept2 values(60,'TESTING','SEOUL');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+
+6 개의 행이 선택되었습니다.
+
+SQL> savepoint  A;
+
+저장점이 생성되었습니다.
+
+SQL> update b_dept2 set dname='IMSI', loc='BUSAN'
+  2        where deptno=50;
+
+1 행이 갱신되었습니다.
+
+SQL>  savepoint B;
+
+저장점이 생성되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 IMSI           BUSAN                                                 
+        60 TESTING        SEOUL                                                 
+
+6 개의 행이 선택되었습니다.
+
+SQL> delete from b_dept2 where deptno=40;
+
+1 행이 삭제되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        50 IMSI           BUSAN                                                 
+        60 TESTING        SEOUL                                                 
+
+SQL> rollback to B;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 IMSI           BUSAN                                                 
+        60 TESTING        SEOUL                                                 
+
+6 개의 행이 선택되었습니다.
+
+SQL> rollback to A;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+
+6 개의 행이 선택되었습니다.
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+
+SQL> show autocommit
+autocommit OFF
+SQL> create index emp_ename_idx on emp(ename);
+
+인덱스가 생성되었습니다.
+
+SQL> select c.index_name,c.column_name,c.column_position,
+  2        i.uniqueness from user_indexes i,user_ind_columns c
+  3       where c.index_name=i.index_name and
+  4       c.table_name='&table_name';
+table_name의 값을 입력하십시오: EMP
+구   4:      c.table_name='&table_name'
+신   4:      c.table_name='EMP'
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+COLUMN_NAME                                                                     
+--------------------------------------------------------------------------------
+COLUMN_POSITION UNIQUENES                                                       
+--------------- ---------                                                       
+EMP_ENAME_IDX                                                                   
+ENAME                                                                           
+              1 NONUNIQUE                                                       
+                                                                                
+PK_EMP                                                                          
+EMPNO                                                                           
+              1 UNIQUE                                                          
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+COLUMN_NAME                                                                     
+--------------------------------------------------------------------------------
+COLUMN_POSITION UNIQUENES                                                       
+--------------- ---------                                                       
+                                                                                
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  create or replace view v_index
+  2  as
+  3  select c.index_name,c.column_name,c.column_position,
+  4        i.uniqueness from user_indexes i,user_ind_columns c
+  5       where c.index_name=i.index_name and
+  6*      c.table_name=upper('&table_name')
+SQL> /
+table_name의 값을 입력하십시오: dept
+구   6:      c.table_name=upper('&table_name')
+신   6:      c.table_name=upper('dept')
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_index;
+
+INDEX_NAME                                                                      
+------------------------------                                                  
+COLUMN_NAME                                                                     
+--------------------------------------------------------------------------------
+COLUMN_POSITION UNIQUENES                                                       
+--------------- ---------                                                       
+PK_DEPT                                                                         
+DEPTNO                                                                          
+              1 UNIQUE                                                          
+                                                                                
+
+SQL> drop index emp_ename_idx;
+
+인덱스가 삭제되었습니다.
+
+SQL> create sequence b_emp4_empno;
+
+시퀀스가 생성되었습니다.
+
+SQL> create sequence b_dept2_deptno;
+
+시퀀스가 생성되었습니다.
+
+SQL> select b_dept2_deptno.currval from dual;
+select b_dept2_deptno.currval from dual
+       *
+1행에 오류:
+ORA-08002: 시퀀스 B_DEPT2_DEPTNO.CURRVAL은 이 세션에서는 정의 되어 있지
+않습니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select b_dept2_deptno.nextval from dual
+SQL> /
+
+   NEXTVAL                                                                      
+----------                                                                      
+         1                                                                      
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select b_dept2_deptno.currval from dual
+SQL> /
+
+   CURRVAL                                                                      
+----------                                                                      
+         1                                                                      
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select b_dept2_deptno.nextval from dual
+SQL> /
+
+   NEXTVAL                                                                      
+----------                                                                      
+         2                                                                      
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+
+SQL> create sequence b_dept2_deptno2
+  2         start with 60
+  3        increment by 10
+  4        maxvalue 10000
+  5        nocycle
+  6        nocache;
+
+시퀀스가 생성되었습니다.
+
+SQL> insert into b_dept2 values(b_dept2_deptno2.nextval,'TESTING','SEOUL');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> insert into b_dept2 values(b_dept2_deptno2.nextval,'TESTING2','PUSAN');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+
+7 개의 행이 선택되었습니다.
+
+SQL> desc user_sequences
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ SEQUENCE_NAME                             NOT NULL VARCHAR2(30)
+ MIN_VALUE                                          NUMBER
+ MAX_VALUE                                          NUMBER
+ INCREMENT_BY                              NOT NULL NUMBER
+ CYCLE_FLAG                                         VARCHAR2(1)
+ ORDER_FLAG                                         VARCHAR2(1)
+ CACHE_SIZE                                NOT NULL NUMBER
+ LAST_NUMBER                               NOT NULL NUMBER
+
+SQL> create view v_sequence_seq
+  2        as
+  3        select sequence_name,min_value,max_value,increment_by,
+  4        last_number from user_sequences;
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_sequence_seq;
+
+SEQUENCE_NAME                   MIN_VALUE  MAX_VALUE INCREMENT_BY LAST_NUMBER   
+------------------------------ ---------- ---------- ------------ -----------   
+B_DEPT2_DEPTNO                          1 1.0000E+28            1          21   
+B_DEPT2_DEPTNO2                         1      10000           10          80   
+B_EMP4_EMPNO                            1 1.0000E+28            1           1   
+
+SQL> alter sequence b_dept2_deptno2
+  2        increment by 2
+  3        maxvalue 23
+  4        minvalue 1
+  5        nocycle
+  6        nocache;
+alter sequence b_dept2_deptno2
+*
+1행에 오류:
+ORA-04009: MAXVALUE 에 현재치보다 작은 값을 지정할 수 없습니다 
+
+
+SQL> drop sequence b_dept2_deptno2;
+
+시퀀스가 삭제되었습니다.
+
+SQL> create synonym buser for b_dept2;
+
+동의어가 생성되었습니다.
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+BUSER                          SYNONYM                                          
+B_DEPT2                        TABLE                                            
+B_EMP2                         TABLE                                            
+B_EMP3                         TABLE                                            
+B_EMP4                         TABLE                                            
+DEPT                           TABLE                                            
+DEPT30                         VIEW                                             
+EMP                            TABLE                                            
+EMP30                          VIEW                                             
+EMP_20                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+EMP_DEPTNO                     TABLE                                            
+SALGRADE                       TABLE                                            
+TEST1                          TABLE                                            
+VIEW_30                        VIEW                                             
+V_DALLS                        VIEW                                             
+V_DALLS2                       VIEW                                             
+V_DNAME                        VIEW                                             
+V_EMP_10                       VIEW                                             
+V_INDEX                        VIEW                                             
+V_MAXSAL                       VIEW                                             
+V_SALE                         VIEW                                             
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+V_SEARCH                       VIEW                                             
+V_SEQUENCE_SEQ                 VIEW                                             
+V_SMITH                        VIEW                                             
+V_TEST1                        VIEW                                             
+
+26 개의 행이 선택되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+
+7 개의 행이 선택되었습니다.
+
+SQL> select * from buser;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+
+7 개의 행이 선택되었습니다.
+
+SQL> insert into buser values(80,'TESTING3','SEOUL2');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+        80 TESTING3       SEOUL2                                                
+
+8 개의 행이 선택되었습니다.
+
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> select * from b_dept2;
+select * from b_dept2
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> clear screen
+
+SQL> 
+SQL> show user
+USER은 "SCOTT"입니다
+SQL> grant insert,select on b_dept2 to test1;
+
+권한이 부여되었습니다.
+
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> select * from b_dept2;
+select * from b_dept2
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select * from scott.b_dept2
+SQL> /
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+        80 TESTING3       SEOUL2                                                
+
+8 개의 행이 선택되었습니다.
+
+SQL> show user
+USER은 "TEST1"입니다
+SQL> create synonym  buser2 for scott.b_dept2;
+
+동의어가 생성되었습니다.
+
+SQL> select * from buser2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+        80 TESTING3       SEOUL2                                                
+
+8 개의 행이 선택되었습니다.
+
+SQL> insert into buser2 values(90,'TESTING4','SEOUL3');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from buser2;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        90 TESTING4       SEOUL3                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+        80 TESTING3       SEOUL2                                                
+
+9 개의 행이 선택되었습니다.
+
+SQL> conn sys/sys12345 as sysdba
+연결되었습니다.
+SQL> create public synonym butest for scott.b_dept2;
+
+동의어가 생성되었습니다.
+
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> select * from butest;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+        90 TESTING4       SEOUL3                                                
+        50 SUPPORT        KWANGJU                                               
+        60 TESTING        SEOUL                                                 
+        70 TESTING2       PUSAN                                                 
+        80 TESTING3       SEOUL2                                                
+
+9 개의 행이 선택되었습니다.
+
+SQL> show user
+USER은 "TEST1"입니다
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> revoke  insert,select on b_dept2 from test1;
+
+권한이 취소되었습니다.
+
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> select * from buser2;
+select * from buser2
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> select * from butest;
+select * from butest
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> drop synonym buser2;
+
+동의어가 삭제되었습니다.
+
+SQL> drop synonym butest;
+drop synonym butest
+             *
+1행에 오류:
+ORA-01434: 삭제할 비공개 동의어가 존재하지 않습니다 
+
+
+SQL> spool off

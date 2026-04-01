@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>제어문3(반복문)(1).html</title>
+    <!-- 
+	 프로그램 제어문(if,for문) 
+	 반복문->어떤 특정한 조건에 따라서 반복적으로 수행이 되는 문장
+	 반복할 횟수가 정해져 있는 경우->for문,while구문
+                           초기식
+	 형식) for(반복할 변수=초기값(1);조건식;증감식){
+	                     수행할 구문
+						  수행할 구문2
+             }
+			 초기값 설정(변수) i=1
+	  형식) while(조건식){  //조건식이 참인동안 실행하라
+	              실행구문
+                  실행구문2
+			}
+	 반복할 횟수가 정해져 있지 않은 경우->while구문
+	 
+	 (외부에서 파일을 불러오는 경우->파일의 크기가 다 다르기에)
+	-->
+  <script>
+     var dan=prompt("단을 입력?",'')
+	 //alert(dan)
+	 //gugu(dan)
+
+     /* (1)
+	 for(var i=1;i<=9;i++)
+	   document.write(dan+"*"+i+"="+(dan*i)+"<br>")
+	  document.write("for문 종료") */
+      
+	  //(2) 무한루프->조건식이 항상 참이라서 끝도 없이 문장이 수행되는 경우
+	  i=1  //1)실행순서(초기식)밖에 선언
+      while(i<=9){ //2)조건식이 참인지 거짓인지 체크 4)조건체크
+	     document.write(dan+"*"+i+"="+(dan*i)+"<br>")  //3)구문실행 5)실행2
+	     i++
+	  } //하나의 문장처럼 블럭처리
+	  document.write("while구문 종료")
+	 /* 
+	   1)var i=1 2)i<=9 3) document.write(dan+"*"+i+"="+(dan*i)+"<br>")
+	   4)i++->i=2  5)2<=9 6)document.write(dan+"*"+i+"="+(dan*i)+"<br>")
+	 document.write(7+"*"+1+"="+(7*1)+"<br>")
+	 document.write(7+"*"+2+"="+(7*2)+"<br>")
+	 document.write(7+"*"+3+"="+(7*3)+"<br>")
+	 ...
+	 */
+   function gugu(dan){ //매개변수->단을 전달
+      //dan이 양수인지 음수인지 판단->if문 ==>제어문내에 또 다른 제어문이 나올수있다
+    if(dan <=0){
+       document.write("음수는 입력이 불가입니다.")
+	}else{
+	  for(var i=1;i<=9;i++)
+	   document.write(dan+"*"+i+"="+(dan*i)+"<br>")
+	  document.write("for문 종료") 
+	}
+   }
+  </script>
+ </head>
+ <body>
+  
+ </body>
+</html>

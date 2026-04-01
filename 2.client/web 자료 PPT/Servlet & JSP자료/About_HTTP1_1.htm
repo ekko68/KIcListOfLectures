@@ -1,0 +1,477 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0047)http://www.initech.com/~qkim/HTTP/http11v1.html -->
+<HTML><HEAD><TITLE>Hypertext Transfer Protocol - HTTP/1.1 (Korean Version 1.0)</TITLE>
+<META content="text/html; charset=ks_c_5601-1987" http-equiv=Content-Type>
+<META content="Hypertext Transfer Protocol" name=Title>
+<META content=HTTP name=Keyword>
+<META content="Kim, Yong-Woon" name=Author>
+<META content="MSHTML 5.00.3504.2500" name=GENERATOR></HEAD>
+<BODY>
+<H1>HyperText Transfer Protocol -- HTTP/1.1 <BR>(Korean Version 1.0) </H1>
+<P>
+<ADDRESS>305-350, 대전광역시 유성구 가정동 161번지<BR>한국전자통신연구소 멀티미디어표준연구실<BR>김 용 운<BR>E-mail 
+: qkim@pec.etri.re.kr<BR>URL : <A 
+href="http://pec.etri.re.kr/~qkim/">http://pec.etri.re.kr/~qkim/</A><BR></ADDRESS>
+<DL>
+  <DT><B>Abstract:</B> 
+  <DD>HTTP는 HyperText Transfer Protocol의 약자이며, 분산환경 및 공동작업 환경에 이용할 하이퍼미디어 정보시스템의 
+  개발을 목적으로 설계된 응용 계층의 프로토콜로서 WWW에서의 하이퍼텍스트 문서의 전송을 위해 쓰이는 것이다. 또한 하이퍼텍스트 문서만이 
+  아니라 음성, 화상, 데이터 등과 같은 여러 종류의 데이터 형식을 MIME (Multipurpose Internet Mail 
+  Extensions)으로 정의하여 전송할 수 있으며, 요구/응답 (request/response, i.e., stateless) 동작에 
+  기반하여 서비스를 제공한다. HTTP 프로토콜의 한 가지 특징은 데이타 표현의 형태 및 협상에 관한 것이며 전송하는 데이타에 독립적으로 
+  시스템을 구성할 수 있게 한다. 이 문서의 내용은 HTTP/1.0 버전 다음 단계인 HTTP/1.1 버전에 관한 것이다. 
+  <P></P>
+  <DT><B>Keywords:</B> 
+  <DD>HTTP, Protocol, BNF, Message, Header, Request, Response, Entity, Method, 
+  Proxy, Cache, Content Negotiation, Access Authentication 
+  <P></P>
+  <DT><B>Status:</B> 
+  <DD>이 문서는 <A 
+  href="ftp://ftp.ietf.org/rfc/rfc2068.txt">ftp://ftp.ietf.org/rfc/rfc2068.txt</A> 
+  문서에 대해 <A 
+  href="ftp://ds.internic.net/rfc/rfc1945.txt">ftp://ds.internic.net/rfc/rfc1945.txt</A> 
+  문서의 비교 관점에서 요약 정리를 한 것이며, 본문 속에 들어있는 대부분의 내용이 빠진채 작성된 것이다. 내용을 대폭 보완한 새로운 문서는 
+  Korean Version 2.0에서 제공될 예정이다. 본 문서인 Korean Version 1.0이 위치하는 곳은 <A 
+  href="http://pec.etri.re.kr/~qkim/HTTP/http11v1.html">http://pec.etri.re.kr/~qkim/HTTP/http11v1.html</A> 
+  이며, Korean Version 2.0이 위치하는 곳은 <A 
+  href="http://pec.etri.re.kr/~qkim/HTTP/http11v2.html">http://pec.etri.re.kr/~qkim/HTTP/http11v2.html</A> 
+  이다. WWW에서 사용하는 각종 프로토콜에 대한 문서 정리는 <A 
+  href="http://pec.etri.re.kr/~qkim/HTTP/">http://pec.etri.re.kr/~qkim/HTTP/</A>에 
+  정리되고 있으며 문서 내용의 변경에 대한 알림글이 있다. 
+  <P></P></DD></DL>
+<H2>1. 서론</H2>
+<P>HTTP/0.9로서 표기되던 초기 HTTP 프로토콜은 인터넷을 통해 데이타 그대로 송수신하기 위한 목적으로 만들어진 매우 단순한 
+프토토콜이다. 그래서 기능의 향상을 위해 HTTP/1.0 프로토콜을 설계하여 메시지를 MIME과 비슷한 형식으로 구성할 수 있게 하고 전송하는 
+데이타에 대한 외형 정보를 전달하고 요구/응답 체계에 있어서의 표현식을 보강하였다. 
+<P>그러나 HTTP/1.0에는 계층적 구조의 프락시 서버와 캐싱에 대한 고려가 없고 상시 연결 (persistent connection) 및 
+가상 호스트에 대한 필요성에 대한 언급도 없다. 더우기 클라이언트와 서버 사이에 각각의 모든 처리 능력에 대한 협상 또는 결정에 대한 어떤 
+기능도 지원되지 않으므로 프로토콜 버전의 변경과 함께 기능 향상을 도모하게 되었다. 
+<P>이에 따라 기능 향상되는 HTTP/1.0 프로토콜을 HTTP/1.1로 이름 붙이기로 하였다. HTTP/1.1에서는 향상된 기능을 신뢰성 
+있게 구현하기 위해 보다 엄밀한 요구사항들을 정의하고 있다. 
+<P>
+<H2>2. HTTP/1.0 프로토콜의 문제점</H2>
+<P>HTTP/1.0 프로토콜의 특징은 단순성에 있다. 그래서 연결을 만들고 동작하고 연결을 해제하는 단순한 과정으로 구성되어 있으며, 하나의 
+URL은 하나의 TCP 연결이 되도록 만들어져 있다. 
+<P>연결의 설립/동작/해제의 단순 동작이 계속 반복됨으로해서 네트워크의 congestion에 대한 정보를 확보할 수가 없었다. 연결이 계속 
+지속되어 있다면 정보 축적과 분석을 통해 트래픽의 혼잡을 인식할 수 있는 것이다. 
+<P>또한 잦은 연결 설립과 동시에 여러 개의 연결을 설립하는 동작을 통해 bandwidth가 낮은 링크에서 congestion 문제의 가능성을 
+높이고 사용자에게는 불만족스런 성능을 제공해주게 된다. 
+<P>캐시 모델의 미흡함도 문제이다. 캐싱에 관해 설계한 모델이 초기적인 형태로 구성되었기 때문에 동작상의 오버헤드도 만들고 캐시된 데이타 
+관리에도 문제를 갖고 있었던 것이다. 
+<P>이러한 문제들을 해결하고, 추가적인 고려 사항을 반영한 HTTP/1.1 프로토콜을 설계하게 된 것이다. 
+<P>
+<H2>3. HTTP/1.1 프로토콜의 특징 </H2>
+<P>이 문서에서는 HTTP/1.1의 전체 규격에 대한 상세 소개는 하지 않고, HTTP/1.0 버전과의 비교에 의한 주요 차이점만 살펴보도록 
+한다. HTTP/1.1에 대한 상세 소개는 다음 단계의 문서 정리 때 마무리하도록 한다. 
+<P>
+<H3>3.1 용어 정의 (Terminology)</H3>
+<P>HTTP/1.1에서 사용하고 있는 용어들은 기본적으로 HTTP/1.0에서 사용하고 있는 용어 정의를 그대로 이용하고 있으며, 
+HTTP/1.1 추가 기능을 위한 상당수 새로운 용어 정의가 추가되었다. 
+<P>HTTP/1.1의 특징 가운데 하나가 content negotiation이라고 하는 것이다. (???절 참조) 이와 관련된 용어 정의가 
+추가되었으며 representation, content negotiation, variant 등이다. 
+<P>계층적인 프락시 및 캐시 기능이 HTTP/1.1의 특징이며 이를 위한 cachable, first-hand, explicit 
+expiration time, heuristic expiration time, age, freshness lifetime, fresh, 
+stale, semantically transparent, validator 등의 용어가 추가되었다. 
+<P>
+<H3>3.2 프로토콜 파라미터</H3>
+<P>프로토콜 파라미터와 관련해서는 다음과 같은 사항들이 변경되었다. 
+<P>
+<UL>
+  <LI>HTTP/1.0에서는 gzip과 compress만 허용되던 content-coding이 HTTP/1.1에서는 deflate까지 
+  허용하고 있다. deflate는 RFC 1950과 RFC 1951을 참조하면 된다. 
+  <P></P>
+  <LI>HTTP/1.1에서는 네트워크를 통한 안전한 전송을 보장하기 위하여 entity body에 적용되는 인코딩 전달을 지정할 수 있다. 
+  이를 위해 transfer-coding 파라미터가 추가되고 이를 이용하는 Transfer-Encoding 헤더 필드가 추가되었다. 
+  <P></P>
+  <LI>Content negotiation을 함에 있어 여러 가지 협상 파라미터들의 상대적인 중요도를 명시할 수 있는데 이를 위해 
+  Quality Value를 사용하고 있으며 qvalue 파라미터가 추가되었다. 
+  <P></P>
+  <LI>사용자가 말하고 글로 쓰는 언어가 무엇인지 알릴 수 있는 language-tag가 추가되었고 이것을 이용하는 
+  Accept-Language, Content-Language 헤더 필드가 또한 추가되었다. 
+  <P></P>
+  <LI>두 개 또는 그 이상의 entity에 대한 비교를 위해 entity-tag가 추가되었고 이것을 이용하는 ETag, If-Match, 
+  If-None-Match, If-Range 헤더 필드가 추가되었다. 
+  <P></P>
+  <LI>클라이언트는 대상 자원의 일부분만 요구할 수도 있으며 이를 위해 응답 메시지에 일부분만 포함시킬 수 있도록 하는 range-unit 
+  파라미터가 추가되었고 이것을 활용하는 Range 및 Content-Range 헤더 필드가 추가되었다. 
+  <P></P></LI></UL>
+<P>
+<H3>3.3 HTTP 메시지</H3>
+<P>메시지 구성 형식을 나타내기 위한 표현식이 HTTP/1.0에 비해 달라졌다. entity-body란 이름이 message-body란 
+이름으로 바뀌었으나 전체적으로 표현식만 달라졌을 뿐 실제 구성 형식은 HTTP/1.0과 같다. 그러나 각 헤더 에 포함되는 헤더 필드는 다수 
+추가되어 있으며 HTTP/1.0과는 달리 구성되어 있다. 
+<P>General Header Field만 하더라도 기존의 Data, Pragma에 더해 Cache-Control, Connection, 
+Transfer-Encoding, Upgrade, Via 등의 필드가 추가되어 있다. 
+<P>
+<H3>3.4 Request</H3>
+<P>HTTP/1.0에서의 Request 메시지와 기본 구성 형식은 똑같으나 request-hader의 헤더 필드가 다수 추가되었고, 사용하는 
+method의 종류도 많이 늘어났다. 
+<P>method는 HTTP/1.0에서 쓰이던 것들이 다음과 같다. 
+<P>
+<UL>
+  <LI>GET 
+  <LI>HEAD 
+  <LI>POST </LI></UL>
+<P>이러한 method들에 추가하여 HTTP/1.1에는 다음과 같은 것들이 있다. 
+<P>
+<DL>
+  <DT>OPTIONS 
+  <DD>Request-URI에 의해 지정되는 자원에 대한 요구/응답의 관계에 있어 통신과 관련된 선택 사항들에 대한 정보를 요청할 때 
+  쓰인다. 이를 통해 클라이언트는 어느 것을 선택할지 결정할 수 있으며 또는 자원과 관련된 필요사항도 결정할 수 있다. 그리고 서버의 수행 
+  능력에 대해서도 알아볼 수 있다. 그러나 자원에 대한 어떤 동작을 수행시키거나 갖고 온다든지 하는 동작은 허용되지 않는다. 해당 자원에 
+  허용되는 접근 방법들을 나열하는 Allow 헤더 필드가 통신 선택 사항의 예가 될 것이다. Content-Type은 예로서 적당하지 않다. 
+  <P></P>
+  <DT>PUT 
+  <DD>메시지에 포함되어 있는 데이타를 지정한 Request-URI 장소에 그 이름으로 저장되게 한다. Request-URI 자리에 같은 
+  것이 존재하고 있다면 메시지에 포함되어 있는 데이타 수정된 최근 자원이라고 간주하여야 한다. 만약에 존재하지 않고 있다면 새로운 자원으로서 
+  Request-URI에 있는 URI로 저장되게 되며 브라우저에서는 이 URI로 자원을 이용할 수 있게 된다. 바로 이 점이 POST와의 
+  차이점이다. POST에서는 이 URI로 활용 방법에 따라 이용할 수 없을 가능성도 있다. 
+  <P></P>
+  <DT>DELETE 
+  <DD>Request-URI에 지정되어 있는 자원을 서버에서 지울 수 있게 하는 역할을 한다. 
+  <P></P>
+  <DT>TRACE 
+  <DD>요구 메시지의 최종 수신처까지의 루프백 검사용으로 쓰인다. 즉, 클라이언트가 보내는 요구 메시지가 거쳐가는 프락시나 게이트웨이의 중간 
+  경로 및 최종 수신 서버까지 이르는 경로를 알아내는 데에 쓰인다. 이와 함께 사용되는 헤더 필드는 Max-Forwards라고 하는 것이며, 
+  중간에 거쳐갈 프락시나 게이트웨이 경로의 최대 숫자를 지정하는 것이다. 
+  <P></P></DD></DL>
+<P>request-header의 필드에는 HTTP/1.0의 것이 다음과 같으며, 
+<P>
+<UL>
+  <LI>Authorization 
+  <LI>From 
+  <LI>If-Modified-Since 
+  <LI>Referer 
+  <LI>User-Agent </LI></UL>
+<P>HTTP/1.1에서는 위 필드에 더해 다음과 같은 것들이 추가되었다. 
+<P>
+<UL>
+  <LI>Accept 
+  <LI>Accept-Charset 
+  <LI>Accept-Encoding 
+  <LI>Accept-Language 
+  <LI>Host 
+  <LI>If-Match 
+  <LI>If-None-Match 
+  <LI>If-Range 
+  <LI>If-Unmodified-Since 
+  <LI>Max-Forwards 
+  <LI>Proxy-Authorization 
+  <LI>Range </LI></UL>
+<P>
+<H3>3.5 Response</H3>
+<P>HTTP/1.0에서의 Response 메시지와 기본 구성 형식은 똑같으나 response-hader의 헤더 필드가 다수 추가되었고, 상태 
+코드의 종류도 다수 늘어났다. 
+<P>response-header의 필드에는 HTTP/1.0의 것이 다음과 같으며, 
+<P>
+<UL>
+  <LI>Location 
+  <LI>Server 
+  <LI>WWW-Authenticate </LI></UL>
+<P>HTTP/1.1에서는 위 필드에 더해 다음과 같은 것들이 추가되었다. 
+<P>
+<UL>
+  <LI>Age 
+  <LI>Proxy-Authenticate 
+  <LI>Public 
+  <LI>Retry-After 
+  <LI>Vary 
+  <LI>Warning </LI></UL>
+<P>
+<H3>3.6 Entity</H3>
+<P>entity-hader의 헤더 필드가 다수 추가되었다. HTTP/1.0의 것이 다음과 같으며, 
+<P>
+<UL>
+  <LI>Allow 
+  <LI>Content-Encoding 
+  <LI>Content-Length 
+  <LI>Content-Type 
+  <LI>Expires 
+  <LI>Last-Modified </LI></UL>
+<P>HTTP/1.1에서는 위 필드에 더해 다음과 같은 것들이 추가되었다. 
+<P>
+<UL>
+  <LI>Content-Base 
+  <LI>Content-Language 
+  <LI>Content-Location 
+  <LI>Content-MD5 
+  <LI>Content-Range 
+  <LI>ETag </LI></UL>
+<P>
+<H3>3.7 Connections</H3>
+<P>TCP 연결 관점에서 데이타 송수신의 효율성을 높이기 위하여 상시 연결 (persistent connection) 기능을 
+HTTP/1.0에서 추가하였다. 이에 따라 HTTP/1.1 프로토콜에 기반하는 모든 HTTP 연결은 상시 연결 기능에 의해 서버에 접속하게 
+된다. 따라서 서버는 수립한 연결에 대해 일단 상시 연결이라고 간주해버린다. 
+<P>그러므로 연결의 해제를 위한 수단을 제공해야 하는데 이것이 Connection 헤더 필드가 되며 close란 파라미터가 서버로 전달되면 
+설립된 상시 연결은 해제되게 된다. 반대로 서버가 응답을 하고난 후에 연결을 해제하고자 한다면 클라이언트로 전송되는 응답 메시지에 
+Connection 헤더 필드를 넣어서 close 파라미터를 전달하면 된다.
+<P>이 기능에 따라 클라이언트는 '파이프라인(pipeline)'이라 불리우는 연속적으로 몇 개의 요구 메시지를 각각에 대해 응답을 받지 않은 
+상태임에도 보낼 수 있게 된다. 이때 서버는 요구 메시지를 수신한 순서대로 응답 메시지를 전달해야 한다. 
+<P>
+<H3>3.8 Access Authentication</H3>
+<P>HTTP/1.0 규격에는 기본 인증 체계 (Basic Access Authentication, BAA)에 대한 규정만 있었으나 
+HTTP/1.1에는 프락시와 사용하는 Proxy-Authentication 필드와 Proxy-Authorization 필드가 추가되어 있으며, 
+또한 Digest Access Authentication (DAA) 부분도 추가되어 있다.[1] <I>(BAA와 DAA란 용어는 손쉬운 표기를 
+위해 이 문서에서만 쓰이는 것이므로 다른 문서 속에 혹시 있을지도 모르는 BAA 및 DAA와 혼동하지 않기 바란다.) </I>
+<P>HTTP/1.0에서 사용되던 사용자 인증 방식은 사용자 아이디와 비밀 번호가 아무런 암호화 과정없이 네트워크를 통해 서버로 전달되던 
+것이어서 탈취 및 공격의 가능성이 있었으므로, 인증을 위한 정보를 보다 안전한 방법으로 전달하기 위해 Digest Access 
+Authentication 방식을 사용한다. 
+<P>DAA 방식도 BAA 방식과 마찬가지로 단순한 challenge-response 메카니즘으로 동작한다. Basic 방식에서와 같이 통신하는 
+양 쪽에서 둘 다 비밀번호를 공유한다는 점은 같다. 그러나 DAA 방식에서는 nonce value를 사용하고 있으며, 응답 메시지 속에 MD5 
+checksum 방식에 의해 인코딩된 사용자 아이디, 비밀번호, 주어진 nonce value, HTTP method, request-URI 등이 
+들어가지만, 비밀번호는 절대 clear text의 형태로 전달되지 않는다. 이 과정에서 서버에게 checksum이나 digest를 생성하는 데 
+쓰이는 알고리즘을 지정할 수 있게 하는 선택적 헤더가 있다. 여기서는 MD5 알고리즘이 기본적으로 설정되어 있으며 128-bits MD5 
+digest가 32개의 ASCII 문자로서 표현된다. 
+<P>따라서 MD5 알고리즘에서 알려진 문제점들이 그대로 DAA 방식에서도 나타난다. 하지만 DAA는 BAA를 대치하기 위해 만들어진 것이며, 
+서버 측면에서의 비밀번호 시스템이 공통적으로 겪고 있는 문제점이기도 하다. 이 프로토콜은 kerberos 만큼 안전하지 못하고, 
+client-side private-key 방식에 비해서도 안전하지 못하긴 하지만, 없는 것보다는 낫고, 또한 telnet, ftp에서 쓰이는 
+방식이나 BAA 방식보다는 더 좋은 방법이다. 
+<P>그러므로 이것이 보안을 위한 완벽한 해결책이 될 수는 없으며, 또한 메시지 속의 실제 데이타는 암호화 되지도 않고 전달된다. DAA를 통해 
+달성하고자 했던 것은 BAA 방식이 가진 가장 심각한 문제점을 해결하고자 하는 단순한 목적에 있기 때문에 DAA를 통해 완벽한 보안이 
+이루어진다고 생각해서는 안 된다.
+<P>대부분의 다른 인증 프로토콜에서 보더라도 공격에 대한 위험은 프로토콜 자체에 있는 것이 아니라 이것을 사용하는 데 있어서의 보안 정책이나 
+절차에 의해 좌우된다. Digest Access Authentication을 사용하더라도 이의 보안 강도는 구현 방식에 달려 있게 된다. 
+<P>이러한 DAA 방식을 위해 WWW-Authenticate 헤더 필드와 Authorization 헤더 필드를 수정하였다. 여기에다 
+Authentication-info라고 하는 새로운 헤더 필드 하나가 DAA를 위해 추가되었다.[2] 
+<P>
+<H3>3.9 Content Negotiation</H3>
+<P>대부분의 응답 메시지에는 요청된 대상 자원이 entity로서 포함되어 있는데 사용자가 인식할 수 있는 정보로 표현하기 위해 적절한 변환 
+과정을 거칠 수 있다. 이때 사용자는 요청한 요구 메시지의 지정 사항에 가장 '적절한' 형태로 받아보고자 할 것이다. 
+<P>예를 들어, gzip으로 압축되어 있는 자원을 클라이언트가 갖고 와서 압축을 풀고서 저장하게 할 수도 있고 적절한 viewer로 보여줄 
+수도 있으며 여러가지 viewer들 가운데 선택하게 할 수도 있다. 여기서 가장 적절하다는 것은 선호도 문제 때문에 모든 사용자들에게 똑같이 
+적용되는 것은 아니다. 또한 모든 브라우저가 모든 종류의 데이타 형태를 모두 처리할 수 있는 것도 아니다. 
+<P>HTTP/1.1에서는 한 가지 대상 자원에 대해 몇 가지 형태의 선택 사양을 전달한다. 이 각각의 선택 정보를 'variant'라고 한다. 
+예를 들어 어떤 문서에 대해 다음과 같이 세 가지 선택 조건을 제시할 수 있다. 
+<P>
+<OL>
+  <LI>HTML, Korean 
+  <LI>HTML, English 
+  <LI>Postscript, Korean 
+  <LI>Postscript, English </LI></OL>
+<P>content negotiation이란, 해당 문서를 갖고 오고자 할 때 사용자의 선호도 지정 사항과 클라이언트의 수행 능력에 따라서 가장 
+최상으로 합치되는 조건의 문서를 선택하여 가져와서 사용자에게 보여줄 수 있도록 하는 과정을 말한다.[3] 
+<P>그러므로 사용자가 바라는 형태로 제공하기 위해 content negotiation이라고 하는 몇 가지 메카니즘을 HTTP/1.1에서는 
+제공한다. 다음과 같은 메카니즘이 제안되어 있다.[1] 
+<P>
+<DL>
+  <DT>Server-driven Negotiation 
+  <DD>이것은 서버에 있는 알고리즘에 의해 여러 가지 선택안들 가운데 최상의 것이 결정되도록 한 것이다. 이의 선택은 서버 응답에 허용되는 
+  것들과 클라이언트의 요구 메시지에 포함되어 있는 특정 지정 사항에 의해 결정되거나, 또는 요구 메시지에 포함되어 있는 다른 정보들을 이용하여 
+  서버가 결정하는 것이다. 
+  <P>이를 위해 클라이언트는 Accept, Accept-Language, Accept-Encoding 등의 헤더 필드를 요구 메시지에 
+  포함시켜서 서버에게 보낸다. 서버를 이들 정보를 보고서 결정하는 것이다.[1] 
+  <P></P>
+  <DT>Agent-driven Negotiation 
+  <DD>최상의 선택에 대한 결정을 서버로부터 최초 응답을 받고 난 후에 클라이언트가 하는 방식이다. 응답 메시지의 Alternates 헤더 
+  필드에 있는 정보나 최초 응답의 entity-body 정보를 보고서 클라이언트가 결정한다.[1] 
+  <P></P>
+  <DT>Transparent Nogotiation 
+  <DD>이것은 위 두 방식을 결합한 것이다. 협상의 분산이 가능한 잇점을 갖고 있으며 두 방식의 장점들이 결합됨으로서 가장 주목받고 있는 
+  방식이다.[1]
+  <P>HTTP/1.1 문서와는 별도로 관리되고 있으며, 안정적인 상태로 정리되면 HTTP/1.1 문서에 들어가게 될 것이다.[3] 
+  <P></P></DD></DL>
+<P>
+<H3>3.10 Caching in HTTP</H3>
+<P>HTTP/1.0 규격에서도 HTTP 프로토콜 동작 상의 데이타 캐싱에 대하여 다루고 있다. HTTP/1.1에서는 이 기능이 보다 잘 
+동작하게 하기 위한 많은 요소들이 추가되었는데, 그 목적은 많은 경우에 있어 데이타 요청을 위한 요구 메시지의 수를 줄이기 위함이고 또 다른 
+경우들에 있어 서버가 보내는 응답 메시지의 수를 줄이기 위함이다. 
+<P>요구 메시지의 수를 줄이게 되면 네트워크의 round-trip의 횟수가 줄어드는데 이를 위해 expiration 메카니즘을 사용한다. 만약 
+응답 메시지의 수가 줄어들게 되면 네트워크의 bandwidth 용량을 보존할 수 있게 되며 이를 위해 validation 메카니즘을 사용한다. 
+<P>Expiration이란 서버가 요청받은 자원을 보낼 때 명확한 유효기간을 정해서 보내는 동작을 말한다. 이 날자가 지난 자원의 유효성은 
+보장하지 못하므로 서버로부터 새롭게 받아와야 하며, 유효기간 내의 자원이라면 요구 메시지를 보내지 않더라도 캐시되어 있는 자원을 제공할 수 있게 
+되는 것이다.
+<P>Validation이란 캐시되어 자원에 대한 유효성을 확인하는 것이다. 클라이언트의 요구에 대한 응답으로서 사용할 수 있는 캐시 데이타가 
+있다면 먼저 서버와 해당 데이타를 사용할 수 있는지 유효성 검사를 해야 한다. 
+<P>
+<H3>3.11 헤더 필드 정의</H3>
+<P>앞에서 언급했던 많은 헤더 필드들이 HTTP/1.1에서 추가되었다. 상세한 기능 설명은 다음에 개정될 문서에서 다루도록 하고, 여기서는 
+주목되는 특징적 필드만 언급하도록 한다. 
+<P>
+<H4>3.11.1 Host</H4>
+<P>이렇게 추가된 필드들 가운데 하나의 호스트 컴퓨터에 여러 개의 서버를 구성할 수 있는 Multi-Homed 기능을 프로토콜 차원에서 
+구현하도록 하는 것이 있다. HTTP/1.0에서는 서버 프로그램의 구현상 가능했던 기능이며 이 경우에 하나의 호스트 컴퓨터에 추가하고자 하는 
+서버 홈의 갯수만큼 IP 주소를 지정했어야 했다. 따라서 호스트 컴퓨터는 한 대일지라도 할당된 IP 갯수만큼의 서버 홈을 구성할 수 있었다. 
+<P>그러나 HTTP/1.0에서는 하나의 호스트에 하나의 IP 주소만 가지고도 이런 기능이 가능하도록 되어 있다. 다만 DNS 시스템에 등록되는 
+여러 개의 이름 주소는 같은 IP 주소로 등록되어야 한다. 즉, 다양한 도메인의 다양한 이름 주소라 할지라도 모두 같은 IP 주소로 등록되어야 
+한다는 것이다. 
+<P>이런 기능을 하는 것이 Host라고 하는 헤더 필드이다. 예를 들어, 
+<P><XMP>http://pec.etri.re.kr/~qkim/HTTP/
+</XMP>
+<P>위와 같은 URL이 요구 메시지에 포함될 때 아래와 같은 형식으로 구성된다. 
+<P><XMP>GET /~qkim/HTTP/ HTTP/1.1
+Host: pec.etri.re.kr
+</XMP>
+<P>그러므로 같은 IP를 사용하는 같은 호스트라 할지라도 포함되어 있는 Host 정보를 통해 어느 홈을 가리키는지 알 수 있게 되는 것이다. 
+<P>
+<H4>3.11.2 Range</H4>
+<P>모든 HTTP entities는 HTTP 메시지 내에 일련의 바이트열로서 포함된다. 따라서 이 가운데 일정 부분의 바이트만 요구하고 
+서비스받는 것은 아주 편리한 기능이다. 이를 위해 원하는 바이트 영역을 표시하여 가져올 수 있게 하며, 추가된 헤더 필드는 Range이다. 
+<P>
+<H4>3.11.3 Upgrade</H4>
+<P>General 헤더에 속하는 헤더 필드이다. 클라이언트는 자신이 지원할 수 있는 추가적인 프로토콜이 무엇인지, 만약 서버가 프로토콜 변환을 
+할 수 있다면 클라이언트는 어떤 프로토콜을 사용하고자 하는지 Upgrade 헤더 필드를 통해 서버에게 알려 줄 수 있다. 
+<P>만약 서버가 프로토콜 변환을 할 수 있다면, 서버는 반드시 101 (Switching Protocols) 응답 메시지 속에 Upgrade 
+필드를 반드시 포함시켜야 한다. 이의 형식은 아래와 같다. 
+<P><XMP>Upgrade        = "Upgrade" ":" 1#product
+</XMP>
+<P>이의 예를 들자면 아래와 같다. 
+<P><XMP>       Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11
+</XMP>
+<P>이러한 헤더 필드를 통해 HTTP/1.1 프로토콜에서 개정된 새로운 HTTP 프로토콜로의 변환이나, 또는 다른 종류의 프로토콜로의 변환이 
+손쉽게 가능하게 된다. 
+<P>이때 Upgrade 헤더 필드는 클라이언트와 처음 나타나는 중간 프락시나 게이트웨이 사이에서와 같이 중간 연결에만 적용되기 때문에 메시지가 
+오가는 전체 연결에 대해서 적용하기 위해서는 Upgrade 헤더가 필드가 존재하는 모든 메시지에 대해 Connection 헤더 필드도 존재하여야 
+한다. 
+<P>
+<H2>4. To the Future</H2>
+<P>HTTP/1.1 다음 버전에서 논의될 것들이 거론되고 있는데, 다음과 같은 것들이다. 
+<P>
+<DL>
+  <DT>Hit Count 
+  <DD>캐시되어 있는 데이타에 대해 hit ratio를 파악할 수 있게 하여 캐시 관리의 효율성을 높이고자 하는 것이다. 
+  <P></P>
+  <DT>Compressed Protocol 
+  <DD>sticky header를 사용하는 것인데, 무엇을 목표로 하는 것인지 아직 파악되지 않았다.(1996. 11. 7. 현재) 
+  <P></P>
+  <DT>Multiplexing 
+  <DD>multiplexing 기법을 이용하여 여러 개의 TCP 연결을 만들지 않더라도 해당 HTTP 메시지들을 가져올 수 있도록 하자는 
+  것이다. 
+  <P></P>
+  <DT>PEP 
+  <DD>HTTP 프로토콜에 사용자가 직접 설계한 프로토콜을 추가할 수 있게 하는 것이다.
+  <P></P></DD></DL>
+<P>
+<H2>5. Out of Scope of HTTP/1.1: <BR>HTTP State Management Mechanism</H2>[4] 
+<P>HTTP 프로토콜 상의 상태 관리는 클라이언트와 서버 사이에 오가는 요구 및 응답 메시지에서 오가는 상태 정보를 일관적으로 다루기 
+위함이다. HTTP는 stateless로서 연속적으로 보내는 요구 메시지들 사이에 아무런 관련성을 부여할 수가 없다. 그러므로 같은 보안 영역 
+속에 있는 자원들을 연속적으로 요청하고자 한다면 매번 사용자 인증의 과정을 거쳐야 할 것이다. <P. <p 된다. 저장되게 측에 agent 
+user 있으며, 수 간주할 정보로서 상대 전달하는 사이에 서버와 용어도 Cookie의 따라 이에 제안되었다. 최초 의해 Netscape에 
+것이며 있는 쓰이고 구현되어 브라우저에 Netscape사의 실제로 이것은 것이다. 하는 Set-Cookie라고 Cookie와 추가되었고 필드가 
+헤더 위한 관리를 상태 목적의 이러한 않게 거치지 다시 과정을 번거로운 대해 메시지들에 요구 이후의 유지하여야만 그대로 상태를 인증 통과된 번 
+한 없으므로 수밖에 것일 너무나 사용자에게>이것이 많이 활용되고 있음에도 불구하고 HTTP/1.0이나 HTTP/1.1 규격 두 곳 모두에 아직 
+포함되어 있지 않으며 별도의 드래프트 문서로서 존재한다. 
+<P>여기서는 동작 개념에 대한 개략만 언급하기로 한다. 
+<P>
+<H3>5.1 State &amp; Sessions</H3><P. <p 된다. 수 것이며 상태 요구 한 없으므로 있다. 할 모습이라고 전체 
+응답의 동작하는 하에 목적 가지 세션은 즉, 세션이 이것이 바로 것들이 관련된 동작에 일관된 될 상황이 공유하는 정보를 같은 메시지들은 번의 
+여러 이때 정보라고 것이 나타내는 관계를 이 생기게 필요가 유지할 상관 사이의 메시지 각 위해서는 수행하기 동작을 서버와의 관계가 아무런 
+사이에는 메시지들 보내는 클라이언트에서>예를 들자면, 소비자가 상점에 가서 필요한 여러 물건들을 집어드는 동작과 장바구니에 담는 동작은 여러 
+번의 요구/응답 상황과 완벽하게 일치하며 각각의 물건 선택과 담는 것들은 서로 상관관계가 없다. 하지만 소비자가 필요한 물건을 구입하고자하는 한 
+가지 목적 하에 움직이고 있는 것이므로 이것이 세션의 의미가 된다. 저녁 반찬거리 구입이 바로 한 가지 세션의 의미인 것이다. 
+<P>쿠키의 교환에 의해 생성되는 세션은 다음과 같은 특성을 가진다. 
+<P>
+<OL>
+  <LI>각 세션은 시작과 끝이 존재한다. 
+  <LI>각 세션은 비교적 짧은 시간 동안만 존재한다. 
+  <LI>클라이언트 또는 서버 어느 쪽이라도 세션을 해제할 수 있다. 
+  <LI>세션이란 상태 정보의 교환이란 의미를 함축하고 있다. </LI></OL>
+<P>아래에 서버와 클라이언트 사이의 상태 정보 교환에 대한 방법에 대해 설명하도록 한다. 
+<P>
+<H3>5.2 서버의 역할 </H3>
+<P>
+<H4>5.2.1 일반적 동작</H4>
+<P>서버는 세션을 생성시키는 역할을 한다. 이를 위해 서버는 응답 메시지에 Set-Cookie라고 하는 추가적인 헤더 필드를 보내도록 한다. 
+<P>클라이언트는 세션을 지속시키자 결정할 경우에 서버를 향해 요구 메시지에 Cookie 헤더 필드를 보내도록 한다. 서버는 이 정보를 무시할 
+수도 있고 세션의 현재 상태를 결정하기 위해 사용할 수도 있다. 서버는 클라이언트에게 같은 정보 또는 다른 정보를 Set-Cookie 헤더 
+필드를 통해 보낼 수도 있고, 또흔 전혀 안 보낼 수도 있다. 서버가 세션을 해제하기 위해서는 Max-Age=0란 정보를 Set-Cookie 
+헤더 필드에 실어서 클라이언트에게 보내면 된다. 
+<P>이때 서버는 하나의 응답 메시지에 여러 개의 Set-Cookie 헤더 필드를 포함시킬 수도 있다. 그러므로 중간 게이트웨이에서는 이런 여러 
+개의 헤더 필드를 하나의 필드로 하여 보낼 수 있어야 한다. 
+<P>Set-Cookie 헤더 필드는 다음과 같이 구성되어 있다. 
+<P><XMP>set-cookie     = "Set-Cookie:" cookies
+cookies        = 1#cookie
+cookie         = NAME "=" VALUE *(";" cookie-av)
+NAME           = attr
+attr           = token
+VALUE          = value
+value          = word
+cookie-av      = "Comment" "=" value
+               | "Domain" "=" value
+               | "Max-Age" "=" value
+               | "Path" "=" value
+               | "Secure"
+               | "Version" "=" 1*DIGIT
+</XMP>
+<P>
+<H4>5.2.2 캐싱 관리</H4>
+<P>서버는 클라이언트에게 전달한 자원과 Set-Cookie 헤더에 대한 캐싱 문제를 해결하여야 한다. 타인에게 보여서는 안 되는 문서나 다른 
+사람들과 공유해서는 안 되는 Set-Cookie 정보가 캐시로서 남아있어서는 안 되기 때문이다. 만약 다른 사람들과 공유해도 되는 
+Set-Cookie 헤더라면 캐시되게 할 수도 있다. 
+<P>이러한 동작을 위해 서버는 응답 메시지의 헤더에 조건에 따라서 추가적인 헤더 필드를 선택적으로 보내어야 한다. 예를 들어, 
+Set-Cookie를 캐시되지 않도록 하고자 한다면 다음과 같은 헤더 필드를 보내야 한다. 
+<P><XMP>Cache-control: no-cache="set-cookie"
+</XMP>
+<P>만약 개인적 정보라서 해당 자원을 다른 사람들과 공유하지 않게끔 할려면 다음과 같은 헤더 필드를 보내서 공유 캐시 영역에 캐시되지 않도록 
+해야 한다. 
+<P><XMP>Cache-control: private
+</XMP>
+<P>
+<H3>5.3 클라이언트 역할 (User Agent Role) </H3>
+<P>
+<H4>5.3.1 Set-Cookie 적용</H4>
+<P>클라이언트에서는 각기 다른 서버로부터 전달되는 Set-Cookie 응답을 통해 상태 정보를 별도로 관리하여야 한다. 그러므로 
+Set-Cookie 속에 있는 지정 사항들을 적절하게 인식하여 적용하여야 한다. 
+<P>
+<H4>5.3.2 Cookie 거부</H4>
+<P>몇 가지 불일치 상황이 발생하면 보안이나 사생활 침해의 문제로 클라이언트는 쿠키를 거부할 수도 있다. 
+<P>
+<H4>5.3.3 Cookie 관리</H4>
+<P>클라이언트가 현재 존재하는 쿠키와 같은 이름을 갖고서 이의 Domain이나 Path가 완전히 일치할 때 새로 도착한 쿠키가 기존의 것을 
+대치하게 된다. 하지만 새로 도착한 Set-Cookie가 Max-Age의 값을 0으로 가질 때 기존의 것이나 현재의 것이나 둘 다 삭제해버려야 
+한다. 이런 쿠키가 도착하지 않는다면 시스템 자원이 허용하는 한 쿠키들은 축적된다. 
+<P>그러나 클라이언트가 쿠키를 저장할 수 있는 한계가 있으므로 오래된 쿠키를 지워야 하는데, 이때 least-recently-used 
+알고리즘을 사용할 수도 있다. 
+<P>만약 Set-Cookie 헤더에 Comment를 포함하고 있다면, 클라이언트는 이 정보를 사람이 읽을 수 있는 정보의 형태로 쿠키와 함께 
+저장하여야 한다. 
+<P>
+<H4>5.3.4 서버로의 쿠키 전달</H4>
+<P>클라이언트가 전송하는 요구 메시지에 대해 적용할 쿠키를 갖고 있을 때 서버에게 쿠키 요구 헤더를 다음에 따라서 보낼 수가 있다. 
+<P>
+<UL>
+  <LI>request-host 
+  <LI>request-URI 
+  <LI>cookie's age </LI></UL>
+<P>여기서 Cookie의 구성 형식은 다음과 같다. 
+<P><XMP>cookie          = "Cookie:" cookie-version 1*((";" | ",") cookie-value)
+cookie-value    = NAME "=" VALUE [";" path] [";" domain]
+cookie-sersion  = "$Version" "=" value
+NAME            = attr
+attr            = token
+VALUE           = value
+value           = word
+path            = "$Path" "=" value
+domain          = "$Domain" "=" value
+</XMP>
+<P>
+<H2>6. 참고자료
+<P></H2>
+<DL compact>
+  <P>
+  <DT><B>[1]</B> 
+  <DD>Roy Fielding, "Hypertext Transfer Protocol - HTTP/1.1", Internet Draft (<A 
+  href="ftp://ftp.ietf.org/internet-drafts/draft-ietf-http-v11-spec-07.txt">Text</A> 
+  / <A 
+  href="ftp://ftp.ietf.org/internet-drafts/draft-ietf-http-v11-spec-07.ps">PostScript</A>), 
+  IETF HTTP WG, August 1996. 
+  <P></P>
+  <DT><B>[2]</B> 
+  <DD>John Franks and others, "An Extension to HTTP: Digest Access 
+  Authentication", <A 
+  href="ftp://ftp.ietf.org/internet-drafts/draft-ietf-http-digest-aa-05.txt">Internet 
+  Draft</A>, IETF HTTP WG, September 1996. 
+  <P></P>
+  <DT><B>[3]</B> 
+  <DD>Koen Holtman and Andrew Mutz, "Transparent Content Negotiation in HTTP", 
+  <A 
+  href="ftp://ftp.ietf.org/internet-drafts/draft-holtman-http-negotiation-03.txt">Internet 
+  Draft</A>, IETF HTTP WG, September 1996. 
+  <P></P>
+  <DT><B>[4]</B> 
+  <DD>David M. Kristol and Lou Montulli, "HTTP State Management Mechanism", 
+  Internet Draft (<A 
+  href="ftp://ftp.ietf.org/internet-drafts/draft-ietf-http-state-mgmt-03.txt">Text</A> 
+  / <A 
+  href="ftp://ftp.ietf.org/internet-drafts/draft-ietf-http-state-mgmt-03.ps">PostScript</A>), 
+  IETF HTTP WG, July 1996. 
+  <P></P></DD></DL>
+<P></P></BODY></HTML>

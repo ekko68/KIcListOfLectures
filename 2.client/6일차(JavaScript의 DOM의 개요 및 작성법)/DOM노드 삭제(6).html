@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>DOM노드 삭제(6).html</title>
+  <script>
+     window.onload=function(){
+          var remove=document.getElementById("will_remove")
+         document.body.removeChild(remove)
+		 //형식) setTimeout(호출할 함수명(실행) or 익명함수,초단위(1000)->1초)
+		 setTimeout(function(){
+		     document.body.innerHTML=''
+		 },3000) //3초뒤에 익명함수를 실행
+	 }
+  </script>
+ </head>
+ <body>
+   <h1 id="will_remove">Header</h1>
+   <h1>Header2</h1>
+ </body>
+</html>

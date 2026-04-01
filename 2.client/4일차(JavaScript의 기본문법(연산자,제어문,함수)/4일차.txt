@@ -1,0 +1,75 @@
+4일차(JavaScript의 기본문법(연산자,제어문(if),함수(자바(메서드)
+
+<script>
+      //함수의 선언->어떤 함수를 사용할것인지를 정의해 놓은것
+	  /*  변수,연산자,제어문,함수(사원)(핵심) 프로그램(회사)
+       어떤 기능을 가진 최소한의 작업단위
+         (계산목적, 데이터 저장목적, 데이터조회,출력목적…)
+		 함수형식)
+
+		 function 함수명(매개변수명,,,,){ //매개변수->전달받아서 처리할값
+           함수가 처리해야할 내용(변수,연산자,제어문)작성
+       }
+	  */
+  var test=3
+  var test2=5,b,c
+      //함수의 종류(기능별로 분류)->새로 만드는 함수(=사용자정의 함수)
+	  //자바스크립자체에서 이미 존재하는 함수(내장함수)
+     //1.매개변수 X, 반환값 X(보고)->단순하고 반복적인 일을 처리
+	 function print(){
+         document.write("단순하고 반복적인 일을 주로<br>")
+	 }
+	 //2.매개변수 O,반환값 X (데이터를 저장목적,출력,계산목적)
+	 function print2(su){ //숫자,문자,논리적인값(true or false)
+         document.write("입력받은 값은=>"+su+"입니다<br>")
+	 }
+	 function print3(su,su2){ //계산해서 출력하는 목적
+         document.write("su+su2=>"+(su+su2)+"<br>")
+	 }
+	 //3.매개변수 O ,반환값(보고) O ->웹프로그래밍방식->계산목적
+	 function print4(su,su2){//30,40
+		 /*
+          var result=su*su2
+         return result */ //형식) return 변수 or 수식(계산식)
+		 return (su*su2)
+	 }
+  </script>
+ </head>
+ <body>
+   <script>
+      //함수호출(업무 지시내림)=>함수를 사용->함수명();
+      print()
+	  //document.write("단순하고 반복적인 일을 주로<br>")
+	  //document.write("입력받은 값은=>"+su+"입니다<br>")
+	  print2(30)//함수명(전달할값(매개변수))
+	  print3(10,20)
+	  /*
+	  gap=print4(30,40) //형식) 변수명=호출할함수명(매개변수,,,)
+	  document.write("반환받은 값(gap)=>"+gap+"<p>") */
+      alert(print4(30,40))
+   </script>
+ <!--함수호출 유형(2가지유형)
+   1.버튼클릭->클릭이벤트
+   이벤트(Event)->운영체제가 인식가능한 사용자들의 모든 행동양식(키보드)
+                         마우스 작업(클릭,드래그 & 드롭),터치
+						 click(이벤트종류) onclick="자바스크립트구문;구문2;구문3"
+						                                         함수명(매개변수)
+   2.링크문자열을 클릭->함수호출
+ -->
+<input type="button" value="계산목적" onclick="alert('이벤트연습')">
+<input type="button" value="함수호출" onclick="print2(12)">
+<a href="#" onclick="print2('매개변수전달')">링크문자열 클릭</a>
+
+
+ </body>
+</html>
+=====================================
+   if제어문2(8).html
+
+ 제어문2->switch~case,for~예습
+====================
+
+
+
+
+

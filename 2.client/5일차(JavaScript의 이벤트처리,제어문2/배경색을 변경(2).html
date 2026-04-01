@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>배경색을 변경(2).html </title>
+   <style>
+       div#box{
+               width:200px;
+			   height:200px;
+			   background:#ffffff;
+			   border:2px solid black
+	   }
+   </style>
+   <script>
+      function setRed(){ //빨간
+        //배경색에 빨간색을 부여할 태그정보를 얻어옴->id
+		var box=document.getElementById("box")
+		//alert(box)  style="background:red"  //태그정보.속성명=속성값;
+		//태그정보.상위속성명.하위속성명=변경할값(저장할값)
+           box.style.background="#ff0000"
+	  }
+
+	  function setGreen(){//녹색
+           var box=document.getElementById("box")
+           box.style.background="#00ff00"
+	  }
+
+	  function setBlue(){//파란색
+          var box=document.getElementById("box")
+           box.style.background="#0000ff"
+	  }
+	  //추가
+	  function setColor(n){
+		  //n=1 red ,n=2 green, n=3 blue
+          var box=document.getElementById("box") //배경색을 부여할 태그정보
+		  var color="#ffffff" //흰색(기본 색깔)
+          //if(n==1) red else if(n==2) green else blue ->다중 if문을 사용(속도느려짐)
+		  switch(n){
+          case 1:
+		            color="#ff0000"
+					break;
+           case 2:
+		            color="#00ff00"
+					break;
+           case 3:
+		            color="#0000ff"
+					break;
+		  }
+         box.style.background=color
+	  }
+   </script>
+ </head>
+ <body>
+ <!-- 
+   1)setRed() ,setGreen(), setBlue()->각버튼을 눌렀을때 각각 호출하는 함수
+   2)setColor()->함수의 갯수를 1개로 줄이고 함수의 내용을 하나로 합치는 경우
+                         각버튼을 구분
+ 
+  <input type="button" value="Red" onclick="setRed()">
+  <input type="button" value="Green" onclick="setGreen()">
+  <input type="button" value="Blue" onclick="setBlue()"> -->
+
+  <input type="button" value="Red" onclick="setColor(1)">
+  <input type="button" value="Green" onclick="setColor(2)">
+  <input type="button" value="Blue" onclick="setColor(3)">
+   <p>
+  <!-- <div id="box" style="background:red"></div> -->
+  <div id="box"></div>
+  <div id="box2"></div>
+ </body>
+</html>

@@ -1,0 +1,623 @@
+10일차(데이터복원,테이블 스페이스 개요(admin) 및 사용법)
+
+2과목을 동시->17*2=>2시간 이상
+=====================
+4:00~6:30
+
+SQL> spool C:\webtest\1.db\print\20170512.txt
+SQL>
+
+DDL ->create~ alter~ drop~
+DML->insert,update,delete,select(DQL)
+DCL
+===========================
+데이터 복원->10g이후 부터 가능 (delete,truncate,drop~)
+
+<문1>데이터를 삭제->delete구문,truncate구문을 이용?
+ 차이점,공통점을 확인?
+
+1.delete from 테이블명;//->테이블의 내부데이터 삭제
+   delete from 테이블명 where 조건식->회원탈퇴
+
+sql>select * from tab;
+sql>select count(*) from b_emp2;
+
+sql>delete from b_emp3;
+
+14 행이 삭제되었습니다.
+
+SQL> desc b_emp3;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ---------------
+
+ EMPNO                                              NUMBER(4)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> rollback; //DML에 포함
+
+롤백이 완료되었습니다.
+
+SQL> select count(*) from b_emp3;
+
+  COUNT(*)
+----------
+        14
+
+
+형식) truncate table 삭제시킬 테이블명;//테이블 내의 데이터삭제
+sql>truncate table  b_emp3;
+테이블이 잘렸습니다.
+
+sql>select count(*) from b_emp3;
+sql>desc b_emp3;
+
+SQL> select count(*) from b_emp3;
+
+  COUNT(*)
+----------
+         0
+
+SQL> desc b_emp3;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ---------------
+
+ EMPNO                                              NUMBER(4)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_emp3;
+
+선택된 레코드가 없습니다.
+
+
+delete from 테이블명,  truncate table 삭제시킬 테이블명
+
+공통점: 둘다 테이블내의 데이터를 삭제,테이블의 구조는 그대로 유지
+차이점:delete from 테이블->rollback으로 복원이 가능(DML)
+
+         truncate table ~=>rollback으로 복원이 X(DDL 계열)
+          ->데이터삭제 외에 추가적인 구조(트랙,섹터)
+
+<문제2> 데이터를 삭제->drop문->drop table 삭제시킬  테이블명
+->테이블이 삭제->데이터도 같이 삭제(구조 X)
+->일반적으로 복원X (DDL 계열)=>10g이후
+                                                9i->drop table~X
+
+ flashback 기술->항상 복원X
+
+sql>drop table b_emp3;
+
+테이블이 삭제되었습니다.
+
+SQL> select * from b_emp3;
+select * from b_emp3
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_emp3;
+select * from b_emp3
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+SQL>select * from tab;
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+BIN$ZfcZY+AMR7237C5sUXwpYA==$0 TABLE =>b_emp3
+
+오라클의 휴지통에 들어간 상태를 의미
+=============================
+
+BONUS                          TABLE
+BUSER                          SYNONYM
+B_EMP2                         TABLE
+B_EMP4                         TABLE
+DEPT                           TABLE
+DEPT30                         VIEW
+EMP                            TABLE
+EMP30                          VIEW
+EMP_20                         VIEW
+<문제3>삭제된 테이블이 휴지통에 들어가 있는 상태->조회?
+user_recyclebin-->휴지통
+
+desc user_recyclebin
+
+이름                                      널?      유형
+----------------------------------------- -------- -------------
+
+OBJECT_NAME(테이블의 삭제후 이름)                              NOT NULL VARCHAR2(30)
+ORIGINAL_NAME(삭제전 이름)                                      VARCHAR2(32)
+OPERATION                                          VARCHAR2(9)
+TYPE (오라클의 객체 종류->테이블)                                              VARCHAR2(25)
+TS_NAME                                            VARCHAR2(30)
+CREATETIME                                         VARCHAR2(19)
+DROPTIME (삭제된 시간)                                          VARCHAR2(19)
+DROPSCN(같은 테이블이라도 서로 내부적으로
+               구분해주는 고유의 번호(System Change Number)
+                                                         NUMBER
+PARTITION_NAME                                     VARCHAR2(32)
+CAN_UNDROP                                         VARCHAR2(3)
+CAN_PURGE                                          VARCHAR2(3)
+RELATED                                   NOT NULL NUMBER
+BASE_OBJECT                               NOT NULL NUMBER
+PURGE_OBJECT                              NOT NULL NUMBER
+SPACE                                              NUMBER
+
+SQL> show recyclebin //뷰처럼 휴지통의 내용을 보여준다.
+
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME
+---------------- ------------------------------ ------------ -------------------
+
+B_EMP3           BIN$ZfcZY+AMR7237C5sUXwpYA==$0 TABLE        2017-05-12:10:05:43
+
+<문제4>휴지통에 들어가 있는 테이블->복원
+형식)flashback table 복원시킬 테이블명 to before drop
+
+sql>flashback table b_emp3 to before drop;
+
+플래시백이 완료되었습니다.
+
+SQL> select count(*) from b_emp3;
+
+  COUNT(*)
+----------
+         0
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+BONUS                          TABLE
+BUSER                          SYNONYM
+B_EMP2                         TABLE
+-----------------------------------
+B_EMP3                         TABLE =>복원
+-----------------------------------
+B_EMP4                         TABLE
+...
+
+<문제5>영구삭제시키는 방법?->휴지통 거치지 않고 삭제
+flashback 기술이 적용X->휴지통에 없기때문에
+
+형식) drop table 삭제시킬 테이블명 [purge]
+sql>drop table b_emp3 purge;
+
+SQL> show recyclebin;
+SQL> flashback table b_emp3 to before drop;
+flashback table b_emp3 to before drop
+*
+1행에 오류:
+ORA-38305: 객체가 RECYCLE BIN에 없음
+
+sql>select * from tab;
+
+<문제6>만약에 같은 테이블을 여러개 삭제시킨 경우 어떻게 복원?
+
+ //시간차를 두고 삭제
+sql>create table t1(a number);
+      drop table t1;
+
+      create table t1(a varchar2(10));
+      drop table t1;
+
+      create table t1(a date);
+      drop table t1;
+
+      create table t1(a number);
+      drop table t1;
+
+sql>show recyclebin
+
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME
+---------------- ------------------------------ ------------ -------------------
+
+T1               BIN$j8DzVgfVQ92ZwmRBuj3cxg==$0 TABLE        2017-05-12:10:48:04
+
+T1               BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE        2017-05-12:10:47:29
+
+T1               BIN$ZIJJhLb+ScW+0XMXzk627w==$0 TABLE        2017-05-12:10:46:57
+
+T1               BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE        2017-05-12:10:45:42
+
+sql>flashback table t1 to before drop;
+=>가장 최근의 순서대로 복구를 해준다.
+
+ORIGINAL NAME    RECYCLEBIN NAME                OBJECT TYPE  DROP TIME
+---------------- ------------------------------ ------------ -------------------
+
+T1               BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE        2017-05-12:10:47:29
+
+T1               BIN$ZIJJhLb+ScW+0XMXzk627w==$0 TABLE        2017-05-12:10:46:57
+
+T1               BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE        2017-05-12:10:45:42
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+BIN$ZIJJhLb+ScW+0XMXzk627w==$0 TABLE
+BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE
+BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE
+B_PRTEST                       TABLE
+DEPT                           TABLE
+PRTEST                         TABLE
+SAWON                          TABLE
+T1                             TABLE
+
+8 개의 행이 선택되었습니다.
+
+<문제7>이미 복원시킬 테이블이 존재하는 경우(동일한 테이블)
+어떻게 복원?=>복원을 시킬때 이름을 변경시켜서 복원시킨다.
+
+형식) flashback table "휴지통의 테이블이름" to before drop
+        rename to 새로운 테이블명;
+
+sql>flashback table  "BIN$ZIJJhLb+ScW+0XMXzk627w==$0"
+    to before drop rename to imsitest;
+
+SQL> desc imsitest
+ 이름                                      널?      유형
+ ----------------------------------------- -------- --------------------
+
+ A                                                  VARCHAR2(10)
+
+기존의 존재하는 테이블의 이름을 변경 or 
+휴지통의 테이블을 복원시키면서 이름을 변경
+
+===================================
+ 테이블스페이스 설계
+
+ 작업->테이블에 저장(데이터)->파일
+         ->계정별로 무조건 users 테이블스페이스(폴더)(논리적인이름)
+         ->test1->테이블을 생성->어느 특정한 파일에 저장
+                                             (~.dbf)물리적인 이름
+                                         ->테이블스페이스(논리적인 이름)
+
+ 테이블스페이스
+
+ 주가 되는 테이블스페이스(20M)
+ 부가 되는 테이블스페이스(임시 테이블스페이스명)
+                                   temporary
+
+--------------------------------------------------------------
+<문8>관리자로 로그인 
+         conn sys/sys12345 as sysdba
+         conn / as sysdba
+
+ 1.테이블스페이스를 생성->C:\webtest\1.db 에 파일로 저장
+                                     oradata2.dbf 10m
+
+형식)create tablespace 테이블스페이스명(논리적인이름)
+       datafile '경로포함해서 저장할파일명.dbf' size nm;
+
+sql>create tablespace oradata2 datafile 
+        'C:\webtest\1.db\oradata2.dbf' size 10m;
+
+테이블스페이스가 생성되었습니다.
+ 
+v$tablespace; //테이블스페이스의 목록을 보고자 할때 사용
+
+sql>select * from v$tablespace;
+
+
+       TS# NAME                           INC BIG FLA ENC
+---------- ------------------------------ --- --- --- ---
+         0 SYSTEM                         YES NO  YES
+         1 SYSAUX                         YES NO  YES
+         2 UNDOTBS1                       YES NO  YES
+         =========================
+         오라클에서 계정을 생성->로그인->테이블을 생성->저장
+          되는 기본 테이블스페이스
+         4 USERS                          YES NO  YES
+         ===========================
+         3 TEMP                           NO  NO  YES
+         6 EXAMPLE                        YES NO  YES
+        10 ORADATA2                       YES NO  YES
+         8 SHOP                           YES NO  YES
+         9 TEMP2                          NO  NO  YES
+
+9 개의 행이 선택되었습니다.
+
+<문10>테이블스페이스(oradata2)->연결? 계정 or 테이블
+
+SQL> conn / as sysdba
+연결되었습니다.
+
+형식) create table 테이블명(~) tablespace 연결시킬테이블스페이스명
+sql>create table t2(c1 number) tablespace oradata2;
+                                              ===============
+                                             ~tablespace users
+
+계정으로 테이블스페이스를 연결
+형식) create user 생성시킬유저명 identified by 암호 default
+        tablespace 연결시킬테이블스페이스명 ->default(users)
+
+sql>create user kim2 identified by kim2 default tablespace oradata2;
+사용자가 생성되었습니다.
+
+SQL> grant connect,resource to kim2;
+
+권한이 부여되었습니다.
+
+<문11>kim2계정으로 로그인->이 계정과 연결중인 테이블스페이스를 확인?
+조회 SQL? (user_users) ,         user_tables(테이블)
+               계정,테이블스페이스   테이블과 연결된 테이블스페이스
+
+sql>conn kim2/kim2
+
+sql>select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE
+------------------------------ --------------------
+KIM2                           ORADATA2
+
+sql>create table s1(id number);
+sql>select table_name,tablespace_name from user_tables;
+
+TABLE_NAME                     TABLESPACE_NAME
+------------------------------ ------------------------------
+S1                             ORADATA2
+
+계정생성할때 QUOTA  nM ->계정별로 사용할 수있는 데이터 공간
+------------------------------------------------------------------
+
+sql>conn test1/t1234
+sql>select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE
+------------------------------ ---------------------
+TEST1                          USERS ===>oradata2로 변경
+
+=====================================
+<문12>test1,scott,,,->users 테이블스페이스 기본
+
+    따로 생성된 oradata2에 연결시켜서 작업?
+
+sql>conn / as sysdba
+형식) alter user 수정user default tablespace 새로 변경할 ts명;
+
+sql>alter user test1 default tablespace oradata2;
+
+sql>conn test1/t1234
+sql>select username,default_tablespace from user_users;
+
+USERNAME                       DEFAULT_TABLESPACE
+------------------------------ --------------------
+TEST1                          ORADATA2
+
+현재 상태
+
+sql>select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+BIN$i4tx9VwqR8CExgm5pdW9hA==$0 TABLE
+BIN$o726VAqXQ06pL2nXtuEM+g==$0 TABLE
+B_PRTEST                       TABLE
+DEPT                           TABLE
+IMSITEST                       TABLE
+PRTEST                         TABLE
+SAWON                          TABLE
+T1                             TABLE
+
+8 개의 행이 선택되었습니다.->users(8개)  ==>oradata2(0)
+---------------------------------------------------------------
+<문13>기존의 ts에서 작업한 테이블---->새로운 oradata2로 이동?
+
+형식)alter table 이동시킬 table명 move tablespace 옮길 ts명
+
+sql>alter table t1 move tablespace oradata2;
+테이블이 변경되었습니다.
+
+=>테이블스페이스 생성-유저와 연결=>임시 테이블스페이스를 작성 연결
+=>10M-->20,40M
+        -->extends(확장)->더 이상 불필요->삭제
+ 
+-------------------------------------------------------------------
+<문14> shop2 테이블 스페이스를 생성->d:\data2\shop2.dbf  100m
+          ->계정(shopuser/t1234)
+
+sql>conn / as sysdba
+sql>create tablespace shop2 datafile 'd:\data2\shop2.dbf' size 100m;
+sql>create user shopuser2 identified by t1234 default tablespace shop2;
+sql>grant connect,resource to shopuser2;
+
+부족한 관계로 임시 테이블스페이스를 하나 더 생성 연결해서 작업?
+(병렬 연결)
+
+형식)create temporary tablespace 임시ts명 
+         tempfile '경로명및 파일명.dbf' size nm
+
+sql>create temporary tablespace temp3 tempfile 
+       'd:\data2\temp3.dbf' size 50m;
+
+p38=>새로운 계정을 하나 생성->default ts명 부여 ,tempoary ts명 부여
+
+=>계정 lee2/lee2->oradata2,temp3에 저장
+
+sql>create user lee2 identified by lee2 default tablespace oradata2 
+      temporary tablespace temp3;
+
+->lee2에 권한부여 작업(connect,resource)
+------------------------------------------------------------------
+<문15>테이블스페이스 부족->용량을 잘못계산->수정?
+ 할 수있는 조회할 수 SQL?=>dba_data_files테이블
+
+tablespace_name(논리적인 테이블스페이스 이름)
+file_name(물리적인 테이블스페이스이름)
+autoextensible(용량이 부족하면 확장이 가능유무)
+
+sql>select tablespace_name,file_name,autoextensible 
+      from dba_data_files;
+
+TABLESPACE_NAME
+------------------------------
+FILE_NAME
+-----------------------------------------------
+
+AUT
+---
+USERS
+C:\ORACLE\ORADATA\ORCL\USERS01.DBF
+YES  ==>용량이 부족하면 용량을 확장이 가능한 상태
+
+UNDOTBS1
+C:\ORACLE\ORADATA\ORCL\UNDOTBS01.DBF
+YES
+
+TABLESPACE_NAME
+------------------------------
+FILE_NAME
+-----------------------------------------------
+
+AUT
+---
+
+SYSAUX
+C:\ORACLE\ORADATA\ORCL\SYSAUX01.DBF
+YES
+
+SYSTEM
+C:\ORACLE\ORADATA\ORCL\SYSTEM01.DBF
+
+TABLESPACE_NAME
+------------------------------
+FILE_NAME
+-----------------------------------------------
+
+AUT
+---
+YES
+
+EXAMPLE
+C:\ORACLE\ORADATA\ORCL\EXAMPLE01.DBF
+YES
+
+ORADATA2
+
+TABLESPACE_NAME
+------------------------------
+FILE_NAME
+-----------------------------------------------
+
+AUT
+---
+C:\WEBTEST\1.DB\ORADATA2.DBF
+NO  ====>기존에 존재하는 테이블스페이스말고 새로 만드는 경우
+                 디폴트가 확장이 제한적이다는 알수 있다.(50m)->200m
+
+SHOP
+D:\DATA\SHOP1.DBF
+NO
+
+
+TABLESPACE_NAME
+------------------------------
+FILE_NAME
+-----------------------------------------------
+
+AUT
+---
+SHOP2
+D:\DATA2\SHOP2.DBF
+NO
+
+
+8 개의 행이 선택되었습니다.
+
+SQL>
+
+기존의 테이블스페이스의 용량을 확장시키는 방법
+(부족->얼마큰 확장-->최대로 용량)
+
+형식1) alter database datafile '경로포함해서 변경할 파일명.dbf' 
+autoextend on next 증가치(n)m maxsize 최대용량크기(m)
+
+ oradata2.dbf
+
+sql>alter database datafile 'c:\webtest\1.db\oradata2.dbf' 
+      autoextend on next 2m maxsize 200m;  //50m->52,54,,,200m
+
+데이터베이스가 변경되었습니다.
+
+형식2) 50m->바로 200m로 파일 추가
+
+                        oradata2 ----- oradata2.dbf+oradata3.dbf+~+~
+alter tablespace 변경시킬ts명 add datafile '경로포함해서 새로운파일명'
+size nm;
+
+sql>alter tablespace oradata2 add datafile 
+      'c:\webtest\1.db\oradata3.dbf' size 200m;
+------------------------------------------------------------------
+                               oradata4.dbf 300m, oradata5.dbf 400m
+
+==>오라클이 접속할때 오류==>외부에서 ~.dbf을 삭제,변경=>
+==>오라클 문제발생
+
+테이블스페이스를 삭제하는 방법->내용(테이블) 및 파일 삭제
+형식) drop tablespace 삭제시킬ts명 including contents and datafiles;
+sql>drop tablespace shop2 including contents and datafiles;
+
+테이블스페이스가 삭제되었습니다.
+
+sql>spool off
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

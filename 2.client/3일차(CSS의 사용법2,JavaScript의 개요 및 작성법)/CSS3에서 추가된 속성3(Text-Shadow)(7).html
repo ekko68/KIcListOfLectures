@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>CSS3에서 추가된 속성3(Text-Shadow)(7).html </title>
+  <style type="text/css">
+       /*  수평위치,수직위치,흐름거리,그림자색상  */
+	   /* animation-duration:작동시간
+	       animation-name:애니매이션 이름
+		   ->@-webkit-keyframes 애니매이션이름 { 기능}
+	    */
+
+	 h1 {text-shadow:4px 4px 10px #333333;
+	        /* chrome의 동작을 확인하기위해서 -webkit 접두어 추가 */
+	       -webkit-animation-duration:3s;
+		   -webkit-animation-name:slidein ;
+	     }
+
+	  @-webkit-keyframes slidein {
+         /* 동작 포인트를 지정 */
+		  from{
+                margin-left:100%; /* 오른쪽  100%->0%(왼쪽부터 시작)*/
+				width:100%
+		  }
+          to {
+               margin-left:0%; /* 왼쪽 -> 100%(오른쪽 끝)*/
+				width:100%
+		  }
+	  }
+  </style>
+ </head>
+ <body>
+    <h1>Text Shadow </h1>
+	<p>CSS3에서는 text-shadow속성을 이용해서 문자에 그림자를 만
+	들 수가 있다. 그림자를 만들때에는 수평/수직 위치,흐림 정도,그림자
+	색상을 지정할 수가 있다.
+ </body>
+</html>

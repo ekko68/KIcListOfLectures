@@ -1,0 +1,5 @@
+http://192.168.0.57/webtest/ =>강사용
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+http://malsup.github.com/jquery.cycle2.js=>다운로드 받음

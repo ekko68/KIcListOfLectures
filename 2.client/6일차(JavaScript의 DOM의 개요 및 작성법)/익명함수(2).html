@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>익명함수(2).html</title>
+ </head>
+ <body>
+   <script>
+     //1.함수선언->함수의 이름이 없는 경우->익명함수, 이름이 있는 함수(선언적함수)
+	 //선언적 함수(이름이 있는 함수)->함수 선언문 앞,뒤로 호출할 수가 있다.
+	 //1) 매개변수 X, 반환값 X (보고X) return(X)->단순,반복
+	 //check()
+	 //check2("사과")
+
+	 function check(){
+         document.write("호출하면 단순하게 반복처리합니다.<br>")
+	 }
+
+    //2) 매개변수 O ,반환값 X (입력->계산,출력,저장)
+	 function check2(msg){
+         document.write(msg+"을(를) 좋아합니다.<br>")
+	 }
+
+     //3)매개변수 O, 반환값 O (주로 계산 목적)
+	 function check3(num){
+         return (num*num) //3*3=9
+	 }
+
+     check()
+	 check2("가을")
+	 result=check3(3)
+	 document.write("result="+result+"<p>")
+	 //4.익명함수->함수이름X(변수를 이용->함수이름대신 사용) ->매개변수X ,반환값 X
+      //var 변수명=function(){~}
+	  //play() ->익명함수는 반드시 선언을 하고 호출해야 한다.
+	  var play=function(){
+         document.write("운동을 좋아합니다.<br>")
+	  }
+
+      play()
+
+	  //매개변수 O ,반환값 X ->익명함수
+	  var play2=function(item){ //undefined->매개변수를 받지 못한상태(에러값)
+         document.write(item+"을 좋아합니다.<br>")
+	  }
+
+     play2("축구")
+
+	 //매개변수 O, 반환값 O
+     var play3=function(x,y){ //x=5,y=8
+         return x+y
+	  }
+    document.write("반환값=>"+play3(5,8))
+   </script>
+ </body>
+</html>

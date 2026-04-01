@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>내장함수(confirm)(7).html </title>
+ </head>
+ <body>
+   <script>
+      //반혼값(변수명)=confirm('동의를 구하는 메세지?')
+         result=confirm('정말로 탈퇴하시겠습니까?')
+		 if(result==true) //yes->반환값 no->false반환값
+		    alert("당신은 정상적으로 회원탈퇴\n처리되었습니다.")
+			//오라클에 접속->delete from emp where empno=2341 코딩
+		 else
+		     alert("회원탈퇴가 취소되었습니다.")
+		 //alert(result) //true or false
+
+   </script>
+ </body>
+</html>

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>DOM 이벤트 연결방법(7).html </title>
+  <script>
+          window.onload=function(){ //맨 처음에 문서를 읽어들일때
+			  //클릭-><h1>태그의 정보를 얻어온다.
+			  var header=document.getElementById("header")//이벤트발생대상자
+               function whenClick(){
+                   alert('문자열을 click')
+			   }
+             //클릭문자열->onclick->whenClick함수를 호출->실행
+			 //형식)이벤트발생대상자.on이벤트종류명=함수명 or 익명함수
+			 //header.onclick=whenClick //(1) or function(){~}
+             header.onclick=function(){
+                   alert('익명함수를 이용해서 호출됨!')
+			 }
+		  }
+  </script>
+ </head>
+ <body>
+  <h1 id="header">클릭</h1>
+  <!--<input type="button" id="test" value="클릭" onclick="whenClick()"> -->
+ </body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>테이블에 행을 추가(10).html </title>
+  <style>
+            table#myTable {
+                    width:300px;
+					border:1px solid black;
+					/* 테이블과 테이블 레이아웃에 자주 사용하는 속성
+					   default->seperate(테두리 사이에 간격 나누기)
+					*/
+					border-collapse:collapse; /* 테두리 사이의 간격을 제거 */
+			}
+			#myTable th, #myTable td{
+                  border:1px solid black;
+			}
+            #myTable > tfoot td{
+                 text-align:right;
+			}
+  </style>
+  <script>
+          function addRow(){
+             var table=document.getElementById("myTable")
+			 //행을 추가->3개의 td를 생성->tr에 추가->tr->tbody에 추가
+			 var td1=document.createElement("td");//번호  <td></td>
+			 var td2=document.createElement("td");//이름
+			 var td3=document.createElement("td");//연락처
+			 var td4=document.createElement("td");//삭제
+
+			 //2.생성된 td요소들에 각 저장할 문자열을 넣어주면
+			 td1.innerHTML=document.f.num.value   //<td>1</td>
+             td2.innerHTML=document.f.name.value //<td>김길수</td>
+			 td3.innerHTML=document.f.pnum.value
+             td4.innerHTML="삭제"
+
+             //2-1)td4에 click->행을 삭제시킨다.
+             td4.onclick=function(){
+                  //deleteRow(삭제시킬 행의 번호)
+                  table.deleteRow(table.clickedRowIndex) //삭제시킬 행의 번호
+			 }
+
+			 //3.td와 연결시킬 tr객체 생성
+			 var tr=document.createElement("tr")//<tr></tr>
+			 tr.style.textAlign="center" //글자 가운데
+
+             //4.생성된 tr객체에 추가
+			 tr.appendChild(td1)//<tr><td>2</td>~</tr>
+             tr.appendChild(td2)
+			 tr.appendChild(td3)
+			 tr.appendChild(td4)
+
+			 //4-1)마우스를 갖다대면 기본적으로 행의 번호를 구하는 함수작성(rowIndex)
+			 tr.onmouseover=function(){
+                 //table태그정보의 행의번호를 구해서 변수에 저장->tr.rowIndex
+				 //table태그에 임의로 속성을 하나 추가(동적속성)->태그명.속성명=값
+				 //this=>현재 마우스를 갖다댄 tr태그를 가리킨다.(이벤트가 발생된)
+                 table.clickedRowIndex=this.rowIndex
+                 //alert(this.rowIndex)
+			 }
+
+			 //5.tr태그가 들어간 tbody를 검색->
+			 var tbody=table.children[1] //www.w3schools.com
+			 //alert(tbody)//[~]
+			 //6.tbody에 결합->appendChild(~)
+			 tbody.appendChild(tr)
+		  }
+  </script>
+ </head>
+ <body onload="document.f.num.focus()">
+   <h1>테이블에 행을 추가시켜주는 예제</h1>
+   <form name="f">
+   <fieldset><!-- 입력양식을 테두리로 묶어주는 역할 -->
+    번호:<input type="text" size="3" name="num">&nbsp;&nbsp;
+	이름:<input type="text" size="5" name="name">&nbsp;&nbsp;
+	연락처:<input type="text" size="12" name="pnum">&nbsp;&nbsp;
+	<input type="button" value="추가" onclick="addRow()">
+	<input type="reset" value="지우기" onclick="document.f.num.focus()">
+    </fieldset>
+   </form>
+   <table id="myTable">
+       <!-- 테이블 헤더그룹(헤더,바디,푸터) -->
+	   <thead>
+            <tr>
+                <th>번호</th>
+				<th>이름</th>
+				<th>연락처</th>
+				<th>삭제</th>
+			</tr>
+	   </thead>
+	   <tbody>
+             <!-- <tr>
+                <td>1</td>
+				<td>홍길동</td>
+				<td>02-123-0987</td>
+				<td>삭제</td>
+			 </tr> -->
+	   </tbody>
+   </table>
+ </body>
+</html>

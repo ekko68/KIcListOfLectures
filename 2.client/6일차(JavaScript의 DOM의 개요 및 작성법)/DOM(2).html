@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>DOM(2).html </title>
+  <script>
+    /*
+      형식) 특정 이벤트를 발생->함수를 연결
+	          window.on이벤트종류명=함수명 or
+			  window.on이벤트종류명=function(~){~}
+	*/
+	window.onload=function() {
+        var spans=document.getElementsByTagName("span")
+		//배열->인덱스번호->for문(제어문 내에 또 다른 제어문 
+		alert("length"+spans.length);
+		for(var i=0;i<spans.length;i++){
+           if(i%2==1)  //홀수(%->나머지 구해주는 연산자)
+                spans[i].innerHTML="테스트"
+		   else
+		        spans[i].innerHTML="임시"
+		}
+	}
+
+  </script>
+ </head>
+ <!-- <body onload="test()"> -->
+  <body>
+      <span>연습1</span>
+	  <span>연습2</span>
+	  <span>연습3</span>
+	  <span>연습4</span>
+	  <span>연습1</span>
+	  <span>연습2</span>
+	  <span>연습3</span>
+	  <span>연습4</span>
+ </body>
+</html>

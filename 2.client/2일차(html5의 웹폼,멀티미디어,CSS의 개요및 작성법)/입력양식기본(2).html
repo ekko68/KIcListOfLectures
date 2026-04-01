@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>입력양식기본(2).html </title>
+ </head>
+ <body>
+  <h3>웹프로그래밍을 하기위한  입력양식</h3>
+  <!-- methdo="데이터 전송방식(Get|Post)
+         get->사이트 접속(기본), ->url창에 노출(X) 보안때문에
+		 post->데이터입력(회원가입,로그인,게시판글쓰기)->url창에 노출X
+		                                               파일첨부
+         action->누구에게 전달하는 페이지명(~.jsp(~.php,~.asp)
+		 name->각각의 입력받은 값을 구분해주는 구분자(변수)
+         -->
+ <form method="post" action="register.jsp">
+	이름:<input type="text" name="name" size="10"><br>
+    암호:<input type="password" name="pw" size="10"><br>
+	메일:<input type="text" name="email" size="10"><br>
+	<p>
+	<!-- 성별(둘중의 하나값을 선택) -->
+	<input type="radio" name="gender" selected>남자
+	<input type="radio" name="genter">여자
+     <p>
+	 <!-- 다중선택(여러개를 동시에 선택) -->
+	 취미:<input type="checkbox" name="chk">바둑
+            <input type="checkbox" name="music">음악감상
+			<input type="checkbox" name="baseball">야구
+	 <p>
+     <!-- 정해져 있는 값중에서 하나를 선택(select)태그 -->
+	 취업희망:<select name="hope">
+                      <option>웹프로그래머</option>
+					  <option>빅데이터 분석가</option>
+					  <option>DB전문가</option>
+					  <option>보안전문가</option>
+	              </select><p>
+      <!-- 여러줄을 입력받을때 textarea -->
+      경력사항:<br>
+	  <textarea name="career" rows="4" cols="40">
+	  </textarea><br>
+	  <input type="file" name="file">
+	  <!-- 버튼(전송버튼) value(버튼의 이름),취소 -->
+       <input type="submit" value="전송">
+	   <input type="reset" value="취소">
+ </form>
+ </body>
+</html>

@@ -1,0 +1,891 @@
+8일차(트랜잭션 및 인덱스,시컨스 동의어 사용법)
+
+ 테이블,뷰-->동의어 사용권한
+ =====
+ 과제
+
+<문제1>업무가 'SALESMAN'인 사원들과 같은 부서에서 근무하는 사원의
+       이름과 급여를 조회하는 뷰를 작성하시오.
+       (뷰명:v_sale, 수정이 가능한 뷰로 작성할것.)
+
+1)업무가 'SALESMAN'인 사원들과 같은 부서?->부서번호가 같다
+
+  sql>select deptno from emp
+        where job='SALESMAN';
+
+    DEPTNO
+----------
+        30
+        30
+        30
+        30 ->다중행(in)
+
+  create or replace view v_sale
+  as
+  select ename,sal from emp  where 
+   deptno in (select deptno from emp
+                  where job='SALESMAN');
+
+  select * from v_sale;
+
+SQL> select * from v_sale;
+
+ENAME             SAL
+---------- ----------
+JAMES             950
+TURNER           1500
+BLAKE            2850
+MARTIN           1250
+WARD             1250
+ALLEN            1600
+
+6 개의 행이 선택되었습니다.
+==================
+
+<문제2> 'DALLAS'에서 근무하고 있는 사원의 이름,급여,부서명,부서위치를
+        조회할 수 있는 뷰를 작성하시오.
+        (뷰명:v_dallas,수정이 가능한 뷰로 작성할것.)
+
+    ->조인(inner join)
+
+   1.오라클 조인
+
+     SQL> select e.ename,e.sal,d.dname,d.loc
+  2       from emp e,dept d
+  3       where e.deptno=d.deptno and d.loc='DALLAS';
+
+ENAME             SAL DNAME          LOC
+---------- ---------- -------------- -------------
+SMITH             800 RESEARCH       DALLAS
+JONES            2975 RESEARCH       DALLAS
+SCOTT            3000 RESEARCH       DALLAS
+ADAMS            1100 RESEARCH       DALLAS
+FORD             3000 RESEARCH       DALLAS
+
+ed
+ 
+   =>오라클의 조인
+  1  create or replace view v_dalls
+  2  as
+  3  select e.ename,e.sal,d.dname,d.loc
+  4       from emp e,dept d
+  5*      where e.deptno=d.deptno and d.loc='DALLAS'
+SQL> /
+
+뷰가 생성되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+=>Ansi SQL
+  1  create or replace view v_dalls2
+  2  as
+  3  select e.ename,e.sal,d.dname,d.loc
+  4       from emp e inner join dept d
+  5*      on e.deptno=d.deptno and d.loc='DALLAS'
+SQL> /
+
+sql>select * from v_dalls;
+sql>select * from v_dalls2;
+
+SQL> select * from v_dalls;
+
+ENAME             SAL DNAME          LOC
+---------- ---------- -------------- -------------
+SMITH             800 RESEARCH       DALLAS
+JONES            2975 RESEARCH       DALLAS
+SCOTT            3000 RESEARCH       DALLAS
+ADAMS            1100 RESEARCH       DALLAS
+FORD             3000 RESEARCH       DALLAS
+
+SQL> select * from v_dalls2;
+
+ENAME             SAL DNAME          LOC
+---------- ---------- -------------- -------------
+SMITH             800 RESEARCH       DALLAS
+JONES            2975 RESEARCH       DALLAS
+SCOTT            3000 RESEARCH       DALLAS
+ADAMS            1100 RESEARCH       DALLAS
+FORD             3000 RESEARCH       DALLAS
+================================
+트랜잭션(transaction)
+
+<문1>
+데이터베이스에서 데이터를 관리할때(insert,update,delete) 
+여러개의 SQL명령어를 사용하게 되는데 이를 하나의 작업단위로 설정
+
+ex) 계좌이체 (A-------->B은행)
+                   -1000      +1000
+                    수정            입금==>한개의 작업
+
+트랜잭션의 처리요건
+
+ All or Nothing(원자성)->반드시 처리가 되든지 or 처리 X
+                                    commit or rollback
+====================================
+COMMIT
+
+모든 작업들을 정상적으로 처리
+데이터베이스에 모두 반영--->메모리에 저장=>테이블에 적용이 된다.
+변경된 내용을 모두 영구 저장-->테이블에 저장
+
+(주의할점)
+자동 commit이 되는 경우가 있다.
+
+1.create ~alter~ drop~으로 시작하는 문장(DDL문)은 복구불가
+   DCL문(grant,revoke)사용권한
+2.insert,update,delete->commit명령어를 입력X  ->정상종료(exit)
+ =>메모리에 저장된 값을 테이블로 저장한 후 오라클 종료
+
+
+ROLLBACK
+
+commit이 되면 그 작업이 끝난상태로 취급->취소가 불가능
+처리 과정에서 발생한 변경 사항을 취소->메모리상에 저장된 결과물
+                                                      (insert,update,delete)
+이전의 상태로 되돌린다. ->삭제
+
+자동 rollback
+
+1.비정상적인 종료(정전),다운
+
+==============================
+창1
+
+sql>create table b_dept2
+     as select * from dept;
+
+sql>select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- ------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+
+sql>insert into b_dept2 values (50,'SUPPORT','KWANGJU');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- ----------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU =>데이터가 들어간 상태
+
+   =>오라클의 메모리에 저장된 상태로 존재(insert,update,delete)
+   =>실제로 아직 테이블에 저장된 상태가 아니다.
+
+창2
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- ----------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+
+<문2>트랜잭션작업 중간에 savepoint를 지정이 가능하다.
+ (책갈피 처럼 생각) 이름을 부여
+
+ sql>update b_dept2 set dname='TEST',loc='SUWON'
+       where deptno=50;
+
+1 행이 갱신되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 TEST           SUWON
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+
+SQL>
+
+<문3> 시나리오 트랜잭션
+----------------------------------
+ insert
+ ======>savepoint 별칭(A)
+ update
+ ======>savepoint 별칭(B)
+ delete
+
+ rollback ->insert,update,delete 전부 복구
+ rollback to 별칭A->update,delete
+ rollback to 별칭B->delete
+============================
+
+ sql>insert into b_dept2 values(60,'TESTING','SEOUL');
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- ------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+        60 TESTING        SEOUL
+
+6 개의 행이 선택되었습니다.
+
+형식) savepoint 별칭명;
+sql> savepoint  A;
+저장점이 생성되었습니다.
+
+2.부서번호 50번 'IMSI', loc='BUSAN' 로 수정
+sql>update b_dept2 set dname='IMSI', loc='BUSAN'
+      where deptno=50;
+
+1 행이 갱신되었습니다.
+
+sql> savepoint B;
+
+저장점이 생성되었습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -----------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 IMSI           BUSAN ===>update
+        60 TESTING        SEOUL ==>insert
+
+6 개의 행이 선택되었습니다.
+
+3.40번 부서의 삭제
+sql> delete from b_dept2 where deptno=40;
+sql>select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+                                         ->delete
+        50 IMSI           BUSAN ->update
+        60 TESTING        SEOUL ->insert
+
+ rollback ->insert,update,delete 전부 복구
+ rollback to 별칭A->update,delete
+ rollback to 별칭B->delete
+
+sql>rollback to B;
+sql>select * from b_dept2; //delete만 복구
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 IMSI           BUSAN
+        60 TESTING        SEOUL
+
+6 개의 행이 선택되었습니다.
+sql> rollback to A;
+sql>select * from b_dept2;
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- ----------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU ->수정 전으로 복귀
+        60 TESTING        SEOUL
+
+6 개의 행이 선택되었습니다.
+
+sql>rollback;
+sql>select * from b_dept2;
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+        =>60번 데이터가 입력되기전으로 복귀
+
+sql> show autocommit  //환경변수
+autocommit OFF ->자동으로 commit X 설정된 상태
+
+->commit을 입력하기전까지는 rollback으로 복구가 가능
+--------------------------------------------------------
+테이블,뷰,트랜잭션=>인덱스,시컨스,동의어(Synonym)
+=>사용권한
+
+인덱스->책갈피와 역할(자주 사용되는 컬럼에 부여)
+                               자주 검색이 되는 필드(where 조건식)
+         ->인덱스가 부여된 필드 먼저 찾아준다.
+         ->데이터 저장공간이 필요
+         ->데이터 저장공간X->user_views테이블에 기록
+
+primary key키->not null+unique키가 부여
+                                    ---------(unique index)
+
+인덱스 종류
+
+1.unique index->자동으로 pk가 생성->부여
+2.non-unique index->중복이 돼도 괜찮은 필드에 부여
+                              job,sung,
+
+ 수정이 자주되는 필드에 인덱스부여->내부적으로 정렬->찾는
+                                                              속도가 느려짐
+형식)create [unique]  index 인덱스명(테이블명_필드명_idx)
+        on 적용 테이블명(필드명1)
+      ~on 적용 테이블명(필드명1,필드명2,,)=>복합키
+
+sql>emp->b_emp2
+ sql>create index emp_ename_idx on emp(ename);
+
+인덱스가 생성되었습니다.
+
+<문3>index->user_indexes(i)->인덱스이름,고유의 정보
+                          uniquness
+                     user_ind_columns->인덱스이름,테이블,필드명
+                                       (c)index_name,column_name,
+                                           column_position
+
+sql>select c.index_name,c.column_name,c.column_position,
+      i.uniqueness from user_indexes i,user_ind_columns c
+     where c.index_name=i.index_name and 
+     c.table_name='&table_name';
+
+    ->
+SQL> select c.index_name,c.column_name,c.column_p
+  2        i.uniqueness from user_indexes i,user_
+  3       where c.index_name=i.index_name and
+  4       c.table_name='&table_name';
+table_name의 값을 입력하십시오: EMP
+구   4:      c.table_name='&table_name'
+신   4:      c.table_name='EMP'
+
+INDEX_NAME
+------------------------------
+COLUMN_NAME
+-------------------------------------------------
+
+COLUMN_POSITION UNIQUENES
+--------------- ---------
+EMP_ENAME_IDX
+ENAME
+              1 NONUNIQUE (중복을 허용해주는 필드)
+
+PK_EMP
+EMPNO
+              1 UNIQUE (primary key를 부여하면 자동으로 부여)
+
+INDEX_NAME
+------------------------------
+COLUMN_NAME
+-------------------------------------------------
+
+COLUMN_POSITION UNIQUENES
+--------------- ---------
+
+ed
+
+  1  create or replace view v_index
+  2  as
+  3  select c.index_name,c.column_name,c.column_pos
+  4        i.uniqueness from user_indexes i,user_in
+  5       where c.index_name=i.index_name and
+  6*      c.table_name=upper('&table_name')
+SQL> /
+table_name의 값을 입력하십시오: dept
+구   6:      c.table_name=upper('&table_name')
+신   6:      c.table_name=upper('dept')
+
+뷰가 생성되었습니다.
+
+SQL> select * from v_index;
+
+INDEX_NAME
+------------------------------
+COLUMN_NAME
+---------------------------------------------------
+
+COLUMN_POSITION UNIQUENES
+--------------- ---------
+PK_DEPT
+DEPTNO
+              1 UNIQUE
+
+<문4> 인덱스 삭제->drop index emp_ename_idx;
+인덱스가 삭제되었습니다.
+
+=>시컨스(sequence)객체,시노님(동의어)->사용권한
+                                   select * from tab;
+
+시컨스->특정필드에 연결시켜서 데이터를 입력할때
+            자동적으로 지정한 번호를 넣어주는 역할을 하는 오라클
+            객체<-->nowrum(화면에 출력->레코드 앞에 번호부여)
+
+특정필드->pk와 연결된 필드(중복 X,유일한 값)->수동
+
+          dept->deptno->60,70,80,90->수동대신 자동으로 입력
+<문5>
+
+CREATE SEQUENCE sequence_name (테이블명_필드명)
+[START WITH n] ① ->시작번호 (10)
+[INCREMENT BY n] ② ->증가치 (2)
+[{MAXVALUE n | NOMAXVALUE}] ③ 최대값 | noMaxvalue(무제한)
+[{MINVALUE n | NOMINVALUE}] ④ 최소값  |최소값 설정X
+[{CYCLE | NOCYCLE}] ⑤ 순환유무
+[{CACHE n | NOCACHE}] ⑥ 메모리 저장유무
+
+sql>create sequence b_emp4_empno;
+=>default가 적용 (1,1)->1,2,3,4,5,
+
+sql>create sequence b_dept2_deptno;  //1,2,3,4,,,
+=>deptno대신에 정해준 번호를 자동으로 입력
+
+시컨스 속성->시컨스명.속성명(currval or nextval)
+
+1.currval :현재값을 반환(현재 설정된 값)
+2.nextval :현재 지정된 시컨스값의 다음값을 반환
+
+sql>select b_dept2_deptno.currval from dual;
+
+select b_dept2_deptno.currval from dual
+       *
+1행에 오류:
+ORA-08002: 시퀀스 B_DEPT2_DEPTNO.CURRVAL은 이 세션에서
+정의 되지 있지 않습니다
+
+==>현재 시컨스에 설정된 값이 저장이 되어있지 않기때문에 발생
+
+ed
+
+  1* select b_dept2_deptno.nextval from dual
+SQL> /
+
+   NEXTVAL
+----------
+         1
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select b_dept2_deptno.currval from dual
+SQL> /
+
+   CURRVAL
+----------
+         1
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select b_dept2_deptno.nextval from dual
+SQL> /
+
+   NEXTVAL
+----------
+         2
+
+테이블에 적용시켜서 사용?->select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -----------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+
+  insert->60,70 ->시작값 60 증가치 10
+
+sql>create sequence b_dept2_deptno2
+       start with 60
+      increment by 10
+      maxvalue 10000
+      nocycle
+      nocache;
+=================================
+  insert into b_dept2 values(60,'TESTING','SEOUL');
+                                         ==
+
+insert into b_dept2 values(b_dept2_deptno2.nextval,'TESTING','SEOUL');
+insert into b_dept2 values(b_dept2_deptno2.nextval,'TESTING2','PUSAN');
+...
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- ----------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+        ==================>
+        60 TESTING        SEOUL
+        70 TESTING2       PUSAN
+
+시컨스의 번호 skip->1.시컨스를 여러개의 테이블에 연결
+
+               b_dept2          b_dept3
+                 80                   90
+                 100
+                            2.crash->down->시컨스 skip->게시물 번호->시컨스
+                             ->최대값+1
+
+                        select max(필드명) from 테이블명 =>JSP(게시판)
+                             1+1=2+1=3
+===========================================
+<문6>시컨스->user_sequences에 저장->뷰를 이용해서 조회?
+
+desc user_sequences
+
+ 이름                                      널?      유형
+ ----------------------------------------- -------- -------------
+
+ SEQUENCE_NAME(시컨스명)                             NOT NULL VARCHAR2(30)
+ MIN_VALUE (최소값)                                         NUMBER
+ MAX_VALUE (최대값)                                         NUMBER
+ INCREMENT_BY (증가치)                             NOT NULL NUMBER
+ CYCLE_FLAG                                         VARCHAR2(1)
+ ORDER_FLAG                                         VARCHAR2(1)
+ CACHE_SIZE                                NOT NULL NUMBER
+ LAST_NUMBER(현재 저장된 마지막 값)                               NOT NULL NUMBER
+
+sql>create view v_sequence_seq
+      as
+      select sequence_name,min_value,max_value,increment_by,
+      last_number from user_sequences;
+
+sql>select * from v_sequence_seq;
+
+SEQUENCE_NAME                   MIN_VALUE  MAX_VALUE INCREMENT_BY LAST_NUMBER
+------------------------------ ---------- ---------- ------------ -----------
+B_DEPT2_DEPTNO                          1 1.0000E+28            1          21
+B_DEPT2_DEPTNO2                         1      10000           10          80
+B_EMP4_EMPNO                            1 1.0000E+28            1           1
+
+<문7>시컨스를 수정->
+형식)ALTER SEQUENCE sequence_name (테이블명_필드명)
+[START WITH n] ① ->시작번호 (10)
+[INCREMENT BY n] ② ->증가치 (2)
+[{MAXVALUE n | NOMAXVALUE}] ③ 최대값 | noMaxvalue(무제한)
+[{MINVALUE n | NOMINVALUE}] ④ 최소값  |최소값 설정X
+[{CYCLE | NOCYCLE}] ⑤ 순환유무
+[{CACHE n | NOCACHE}] ⑥ 메모리 저장유무
+
+sql>alter sequence b_dept2_deptno2
+      increment by 2
+      maxvalue 23
+      minvalue 1
+      nocycle
+      nocache;
+
+SQL> alter sequence b_dept2_deptno2
+  2        increment by 2
+  3        maxvalue 23  -->maxvalue=>현재 값보다 적게 설정X
+  4        minvalue 1
+  5        nocycle
+  6        nocache;
+alter sequence b_dept2_deptno2
+*
+1행에 오류:
+ORA-04009: MAXVALUE 에 현재치보다 작은 값을 지정할 수 없습니다
+
+시컨스를 사용할 수 없는 경우
+
+1.VIEW의 SELECT 절->뷰절에서의 select구문내에 시컨스 사용 불가
+2.DISTINCT 키워드가 있는 SELECT 문
+3.GROUP BY, HAVING, ORDER BY 절이 있는 SELECT 문->그룹함수 사용
+4.SELECT, DELETE, UPDATE의 서브 쿼리
+5.CREATE TABLE, ALTER TABLE 명령의 DEFAULT 값 
+
+<문8>시컨스를 삭제->drop sequence 삭제시킬 시컨스명->user_sequences
+ sql>drop sequence b_dept2_deptno2;
+
+<문9>동의어(Synonym(시노님)) 개요,사용->사용권한
+                  ->단어는 다르지만 의미가 같은것(별칭,별명(사람))
+                  ->테이블에 부여(테이블은 하나인데 ----->이름이 2개)
+                                         테이블(dept)---->b_dept2
+
+형식) create synonym 동의어이름 for 대상객체명(=테이블명)
+sql>create synonym buser for b_dept2;
+
+sql>select * from tab;
+TNAME                          TABTYPE  CLUSTERID
+------------------------------ ------- ----------
+BONUS                          TABLE
+=======================
+BUSER                          SYNONYM
+B_DEPT2                        TABLE
+=======================
+B_EMP2                         TABLE
+B_EMP3                         TABLE
+B_EMP4                         TABLE
+DEPT                           TABLE
+DEPT30                         VIEW
+EMP                            TABLE
+
+sql>select * from b_dept2;
+    DEPTNO DNAME          LOC
+---------- -------------- ------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+        60 TESTING        SEOUL
+        70 TESTING2       PUSAN
+
+7 개의 행이 선택되었습니다.
+
+sql>select * from buser; //별칭,별명
+sql>insert into buser values(80,'TESTING3','SEOUL2');
+sql>select * from b_dept2;
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from b_dept2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+        60 TESTING        SEOUL
+        70 TESTING2       PUSAN
+        80 TESTING3       SEOUL2
+
+8 개의 행이 선택되었습니다.
+
+<문10>동의어를 왜 만드는가?->사용권한과 연관
+
+  계정별로 관리->속한 테이블만 사용
+   test1                                       scott
+          ------------------------> emp,b_dept2,,,(insert,update,delete,select)
+
+  서로 다른 계정에서 특정 계정의 테이블을 사용?
+
+동의어의 종류
+
+1.개인용(private synonym)->각 계정별로 따로따로 만드는 경우
+                                     ->자기계정만 사용이 가능
+
+2.공용(public synonym)=>관리자만 만드는 경우 
+                                      모든 계정들이 사용할 수있는 동의어를 만들때
+
+sql>test1->scott->b_dept2
+sql>conn test1/t1234
+
+SQL> select * from b_dept2;
+select * from b_dept2
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+  다른 계정이 가지고 있는 테이블을 DML할려면 사용권한인증?
+  DCL
+ owner(소유자)->권한줄 수도(grant) 있고 회수(revoke)
+
+sql>conn scott/tiger
+
+DCL->형식) grant 권한종류,,,,(all) on 적용 테이블명 to 계정1,,,
+                         insert,delete,,                           to public (모든계정)
+sql>grant insert,select on b_dept2 to test1;
+  권한 부여~
+
+sql>conn test1/t1234
+sql>select * from b_dept2;
+SQL> select * from b_dept2; //소유자명.테이블명
+select * from b_dept2
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+ed
+
+  1* select * from scott.b_dept2 //소유자명.테이블->불편
+SQL> /
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+        60 TESTING        SEOUL
+        70 TESTING2       PUSAN
+        80 TESTING3       SEOUL2
+
+8 개의 행이 선택되었습니다.
+
+   scott.b_dept2===>buser2 동의어
+sql>create synonym  buser2 for scott.b_dept2;
+
+SQL> select * from buser2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        50 SUPPORT        KWANGJU
+        60 TESTING        SEOUL
+        70 TESTING2       PUSAN
+        80 TESTING3       SEOUL2
+
+8 개의 행이 선택되었습니다.
+                     scott.b_dept2
+sql>insert into buser2 values(90,'TESTING4','SEOUL3');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from buser2;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        90 TESTING4       SEOUL3==>
+        50 SUPPORT        KWANGJU
+        60 TESTING        SEOUL
+        70 TESTING2       PUSAN
+        80 TESTING3       SEOUL2
+
+9 개의 행이 선택되었습니다.
+
+동의어를 사용하는 목적->다른 계정이 소유한 테이블을 데이터 작업할때(DML)
+                                 할때 소유자명.테이블명->편리하게 자기만의 이름으로
+                                 변경해서 사용하고자할때 쓰는 오라클 객체
+
+
+<문11> 공용 동의어? 관리자가 만들어주는 경우(모든 계정이 다사용가능한
+                                                                동의어)
+  ex) test1---------->scott/b_dept2
+                buser2
+        test2->buser3
+        test3->buser4
+
+sql>관리자->공용동의어->test1
+sql>conn sys/sys12345 as sysdba //(role)->권한
+
+형식) create [public] synonym ~
+
+sql>create public synonym butest for scott.b_dept2;
+
+sql>conn test1/t1234
+sql>select * from butest;
+
+SQL> select * from butest; //공용동의어==>select * from tab;
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+        90 TESTING4       SEOUL3
+        50 SUPPORT        KWANGJU
+        60 TESTING        SEOUL
+        70 TESTING2       PUSAN
+        80 TESTING3       SEOUL2
+
+9 개의 행이 선택되었습니다.
+
+SQL>
+
+<문12>scott계정이 b_dept2테이블에 대한 권한(insert,select)->test1X
+           회수(=몰수)
+
+형식) revoke 회수할 권한종류,,, on 적용 테이블명 from 계정명1,,,
+
+SQL> conn scott/tiger
+연결되었습니다.
+
+sql>revoke  insert,select on b_dept2 from test1;
+권한이 취소되었습니다.
+
+sql>conn test1/t1234
+sql> select * from buser2;//X  개인(test1)이 만들어준 경우
+sql> select * from butest;// 관리자가 만들어 준거
+
+SQL> select * from buser2;
+select * from buser2  //더 이상 불필요
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+
+SQL> select * from butest;
+select * from butest
+              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+SQL>
+
+<문13>불필요로한 동의어를 삭제?
+ 형식) drop synonym 삭제할 동의어 이름
+sql>drop synonym buser2;
+
+동의어가 삭제되었습니다.
+
+SQL> drop synonym butest;
+drop synonym butest   //공용 동의어->관리자만이 삭제 가능하다.
+             *
+1행에 오류:
+ORA-01434: 삭제할 비공개 동의어가 존재하지 않습니다
+------------------------------------------------------------------
+sql>spool off  =>사용권한(p53~56) SQL활용
+                                      p38~42 (데이터 베이스 구현 과목)
+==================>관리자===============
+
+
+
+
+
+
+
+
+

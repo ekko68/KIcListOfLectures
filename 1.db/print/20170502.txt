@@ -1,0 +1,628 @@
+SQL> conn test1/t1234
+연결되었습니다.
+SQL> desc user_constraints
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ OWNER                                              VARCHAR2(30)
+ CONSTRAINT_NAME                           NOT NULL VARCHAR2(30)
+ CONSTRAINT_TYPE                                    VARCHAR2(1)
+ TABLE_NAME                                NOT NULL VARCHAR2(30)
+ SEARCH_CONDITION                                   LONG
+ R_OWNER                                            VARCHAR2(30)
+ R_CONSTRAINT_NAME                                  VARCHAR2(30)
+ DELETE_RULE                                        VARCHAR2(9)
+ STATUS                                             VARCHAR2(8)
+ DEFERRABLE                                         VARCHAR2(14)
+ DEFERRED                                           VARCHAR2(9)
+ VALIDATED                                          VARCHAR2(13)
+ GENERATED                                          VARCHAR2(14)
+ BAD                                                VARCHAR2(3)
+ RELY                                               VARCHAR2(4)
+ LAST_CHANGE                                        DATE
+ INDEX_OWNER                                        VARCHAR2(30)
+ INDEX_NAME                                         VARCHAR2(30)
+ INVALID                                            VARCHAR2(7)
+ VIEW_RELATED                                       VARCHAR2(14)
+
+SQL> select constraint_name,constraint_type,table_name,
+  2         status from user_constraints
+  3         where table_name=upper('&table_name');
+table_name의 값을 입력하십시오: b_prtest
+구   3:        where table_name=upper('&table_name')
+신   3:        where table_name=upper('b_prtest')
+
+CONSTRAINT_NAME                C TABLE_NAME                     STATUS          
+------------------------------ - ------------------------------ --------        
+B_PRTEST_CK_AGE                C B_PRTEST                       ENABLED         
+
+SQL> save  C:\webtest\1.db\print\consearch.txt
+file C:\webtest\1.db\print\consearch.txt(이)가 생성되었습니다
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select constraint_name,constraint_type,table_name,
+  2         status from user_constraints
+  3*        where table_name=upper('&table_name')
+SQL> /
+table_name의 값을 입력하십시오: prtest
+구   3:        where table_name=upper('&table_name')
+신   3:        where table_name=upper('prtest')
+
+선택된 레코드가 없습니다.
+
+SQL> alter table b_prtest disable constraints B_PRTEST_CK_AGE;
+
+테이블이 변경되었습니다.
+
+SQL> @C:\webtest\1.db\print\consearch.txt
+table_name의 값을 입력하십시오: b_prtest
+구   3:        where table_name=upper('&table_name')
+신   3:        where table_name=upper('b_prtest')
+
+CONSTRAINT_NAME                C TABLE_NAME                     STATUS          
+------------------------------ - ------------------------------ --------        
+B_PRTEST_CK_AGE                C B_PRTEST                       DISABLED        
+
+SQL> alter table b_prtest enable constraints b_prtest_ck_age;
+
+테이블이 변경되었습니다.
+
+SQL> select empno,ename,deptno,dname,loc
+  2        from emp,dept;
+      from emp,dept
+           *
+2행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다 
+
+
+SQL> conn scott/tiger
+연결되었습니다.
+SQL> select empno,ename,deptno,dname,loc
+  2        from emp,dept;
+select empno,ename,deptno,dname,loc
+                   *
+1행에 오류:
+ORA-00918: 열의 정의가 애매합니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename,dept.deptno,dname,loc
+  2*       from emp,dept
+SQL> /
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7369 SMITH              10 ACCOUNTING     NEW YORK                        
+      7499 ALLEN              10 ACCOUNTING     NEW YORK                        
+      7521 WARD               10 ACCOUNTING     NEW YORK                        
+      7566 JONES              10 ACCOUNTING     NEW YORK                        
+      7654 MARTIN             10 ACCOUNTING     NEW YORK                        
+      7698 BLAKE              10 ACCOUNTING     NEW YORK                        
+      7782 CLARK              10 ACCOUNTING     NEW YORK                        
+      7788 SCOTT              10 ACCOUNTING     NEW YORK                        
+      7839 KING               10 ACCOUNTING     NEW YORK                        
+      7844 TURNER             10 ACCOUNTING     NEW YORK                        
+      7876 ADAMS              10 ACCOUNTING     NEW YORK                        
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7900 JAMES              10 ACCOUNTING     NEW YORK                        
+      7902 FORD               10 ACCOUNTING     NEW YORK                        
+      7934 MILLER             10 ACCOUNTING     NEW YORK                        
+      7369 SMITH              20 RESEARCH       DALLAS                          
+      7499 ALLEN              20 RESEARCH       DALLAS                          
+      7521 WARD               20 RESEARCH       DALLAS                          
+      7566 JONES              20 RESEARCH       DALLAS                          
+      7654 MARTIN             20 RESEARCH       DALLAS                          
+      7698 BLAKE              20 RESEARCH       DALLAS                          
+      7782 CLARK              20 RESEARCH       DALLAS                          
+      7788 SCOTT              20 RESEARCH       DALLAS                          
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7839 KING               20 RESEARCH       DALLAS                          
+      7844 TURNER             20 RESEARCH       DALLAS                          
+      7876 ADAMS              20 RESEARCH       DALLAS                          
+      7900 JAMES              20 RESEARCH       DALLAS                          
+      7902 FORD               20 RESEARCH       DALLAS                          
+      7934 MILLER             20 RESEARCH       DALLAS                          
+      7369 SMITH              30 SALES          CHICAGO                         
+      7499 ALLEN              30 SALES          CHICAGO                         
+      7521 WARD               30 SALES          CHICAGO                         
+      7566 JONES              30 SALES          CHICAGO                         
+      7654 MARTIN             30 SALES          CHICAGO                         
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7698 BLAKE              30 SALES          CHICAGO                         
+      7782 CLARK              30 SALES          CHICAGO                         
+      7788 SCOTT              30 SALES          CHICAGO                         
+      7839 KING               30 SALES          CHICAGO                         
+      7844 TURNER             30 SALES          CHICAGO                         
+      7876 ADAMS              30 SALES          CHICAGO                         
+      7900 JAMES              30 SALES          CHICAGO                         
+      7902 FORD               30 SALES          CHICAGO                         
+      7934 MILLER             30 SALES          CHICAGO                         
+      7369 SMITH              40 OPERATIONS     BOSTON                          
+      7499 ALLEN              40 OPERATIONS     BOSTON                          
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7521 WARD               40 OPERATIONS     BOSTON                          
+      7566 JONES              40 OPERATIONS     BOSTON                          
+      7654 MARTIN             40 OPERATIONS     BOSTON                          
+      7698 BLAKE              40 OPERATIONS     BOSTON                          
+      7782 CLARK              40 OPERATIONS     BOSTON                          
+      7788 SCOTT              40 OPERATIONS     BOSTON                          
+      7839 KING               40 OPERATIONS     BOSTON                          
+      7844 TURNER             40 OPERATIONS     BOSTON                          
+      7876 ADAMS              40 OPERATIONS     BOSTON                          
+      7900 JAMES              40 OPERATIONS     BOSTON                          
+      7902 FORD               40 OPERATIONS     BOSTON                          
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7934 MILLER             40 OPERATIONS     BOSTON                          
+
+56 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename,dept.deptno,dname,loc
+  2        from emp,dept
+  3* where emp.deptno=dept.deptno
+SQL> /
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7369 SMITH              20 RESEARCH       DALLAS                          
+      7499 ALLEN              30 SALES          CHICAGO                         
+      7521 WARD               30 SALES          CHICAGO                         
+      7566 JONES              20 RESEARCH       DALLAS                          
+      7654 MARTIN             30 SALES          CHICAGO                         
+      7698 BLAKE              30 SALES          CHICAGO                         
+      7782 CLARK              10 ACCOUNTING     NEW YORK                        
+      7788 SCOTT              20 RESEARCH       DALLAS                          
+      7839 KING               10 ACCOUNTING     NEW YORK                        
+      7844 TURNER             30 SALES          CHICAGO                         
+      7876 ADAMS              20 RESEARCH       DALLAS                          
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7900 JAMES              30 SALES          CHICAGO                         
+      7902 FORD               20 RESEARCH       DALLAS                          
+      7934 MILLER             10 ACCOUNTING     NEW YORK                        
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select empno,ename,d.deptno,dname,loc
+  2        from emp e,dept d
+  3* where e.deptno=d.deptno
+SQL> /
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7369 SMITH              20 RESEARCH       DALLAS                          
+      7499 ALLEN              30 SALES          CHICAGO                         
+      7521 WARD               30 SALES          CHICAGO                         
+      7566 JONES              20 RESEARCH       DALLAS                          
+      7654 MARTIN             30 SALES          CHICAGO                         
+      7698 BLAKE              30 SALES          CHICAGO                         
+      7782 CLARK              10 ACCOUNTING     NEW YORK                        
+      7788 SCOTT              20 RESEARCH       DALLAS                          
+      7839 KING               10 ACCOUNTING     NEW YORK                        
+      7844 TURNER             30 SALES          CHICAGO                         
+      7876 ADAMS              20 RESEARCH       DALLAS                          
+
+     EMPNO ENAME          DEPTNO DNAME          LOC                             
+---------- ---------- ---------- -------------- -------------                   
+      7900 JAMES              30 SALES          CHICAGO                         
+      7902 FORD               20 RESEARCH       DALLAS                          
+      7934 MILLER             10 ACCOUNTING     NEW YORK                        
+
+14 개의 행이 선택되었습니다.
+
+SQL> select e.ename,e.sal,d.dname,d.loc
+  2  from emp e,dept d
+  3  where e.deptno=d.deptno and e.job='SALESMAN';
+
+ENAME             SAL DNAME          LOC                                        
+---------- ---------- -------------- -------------                              
+TURNER           1500 SALES          CHICAGO                                    
+MARTIN           1250 SALES          CHICAGO                                    
+WARD             1250 SALES          CHICAGO                                    
+ALLEN            1600 SALES          CHICAGO                                    
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select e.ename,e.sal,d.dname,d.loc
+  2  from emp e,dept d
+  3* where e.deptno=d.deptno and e.sal >=1200
+SQL> /
+
+ENAME             SAL DNAME          LOC                                        
+---------- ---------- -------------- -------------                              
+ALLEN            1600 SALES          CHICAGO                                    
+WARD             1250 SALES          CHICAGO                                    
+JONES            2975 RESEARCH       DALLAS                                     
+MARTIN           1250 SALES          CHICAGO                                    
+BLAKE            2850 SALES          CHICAGO                                    
+CLARK            2450 ACCOUNTING     NEW YORK                                   
+SCOTT            3000 RESEARCH       DALLAS                                     
+KING             5000 ACCOUNTING     NEW YORK                                   
+TURNER           1500 SALES          CHICAGO                                    
+FORD             3000 RESEARCH       DALLAS                                     
+MILLER           1300 ACCOUNTING     NEW YORK                                   
+
+11 개의 행이 선택되었습니다.
+
+SQL> select * from tab;
+
+TNAME                          TABTYPE  CLUSTERID                               
+------------------------------ ------- ----------                               
+BONUS                          TABLE                                            
+DEPT                           TABLE                                            
+EMP                            TABLE                                            
+SALGRADE                       TABLE                                            
+
+SQL> desc bonus
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ SAL                                                NUMBER
+ COMM                                               NUMBER
+
+SQL> select count(*) from bonus;
+
+  COUNT(*)                                                                      
+----------                                                                      
+         0                                                                      
+
+SQL>  insert into bonus values('SMITH','CLERK',800,null);
+
+1 개의 행이 만들어졌습니다.
+
+SQL>        insert into bonus values('ALLEN','SALESMAN',1600,300);
+
+1 개의 행이 만들어졌습니다.
+
+SQL>        insert into bonus values('WARD','SALESMAN',1250,500);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> select * from bonus;
+
+ENAME      JOB              SAL       COMM                                      
+---------- --------- ---------- ----------                                      
+SMITH      CLERK            800                                                 
+ALLEN      SALESMAN        1600        300                                      
+WARD       SALESMAN        1250        500                                      
+
+SQL> select e.empno,e.ename,e.job,e.hiredate,e.sal,e.comm,d.dname,d.loc
+  2        from emp e,dept d,bonus b
+  3        where e.deptno=d.deptno and e.ename=b.ename;
+
+     EMPNO ENAME      JOB       HIREDATE        SAL       COMM DNAME            
+---------- ---------- --------- -------- ---------- ---------- --------------   
+LOC                                                                             
+-------------                                                                   
+      7369 SMITH      CLERK     80/12/17        800            RESEARCH         
+DALLAS                                                                          
+                                                                                
+      7521 WARD       SALESMAN  81/02/22       1250        500 SALES            
+CHICAGO                                                                         
+                                                                                
+      7499 ALLEN      SALESMAN  81/02/20       1600        300 SALES            
+CHICAGO                                                                         
+                                                                                
+
+SQL> desc salgrade
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ GRADE                                              NUMBER
+ LOSAL                                              NUMBER
+ HISAL                                              NUMBER
+
+SQL> select * from salgrade;
+
+     GRADE      LOSAL      HISAL                                                
+---------- ---------- ----------                                                
+         1        700       1200                                                
+         2       1201       1400                                                
+         3       1401       2000                                                
+         4       2001       3000                                                
+         5       3001       9999                                                
+
+SQL> select e.empno,e.ename,e.job,e.sal,s.grade,s.losal,s.hisal
+  2         from emp e,salgrade s
+  3        where e.sal between s.losal and s.hisal
+  4        and e.deptno=&deptno
+  5        order by s.grade desc;
+deptno의 값을 입력하십시오: 10
+구   4:       and e.deptno=&deptno
+신   4:       and e.deptno=10
+
+     EMPNO ENAME      JOB              SAL      GRADE      LOSAL      HISAL     
+---------- ---------- --------- ---------- ---------- ---------- ----------     
+      7839 KING       PRESIDENT       5000          5       3001       9999     
+      7782 CLARK      MANAGER         2450          4       2001       3000     
+      7934 MILLER     CLERK           1300          2       1201       1400     
+
+SQL> /
+deptno의 값을 입력하십시오: 20
+구   4:       and e.deptno=&deptno
+신   4:       and e.deptno=20
+
+     EMPNO ENAME      JOB              SAL      GRADE      LOSAL      HISAL     
+---------- ---------- --------- ---------- ---------- ---------- ----------     
+      7788 SCOTT      ANALYST         3000          4       2001       3000     
+      7902 FORD       ANALYST         3000          4       2001       3000     
+      7566 JONES      MANAGER         2975          4       2001       3000     
+      7876 ADAMS      CLERK           1100          1        700       1200     
+      7369 SMITH      CLERK            800          1        700       1200     
+
+SQL> /
+deptno의 값을 입력하십시오: 30
+구   4:       and e.deptno=&deptno
+신   4:       and e.deptno=30
+
+     EMPNO ENAME      JOB              SAL      GRADE      LOSAL      HISAL     
+---------- ---------- --------- ---------- ---------- ---------- ----------     
+      7698 BLAKE      MANAGER         2850          4       2001       3000     
+      7844 TURNER     SALESMAN        1500          3       1401       2000     
+      7499 ALLEN      SALESMAN        1600          3       1401       2000     
+      7521 WARD       SALESMAN        1250          2       1201       1400     
+      7654 MARTIN     SALESMAN        1250          2       1201       1400     
+      7900 JAMES      CLERK            950          1        700       1200     
+
+6 개의 행이 선택되었습니다.
+
+SQL> save c:\webtest\1.db\print\gradesearch.txt
+file c:\webtest\1.db\print\gradesearch.txt(이)가 생성되었습니다
+SQL> select * from dept;
+
+    DEPTNO DNAME          LOC                                                   
+---------- -------------- -------------                                         
+        10 ACCOUNTING     NEW YORK                                              
+        20 RESEARCH       DALLAS                                                
+        30 SALES          CHICAGO                                               
+        40 OPERATIONS     BOSTON                                                
+
+SQL> select e.ename,e.job,d.deptno,d.dname
+  2         from emp e,dept d
+  3         where d.deptno=e.deptno;
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+SMITH      CLERK             20 RESEARCH                                        
+ALLEN      SALESMAN          30 SALES                                           
+WARD       SALESMAN          30 SALES                                           
+JONES      MANAGER           20 RESEARCH                                        
+MARTIN     SALESMAN          30 SALES                                           
+BLAKE      MANAGER           30 SALES                                           
+CLARK      MANAGER           10 ACCOUNTING                                      
+SCOTT      ANALYST           20 RESEARCH                                        
+KING       PRESIDENT         10 ACCOUNTING                                      
+TURNER     SALESMAN          30 SALES                                           
+ADAMS      CLERK             20 RESEARCH                                        
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+JAMES      CLERK             30 SALES                                           
+FORD       ANALYST           20 RESEARCH                                        
+MILLER     CLERK             10 ACCOUNTING                                      
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select e.ename,e.job,d.deptno,d.dname
+  2         from emp e,dept d
+  3*        where d.deptno=e.deptno(+)
+SQL> /
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+SMITH      CLERK             20 RESEARCH                                        
+ALLEN      SALESMAN          30 SALES                                           
+WARD       SALESMAN          30 SALES                                           
+JONES      MANAGER           20 RESEARCH                                        
+MARTIN     SALESMAN          30 SALES                                           
+BLAKE      MANAGER           30 SALES                                           
+CLARK      MANAGER           10 ACCOUNTING                                      
+SCOTT      ANALYST           20 RESEARCH                                        
+KING       PRESIDENT         10 ACCOUNTING                                      
+TURNER     SALESMAN          30 SALES                                           
+ADAMS      CLERK             20 RESEARCH                                        
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+JAMES      CLERK             30 SALES                                           
+FORD       ANALYST           20 RESEARCH                                        
+MILLER     CLERK             10 ACCOUNTING                                      
+                             40 OPERATIONS                                      
+
+15 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select e.ename,e.job,d.deptno,d.dname
+  2         from emp e,dept d
+  3*        where d.deptno(+)=e.deptno(+)
+SQL> /
+       where d.deptno(+)=e.deptno(+)
+                        *
+3행에 오류:
+ORA-01468: outer-join된 테이블은 1개만 지정할 수 있습니다 
+
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select e.ename,e.job,d.deptno,d.dname
+  2         from emp e,dept d
+  3         where d.deptno=e.deptno(+) and
+  4*        e.ename like '%A%'
+SQL> /
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+ALLEN      SALESMAN          30 SALES                                           
+WARD       SALESMAN          30 SALES                                           
+MARTIN     SALESMAN          30 SALES                                           
+BLAKE      MANAGER           30 SALES                                           
+CLARK      MANAGER           10 ACCOUNTING                                      
+ADAMS      CLERK             20 RESEARCH                                        
+JAMES      CLERK             30 SALES                                           
+
+7 개의 행이 선택되었습니다.
+
+SQL> select w.ename || '의 직속상관은' || m.ename || '입니다.'
+  2        from emp w,emp m
+  3        where w.mgr=m.empno;
+
+W.ENAME||'의직속상관은'||M.ENAME||'입니                                         
+----------------------------------------                                        
+FORD의 직속상관은JONES입니다.                                                   
+SCOTT의 직속상관은JONES입니다.                                                  
+JAMES의 직속상관은BLAKE입니다.                                                  
+TURNER의 직속상관은BLAKE입니다.                                                 
+MARTIN의 직속상관은BLAKE입니다.                                                 
+WARD의 직속상관은BLAKE입니다.                                                   
+ALLEN의 직속상관은BLAKE입니다.                                                  
+MILLER의 직속상관은CLARK입니다.                                                 
+ADAMS의 직속상관은SCOTT입니다.                                                  
+CLARK의 직속상관은KING입니다.                                                   
+BLAKE의 직속상관은KING입니다.                                                   
+
+W.ENAME||'의직속상관은'||M.ENAME||'입니                                         
+----------------------------------------                                        
+JONES의 직속상관은KING입니다.                                                   
+SMITH의 직속상관은FORD입니다.                                                   
+
+13 개의 행이 선택되었습니다.
+
+SQL> select empno,ename,dname
+  2          from emp inner join dept
+  3          on emp.deptno=dept.deptno;
+
+     EMPNO ENAME      DNAME                                                     
+---------- ---------- --------------                                            
+      7369 SMITH      RESEARCH                                                  
+      7499 ALLEN      SALES                                                     
+      7521 WARD       SALES                                                     
+      7566 JONES      RESEARCH                                                  
+      7654 MARTIN     SALES                                                     
+      7698 BLAKE      SALES                                                     
+      7782 CLARK      ACCOUNTING                                                
+      7788 SCOTT      RESEARCH                                                  
+      7839 KING       ACCOUNTING                                                
+      7844 TURNER     SALES                                                     
+      7876 ADAMS      RESEARCH                                                  
+
+     EMPNO ENAME      DNAME                                                     
+---------- ---------- --------------                                            
+      7900 JAMES      SALES                                                     
+      7902 FORD       RESEARCH                                                  
+      7934 MILLER     ACCOUNTING                                                
+
+14 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select e.empno,e.ename,d.dname
+  2          from emp e join dept d
+  3*         using(deptno)
+SQL> /
+
+     EMPNO ENAME      DNAME                                                     
+---------- ---------- --------------                                            
+      7369 SMITH      RESEARCH                                                  
+      7499 ALLEN      SALES                                                     
+      7521 WARD       SALES                                                     
+      7566 JONES      RESEARCH                                                  
+      7654 MARTIN     SALES                                                     
+      7698 BLAKE      SALES                                                     
+      7782 CLARK      ACCOUNTING                                                
+      7788 SCOTT      RESEARCH                                                  
+      7839 KING       ACCOUNTING                                                
+      7844 TURNER     SALES                                                     
+      7876 ADAMS      RESEARCH                                                  
+
+     EMPNO ENAME      DNAME                                                     
+---------- ---------- --------------                                            
+      7900 JAMES      SALES                                                     
+      7902 FORD       RESEARCH                                                  
+      7934 MILLER     ACCOUNTING                                                
+
+14 개의 행이 선택되었습니다.
+
+SQL> select e.ename,e.job,d.deptno,d.dname
+  2     from dept d left outer join emp e
+  3     on e.deptno=d.deptno;
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+SMITH      CLERK             20 RESEARCH                                        
+ALLEN      SALESMAN          30 SALES                                           
+WARD       SALESMAN          30 SALES                                           
+JONES      MANAGER           20 RESEARCH                                        
+MARTIN     SALESMAN          30 SALES                                           
+BLAKE      MANAGER           30 SALES                                           
+CLARK      MANAGER           10 ACCOUNTING                                      
+SCOTT      ANALYST           20 RESEARCH                                        
+KING       PRESIDENT         10 ACCOUNTING                                      
+TURNER     SALESMAN          30 SALES                                           
+ADAMS      CLERK             20 RESEARCH                                        
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+JAMES      CLERK             30 SALES                                           
+FORD       ANALYST           20 RESEARCH                                        
+MILLER     CLERK             10 ACCOUNTING                                      
+                             40 OPERATIONS                                      
+
+15 개의 행이 선택되었습니다.
+
+SQL> ed
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select e.ename,e.job,d.deptno,d.dname
+  2     from dept d right outer join emp e
+  3*    on e.deptno=d.deptno
+SQL> /
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+MILLER     CLERK             10 ACCOUNTING                                      
+KING       PRESIDENT         10 ACCOUNTING                                      
+CLARK      MANAGER           10 ACCOUNTING                                      
+FORD       ANALYST           20 RESEARCH                                        
+ADAMS      CLERK             20 RESEARCH                                        
+SCOTT      ANALYST           20 RESEARCH                                        
+JONES      MANAGER           20 RESEARCH                                        
+SMITH      CLERK             20 RESEARCH                                        
+JAMES      CLERK             30 SALES                                           
+TURNER     SALESMAN          30 SALES                                           
+BLAKE      MANAGER           30 SALES                                           
+
+ENAME      JOB           DEPTNO DNAME                                           
+---------- --------- ---------- --------------                                  
+MARTIN     SALESMAN          30 SALES                                           
+WARD       SALESMAN          30 SALES                                           
+ALLEN      SALESMAN          30 SALES                                           
+
+14 개의 행이 선택되었습니다.
+
+SQL> spool off

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>CSS의 개요 및 특징(1).html </title>
+  <!-- 
+    웹문서에서 공통으로 사용하는 색깔,이미지,글꼴등을 head영역에서 선언사용
+  -->
+    <style type="text/css">
+		/*  1. 공통으로 선언
+		   형식)	선택자(스타일 적용태그지칭) {속성명:속성값;~;~;}
+		    h4,h3 {font-family:돋움체;color:red;font-size:14pt}
+		*/
+    </style>
+	<!--3.파일로 불러오는 경우 rel->스타일시트 type->텍스트형태의 css  
+	    href="경로포함해서 불러올 스타일 시트 파일명.css"-->
+  <link rel="stylesheet"  type="text/css"  href="test.css" >
+ </head>
+ <body>
+    <header>
+          <!-- <h4><font face="돋움체" color="red" size="14pt">
+		          CSS의 개요 및 특징</font></h4> -->
+			  <h4>CSS의 개요 및 특징</h4>
+	</header>
+   <section>
+      <header>
+	     <!-- 2.디자인을 복잡(다른 스타일과 중복->우선적으로 적용) -->
+          <h3 style="font-family:궁서체;background:yellow">스타일 시트의 장점 </h3>
+	  </header>
+	  <article>
+             <ol>
+				<li>문서의 파일크기가 줄어들면 문서의 로딩속도가 빨라진다.
+				<li>디자인시간이 줄어든다.</li>
+             </ol>
+	  </article>
+      <article>
+            <ol> 용어정리
+                <li>스타일:문서의 글꼴,크기,간격등의 출력형태(레이아웃)에 영향을
+				      미치는 요소
+			    <li>스타일시트:스타일의 내용만을 별도로 모아서 head태그 영역에
+				      선언된 묶음
+			</ol>
+	  </article>
+   </section>
+ </body>
+</html>

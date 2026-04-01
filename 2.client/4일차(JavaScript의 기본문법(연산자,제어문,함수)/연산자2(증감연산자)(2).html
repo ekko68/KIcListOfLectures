@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>연산자2(증감연산자)(2).html </title>
+ </head>
+ <!-- 
+  증감연산자->경우에 따라서 특정변수의 값을 하나 증가시키거나 하나 감소시켜주는
+                    연산자(++,--)
+			        a++(후위연산자)  5+1=6+1=7
+              ++a(전위연산자)
+ -->
+ <body>
+    <script>
+          document.write("증감연산자<br>")
+		  a=10,b=20
+		  c=3   //++변수명=>변수의 값을 먼저 하나 증가시켜라
+		  document.write(++a+"<br>") //11
+		  /*              10+1
+           ++a  ->a=a+1 =>a=10+1
+		   document.write(a+"<br>");
+		  */
+		  document.write((a++)+"<br>")
+		  /*
+		    document.write(a)
+            a++ ->a의 변수값을 나중에 증가시켜주세요
+		  */
+		  document.write("최종적인 a의 값=>"+a+"<br>")
+		  document.write("===========<p>")
+          //b=20
+		  document.write(--b+"<br>")
+		  /*            20-1=19
+              --b   b=b-1
+		   document.write(b)  19
+		  */
+		  document.write(b--+"<br>")
+		  /*
+            document.write(b)
+			b--  19-1=18
+		  */
+		  document.write("최종적인 b의 값"+b+"<br>")
+	</script>
+ </body>
+</html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>내장객체및 이벤트처리(3).html</title>
+  <!-- 
+    이벤트->운영체제가 인식가능한 사용자들의 모든행동양식(마우스,키보드)
+                 이벤트 종류                  이벤트핸들러(Eventhandler)->처리할 내용
+	이벤트발생 대상자
+
+	1.click       마우스클릭                   on+이벤트종류명->onclick
+    2.load  ->제일 먼저 문서를 읽어들일때   onload (팝업창)
+    3.unload-> 현재 사이트->다른사이트로 이동   onunload
+	4.change->콤보박스에서 특정한 항목을 선택(배열)
+	5.mouseover->마우스를 갖다댈때               onmouseover
+	6.mouseout->특정 위치에서 마우스포인터가 벗어날때
+	7.Blur->입력할때 커서가 이동시킬때 발생
+  -->
+ </head>
+ <body onload="alert('환영합니다')" onunload="alert('다음에 또~')">
+  <a href="http://www.daum.net"
+        onmouseover="document.img.src='../images/kid2.gif '"
+		onmouseout="document.img.src='../images/kid.gif '">
+      <img src="../images/kid.gif" name="img">
+  </a>
+  <img src="../images/kid3.gif" name="img2" >
+ </body>
+</html>

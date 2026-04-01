@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Form객체(4).html </title>
+  <script>
+       function test(){  //전송버튼클릭
+		    //이름
+           if(document.myform.name.value==""){
+             alert("이름은 필수입력입니다.")
+			 document.myform.name.focus()
+			 return false //빠져나가는 구문->탈출문
+		   }
+		    //전번
+           if(document.myform.tel.value==""){
+             alert("전번은 필수입력입니다.")
+			 document.myform.tel.focus()
+			 return
+		   }
+		    //암호
+           if(document.myform.pwd.value==""){
+             alert("암호는 필수입력입니다.")
+			 document.myform.pwd.focus()
+			 return false
+		   }
+           //반드시 ->action속성에 있는 a.jsp로 전송시켜달라
+		   //형식) document.폼이름.submit()
+		   //<input type="submit" value="전송"> =>document.myform.submit() 생략
+          document.myform.submit() //전송이 된다.-><input type="button"~>
+	   }
+        //암호의 길이가 최소4자이상 8자이하 범위에서 입력하게 조절
+		//형식)document.폼이름.입력양식이름.속성명(value).length->길이
+		// if(조건식) {실행1 실행2} =>블럭처리
+	   function test2(){
+          if(document.myform.pwd.value.length >=4 &&
+		     document.myform.pwd.value.length<8){
+              alert("정상적으로 암호를 입력했습니다.")
+			  document.myform.pwd.focus()
+			 }else{
+               alert("암호는 4자이상\n8자이하로 입력요망")
+               document.myform.pwd.focus()
+			 }
+	   }
+  </script>
+ </head>
+ <!-- 
+    focus()->커서를 입력하도록 설정해주는 함수
+	document.폼이름.reset() ->입력한 내용을 전부 지워라->다시 입력하기위해
+	전송버튼을 클릭한 경우 onsubmit="return 호출할 함수명()"
+ -->
+ <body onload="document.myform.name.focus()">
+  <form name="myform" method="post" action="a.jsp"
+            onsubmit="return test3()">
+     이름:<input type="text" name="name" size="10"><br>
+	 전번:<input type="text" name="tel" size="10"><br>
+	 암호:<input type="password" name="pwd" size="10"><p>
+
+     <!-- <input type="submit" value="전송"> -->
+	 <input type="button" value="전송" onclick="test()">
+	 <input type="button" value="암호입력" onclick="test2()">
+	 <input type="button" value="다시" 
+	            onclick="document.myform.reset();document.myform.name.focus()">
+  </form>
+ </body>
+</html>
