@@ -1,5 +1,0 @@
-//구글 API
-AIzaSyA67w35cw4kd5G741egvTz3Iihp0q54cbI
-// http://data.seoul.go.kr/openinf/openapiview.jsp?infId=OA-12969 API키값
-
-4e64546965736c7238316179585a64 
