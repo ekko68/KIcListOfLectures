@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+"http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+  <!-- Data Source -->
+  <bean id="dataSource"
+       class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName">
+      <value>com.mysql.jdbc.Driver</value>
+    </property>
+    <property name="url">
+      <value>jdbc:mysql://localhost:3306/spring</value>
+    </property>
+    <property name="username">
+      <value>root</value>
+    </property>
+    <property name="password">
+      <value>1234</value>
+    </property>
+  </bean>
+
+  <!-- Shop -->
+  <bean id="shopService" class="logic.ShopImpl">
+    <property name="itemCatalog">
+      <ref bean="itemCatalog" />
+    </property>
+  </bean>
+
+  <!-- ItemCatalog -->
+  <bean id="itemCatalog" class="logic.ItemCatalogImpl">
+    <property name="itemDao">
+      <ref bean="itemDao" />
+    </property>
+  </bean>
+
+  <!-- ItemDao -->
+  <bean id="itemDao" class="dao.ItemDaoImpl">
+    <property name="dataSource">
+      <ref bean="dataSource" />
+    </property>
+  </bean>
+</beans>

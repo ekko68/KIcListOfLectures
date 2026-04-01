@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+<!-- xml p네임스페이스(태그를 추가)
+   p:멤버변수명="값" p:멤버변수명-ref="상대방 빈즈의 id값"
+ -->
+ 
+<bean id="moniter" class="spring3.SystemMoniter"
+           p:periodTime="10" p:sender-ref="smsSender">
+    <!-- <property name="periodTime">
+        <value>10</value>
+    </property>
+    <property name="sender">
+          <ref bean="smsSender" />
+    </property> -->
+</bean>
+
+<bean id="smsSender"  class="spring3.SmsSender" />
+
+<!-- 생성자 injection
+  index를 부여하지 않으면 입력순서대로 적용이 된다.
+  -->
+
+<bean id="moniter2" class="spring4.SystemMoniter"
+          c:periodTime="30" c:sender-ref="smsSender2">
+    <!-- <constructor-arg value="10" />
+    <constructor-arg ref="smsSender2" /> -->
+</bean>
+
+<bean id="smsSender2"  class="spring4.SmsSender" />
+
+<!-- spring5(임의의 빈객체를 전달하는 방법) -->
+<bean id="moniter3" class="spring5.SystemMoniter"
+           p:periodTime="50">
+    <property name="sender">
+          <!-- <ref bean="smsSender3" /> -->
+          <bean  class="spring5.SmsSender">
+                  <constructor-arg value="true" />
+          </bean>
+    </property>
+</bean>
+
+<!-- 
+<bean id="smsSender3"  class="spring5.SmsSender">
+    <constructor-arg value="true" />
+</bean>
+ -->
+ 
+ <!--spring6 
+     id와 동일한 기능속성명->name
+     id->특정클래스의 객체를 가져오기위한 내부적인 구분번호, 특수기호 사용불가
+           /,# 특수기호 사용불가
+     name-> /,.특수기호를 사용이 가능하다.    
+     =>현재는 구분하지 않고 사용을 한다. 
+   /list.do=action.ListAction
+ 
+<bean name="/list.do"   class="action.ListAction" />
+  -->
+ <bean name="performanceMoniter"  class="spring6.PerformanceMoniter">
+     <property name="number">
+       <list>
+         <value>0.2</value>
+         <value>0.3</value>
+       </list>
+     </property>
+ </bean>
+ 
+ <!--spring7  -->
+ <bean name="customer"  class="spring7.Customer">
+     <property name="subSet">
+       <set>
+         <value>1</value>
+         <value>4</value>
+       </set>
+     </property>
+ </bean>
+
+
+
+</beans>

@@ -1,0 +1,49 @@
+<h1 class="red">{{title}}</h1>
+
+<p [ngClass]="'red'">Hello</p>
+<p [ngClass]="attStyle">World!!!</p>
+<hr>
+<p [ngStyle]="{color:'blue'}">Test</p>
+<p [ngStyle]="{color:attStyle2}">Test</p>
+<p [style.color]="'green'">Test2!!</p>
+<p [style.color]="attStyle2">Test3!!</p>
+<hr>
+<h2>가. *ngIf="조건" 형태</h2>
+<p *ngIf="true">Hello</p>
+<p *ngIf="false">Hello2</p>
+<p *ngIf="result">Hello3</p>
+<p *ngIf="result2">Hello4</p>
+<p *ngIf="result3==10">Hello5</p>
+<hr>
+<p template="ngIf true">Hello</p>
+<p template="ngIf false">Hello2</p>
+<p template="ngIf result">Hello3</p>
+<p template="ngIf result2">Hello4</p>
+<p template="ngIf result3==10">Hello5</p>
+<hr>
+<template [ngIf]="true"><p>template태그를 이용하는 경우</p></template>
+<template [ngIf]="false"><p>false를 적용시키는 경우</p></template>
+<hr>
+<select [(ngModel)]="grade">
+  <option>90</option>
+  <option>80</option>
+  <option>70</option>
+  <option>60</option>
+</select>
+<h2>[ngSwitch]="조건식에 해당되는 대상자(grade)부여"</h2>
+<div [ngSwitch]="grade">
+  <h3 *ngSwitchCase='90'>A학점</h3>
+  <h3 *ngSwitchCase='80'>B학점</h3>
+  <h3 *ngSwitchCase='70'>C학점</h3>
+  <h3 *ngSwitchDefault>F학점</h3>
+</div>
+<hr>
+<div *ngFor="let p of items; let x=index">
+   {{x+1}}&nbsp;{{p.name}} &nbsp;{{p.age}}  
+</div>
+
+
+
+
+
+

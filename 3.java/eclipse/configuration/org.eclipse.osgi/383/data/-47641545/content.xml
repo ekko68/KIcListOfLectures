@@ -1,0 +1,713 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?metadataRepository version='1.1.0'?>
+<repository name='update site: http://quantum.sourceforge.net/update-site' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1'>
+  <properties size='2'>
+    <property name='p2.timestamp' value='1503277380247'/>
+    <property name='site.checksum' value='1563211348'/>
+  </properties>
+  <references size='2'>
+    <repository uri='http://quantum.sourceforge.net/update-site/' url='http://quantum.sourceforge.net/update-site/' type='1' options='0'/>
+    <repository uri='http://quantum.sourceforge.net/update-site/' url='http://quantum.sourceforge.net/update-site/' type='0' options='0'/>
+  </references>
+  <units size='25'>
+    <unit id='com.quantum.flatfiles.feature.feature.group' version='3.3.10' singleton='false'>
+      <update id='com.quantum.flatfiles.feature.feature.group' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='com.quantum.flatfiles.feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='This feature allows you to export the database data and structure&#xA;to different text format.'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.flatfiles.feature.feature.group' version='3.3.10'/>
+      </provides>
+      <requires size='8'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.Quantum' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.core.runtime' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.core.resources' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.swt' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.ui' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.ui.ide' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.flatfiles' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.flatfiles.feature.feature.jar' range='[3.3.10,3.3.10]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html
+      </copyright>
+    </unit>
+    <unit id='com.quantum.dbunit' version='3.3.10' singleton='false'>
+      <update id='com.quantum.dbunit' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.partial.iu' value='true'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.dbunit' version='3.3.10'/>
+        <provided namespace='osgi.bundle' name='com.quantum.dbunit' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.quantum.dbunit' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: com.quantum.dbunit&#xA;Bundle-Version: 3.3.10&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='com.quantum.erd.feature.feature.group' version='3.3.10' singleton='false'>
+      <update id='com.quantum.erd.feature.feature.group' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='ERD Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Contains a graphical editor of entities (tables-views) and relationships,&#xA;allowing for generation of SQL and DDL.'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.erd.feature.feature.group' version='3.3.10'/>
+      </provides>
+      <requires size='2'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.erd' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.erd.feature.feature.jar' range='[3.3.10,3.3.10]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license uri='http://www.example.com/license' url='http://www.example.com/license'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.
+        </license>
+      </licenses>
+      <copyright uri='http://www.example.com/copyright' url='http://www.example.com/copyright'>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;Copyright of the beanshell library belongs to its developers.&#xA;See http://www.beanshell.org for more details.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.beanshell.feature.feature.group' version='3.3.10' singleton='false'>
+      <update id='com.quantum.beanshell.feature.feature.group' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='Beanshell View'/>
+        <property name='org.eclipse.equinox.p2.description' value='Offers a Beanshell View that allows you to write scripts that&#xA;manipulate data from the database. See the&#xA;Quantum help for more info. Beanshell is a lightweight&#xA;scripting language with a sintax very similar to Java. From the&#xA;beanshell website (www.beanshell.org) : &quot;BeanShell dynamically&#xA;executes standard Java syntax and extends it with common scripting&#xA;conveniences such as loose types, commands, and method closures&#xA;like those in Perl and JavaScript.&quot;'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.beanshell.feature.feature.group' version='3.3.10'/>
+      </provides>
+      <requires size='3'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.Quantum' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.beanshell' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.beanshell.feature.feature.jar' range='[3.3.10,3.3.10]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.&#xA;&#xA;The beanshell library has its own license, see http://www.beanshell.org for details.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;&#xA;Copyright of the beanshell library belongs to its developers.&#xA;See http://www.beanshell.org for more details.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.beanshell' version='3.3.10' singleton='false'>
+      <update id='com.quantum.beanshell' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.partial.iu' value='true'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.beanshell' version='3.3.10'/>
+        <provided namespace='osgi.bundle' name='com.quantum.beanshell' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.quantum.beanshell' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: com.quantum.beanshell&#xA;Bundle-Version: 3.3.10&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='http://quantum.sourceforge.net/update-site/site.xml.Core' version='1.0.0.7B7A7ccL_AvE'>
+      <properties size='3'>
+        <property name='org.eclipse.equinox.p2.name' value='Core'/>
+        <property name='org.eclipse.equinox.p2.description' value='Basic Navigation'/>
+        <property name='org.eclipse.equinox.p2.type.category' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='http://quantum.sourceforge.net/update-site/site.xml.Core' version='1.0.0.7B7A7ccL_AvE'/>
+      </provides>
+      <requires size='2'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.help.feature.feature.group' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.feature.feature.group' range='[3.3.10,3.3.10]'/>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+    </unit>
+    <unit id='com.quantum.dbunit.feature.feature.jar' version='3.3.10'>
+      <properties size='3'>
+        <property name='org.eclipse.equinox.p2.name' value='com.quantum.dbunit.feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='This feature allows you to export database data to an external file using the DbUnit XML format, and import the data back.'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.dbunit.feature.feature.jar' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='com.quantum.dbunit.feature' version='3.3.10'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='com.quantum.dbunit.feature' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.&#xA;This does not apply to the dbunit library, that has its own license&#xA;terms.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;This does not cover the copright of the dbunit library, that&#xA;is included as is allowed by its license.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.log' version='3.3.10' singleton='false'>
+      <update id='com.quantum.log' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.partial.iu' value='true'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.log' version='3.3.10'/>
+        <provided namespace='osgi.bundle' name='com.quantum.log' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.quantum.log' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: com.quantum.log&#xA;Bundle-Version: 3.3.10&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='com.quantum.beanshell.feature.feature.jar' version='3.3.10'>
+      <properties size='3'>
+        <property name='org.eclipse.equinox.p2.name' value='Beanshell View'/>
+        <property name='org.eclipse.equinox.p2.description' value='Offers a Beanshell View that allows you to write scripts that&#xA;manipulate data from the database. See the&#xA;Quantum help for more info. Beanshell is a lightweight&#xA;scripting language with a sintax very similar to Java. From the&#xA;beanshell website (www.beanshell.org) : &quot;BeanShell dynamically&#xA;executes standard Java syntax and extends it with common scripting&#xA;conveniences such as loose types, commands, and method closures&#xA;like those in Perl and JavaScript.&quot;'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.beanshell.feature.feature.jar' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='com.quantum.beanshell.feature' version='3.3.10'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='com.quantum.beanshell.feature' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.&#xA;&#xA;The beanshell library has its own license, see http://www.beanshell.org for details.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;&#xA;Copyright of the beanshell library belongs to its developers.&#xA;See http://www.beanshell.org for more details.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.Quantum' version='3.3.10' singleton='false'>
+      <update id='com.quantum.Quantum' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.partial.iu' value='true'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.Quantum' version='3.3.10'/>
+        <provided namespace='osgi.bundle' name='com.quantum.Quantum' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.quantum.Quantum' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: com.quantum.Quantum&#xA;Bundle-Version: 3.3.10&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='com.quantum.dbunit.feature.feature.group' version='3.3.10' singleton='false'>
+      <update id='com.quantum.dbunit.feature.feature.group' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='com.quantum.dbunit.feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='This feature allows you to export database data to an external file using the DbUnit XML format, and import the data back.'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.dbunit.feature.feature.group' version='3.3.10'/>
+      </provides>
+      <requires size='6'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.Quantum' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.ui' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.swt' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.core.runtime' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.dbunit' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.dbunit.feature.feature.jar' range='[3.3.10,3.3.10]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.&#xA;This does not apply to the dbunit library, that has its own license&#xA;terms.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;This does not cover the copright of the dbunit library, that&#xA;is included as is allowed by its license.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.feature.feature.group' version='3.3.10' singleton='false'>
+      <update id='com.quantum.feature.feature.group' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='5'>
+        <property name='org.eclipse.equinox.p2.name' value='com.quantum.feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='QuantumDB is a simple but powerful database access plug-in for&#xA;the Eclipse Development Platform. QuantumDB allows you to:&#xA;&lt;li&gt; Connect to databases using standard JDBC drivers&lt;/li&gt;&#xA;&lt;li&gt; Review schemas, tables, views and sequences&lt;/li&gt;&#xA;&lt;li&gt; Look up column, index and foreign key information&lt;/li&gt;&#xA;&lt;li&gt; Issue ad-hoc queries or other SQL statements against the&#xA;database&lt;/li&gt;&#xA;&lt;li&gt; Manage, edit, and work with SQL files (*.sql)&lt;/li&gt;&#xA;&lt;li&gt; Issue updates, deletes, and inserts using simple, easy-to-use&#xA;wizards&lt;/li&gt;'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.feature.feature.group' version='3.3.10'/>
+      </provides>
+      <requires size='20'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.beanshell.feature.feature.group' range='[3.3.10,3.3.10]' optional='true'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.dbunit.feature.feature.group' range='[3.3.10,3.3.10]' optional='true'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.derby.feature.feature.group' range='[3.3.10,3.3.10]' optional='true'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.erd.feature.feature.group' range='[3.3.10,3.3.10]' optional='true'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.flatfiles.feature.feature.group' range='[3.3.10,3.3.10]' optional='true'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.help.feature.feature.group' range='[3.3.10,3.3.10]' optional='true'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.core.resources' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.ui.ide' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.ui.workbench.texteditor' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.ui.editors' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.search' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.core.runtime' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.core.expressions' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.gef' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.ui.views.properties.tabbed' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.jface.text' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.jface' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.Quantum' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.log' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.feature.feature.jar' range='[3.3.10,3.3.10]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;&#xA;Copyright of the beanshell library belongs to its developers.&#xA;See http://www.beanshell.org for more details.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.feature.feature.jar' version='3.3.10'>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='com.quantum.feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='QuantumDB is a simple but powerful database access plug-in for&#xA;the Eclipse Development Platform. QuantumDB allows you to:&#xA;&lt;li&gt; Connect to databases using standard JDBC drivers&lt;/li&gt;&#xA;&lt;li&gt; Review schemas, tables, views and sequences&lt;/li&gt;&#xA;&lt;li&gt; Look up column, index and foreign key information&lt;/li&gt;&#xA;&lt;li&gt; Issue ad-hoc queries or other SQL statements against the&#xA;database&lt;/li&gt;&#xA;&lt;li&gt; Manage, edit, and work with SQL files (*.sql)&lt;/li&gt;&#xA;&lt;li&gt; Issue updates, deletes, and inserts using simple, easy-to-use&#xA;wizards&lt;/li&gt;'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.feature.feature.jar' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='com.quantum.feature' version='3.3.10'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='com.quantum.feature' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;&#xA;Copyright of the beanshell library belongs to its developers.&#xA;See http://www.beanshell.org for more details.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.derby.feature.feature.jar' version='3.3.10'>
+      <properties size='3'>
+        <property name='org.eclipse.equinox.p2.name' value='Derby Database Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Contains a derby database engine that connects with Quantum.&#xA;When installing this plugin, a new bookmark will automatically&#xA;appear for connecting to the database, and a wizard will be added&#xA;for creating new databases.'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.derby.feature.feature.jar' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='com.quantum.derby.feature' version='3.3.10'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='com.quantum.derby.feature' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.&#xA;This does not apply to the derby library, that is under the Apache&#xA;License.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;This does not cover the copright of the derby library, that&#xA;is included as is allowed by its license. The derby library is&#xA;copyrighted by the Apache Software Foundation.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.erd.feature.feature.jar' version='3.3.10'>
+      <properties size='3'>
+        <property name='org.eclipse.equinox.p2.name' value='ERD Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Contains a graphical editor of entities (tables-views) and relationships,&#xA;allowing for generation of SQL and DDL.'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.erd.feature.feature.jar' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='com.quantum.erd.feature' version='3.3.10'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='com.quantum.erd.feature' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license uri='http://www.example.com/license' url='http://www.example.com/license'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.
+        </license>
+      </licenses>
+      <copyright uri='http://www.example.com/copyright' url='http://www.example.com/copyright'>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;Copyright of the beanshell library belongs to its developers.&#xA;See http://www.beanshell.org for more details.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.help.feature.feature.group' version='3.3.10' singleton='false'>
+      <update id='com.quantum.help.feature.feature.group' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='5'>
+        <property name='org.eclipse.equinox.p2.name' value='com.quantum.help.feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Quantum DB Help'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.help.feature.feature.group' version='3.3.10'/>
+      </provides>
+      <requires size='3'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='org.eclipse.help' range='0.0.0'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.help' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.help.feature.feature.jar' range='[3.3.10,3.3.10]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html
+      </copyright>
+    </unit>
+    <unit id='com.quantum.erd' version='3.3.10' singleton='false'>
+      <update id='com.quantum.erd' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.partial.iu' value='true'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.erd' version='3.3.10'/>
+        <provided namespace='osgi.bundle' name='com.quantum.erd' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.quantum.erd' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: com.quantum.erd&#xA;Bundle-Version: 3.3.10&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='http://quantum.sourceforge.net/update-site/site.xml.Export-Import' version='1.0.0.7B7A7ccL8bnh'>
+      <properties size='3'>
+        <property name='org.eclipse.equinox.p2.name' value='Export-Import'/>
+        <property name='org.eclipse.equinox.p2.description' value='Features to export database data or structure to different file formats.'/>
+        <property name='org.eclipse.equinox.p2.type.category' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='http://quantum.sourceforge.net/update-site/site.xml.Export-Import' version='1.0.0.7B7A7ccL8bnh'/>
+      </provides>
+      <requires size='2'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.flatfiles.feature.feature.group' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.dbunit.feature.feature.group' range='[3.3.10,3.3.10]'/>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+    </unit>
+    <unit id='com.quantum.help.feature.feature.jar' version='3.3.10'>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='com.quantum.help.feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Quantum DB Help'/>
+        <property name='org.eclipse.equinox.p2.description.url' value='http://quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.help.feature.feature.jar' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='com.quantum.help.feature' version='3.3.10'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='com.quantum.help.feature' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html
+      </copyright>
+    </unit>
+    <unit id='com.quantum.derby.feature.feature.group' version='3.3.10' singleton='false'>
+      <update id='com.quantum.derby.feature.feature.group' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='4'>
+        <property name='org.eclipse.equinox.p2.name' value='Derby Database Feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='Contains a derby database engine that connects with Quantum.&#xA;When installing this plugin, a new bookmark will automatically&#xA;appear for connecting to the database, and a wizard will be added&#xA;for creating new databases.'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+        <property name='org.eclipse.equinox.p2.type.group' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.derby.feature.feature.group' version='3.3.10'/>
+      </provides>
+      <requires size='2'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.derby' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.derby.feature.feature.jar' range='[3.3.10,3.3.10]'>
+          <filter>
+            (org.eclipse.update.install.features=true)
+          </filter>
+        </required>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.&#xA;This does not apply to the derby library, that is under the Apache&#xA;License.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html&#xA;This does not cover the copright of the derby library, that&#xA;is included as is allowed by its license. The derby library is&#xA;copyrighted by the Apache Software Foundation.
+      </copyright>
+    </unit>
+    <unit id='com.quantum.flatfiles' version='3.3.10' singleton='false'>
+      <update id='com.quantum.flatfiles' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.partial.iu' value='true'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.flatfiles' version='3.3.10'/>
+        <provided namespace='osgi.bundle' name='com.quantum.flatfiles' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.quantum.flatfiles' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: com.quantum.flatfiles&#xA;Bundle-Version: 3.3.10&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='com.quantum.help' version='3.3.10' singleton='false'>
+      <update id='com.quantum.help' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.partial.iu' value='true'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.help' version='3.3.10'/>
+        <provided namespace='osgi.bundle' name='com.quantum.help' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.quantum.help' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: com.quantum.help&#xA;Bundle-Version: 3.3.10&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='com.quantum.derby' version='3.3.10' singleton='false'>
+      <update id='com.quantum.derby' range='[0.0.0,3.3.10)' severity='0'/>
+      <properties size='1'>
+        <property name='org.eclipse.equinox.p2.partial.iu' value='true'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.derby' version='3.3.10'/>
+        <provided namespace='osgi.bundle' name='com.quantum.derby' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='bundle' version='1.0.0'/>
+      </provides>
+      <artifacts size='1'>
+        <artifact classifier='osgi.bundle' id='com.quantum.derby' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='2'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+          <instruction key='manifest'>
+            Bundle-SymbolicName: com.quantum.derby&#xA;Bundle-Version: 3.3.10&#xA;
+          </instruction>
+        </instructions>
+      </touchpointData>
+    </unit>
+    <unit id='http://quantum.sourceforge.net/update-site/site.xml.Optional Features' version='1.0.0.7H7G7wcLCDnh'>
+      <properties size='2'>
+        <property name='org.eclipse.equinox.p2.name' value='Optional Features'/>
+        <property name='org.eclipse.equinox.p2.type.category' value='true'/>
+      </properties>
+      <provides size='1'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='http://quantum.sourceforge.net/update-site/site.xml.Optional Features' version='1.0.0.7H7G7wcLCDnh'/>
+      </provides>
+      <requires size='3'>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.derby.feature.feature.group' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.erd.feature.feature.group' range='[3.3.10,3.3.10]'/>
+        <required namespace='org.eclipse.equinox.p2.iu' name='com.quantum.beanshell.feature.feature.group' range='[3.3.10,3.3.10]'/>
+      </requires>
+      <touchpoint id='null' version='0.0.0'/>
+    </unit>
+    <unit id='com.quantum.flatfiles.feature.feature.jar' version='3.3.10'>
+      <properties size='3'>
+        <property name='org.eclipse.equinox.p2.name' value='com.quantum.flatfiles.feature'/>
+        <property name='org.eclipse.equinox.p2.description' value='This feature allows you to export the database data and structure&#xA;to different text format.'/>
+        <property name='org.eclipse.equinox.p2.provider' value='quantum.sourceforge.net'/>
+      </properties>
+      <provides size='3'>
+        <provided namespace='org.eclipse.equinox.p2.iu' name='com.quantum.flatfiles.feature.feature.jar' version='3.3.10'/>
+        <provided namespace='org.eclipse.equinox.p2.eclipse.type' name='feature' version='1.0.0'/>
+        <provided namespace='org.eclipse.update.feature' name='com.quantum.flatfiles.feature' version='3.3.10'/>
+      </provides>
+      <filter>
+        (org.eclipse.update.install.features=true)
+      </filter>
+      <artifacts size='1'>
+        <artifact classifier='org.eclipse.update.feature' id='com.quantum.flatfiles.feature' version='3.3.10'/>
+      </artifacts>
+      <touchpoint id='org.eclipse.equinox.p2.osgi' version='1.0.0'/>
+      <touchpointData size='1'>
+        <instructions size='1'>
+          <instruction key='zipped'>
+            true
+          </instruction>
+        </instructions>
+      </touchpointData>
+      <licenses size='1'>
+        <license uri='http://www.eclipse.org/legal/cpl-v10.html' url='http://www.eclipse.org/legal/cpl-v10.html'>
+          Common Public License - v 1.0&#xA;See http://www.eclipse.org/legal/cpl-v10.html for more details.
+        </license>
+      </licenses>
+      <copyright>
+        Copyright (c) 2000-2005 Quantum DB developers.&#xA;All rights reserved.   This program and the accompanying materials&#xA;are made available under the terms of the Common Public License&#xA;v1.0&#xA;which accompanies this distribution, and is available at&#xA;http://www.eclipse.org/legal/cpl-v10.html
+      </copyright>
+    </unit>
+  </units>
+</repository>

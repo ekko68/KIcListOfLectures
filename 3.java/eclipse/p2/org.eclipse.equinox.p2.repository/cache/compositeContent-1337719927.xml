@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?compositeMetadataRepository version='1.0.0'?>
+<repository name='TM Terminal 4.1 Neon Milestone Site (Marketplace)'
+    type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
+  <properties size='1'>
+    <property name='p2.timestamp' value='1332292112027'/>
+  </properties>
+  <children size='3'>
+    <child location='terminal_4.1_20160312'/>
+    <child location='tm_4.0_20150428_subset'/>
+    <child location='cdt_8.4_subset'/>
+  </children>
+</repository>

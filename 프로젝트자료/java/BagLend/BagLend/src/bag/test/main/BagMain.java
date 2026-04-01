@@ -1,0 +1,14 @@
+package bag.test.main;
+
+import bag.event.handler.Handler;
+
+public class BagMain {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		Handler handler = new Handler();
+
+	}
+
+}

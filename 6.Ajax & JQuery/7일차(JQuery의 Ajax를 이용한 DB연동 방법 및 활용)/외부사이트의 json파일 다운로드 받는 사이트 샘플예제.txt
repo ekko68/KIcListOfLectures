@@ -1,0 +1,24 @@
+http://api.flickr.com/services/feeds/photos_public.gne?tags=raccoon&tagmode=any&format=json&jsoncallback=?
+
+format=json&jsoncallback=?=>특정사이트의 json형태의 자료를 불러올때
+                                              jsonp module을 이용->angular에서 사용
+----------------------------------------------------------------------------
+http://api.flickr.com/services/feeds/photos_public.gne
+
+=>getXml.jsp(요청은 jsp로 요청=>처리결과->xml문서로 보여준 경우)
+=>json->DB에 접속->테이블의 필드값을 웹상에 출력 json표기법형태로
+               출력?
+==========================================
+09getBoardJson.jsp 요청->json 표기법으로 출력
+
+
+
+
+
+
+
+
+
+
+
+

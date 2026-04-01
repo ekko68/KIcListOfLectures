@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.quantum.beanshell.feature"
+      label="Beanshell View"
+      version="3.3.10"
+      provider-name="quantum.sourceforge.net">
+
+   <description>
+      Offers a Beanshell View that allows you to write scripts that
+manipulate data from the database. See the
+Quantum help for more info. Beanshell is a lightweight
+scripting language with a sintax very similar to Java. From the
+beanshell website (www.beanshell.org) : &quot;BeanShell dynamically
+executes standard Java syntax and extends it with common scripting
+conveniences such as loose types, commands, and method closures
+like those in Perl and JavaScript.&quot;
+   </description>
+
+   <copyright>
+      Copyright (c) 2000-2005 Quantum DB developers.
+All rights reserved.   This program and the accompanying materials
+are made available under the terms of the Common Public License
+v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/cpl-v10.html
+
+Copyright of the beanshell library belongs to its developers.
+See http://www.beanshell.org for more details.
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/cpl-v10.html">
+      Common Public License - v 1.0
+See http://www.eclipse.org/legal/cpl-v10.html for more details.
+
+The beanshell library has its own license, see http://www.beanshell.org for details.
+   </license>
+
+   <requires>
+      <import plugin="com.quantum.Quantum"/>
+   </requires>
+
+   <plugin
+         id="com.quantum.beanshell"
+         download-size="30"
+         install-size="30"
+         version="3.3.10"
+         unpack="false"/>
+
+</feature>

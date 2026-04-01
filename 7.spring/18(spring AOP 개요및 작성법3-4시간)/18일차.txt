@@ -1,0 +1,119 @@
+18(spring AOP 개요및 작성법3-4시간)
+
+web상에서의 Aop적용
+----------------------
+1)bean 적용
+2)<aop:config>사용=>springmvc3 예제
+
+=>/hello.do-->TestController실행->hello()호출
+  ->beforeProcess() =>내부적으로 실행할때 
+    processMsg()->pointcut ==>xml에서 설정
+    afterProcess()
+
+<aop:config>->aop설정할때 사용하는 사용하는 태그정보
+   <aop:aspect id="aspect" ref="aspectBean">
+                                         ref="공통모듈의 클래스 id값 참조"
+     형식)<aop:advice종류(before,around,after-returnning~)
+                     pointcut="execution("실행하는 메서드를 설정")
+
+   수식어패턴?리턴타입?클래스이름패턴?메서드명패턴(파라미터패턴)
+                             (* process*(..))
+
+   수식어패턴->접근지정자를 부여->(public * ~)
+   리턴타입=>호출할 메서드의 리턴타입을 지정이 가능->void, int,String,,,
+                                                                                    *->반환값은
+                                                                                존재하는데 자료형은 정해져 있지 않은경우
+    패키지명                                                                                  any와 비슷
+   클래스 이름=>어디패키지에 존재하는지
+                        상위패키지명.하위패키지명.*(메서드).*() =>현재 패키지 기준
+                                                                       ()->매개변수
+                        상위패키지명.하위패키지명..*.*(..)=>현재 패키지 되고
+                                                                             하위 패키지 된다.
+                                                                 0개이상
+          * Integer
+        public 반환값   (* process*()--->process*(..) 동일)
+
+                    execution(public void set*(..))
+
+          (),(..) ->매개변수가 없다는 표시
+          (*)->매개변수가 한개 있다는 표시->* get*(*)->get으로 시작하는 메서드
+                                                                   매개변수가 1개짜리 메서드 대상
+          (*,*)->매개변수가 2개있다는 표시
+
+           * read*(Integer,..)->read로 시작하는 메서드
+                                          첫번째매개변수는 Integer,
+                                          1개이상의 매개변수를 의미
+-----------------------------------------------------------------
+     <aop:before pointcut="execution(* process*(..))" 
+                        method="beforeprocess" />
+     <aop:after-returning pointcut="execution(* process*(..))" 
+                        method="afterprocess" />
+   </aop:aspect>
+</aop:config>
+
+
+3)@Aspect 어노테이션을 사용
+
+ ->중간 생략때문에 p226
+1.Aspect를 지정->환경설정
+
+pom.xml에 
+
+ <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.7.4</version>
+    </dependency>
+-------------------------------------------
+Advice에 해당하는 클래스
+
+package sp.aop2;
+
+//핵심모듈의 클래스->공통으로 사용할 메서드
+public class AnonoTest {
+
+	public void print() {
+		System.out.println("AnnonoTest클래스의 print()호출");
+	}
+	public void imsi() {
+		System.out.println("AnnonoTest클래스의 imsi()호출");
+	}
+}
+
+*******************************************************
+2.app.xml =>xml에서 따로 pointcut,advice,advisor를 지정하지 않는다.
+  빈즈로 등록한 Aspect 클래스 내부에서 전부 어노테이션으로 설정하는 방법
+********************************************************
+
+<aop:aspectj-autoproxy /> =>어노테이션(AOP)
+
+<!-- 1.핵심클래스 빈즈등록(print() or imsi()호출 )-->
+<bean id="test" class="sp.aop2.AnonoTest" />
+
+<!-- 2.advice+pointcut->advisor(Aspect)할 클래스를 빈즈로 등록 -->
+<bean id="test2" class="sp.aop2.TestAspect" />
+
+ 실행결과
+-----------
+void sp.aop2.AnonoTest.print()시작
+AnnonoTest클래스의 print()호출==>핵심메서드 호출해서 실행된 결과
+void sp.aop2.AnonoTest.print()종료
+
+ProceedingJoinPoint is only supported for around advice
+==>@Around advice에서만 사용이 가능->proceed()를 호출->핵심메서드호출
+==========================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

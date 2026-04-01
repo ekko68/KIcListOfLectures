@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+ <head>
+    <meta charset="UTF-8">         
+    <title>main</title>
+    <link href="./style/style.css" rel="stylesheet" type="text/css" media="screen and (min-width:768px)">
+    <link href="./style/main-1.css" rel="stylesheet" type="text/css" media="screen and (max-width:767px)">
+     <script>
+        function mouse_up(number) {
+
+            var video = document.getElementById("Video1");
+
+            var c_center1 = document.getElementById('c_center1');
+            var c_center2 = document.getElementById('c_center2');
+            var c_center3 = document.getElementById('c_center3');
+
+            c_center1.style.display = "none";
+            c_center2.style.display = "none";
+            c_center3.style.display = "none";
+
+            if (number == 1) {
+                c_center1.style.display = "block";
+                video.play(); //비디오 재생
+            } else if (number == 2) {
+                c_center2.style.display = "block";
+                video.pause(); //비디오 일시 정지
+            } else {
+                c_center3.style.display = "block";
+                video.pause(); //비디오 일시 정지
+
+            }
+        }
+    </script>
+     
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="http://malsup.github.com/jquery.cycle2.js"></script>
+    <script type=text/javascript>
+
+             jQuery(document).ready(function($) {
+            // 페이지 로드시 드랍메뉴감추기
+            $("#navigation-list").hide();
+            // 클릭시 이벤트발생
+            $(".menuBtn").click(function() {
+                // 슬라이드 이벤트
+                $("#navigation-list").slideToggle(300);
+            });
+        });
+        </script>
+</head>
+<!--마우스 오른쪽 막기-->
+
+<body oncontextmenu="return false" on selectstart="return false" on dragstart="return false">
+    <div id="container">
+        <!--container:s-->
+        <div id="header">
+            <!--header:s-->
+            <div id="header1">
+                <!--header1:s-->
+                <div id="h_jcall"><img src="./images/jumun_call.jpg"></div>
+                <!--주문번호-->
+                <div id="h_logo">
+                    <center>
+                        <a href="main.html"><img src="./images/logo2.jpg"></a>
+                    </center>
+                </div>
+                <!--로고-->
+                <div id="h_lj"><a href="./sub/login.jsp" target="_blank">Login</a></div>
+                <div id="h_lj2">|</div>
+                <div id="h_lj3"><a href="./sub/join.html" target="_blank">Join</a></div>
+                <!--login, join-->
+            </div>
+            <!--header1:e-->
+            <nav class="h_menu">
+                <!--메뉴:s-->
+                <ul>
+                    <li><a class="menu_a" href="#">KGB_CHICKEN</a>
+                        <ul class="li2">
+                            <li><a class="submenu_a" href="#">KGB 인사말</a></li>
+                            <!-- sub 메뉴-->
+                            <li><a class="submenu_a" href="#">수상내역</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="menu_a" href="#">메뉴</a>
+                        <ul class="li2">
+                            <li><a class="submenu_a" href="#">신메뉴</a></li>
+                            <li><a class="submenu_a" href="#">전체메뉴</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="menu_a" href="#">매장찾기</a></li>
+                    <li><a class="menu_a" href="#">공지/이벤트</a>
+                        <ul class="li4">
+                            <li><a class="submenu_a" href="#">공지</a></li>
+                            <li><a class="submenu_a" href="#">ING 이벤트</a></li>
+                            <li><a class="submenu_a" href="#">당첨자 발표</a></li>
+                            <li><a class="submenu_a" href="#">END 이벤트</a></li>
+                        </ul>
+                    </li>
+                    <li><a class="menu_a" href="#">고객센터</a>
+                        <ul class="li2">
+                            <li><a class="submenu_a" href="#">자주묻는질문</a></li>
+                            <li><a class="submenu_a" href="#">묻고답하기</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <!--메뉴:e-->
+
+            <!--반응형메뉴:s-->
+            <div id="wrap">
+                <div class="m_menulogo">
+                    <header>
+                        <span class="menuBtn">
+				<img src="./images/menu_mbtn.jpg" alt="Menu icon" width="35px" heigh="35px" id="mobliemenu">
+				</span>
+                    </header>
+                </div>
+                <div id="m_menu">
+                    <nav id="navigation-list">
+                        <ul>
+                            <li><a href="#item1">KGB_CHICKEN</a></li>
+                            <hr>
+                            <li><a href="#item2">메뉴</a>
+                                <hr>
+                            </li>
+                            <li><a href="#item3">매장찾기</a></li>
+                            <hr>
+                            <li><a href="#item4">공지/이벤트</a></li>
+                            <hr>
+                            <li><a href="#item5">고객센터</a></li>
+                            <hr>
+                            <li>
+                                <a href="#item6"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!--반응형메뉴:e-->
+
+        </div>
+        <div id="content">
+            <!--content:s-->
+
+            <div id="c_center">
+                <!--가운데이미지:s-->
+                <div id="c_center1" style="display:block;"><video id="Video1" src="./video/chicken_video.mp4" width="100%" height="100%" volume="0.5" loop="10" autoplay controls poster="./images/ck_img.jpg"></div>
+				<div id="c_center2" style="display:none;"><img src="./images/ck_img1.jpg"></div>
+				<div id="c_center3" style="display:none;"><img src="./images/ck_img2.jpg"></div>
+			</div> <!--가운데이미지:e-->
+			<div id="c_center_chk">
+			<span onmouseover="mouse_up(1);">●</span>
+			<span onmouseover="mouse_up(2);">●</span>
+			<span onmouseover="mouse_up(3);">●</span>
+			</div>
+
+			<div id="c_center2">
+				<div id="c_event"><!--event:s-->
+					<div><img id="event" src="./images/event.jpg"><a href="#"><img src="./images/event1.jpg"></a>
+					<a id="fbevent" href="#"><img src="./images/fbevent.jpg"></a></div>
+					<div id="hotck" class="event2"><a href="#"><img src="./images/hotck.jpg"></a></div>
+				</div><!--event:e-->
+				<div id="c_anc" ><img src="./images/announce.jpg"><a href="#"><img src="./images/anc1.jpg"></a><a href="#"><img src="./images/anc2.jpg"></a><!--공지:s--></div><!--공지:e-->
+				<div id="c_ccall"><!--창업문의:s--><img src="./images/found.jpg"><br><img src="images/chang_img.jpg"</div><!--창업문의:e-->
+			</div>
+		</div><!--content:e-->
+		
+		<div id="footer"><!--footer:s-->
+			<div id="ft1">
+			
+             <b>KGB Chicken. CEO : 김금빛 / BUSINESS NO : 000-00-00000</b> <br>
+			<span>EMAIL : slr2@daum.net</span> 
+			<span>TEL : 00-0000-0000</span><br><span>
+			<span class="add_kor2">THE HEAD SHOP ADDRESS : 
+			<span class="add_kor">서울 강남구 테헤란로1길 10 세경빌딩 3층 / 서울 강남구 역삼동 819-10)</span><br>
+			<span class="add_kor">THE SHOP ADDRESS : 
+			<span class="add_kor">경상북도 포항시 북구 해안로 1106 / 경상북도 포항시 북구 흥해읍 용한리 856</span><br>
+
+
+			</div>
+		</div><!--footer:e-->
+
+	</div><!--container:e-->
+ </body>
+</html>

@@ -1,0 +1,12 @@
+<p>
+  Person 관리 프로그램
+</p>
+<div>
+  <input #newPersonName placeholder="이름을 입력하세요" />
+  <button (click)="addPerson(newPersonName.value)">등록</button>
+</div>
+<ul>
+ <li *ngFor="let person of personList">
+   {{person.id}}  {{person.name}}  {{person.age}}
+ </li>
+</ul>

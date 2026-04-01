@@ -1,0 +1,116 @@
+package bag.handle.sql;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+import bag.db.data.Product;
+
+public class HandleProductDB {
+	private String sql;
+
+	// SQL문을 발행하기 위한 Statement 객체 생성
+	private Statement stmt;
+	/*
+	 * ResultSet은 커서 개념의 연결 포인터 기본적으로 next() 메서드를 통해 다음 로우 이동
+	 */
+	private ResultSet rs;
+	/*
+	 * 쿼리속도가 Statement보다 빠르고 동일한 질의문 특정 값만 바꾸어서 여러번 실행할때, 많은 데이터를 다루기 때문에 질의문을 정리해야할
+	 * 필요가 있을때, 인수가 많아서 질의문을 정리해야 될 필요가 있을때 사용함 ? 로 압축해서 slq문을 작성가능
+	 */
+	private PreparedStatement pstm;
+
+	// DB 검색
+	public ArrayList<Product> selectAllData(Connection conn) {
+		ArrayList <Product> product = new ArrayList<Product>(); 
+		sql = "select * from product";
+		stmt = null;
+		rs = null;
+
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				System.out.println(rs.getInt("t_num") + "," + rs.getString("t_title") + "," 
+			+ rs.getString("t_info")+","+rs.getString("t_image"));
+				product.add(new Product(rs.getInt("t_num"),rs.getString("t_title"),
+						rs.getString("t_info"),rs.getString("t_image")));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return product;
+	}
+
+	// DB 삽입
+	public void insertData(Connection conn) {
+		sql = "insert into product values(?,?,?,?)";
+		try {
+			pstm = conn.prepareStatement(sql);
+
+			pstm.setString(1, "4");
+			pstm.setString(2, "보테가 클러치");
+			pstm.setString(3, "원산지:이태리 /22.0 x 18.0 x 10.0 cm (가로x세로x 폭) / 가격: 4,000,000원 ");
+			pstm.setString(4, "c:/image/4.jpg");
+	
+			pstm.executeQuery();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtill.close(stmt);
+			JdbcUtill.close(rs);
+			JdbcUtill.close(pstm);
+		}
+
+	}
+
+	// DB 삭제
+	public void deleteData(Connection conn, String num) {
+		sql = "delete from product where t_num =?";
+
+		try {
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, num);
+
+			// INSERT, UPDATE, DELETE 등 (DML), CREATE, DROP 등(DDL)문들을 실행하는데 사용
+			pstm.executeUpdate();
+
+			/*
+			 * executeQuery 메소드 : 하나의 ResultSet을 만드는 SQL문에서 사용(executeQyery 메소드는 ResultSet
+			 * 객체를 리턴한다.) : 주로 SELECT문을 이용하는 조회에서 사용됨.
+			 * 
+			 */
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtill.close(stmt);
+			JdbcUtill.close(rs);
+			JdbcUtill.close(pstm);
+		}
+
+	}
+
+	// DB 수정
+	public void updateData(Connection conn) {
+		sql = "update product set t_num=?,t_title=?,t_info=?,t_image=? " + "where t_num=3";
+		try {
+			pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, 5);
+			pstm.setString(2, "루이비통 핸드백");
+			pstm.setString(3, "홍콩 / 22.0 x 18.0 x 10.0 cm " + "(가로x세로x 폭) / 가격: 4,000,000원");
+			pstm.setString(4, "C:/image/4.jpg");
+
+			pstm.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtill.close(stmt);
+			JdbcUtill.close(rs);
+			JdbcUtill.close(pstm);
+		}
+	}
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="com/quantum/sql/grammar/Sql92Parser.java|com/quantum/sql/grammar/Sql92SelectLexer.java|com/quantum/sql/grammar/Sql92SelectParser.java|com/quantum/sql/grammar/Sql92SyntaxLexer.java|com/quantum/sql/grammar/Sql92SelectParserTokenTypes.java|com/quantum/sql/grammar/Sql92SyntaxLexerTokenTypes.java|com/quantum/sql/grammar/Sql92ParserTokenTypes.java|com/quantum/model/SQLSyntaxModelImpl.java|com/quantum/editors/SQLEditor.java|com/quantum/editors/SQLContentOutlinePage.java|com/quantum/sql/grammar/IQToken.java|com/quantum/editors/QToken.java|com/quantum/model/ISQLSyntaxModel.java|com/quantum/editors/DefaultSQLTokenScanner.java|com/quantum/editors/SQLSourceViewerConfiguration.java|com/quantum/model/ISQLSyntaxChecker.java" kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/bsh-2.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/antlr_2.7.6.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/bsh-2.0b4-src.jar"/>
+	<classpathentry kind="lib" path="lib/jgrapht-jdk1.5.jar" sourcepath="lib/jgraph-jdk1.5-src.zip"/>
+	<classpathentry kind="lib" path="lib/concurrent-1.3.4.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

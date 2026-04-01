@@ -1,0 +1,21 @@
+import bag.design.page.MainPage;
+
+public class BagLend {
+
+	public static void main(String[] args) {
+		
+		new MainPage();
+
+		//customDB.selectAllData(MakeConnection.getInstance());
+		
+		
+		//customDB.insertData(MakeConnection.getInstance());
+		//productDB.insertData(MakeConnection.getInstance());
+		
+		//customDB.deleteData(MakeConnection.getInstance(), 2);
+		//productDB.deleteData(MakeConnection.getInstance())
+		
+		// customDB.insertData(MakeConnection.getInstance());
+
+	}
+}

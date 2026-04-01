@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="com.quantum.Quantum.embedded">
+      <BookmarkGenerator
+            class="com.quantum.derby.DerbyBookmarkGenerator"
+            name="(Internal) Derby">
+      </BookmarkGenerator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="com.quantum.Quantum"
+            name="Sample Derby Database">
+      </category>
+      <wizard
+            category="com.quantum.Quantum"
+            class="com.quantum.derby.SampleDatabaseWizard"
+            icon="icons/sample.gif"
+            id="com.quantum.quantum.wizards.SampleDatabaseWizard"
+            name="Sample Derby Database and Quantum Bookmark">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="com.quantum.preferences"
+            class="com.quantum.derby.DerbyPreferences"
+            id="com.quantum.derby.preferences"
+            name="Derby">
+      </page>
+   </extension>
+
+</plugin>

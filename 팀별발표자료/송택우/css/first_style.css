@@ -1,0 +1,428 @@
+			*{		
+				margin:0 auto;
+				padding:0;
+				outline:0;
+			}
+			img{
+				display:block;
+			}/* 요소들 초기화 */
+
+			#wrap{
+				height:auto;
+				width:1200px;
+
+			}
+
+			.menu{
+				list-style-type:none;
+				text-align:center;			
+				background:#000;
+				width:100%;
+				height:50px;
+			}
+
+			.menu > li{
+				float:left;
+				position:relative;
+				background:#000;
+				min-width:12%;  /* 기본적으로 최소폭을 12%로 설정. 넓이가 12%미만으로 줄어드는것 방지*/
+				text-align:center;
+			}
+
+			.img > a > img{
+				height:40px;
+			}
+
+			.menu > li > a{
+				display:block;
+				color:#fff;
+				padding:10px 7px;
+				line-height:35px;
+				height:30px;
+				font-size:1em;
+				font-family: 'Francois One', sans-serif;  /*구글 폰트 사용*/
+				text-decoration:none;
+
+				text-shadow:0 1px  rgba(200,200,200,0.4),
+						   -1px -2px 1px rgba(230,230,230,0.6);
+
+				-webkit-transition:all 0.2s; /**/
+				transition:all 0.2s; 
+			}
+
+			.menu > li:first-child{
+				 display:block;
+				 min-width:0;
+				 width:100px;
+				 padding-left:12%; 
+			}
+
+			.menu > li > a:hover{
+				text-decoration:underline;
+			}
+
+			.menu > li:hover{
+				background:#555;
+			}
+			.menu > li:first-child:hover{
+				background:#000;
+			}
+			.menu > li:nth-of-type(6) > ul{
+				width:300px;
+			}
+			.sub{
+				position:absolute;
+				z-index:200;
+				margin:0;
+				padding:0;
+				line-height:0;
+				left:0;
+				opacity:0;
+				height:0;
+				width:220px; 
+				list-style-type:none;
+			}
+			.sub > li{
+				opacity:0; 
+				text-align:center;
+				z-index:200;
+
+				-webkit-transition:all 0.3s;
+				transition:all 0.3s;
+
+				font-size:0.8em;
+				background:#000;
+			}
+
+ 			.menu > li:hover .sub{
+				opacity:1;
+			}			
+
+			.menu > li:hover .sub > li{
+				opacity:1;
+				line-height:25px;		
+				height:15px;
+				width:auto;
+				padding:15px;
+				border-bottom:1px dotted rgba(200,200,200,.5);
+			}
+			.sub > li:hover{
+				background:#555;
+			}
+
+			.sub > li > a{
+				display:block;
+				text-decoration:none;
+				color:#fff;
+				font-size:0.9em;
+				-webkit-transition:all 0.1s;
+				transition:all 0.1s;
+			}
+			
+			.sub > li > a:hover{
+				font-size:1.1em;
+			}/*드롭메뉴*/
+
+			#content_wrap{
+				background:#000;  
+				height:1400px;
+			}
+
+			#hide_img{
+				perspective:300px;	/*3d효과를 주기위해 뷰쪽으로 공간왜곡.*/
+			}
+
+			#hide_img > img{	
+				opacity:1;
+				min-width:50%;  /*아무리작아도 최소 50%의 넓이유지*/				 
+				-webkit-animation:logo 2.4s;
+				animation:logo 2.4s;
+			}
+
+			/* #show_img */
+			.cycle-slideshow{
+				opacity:0;
+				z-index:0;
+			}
+
+			/* #show_img */
+			.cycle-slideshow > img {	
+				z-index:0;
+				height:auto;
+				padding:120px 50px 40px 80px;	
+				
+			}
+
+			#iph_article{
+				position:relative;
+				text-align:center;
+				width:100%;
+				height:auto;
+			}
+
+			#iph_article > span{
+			    position:absolute;
+				left:20px;
+				top:20px;
+				display:block;
+				font-size:1.6em;
+				font-weight:bold;
+				font-family: 'Francois One', sans-serif; /*구글폰트*/
+				color:#fff;
+			}
+
+			#content{
+				position:relative;
+				opacity:0;
+			}
+
+			#content1{
+				position:absolute;
+				top:200px;
+			}
+
+			#content1 > h1{
+				position:relative;
+				left:200px;
+				top:120px;
+
+				font-family: 'Francois One', sans-serif;
+				font-size:50px;
+				text-align:center;
+				color:rgba(255,255,255,.9);
+
+				text-shadow:0 1px 2px rgba(220,220,220,0.7),
+					              1px 2px 4px rgba(240,240,240,0.5),
+								  2px 4px 6px rgba(250,250,250,0.6);
+
+			}
+
+			#content1 > img{
+				position:relative;
+				left:0;
+				top:150px;
+				-webkit-animation:content_img1 4s infinite;
+				animation:content_img1 4s infinite;
+
+			}
+
+			#content1 > .sub_article{
+				position:relative;
+				left:600px;
+				top:-70px;
+				width:400px;
+				
+			}
+			#content1 > .sub_article > span{
+				color:rgba(255,255,255,1);
+			}
+
+
+			#content2{
+				position:absolute;
+				top:900px;
+				background:#fff;
+			}
+
+			#content2 > h1{
+				font-family: 'Francois One', sans-serif;
+				font-size:50px;
+				margin-left:60px;
+				
+				text-shadow:0 1px 2px rgba(100,100,100,0.7),
+					              1px 2px 4px rgba(70,70,70,0.8),
+								  2px 4px 6px rgba(40,40,40,0.8),
+								  3px 6px 9px rgba(10,10,10,0.8);
+
+			}
+
+			#content2 > img{
+				position:relative;
+				left:400px;
+				padding:0 10px 0 100px; 
+			}
+
+			#content2 > .sub_article {
+				position:relative;
+				left:-150px;
+				width:400px;
+				top:-180px;
+			} 
+			#content2  > .sub_article > span{
+				font-weight:bold;
+				color:rgba(0,0,0,.9);
+				font-family: 'Francois One', sans-serif;
+				text-shadow:0 1px 2px (10,10,10,.8);
+			}
+
+
+		 	#content3{
+				position:absolute;
+				top:1500px;
+				height:auto;
+				width:1200px;
+				background:rgba(224,224,224,.9); 
+			} 
+
+			#content3 > h1{
+				font-family: 'Francois One', sans-serif;
+				font-size:50px;
+				margin-top:10px;
+				margin-left:60px;
+
+				color:rgba(210,210,210,1);
+				text-shadow:0 1px 2px rgba(10,10,10,0.9),
+					              1px 2px 4px rgba(20,20,20,0.8),
+								  2px 4px 6px rgba(45,45,45,0.9);
+			}
+
+			#content3 > img{
+				position:relative;
+				left:-190px;
+				top:0px;		
+			} 
+
+			#content3 > .sub_article{
+				position:relative;
+				left:800px;
+				top:-200px;
+				
+			}
+
+			#content3 > .sub_article > span{
+				position:absolute;
+				width:400px;
+
+				font-weight:bold;
+				color:rgba(3,3,3,.9);
+				font-family: 'Francois One', sans-serif; /*구글폰트*/
+				text-shadow:0 1px 2px (10,10,10,.9);	
+				
+			}
+
+	
+
+			/*logo라는 사진이 투명한 상태에서 원래이미지로 돌아오면서 화면에 나타남.그 이후에 Z축으로 살짝회전하는 애니메이션*/
+			@-webkit-keyframes logo{
+				0%{
+					opacity:0.2;
+					-webkit-transform:translateZ(1000px); /*perspective설정으로 인한 3d효과 z축으로 1000px만큼이동*/
+					-moz-transform:translateZ(1000px);
+					transform:translateZ(1000px);						
+				}
+				40%{
+					opacity:0.4;
+					-webkit-transform:translateZ(0);/*z축으로 0만큼이동. (1000px만큼 가있던 logo가 다시 제자리로 돌아옴)*/
+					-moz-transform:translateZ(0);
+					transform:translateZ(0);
+
+				}
+				80%{
+					opacity:0.6;
+					-webkit-transform:rotateZ(4deg);/*logo를 Z축으로 10도만큼 회전*/
+					-moz-transform:rotateZ(4deg);
+					transform:rotateZ(4deg);
+				}
+				100%{
+					opacity:0.8;
+					-webkit-transform:rotateZ(0);/*logo를 Z축으로 0도만큼 회전.제자리로 돌아옴*/
+					-moz-transform:rotateZ(0);
+					transform:rotateZ(0);
+				}
+
+			}
+
+			@keyframes logo{
+				0%{
+					opacity:0.2;
+					-webkit-transform:translateZ(1000px);
+					-moz-transform:translateZ(1000px);
+					transform:translateZ(1000px);							
+				}				
+
+				40%{
+					opacity:0.4;
+					-webkit-transform:translateZ(0);
+					-moz-transform:translateZ(0);
+					transform:translateZ(0);
+				}
+				80%{
+					opacity:0.6;
+					-webkit-transform:rotateZ(4deg);
+					-moz-transform:rotateZ(4deg);
+					transform:rotateZ(4deg);
+
+				}
+				100%{
+					opacity:0.8;
+					-webkit-transform:rotateZ(0);
+					-moz-transform:rotateZ(0);
+					transform:rotateZ(0);
+				}
+			}
+
+			@keyframes content_img1{
+				0%{
+					transform:rotateX(0deg);
+				}
+
+				50%{
+					transform:rotateX(50deg);
+				}
+
+				100%{
+					transform:rotateX(0deg);
+				}
+
+			}
+			#footer{
+				opacity:0;
+			}
+
+			.foot{
+				list-style-type:none;
+				position:relative;
+				top:1100px;
+				border-top:3px solid rgba(150,150,150,0.6);
+				
+			}
+			.foot > li{
+				float:left;
+				margin-top:40px;
+				border-right:3px solid rgba(150,150,150,0.6);
+			}
+
+			.foot > li > a{
+				text-decoration:none;
+				padding:50px;
+				color:rgba(50,50,50,0.9);
+
+			}
+
+			
+			.infor{
+				list-style:none;
+				position:relative;
+				top:1200px;
+				left:0;
+				border-top:2px solid rgba(150,150,150,0.6);
+
+			}
+
+			.infor > li{
+				float:left;
+				
+				border-right:3px solid rgba(150,150,150,0.6);
+			
+
+			}
+
+			.infor > li > a{
+				text-decoration:none;
+				padding:0 90px;
+				font-size:0.8em;
+				font-family: 'Francois One', sans-serif;
+				color:rgba(50,50,50,0.9);
+			}
+
+

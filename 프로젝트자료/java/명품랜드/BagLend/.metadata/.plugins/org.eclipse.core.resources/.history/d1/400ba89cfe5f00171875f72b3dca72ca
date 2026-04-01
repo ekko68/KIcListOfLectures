@@ -1,0 +1,5 @@
+package bag.handle.sql;
+
+public class HandleCustomerInfo {
+
+}

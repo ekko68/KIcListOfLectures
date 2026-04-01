@@ -1,0 +1,424 @@
+9일차(Mybatis-글쓰기,글상세보기,글수정,글삭제,글조회 하기 구현)
+
+1.글쓰기 구현
+--------------
+1)BoardDAO 인터페이스->공통 추상 메서드 선언
+2)SqlMapBoardDAO 클래스->메서드 작성
+3)Board.xml-><insert>,<update>,<delete>,<select>
+4)각각의 ActionController가 필요
+-------------------------------------------------------------
+
+Board.xml에서 작업
+
+**기본적인 속성**
+
+1.id(필수)->sql문장에 종류와 상관없이 필수로 작성(구분인자값)
+              ->관례(메서드명)->list()
+
+2.parameterType(선택)->SQL구문중에서 매개변수를 입력을 받아서
+                                     처리해주는 경우의 SQL구문에 필요
+                                  ->where조건식
+                                  ->입력을 받는 자료형을 쓰게 되어있다.
+                      parameterType="java.lang.String" or"String"
+                                               "java.lang.Integer" or "int"             
+
+ select * from springboard where num=#{매개변수명}  ?대신에
+ insert into springboard values(#{매개변수},,,,)
+
+3.resultType(선택)->sql구문을 사용해서 반환값이 있는 경우
+ 대부분->select num from springboard (insert,update,delete  X)
+
+  resultType="java.lang.Integer" or "int"
+
+####
+###
+####에러~ board.xml
+
+글쓰기
+(Board.xml)
+
+<!--2.최대값구하기 (java.lang.Integer->Integer->int) -->
+<select id="getNewNum" resultType="int">
+    select max(num) from springboard
+</select>
+
+<!-- 3.글쓰기(mysql->now()) -->
+<insert id="write" parameterType="board">
+  insert into springboard(num,author,title,content,writeday)
+  values(#{num},#{author},#{title},#{content},sysdate)
+</insert>
+
+2.BoardDAO
+
+//2-1)최대값 구하기->select max(num) from springboard
+	public int getNewNum() throws DataAccessException;
+	
+//2-2)글쓰기
+public void write(BoardCommand data)throws DataAccessException;
+
+3.SqlMapBoardDAO
+
+public int getNewNum() throws DataAccessException {
+		// TODO Auto-generated method stub
+		//메모리상의 값(Object)->(Integer)->int
+		//id값이 인식X->네임스페이스이름.실행시킬 id값 부여
+		//<mapper namespace="board">=>board.getNewNum
+		return (Integer)getSqlSession().selectOne("getNewNum");
+	}
+	
+	@Override
+	public void write(BoardCommand data) throws DataAccessException {
+		// TODO Auto-generated method stub
+		//insert태그->형식)sqlSession객체명.insert("실행시킬 id",매개변수명)
+		getSqlSession().insert("write",data);
+	}
+-----------------------------------------------------
+4.WriteActionController 소스 편집
+
+request.setCharacterEncoding("utf-8");
+		BoardCommand data=(BoardCommand)command;
+		/*
+		String author=data.getAuthor();
+		String content=data.getContent();
+		String title=data.getTitle();*/
+		//최대값 구하기
+		int newNum=dao.getNewNum()+1;
+		data.setNum(newNum);
+		//--------------------------------------
+		dao.write(data);//dao.write(data);->getNum()
+=======================================
+BoardDAO에서 추상메서드 한꺼번에 선언
+
+//3-1)글 조회수 증가하기
+	public void updateReadcnt(String num)throws DataAccessException;
+	
+	//3-2).글상세보기->레코드 한개
+	public BoardCommand retrieve(String num)throws DataAccessException;
+	
+	//4.글수정하기->update
+	public void update(BoardCommand data)throws DataAccessException;
+	
+	//5.글삭제하기
+	public void delete(String num)throws DataAccessException;
+	
+	//6.글검색하기(String searchName,String searchValue)->HashMap처리 관례
+	public List search(BoardCommand data)throws DataAccessException;
+--------------------------------------------------------------
+ Board.xml에서 
+
+<!-- 4.조회수를 증가 (java.lang.String=>String->string(x)-->
+<update id="updateReadcnt" parameterType="String">
+   update springboard set readcnt=readcnt+1 where num=#{num}
+</update>
+
+<!-- 5.게시물번호 레코드 상세보기 -->
+
+<select id="retrieve" parameterType="String" resultType="board">
+   select * from springboard where num=#{num}
+</select>
+
+<!-- 6.글수정하기 -->
+<update id="update" parameterType="board">
+   update springboard set title=#{title}, content=#{content},author=#{author}
+   where num=#{num}
+</update>
+
+<!-- 7.글삭제하기(id=delete)  -->
+<delete id="delete" parameterType="String">
+  delete from springboard where num=#{num}
+</delete>
+---------------------------------------------------------------------
+글상세 보기 만 구현
+
+public void updateReadcnt(String num) throws DataAccessException {
+		// TODO Auto-generated method stub
+		//update태그->형식)sqlSession객체명.update("실행시킬 id",매개변수명)
+		getSqlSession().update("updateReadcnt", num); //#{num}
+	}
+	
+	@Override
+	public BoardCommand retrieve(String num) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return (BoardCommand)getSqlSession().selectOne("retrieve",num);
+	}
+=======================================
+RetriveActionController에서 메서드 호출
+
+System.out.println("RetrieveActionController 실행됨!");
+		String num=request.getParameter("num");
+		System.out.println("num=>"+num);
+		//레코드 한개를 담을 객체 필요
+		//Board data=dao.retrieve(num); before
+                             //after
+		dao.updateReadcnt(num);//reacnt=readcnt+1
+		BoardCommand data=dao.retrieve(num);
+		//----------------------------------
+		ModelAndView mav=new ModelAndView("retrieve");//이동할 페이지명
+		//mav.setViewName("retrieve");//list.jsp
+                              mav.addObject("data",data); //${data} request.getAttribute("data");
+		return mav;
+======================================
+retrieve.jsp에서 소스 편집
+
+<%
+//Board->BoardCommand
+    BoardCommand data=(BoardCommand)request.getAttribute("data");//${data}
+    int num=data.getNum();
+    String title=data.getTitle();
+    String author=data.getAuthor();
+    String content=data.getContent();
+%>
+-----------------------------------------------
+글수정하기->글삭제하기
+ 
+1.sqlMapBoard에서
+
+public void update(BoardCommand data) throws DataAccessException {
+		// TODO Auto-generated method stub
+		//update태그->형식)sqlSession객체명.update("실행시킬 id",매개변수명)
+		getSqlSession().update("update",data);
+	}
+
+2.UpdateActionController ->update()를 소스 편집
+
+@Override
+	protected ModelAndView handle(HttpServletRequest request, 
+			HttpServletResponse response, Object command, BindException error)
+			throws Exception {
+		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8");
+		BoardCommand data=(BoardCommand)command;
+		//게시물번호(before)
+		/*
+		String num=request.getParameter("num");
+		String author=data.getAuthor();
+		String content=data.getContent();
+		String title=data.getTitle();
+		dao.update(num,author, title, content);*/
+		//after
+		dao.update(data);
+		
+		return new ModelAndView("redirect:/list.do");
+	}
+---------------------------------------------------------------------
+글삭제하기
+
+SqlMapBoardDAO->메서드 연결
+------------------------------------
+@Override
+	public void delete(String num) throws DataAccessException {
+		// TODO Auto-generated method stub
+		//update태그->형식)sqlSession객체명.delete("실행시킬 id",매개변수명)
+		getSqlSession().delete("delete",num);
+	}
+
+2.DeleteActionController=>JNDI방법으로 설정한 내용과 메서드내용이
+                                        변화가 없다.
+
+System.out.println("DeleteActionController 실행됨!");
+		String num=request.getParameter("num");//삭제시킬 게시물번호
+		System.out.println("num=>"+num);
+		dao.delete(num);//그대로
+		//----------------------------------
+
+***글검색하기***
+
+1.BoardDAO 인터페이스 선언
+
+//6.글검색하기(String searchName,String searchValue)->HashMap처리 관례
+public List search(BoardCommand data)throws DataAccessException;
+
+2.Board.xml에서 구현
+
+<!-- 8.*글조회하기*(글검색분야,글검색어) -->
+<select id="search" resultType="board"  parameterType="board">
+   select * from springboard where ${searchName} like '%${searchValue}%'
+   order by num desc                     ==                             ==
+</select>
+
+3.SqlMapBoardDAO
+//------------------>(Map<String,Objec> data)
+	@Override
+	public List search(BoardCommand data) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return getSqlSession().selectList("search",data);
+	}
+
+4.SearchActionController
+
+System.out.println("SearchActionController 실행됨!");
+		String searchName=request.getParameter("searchName");
+		String searchValue=request.getParameter("searchValue");
+		
+		//ArrayList list=dao.search(searchName,searchValue); before
+		//after
+                              BoardCommand data=new BoardCommand();//검색분야,검색어만 처리
+		data.setSearchName(searchName);
+		data.setSearchValue(searchValue);
+		List list=dao.search(data);
+		//
+
+Exception
+
+org.springframework.web.util.NestedServletException: Request processing failed; nested exception is org.springframework.jdbc.InvalidResultSetAccessException: 
+### Error querying database.  Cause: java.sql.SQLException: 부적합한 열 인덱스
+### The error may exist in lee/Board.xml
+### The error may involve board.search-Inline
+### The error occurred while setting parameters
+### SQL: select * from springboard where ? like '%?%'    order by num desc
+### Cause: java.sql.SQLException: 부적합한 열 인덱스
+; invalid ResultSet access for SQL []; nested exception is java.sql.SQLException: 부적합한 열 인덱스
+	org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:659)
+	org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:552)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:635)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
+	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+Root Cause
+
+org.springframework.jdbc.InvalidResultSetAccessException: 
+### Error querying database.  Cause: java.sql.SQLException: 부적합한 열 인덱스
+### The error may exist in lee/Board.xml
+### The error may involve board.search-Inline
+### The error occurred while setting parameters
+   =>파라미터값을 세팅하는 동안에 에러가 발생
+### SQL: select * from springboard where ? like '%?%'    order by num desc
+### Cause: java.sql.SQLException: 부적합한 열 인덱스
+; invalid ResultSet access for SQL []; nested exception is java.sql.SQLException: 부적합한 열 인덱스
+	org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:237)
+
+
+<select id="search" resultType="board"  parameterType="board">
+   select * from springboard where #{searchName} like '%#{searchValue}%'
+   order by num desc
+</select>
+
+**Mybatis에서 매개변수를 받을때 주의할점 **
+
+#{매개변수}
+
+1.값을 입력(글쓰기,글수정)=>#{매개변수}(=멤버변수)
+
+=>매개변수가 순수 값을 입력받는값이 아닌 필드명으로 값을 입력받거나 특수기호
+     가 포함되는 값을 입력받은 경우->#{매개변수} 사용불가
+
+2.매개변수 받는 위치  =>필드명 ,특수기호가 포함되는 경우
+    #{매개변수}  =>${매개변수}
+--------------------------------------------------------------------------------
+<bean name="/list.do"  class="lee.ListActionController" />
+
+ property태그를 생략->Setter Method설정X ->Setter Method호출
+                                 sqlSessionFactoryBean 객체생성X->NullPointerException
+
+java.lang.NullPointerException
+	lee.ListActionController.handleRequest(ListActionController.java:28)
+
+
+<해결>
+1.board-servlet.xml에
+
+<!-- @Autowired,@Required  때문에-->
+<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+2.ListActionController-->
+
+POJO 클래스=>컨트롤러역할을 하기위해서는 Controller인터페이스 받거나
+                       AbstractCommandController를 상속을 받아야 한다.
+                  =>요청을 받아서 처리해주는 메서드를 상속받아서 작성해야 되기때문에
+
+특징
+
+1.인터페이스 or 추상클래스를 상속받지 않아도 된다.
+----------------------------------------------------------------------------------
+   인터페이스나 추상클래스를 상속받지 않고도 독립적으로 요청을 받아서 처리해주는
+   클래스===>POJO 클래스
+ -------------------------------------------------------------------------------
+2.@Controller를 부여->자동적으로 컨트롤러가 된다.
+  클래스명 위에 기술->@Controller
+
+3.요청을 받아서 처리해주는 메서드를 내마음대로 변경이 가능하다.
+    매개변수도 내마음대로 설정이 가능
+   반환값은 보통->ModelAndView을 지정->요청을 받아서 처리해주는 메서드의 경우
+  ----------------------------------------------------------------------------------
+ 형식)@RequestMapping("/요청명령어")->메서드명 위에 기술
+
+  ->이 요청명령어를 요청할때 자동적으로 호출되는 메서드임을 알려주는 역할
+----------------------------------------------------------------------------------
+
+
+@RequestMapping("/list.do")
+public ModelAndView handleRequest(HttpServletRequest request, 
+			                                 HttpServletResponse response) throws Exception {
+
+-------------------------------------------------------------------------------
+글쓰기=>글수정은 같다.(구조)
+
+1.board-servlet.xml에
+
+<bean name="/write.do"  class="lee.WriteActionController" />
+----------------------------------------------------------------------
+형식)
+@RequestParam("매개변수명") 반환받는 변수의 자료형 반환받는 변수명
+@RequestParam("title")String title
+
+=>String title=request.getParameter("title"); 와 기능이 같다.
+================================
+
+@Controller
+public class WriteActionController {
+
+	@Autowired
+	BoardDAO dao; //BoardDAO dao=new BoardDAO();
+	//commandClass->사용자로부터 입력받은 값만 따로 저장해주는 메서드
+	//<property name="commandClass"  value="lee.BoardCommand" />
+	
+	public void setDao(BoardDAO dao) {
+		this.dao = dao;
+		System.out.println("setDao()호출됨(dao)=>"+dao);
+	}
+	
+    //1.request(요청객체) 2.response(응답) 3.입력받은값을 저장한 객체
+	//4.BindException->사용자로부터 값을 입력시 에러발생->처리해주는 객체
+	@RequestMapping("/write.do")
+	protected ModelAndView test(@RequestParam("title")String title,
+			@RequestParam("author")String author,
+			@RequestParam("content")String content)
+			throws Exception {
+		// TODO Auto-generated method stub
+		//request.setCharacterEncoding("utf-8");
+		//BoardCommand data=(BoardCommand)command;
+		/*
+		String author=request.getParameter("author");
+		String content=request.getParamert("content");
+		String title=request.getParamert("title");*/
+		//최대값 구하기
+		int newNum=dao.getNewNum()+1;
+		BoardCommand data=new BoardCommand();
+		data.setNum(newNum);
+		data.setTitle(title);
+		data.setAuthor(author);
+		data.setContent(content);
+		//--------------------------------------
+		dao.write(data);
+		return new ModelAndView("redirect:/list.do");
+	}
+}
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

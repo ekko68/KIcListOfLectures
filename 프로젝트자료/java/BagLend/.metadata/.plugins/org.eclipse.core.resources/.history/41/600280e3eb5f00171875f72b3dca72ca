@@ -1,0 +1,32 @@
+package bag.handle.sql;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+import bag.db.data.Coupon;
+import bag.lend.jdbcutil.JdbcUtill;
+
+public class HandleCouponDB {
+
+	public String selectedData(Connection conn, String name){
+		
+		String sql="select coupon_info from coupon where coupon_num = (select coupon_num from custom where name =?)";;
+		Statement stmt = null;
+		ResultSet rs = null;
+		PreparedStatement pstm = null;
+		try {
+			stmt=conn.createStatement();
+			rs=stmt.executeQuery(sql);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtill.close(rs);
+			JdbcUtill.close(stmt);
+		}
+		
+		
+		return null;
+		
+	}
+}

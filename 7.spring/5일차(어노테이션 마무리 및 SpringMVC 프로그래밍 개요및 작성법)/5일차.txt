@@ -1,0 +1,116 @@
+5일차(어노테이션 마무리 및 Spring MVC 프로그래밍 개요및 작성법)
+                                      ======================
+스프링에서 환경설정(웹처리)->누적
+====================
+->8/29일 시험->16문제(Ajax~bootstrap)시험 5시
+----------------------------------------------
+9/8일->스프링 시험(2과목) 4:30
+----------------------------------
+주관식->비교,기술(기술)->소스코드(1~2줄)
+소스코드
+
+
+@Required
+@Autowired->@Inject
+--------------------------
+@Resource
+
+
+
+<!--@Resource  -->
+<bean id="camera2" class="com.spring.anno3.Camera" p:number="2" />
+<bean id="camera3" class="com.spring.anno3.Camera" p:number="3" />
+<bean id="camera4" class="com.spring.anno3.Camera" p:number="4" />
+
+setCamera3()호출됨!
+setCamera4()호출됨!
+home=>HomeController[camera2=Camera[number=2],camera3=Camera[number=3],camera4=Camera[number=4]]
+
+@Autowired=@Inject,@Resource->공통점 (자동 의존 객체연결)
+---------------------------------------------------------------------
+
+@Component
+---------------------
+
+ 자바코드로써 빈즈객체를 생성하기 전,후에 대한 메서드 호출 처리
+@PostConstruct->빈즈 객체생성전 ->Camera
+      before()
+@PreDestory->빈즈 객체생성후
+      afeter()
+---------------------------
+xml로 설정?
+
+<bean id="camera1" class="com.spring.Camera" 
+     init-method="before"   destroy-method="after" />
+==================================
+빈즈객체 생성전에 초기화작업(init)호출됨
+home=>com.spring.anno4.HomeController2@2781e022
+8월 25, 2017 11:45:12 오전 org.springframework.context.support.ClassPathXmlApplicationContext doClose
+정보: Closing org.springframework.context.support.ClassPathXmlApplicationContext@49c2faae: startup date [Fri Aug 25 11:45:11 KST 2017]; root of context hierarchy
+빈즈객체 생성후에 메모리해제(close)호출됨
+----------------------------------------------------------------------
+
+autowired="byType"==>@Autowired 으로 변경
+
+autowired="byName"==>@Resource 으로 변경
+-----------------------------------------
+JSP 모델2+xml 환경설정능력=스프링
+=====================
+ 
+클래스  30개=>@Autowired, @Required, @Inject,,,,
+
+xml에 설정
+----------------------------------------------------------
+->클래스에도 어노테이션을 부여하는 경우
+
+<bean id="~"  class="com.spring.anno5.Camera" />
+ ...
+
+<context:component-scan base-package="com.spring.anno5" />
+com.spring.anono5패키지를 찾아서  클래스들 중에서 
+@Component가 부여된 클래스의 객체를 빈즈로 등록하라.
+@Autowired,@Required,@Resource->자동으로 등록
+---------------------------------------------------------------------
+SpringMVC
+--------------
+Springmvc->프로젝트명
+
+
+모델2에서의 컨트롤러 역할->지정(web.xml)
+
+<!--컨트롤러역할을 하는 서블릿의 이름,요청경로를 지정  -->
+   /list.do=action.ListAction->commandPro.properties=>xml파일
+
+ex)  <bean name="/list.do" class="action.ListAction" /> =>이런식으로 
+-----------------------------------------------------------------------
+형식) test-servlet.xml파일===>dispatcher-servlet.xml파일
+        XXX-servlet.xml파일로 만들어진다.(web.xml과 같은 폴더에 저장)
+1.web.xml에 등록(컨트롤러 역할을 한다고 설정)
+
+  <servlet>
+     <servlet-name>test</servlet-name>
+     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  </servlet>
+  
+  <!-- 어떻게 요청이 들어왔을때 처리할 것인가?  -->
+  <servlet-mapping>
+     <servlet-name>test</servlet-name>
+     <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+======================================
+2.test-servlet.xml에서 다 설정
+
+ index.html->링크문자열===>list.jsp
+
+
+
+
+
+
+
+
+
+
+
+

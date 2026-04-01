@@ -1,0 +1,115 @@
+Manifest-Version: 1.0
+Implementation-Title: ASM
+Bundle-SymbolicName: org.objectweb.asm
+Implementation-Version: 5.2
+Archiver-Version: Plexus Archiver
+Built-By: genie.orbit
+Bundle-ManifestVersion: 2
+Bundle-RequiredExecutionEnvironment: J2SE-1.3
+Bundle-DocURL: http://asm.objectweb.org
+Bundle-Vendor: %bundleVendor
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.2))"
+Implementation-Vendor: France Telecom R&D
+Originally-Created-By: 1.8.0_111 (Oracle Corporation)
+Export-Package: org.objectweb.asm;version="5.2.0",org.objectweb.asm.si
+ gnature;version="5.2.0"
+Bundle-Name: %bundleName
+Bundle-Version: 5.2.0.v20170126-0011
+Created-By: Eclipse Bundle Recipe Maven Plug-in
+Build-Jdk: 1.8.0_121
+
+Name: org/objectweb/asm/CurrentFrame.class
+SHA-256-Digest: B7at2emu3u8JUjNp/nMxFiQ7Ey/JKPRDnt2WvpbYV0M=
+
+Name: org/objectweb/asm/Type.class
+SHA-256-Digest: CKRPL/JKnn3LjLkNitQ4iy3iMdbADwxKiNVE2ux3PCk=
+
+Name: org/objectweb/asm/AnnotationVisitor.class
+SHA-256-Digest: HAa8b4lX1yLOgbV7xZlOXCmYK1yXgZZP6s5mq0joYQ0=
+
+Name: org/objectweb/asm/MethodVisitor.class
+SHA-256-Digest: eN9xd8C0JR1mQ6cP96ALGz756UlU/knIWmrjY+ClycQ=
+
+Name: org/objectweb/asm/Attribute.class
+SHA-256-Digest: NYTWfWkUd2YKHxy517AJ+9NqyBS+0YfDEhahOVe7p1A=
+
+Name: org/objectweb/asm/MethodWriter.class
+SHA-256-Digest: 7RNvZf5arDbIar5O4IVN7Hcfk1XQgCBA/gN0DRAqTM4=
+
+Name: org/objectweb/asm/Handler.class
+SHA-256-Digest: udG3wAx1WBuYaddy1HQS2+JS9eNKP3uWyKH2JWlsJAI=
+
+Name: org/objectweb/asm/ByteVector.class
+SHA-256-Digest: 1LVS3fsefcCFRjhR8vgcuFODISmosyuxlPWcitON4v0=
+
+Name: org/objectweb/asm/signature/SignatureReader.class
+SHA-256-Digest: UtPJ/bh0out10KxLb1KRB8+n0rBsl6/lRJbBUJJifQk=
+
+Name: org/objectweb/asm/Opcodes.class
+SHA-256-Digest: tXF4jPyW4itVRr0MqsTRK46A4Zw/pDCpYlXmJV8au/4=
+
+Name: org/objectweb/asm/FieldVisitor.class
+SHA-256-Digest: pd3HsQbcQOliRr9+tcp/GDl9UW5ZMBL7Q6ZNtM7IeHQ=
+
+Name: org/objectweb/asm/Item.class
+SHA-256-Digest: tQsuhX5nsMEZERuANinBK/tpZ2bxdc/Iu1HAmlEQe2Y=
+
+Name: org/objectweb/asm/TypePath.class
+SHA-256-Digest: oOOuz/BWOYryx2AAnPLd3XBhUsU0TrQA7SXA+2PQMss=
+
+Name: org/objectweb/asm/Label.class
+SHA-256-Digest: f8mDHwvYs2+uB3JwzRZVvnjzNpYDbmkfABvefRifF6Y=
+
+Name: org/objectweb/asm/TypeReference.class
+SHA-256-Digest: 2dIeHH8PKAiKUmk3ECZ2/ODZ1e6ns/Bjxmb9DKpEEEY=
+
+Name: META-INF/maven/org.eclipse.orbit.bundles/org.objectweb.asm/pom.x
+ ml
+SHA-256-Digest: OgCVfpFdDDoKF5U9F1tbqUQ9A4k1DSpZlCI4KBggJUE=
+
+Name: org/objectweb/asm/Handle.class
+SHA-256-Digest: CmREDGc8M+hGRifAWHGFtjPGq3kMKA5lbA+BcbCrOPc=
+
+Name: org/objectweb/asm/AnnotationWriter.class
+SHA-256-Digest: UYqbEPM1EZLLvK1pebcJkKNEqtiI8SSM4d6nnA52Qx4=
+
+Name: org/objectweb/asm/ClassVisitor.class
+SHA-256-Digest: 0KNvvz8RXegCMjTl2zmkR/9IzUkZeKfyMKco3dl4edg=
+
+Name: org/objectweb/asm/ClassWriter.class
+SHA-256-Digest: 9kY0Nm3N7kCfUjvYnfrG3pJO9Kf2EfqbZOhIcg0zerU=
+
+Name: META-INF/maven/org.eclipse.orbit.bundles/org.objectweb.asm/pom.p
+ roperties
+SHA-256-Digest: UmPyZf+Q7YI5/QGz4E6AIuw6J4Dp5JwPGiIpaUFLLGw=
+
+Name: about.html
+SHA-256-Digest: UxbGv2T/AsS6MdLf6K0Mwmwj/Yuvgp2AVpjipawwG7Y=
+
+Name: org/objectweb/asm/FieldWriter.class
+SHA-256-Digest: eq4OEGnSWx67kgD/3xbn3znzk13fCCf4Ezlfm3u5NPc=
+
+Name: org/objectweb/asm/signature/SignatureWriter.class
+SHA-256-Digest: hprfgEnEjKVr0GML6Erdg3U95WW8qzKe60TOfIqRNQ8=
+
+Name: org/objectweb/asm/Edge.class
+SHA-256-Digest: NPnLMg4zaatA4tm1HmhIHKexHjAJUG5a6bTpVta6zXM=
+
+Name: org/objectweb/asm/Frame.class
+SHA-256-Digest: mzLcAomXs5HB4eZ2SaSrwyViDRLTWFNAWkku21PQYps=
+
+Name: org/objectweb/asm/Context.class
+SHA-256-Digest: r8WqU0lIQTmeMa8QdY2Aho6Mp0JQCTxSz5gDme7Hazo=
+
+Name: org/objectweb/asm/ClassReader.class
+SHA-256-Digest: 9ttX+p3SpZPH3pR8zaaXO7D1TgKthCJ91XR87siKHhQ=
+
+Name: OSGI-INF/l10n/bundle.properties
+SHA-256-Digest: RNVryLulj9W8LNPsB0ZLRKHDwjAglXnx3f/dMHQlkkY=
+
+Name: about_files/NEW_BSD_LICENSE.html
+SHA-256-Digest: 86jJYk7NGCjYrCDiL/tuoZ6YaLacExTfvX5A3ZBYCM4=
+
+Name: org/objectweb/asm/signature/SignatureVisitor.class
+SHA-256-Digest: eCf/eBnMyEBQKnFNR1e7HNF1LbT1d1hDJJGj6WBfdLc=
+

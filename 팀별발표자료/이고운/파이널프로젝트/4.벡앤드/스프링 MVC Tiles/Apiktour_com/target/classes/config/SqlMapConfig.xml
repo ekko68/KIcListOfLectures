@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+ <configuration>
+ 	<typeAliases>
+ 		<typeAlias type="com.apik.cosloc.command.CoslocCommand" alias="coslocDto"/>
+ 		<typeAlias type="com.apik.course.command.CourseCommand" alias="courseDto"/>
+ 		<typeAlias type="com.apik.course.command.CourseVO" alias="courseVo"/>
+ 		 		
+ 		<typeAlias type="com.apik.icontype.command.IcontypeCommand" alias="icontypeDto"/>
+ 		<typeAlias type="com.apik.liket.command.LiketCommand" alias="liketDto"/>
+ 		<typeAlias type="com.apik.map.command.MapCommand" alias="mapDto"/>
+ 		<typeAlias type="com.apik.person.command.PersonCommand" alias="personDto"/> 		
+ 	</typeAliases>
+ 	
+<!--
+	 		<mapper resource="sql/Cosloc.xml"/>
+ 		<mapper resource="sql/Course.xml"/>
+ 		<mapper resource="sql/Icontype.xml"/>
+ 		<mapper resource="sql/Liket.xml"/>
+ 		<mapper resource="sql/Login.xml"/>
+ 		<mapper resource="sql/Map.xml"/> 
+ -->
+ 	<mappers>
+ 		<mapper resource="sql/Person.xml"/>
+ 		<mapper resource="sql/Course.xml"/>
+ 	</mappers>
+ </configuration>

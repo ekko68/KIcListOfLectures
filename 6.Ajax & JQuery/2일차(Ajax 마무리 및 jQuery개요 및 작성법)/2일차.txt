@@ -1,0 +1,281 @@
+2일차(Ajax 마무리 및 jQuery개요 및 작성법)
+
+prototype.js<---jQuery->다양한 함수
+-----------------------------------------------------------------
+1.xhtml을 지원해주는 jsp 선언부분
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+---------------------------------------------------------------------
+함수를 이용
+function $(element) {
+  if (arguments.length > 1) {
+    for (var i = 0, elements = [], length = arguments.length; i < length; i++)
+      elements.push($(arguments[i]));
+    return elements;
+  }
+  if (Object.isString(element))
+ element = document.getElementById(element);
+  return Element.extend(element);
+}
+------------------------------------------------
+2.script.js에서 IdCheck()사용X=>주석처리
+
+//중복ID체크 해주는 자바스크립트함수 선언
+/*
+function idCheck(id){  //var idCheck=function(){}
+   if(id==""){
+	   alert("아이디를 먼저 입력하세요")
+	   document.regForm.mem_id.focus() //document.폼객체명.입력양식.함수명()
+   }else{ //=>window.open(불러올 문서명(jsp),창제목,창의옵션(넓이,높이,,,)
+	   //url="IdCheck.jsp"  IdCheck.jsp를 불러올 뿐 매개변수 전달 X
+	   url="IdCheck.jsp?mem_id="+id
+	   window.open(url,"post","left=450,top=150,width=300,height=150")
+   }
+}
+*/
+
+3.Register.jsp에서 선언부분과 중복id 체크 id부여
+
+<script language="JavaScript" src="script.js"></script>
+<script language="JavaScript" src="prototype.js"></script>
+<script language="JavaScript" src="searchWord.js"></script>
+
+  <input type="text" name="mem_id"  id="mem_id"  size="15">
+                                                          =========
+		      <input type="button" value="ID중복확인" 
+       onClick="idCheck(this.form.mem_id.value)"></td>
+            <td id="ducheck" width="27%">아이디를 적어 주세요.</td>
+          </tr>===========
+
+4.searchWord.js
+
+/**
+ * xhr객체를 생성->요청-->jsp로 요청->응답->콜백함수 출력
+ */
+var xhrObject //xhr객체를 전역변수로 선언
+
+//1.xhr객체를 생성함수 선언
+function createXHR(){
+	 if(window.XMLHttpRequest){
+		 xhrObject=new XMLHttpRequest()//객체를 생성->반환
+		// alert(xhrObject) 
+	 }
+}
+
+//2.중복id를 입력->처리하는 함수
+function idCheck(id){
+	if(id==""){
+		//var mem_id=document.getElementById("ducheck")
+		var mem_id=$("ducheck")
+		//alert(mem_id)
+		$("ducheck").innerHTML="<font color='red'>아이디를 먼저 입력요망</font>"
+		//document.regForm.mem_id.focus()
+		$("mem_id").focus()
+		return false;
+	}
+	//입력했다면->Ajax를 이용해서 IdCheck.jsp을 요청
+	//1.xhr객체 얻어옴
+	createXHR()//->xhrObject
+	var url="http://localhost:8090/JspMember/IdCheck.jsp?"+getParameterValues()
+	//alert(url)
+	//2.콜백함수 지정
+	xhrObject.onreadystatechange=resultProcess
+	//3.open함수를 서버에 요청준비
+	xhrObject.open("Get",url,true);//비동기 방식
+	//4.send()요청
+	xhrObject.send(null);
+}
+
+//3.파라미터값을 처리해주는 함수
+function getParameterValues(){
+	var mem_id=$("mem_id").value
+	//서버캐시에 요청 메모리에 저장하지 않는 방법
+	//파라미터값을 하나 전달할때 오늘날짜를 같이 출력시켜주는 매개변수를 첨부
+	return "mem_id="+mem_id+"&timestamp="+new Date().getTime()
+}
+//4.콜백함수
+function resultProcess(){
+	//alert("resultProcess")//콜백함수 호출이 되는지 확인
+	if(xhrObject.readyState==4){//서버가 요청을 다받았다면
+		if(xhrObject.status==200){//서버의 결과를 받았다면
+		  var result=xhrObject.responseText;//태그+문자열=>문자열	
+		  $("ducheck").innerHTML=result;
+		}
+	}
+}
+=====================================
+5.IdCheck.jsp
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ page import="hewon.*" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Id중복 체크</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="script.js"></script>
+</head>
+<body bgcolor="#FFFFCC">
+<br>
+<%
+  //searchWord.js=>IdCheck.jsp?mem_id='kkk'&timestamp=~;
+  //xhr객체가 받을 xml형태로 받을 수 있도록 text/xml형태로 전환(태그+문자열)
+  response.setContentType("text/xml;charset=utf-8");
+  String outString="";//xhr객체에게 전달할 내용을 담을 변수 선언(태그+문자열)
+  String mem_id=request.getParameter("mem_id");
+  System.out.println("IdCheck.jsp의 mem_id=>"+mem_id);
+   //DB접속->MemberDAO의 checkId(mem_id)
+   MemberDAO memMgr=new MemberDAO();
+   boolean check=memMgr.checkId(mem_id);
+   System.out.println("check="+check);
+   
+   if(check==true){//이미 사용중인 아이디가 존재한다면
+  outString="<font color='red'><b>이미 사용중인 아이디입니다.</b></font>";   
+   }else{//사용이 가능한 경우
+  outString="<font color='blue'><b>사용이 가능한 아이디입니다.</b></font>";	   
+   }
+   //xhr객체가 받을 수있도록 전송
+   out.println(outString);
+   System.out.println(outString);//콘솔에 출력
+%>
+</body>
+</html>
+========================================
+새프로젝트->jQueryTest
+
+www.jquery.com
+
+npm install jquery=>외부 라이브러리를 설치->npm사용->node.js설치
+                                                                  자동적으로 npm package도 같이
+--------------------------------------------------------------------------
+jquery-3.2.1.min.js ->압축된 버전->내용을 확인X
+jquery-3.2.1.js===>압축X 된 버전->내용을 확인 가능
+
+ 자바스크립트 라이브러리
+----------------------------pdf
+1.selector(선택자)->2.dom->3.event->4.effect->5.ajax->순으로 진행
+01~.html~10.html
+---------------------------------------------------------------------------
+
+**jQuery의 특징**
+
+1.일단 무료, 오픈소스
+2.작은 용량 (min : 18KB, uncompressed : 114KB)
+3.수많은 사용자 커뮤니티
+4.웹 브라우저간의 차이를 자체적으로 표준화
+플러그인의 다양성
+잘 정리된 API 문서 
+브라우저보다 앞선 W3C 명세 수용
+사용자인터페이스 제공
+
+ //형식) $(element(태그이름),id,class선택자~).함수명(~).함수명2,,,
+	  $('h1').css('color','red')//~$('태그명').css('속성명','속성값')
+	  $('span').css('border','3px solid blue')
+	  //형식2)클래스 선택자->$(태그명.클래스명)
+	  $('p.my').css('border','5px dotted green')
+	  //형식3)id선택자->$('태그명#id선택자이름')->태그명 생략가능
+	  $('#content').css('background','yellow')
+	  //모든 태그를 가리킨다->*
+	  $('*').css('color','red')
+
+ 03chain.html=>template를 작성->사용
+                         html에서만 사용 jQuery
+                          jsp에서 jQuery를 사용->template
+==============================
+<%@ page contentType="text/html;charset=UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$$(function(){ 
+	
+})
+</script>
+</head>
+<body>
+
+</body>
+</html>
+=============================
+html5jspjquery->template작성
+===============================
+ **2.형식)$(선택자).each(호출할 사용자정의 함수명 | 익명함수(function(){}))
+ **$(this)->현재 선택해서 읽어들이는 태그객체를 가리키는 예약어(이벤트처리)
+=============================================
+
+
+ var i=0 //첨자로 적용
+$(function(){ 
+	//1.형식)$(선택자).attr('속성명','속성값')
+	//$('li').attr('class','fromjQuery0')
+	//같은 태그를 어떻게 구분해서 스타일을 적용?->반복적으로 스타일
+	//2.형식)$(선택자).each(호출할 사용자정의 함수명 | 익명함수(function(){}))
+	$('li').each(forEach)
+})
+
+function forEach(){
+	//$('li').attr('class','fromjQuery'+i)
+	//$(this)->현재 선택해서 읽어들이는 태그객체를 가리키는 예약어(이벤트처리)
+	$(this).attr('class','fromjQuery'+i)
+	alert(i)
+	i++;//0->1->2->3
+}
+
+        /******
+	  1.text()->오직 태그의 텍스트만 가져오는 함수<->text(매개변수(값))
+	  2.html()->태그와 텍스트들까지 같이 가져옴<->html(매개변수)
+	  3.val()->폼태그안에 입력양식에 해당되는 값을 가져올때(input,check~)
+	    //<->val(매개변수(값))->Setter
+       *****/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   

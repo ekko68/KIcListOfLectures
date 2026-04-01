@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>몰랑이</title>
+
+								<style type="text/css">
+ul {list-style:none;}
+a  {text-decoration:none;}
+
+/* 1레벨 메뉴(상단메뉴) */
+.dropdownmenu > li {
+  float:left;  /*왼쪽으로 정렬 */
+  position:relative; /* absoulte(메뉴겹침) */
+  background:#67b0d1;
+  width:25%;/* 4개의 메뉴 */
+}
+
+.dropdownmenu > li > a {
+   display:block; /* 무조건 한줄은 점유하고 다음줄로 개행*/
+   font-size:16px;
+   color:#ffffff;
+   text-align:center;/* 글자정렬 가운데 */
+   height:60px; /* 높이 */
+   line-height:60px; /* 텍스트 행 사이의 간격*/
+}
+
+/* 1레벨 메뉴에 마우스를 올렸을때 배경색 지정 
+    태그명:hover->마우스를 올렸을때 표시
+*/
+.dropdownmenu > li:hover {
+   background:#7bbbd7;
+}
+
+/* Service메뉴의 위치 지정 */
+.dropdownmenu > li:hover > ul{
+   top:60px;
+   left:0;
+}
+
+/* 2레벨 메뉴 부터의 속성 */
+.dropdownmenu ul {
+   position:absolute;
+   top:-9999px; /* 위쪽으로 완전히 감춤 */
+   z-index:9999; /*숫자가 크면 앞으로 나옴*/
+   width:140px;
+   border:1px solid #cccccc;
+}
+/* 2레벨 메뉴의 위치 속성 지정*/
+.dropdownmenu ul li {
+    position:relative;
+}
+/* 2레벨 메뉴의 텍스트속성/배경/여백지정*/
+.dropdownmenu ul a {
+  display:block;
+  color:#aaaaaa;
+  font-size:12px;
+  line-height:40px;
+  background:#ffffff;
+  padding-left:20px; /*border와 메뉴사이의 여백*/
+}
+
+/* 2레벨 메뉴에 마우스를 올렸을때 배경색 지정*/
+.dropdownmenu ul a:hover {
+     color:#ffffff;
+	 background:#67b0d1;
+}
+/* 2레벨 메뉴에 마우스를 올렸을때 하위메뉴위치지정*/
+.dropdownmenu ul li:hover > ul {
+  position:absolute;
+  top:0;
+  left:100%;
+
+ }
+
+.leftmenu { 
+width: 100px; float: left; background-color:#ffffff; 
+}
+
+.leftmenu > li {
+  float:left;  
+  position:relative;
+  background:#67b0d1;
+  width:25%;
+}
+
+.leftmenu > li > a {
+   display:block; 
+   font-size:16px;
+   color:#ffffff;
+   text-align:center;
+   height:60px; 
+   line-height:60px;
+}
+
+.at3>embed{
+   position:relative; 
+   width:1050px; height:900px; 
+}
+
+.b1{
+width: 500px; height:150px; margin:0 auto;display:block; font-size:25px; background-color:#FF8224;
+color:#fff
+}
+
+</style>
+
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="http://wonpage.co.kr/wonpageproduct/xmlrpc.php">
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="js/main.js"></script>
+<script src="http://malsup.github.com/jquery.cycle2.js"></script> 
+
+    <div>
+        <ul class="dropdownmenu"> 
+           <li><a href="#" onclick="location.href='http://blog.naver.com/raviefille'">몰랑이 창조주 블로그</a></li>
+		   <li><a href="#">자유게시판</a>
+		       <ul>
+		              <li><a href="#">질문있어요</a></li>
+                      <li><a href="#">몰랑이인형나눔</a>
+					        <ul>
+					             <li><a href="#">수도권</a></li>
+                                 <li><a href="#">지방</a>
+								     <ul>
+								          <li><a href="#">제주도, 울릉도, 산간지역</a></li>
+								     </ul>
+								 </li>
+					        </ul>
+					  </li>
+		       </ul>
+		   </li>
+		   <li><a href="#" onclick="location.href='http://www.molangshop.co.kr'">몰랑이 상품 판매점</a></li>
+		   <li><a href="#">준비중인 게시판입니다</a></li>
+		</ul>
+	</div>
+
+<link rel="alternate" href="http://wonpage.co.kr/wonpageproduct/wp-content/plugins/kboard/rss.php" type="application/rss+xml" title="웹사이트 &raquo; KBoard 통합 피드">
+
+<link rel="alternate" type="application/rss+xml" title="웹사이트 &raquo; 피드" href="http://wonpage.co.kr/wonpageproduct/feed/" />
+<link rel="alternate" type="application/rss+xml" title="웹사이트 &raquo; 댓글 피드" href="http://wonpage.co.kr/wonpageproduct/comments/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"http:\/\/wonpage.co.kr\/wonpageproduct\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.4.10"}};
+			!function(a,b,c){function d(a){var c,d,e,f=b.createElement("canvas"),g=f.getContext&&f.getContext("2d"),h=String.fromCharCode;return g&&g.fillText?(g.textBaseline="top",g.font="600 32px Arial","flag"===a?(g.fillText(h(55356,56806,55356,56826),0,0),f.toDataURL().length>3e3):"diversity"===a?(g.fillText(h(55356,57221),0,0),c=g.getImageData(16,16,1,1).data,g.fillText(h(55356,57221,55356,57343),0,0),c=g.getImageData(16,16,1,1).data,e=c[0]+","+c[1]+","+c[2]+","+c[3],d!==e):("simple"===a?g.fillText(h(55357,56835),0,0):g.fillText(h(55356,57135),0,0),0!==g.getImageData(16,16,1,1).data[0])):!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g;c.supports={simple:d("simple"),flag:d("flag"),unicode8:d("unicode8"),diversity:d("diversity")},c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.simple&&c.supports.flag&&c.supports.unicode8&&c.supports.diversity||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='sdm-styles-css'  href='http://wonpage.co.kr/wonpageproduct/wp-content/plugins/simple-download-monitor/css/sdm_wp_styles.css?ver=4.4.10' type='text/css' media='all' />
+<link rel='stylesheet' id='wonpage-style-css'  href='http://wonpage.co.kr/wonpageproduct/wp-content/themes/wonpageproduct/style.css?ver=4.4.10' type='text/css' media='all' />
+<link rel='stylesheet' id='font-awesome-css'  href='http://wonpage.co.kr/wonpageproduct/wp-content/plugins/kboard/font-awesome/css/font-awesome.min.css?ver=4.6' type='text/css' media='all' />
+<!--[if lte IE 7]>
+<link rel='stylesheet' id='font-awesome-ie7-css'  href='http://wonpage.co.kr/wonpageproduct/wp-content/plugins/kboard/font-awesome/css/font-awesome-ie7.min.css?ver=4.6' type='text/css' media='all' />
+<![endif]-->
+<script type='text/javascript' src='http://wonpage.co.kr/wonpageproduct/wp-includes/js/jquery/jquery.js?ver=1.11.3'></script>
+<script type='text/javascript' src='http://wonpage.co.kr/wonpageproduct/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var sdm_ajax_script = {"ajaxurl":"http:\/\/wonpage.co.kr\/wonpageproduct\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://wonpage.co.kr/wonpageproduct/wp-content/plugins/simple-download-monitor/js/sdm_wp_scripts.js?ver=4.4.10'></script>
+<link rel='https://api.w.org/' href='http://wonpage.co.kr/wonpageproduct/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://wonpage.co.kr/wonpageproduct/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://wonpage.co.kr/wonpageproduct/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 4.4.10" />
+		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		</head>
+
+<body class="home blog">
+<div id="page" class="hfeed site">
+	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+	<div id="content" class="site-content">
+
+
+<!-- Feature Section area -->
+<div class="section-area">
+	    
+        
+                        
+    <div id="featured" style="background-color: #efefef; background-image: url(http://wonpage.co.kr/wonpageproduct/wp-content/themes/wonpageproduct/images/main-bg.jpg);">
+        <div class="container">
+            <div class="slide">
+            	<div class="site-logo"><img src="img/molanglogo.gif" alt="웹사이트" id="logo" /></div>
+                <h1 class="section-title">이곳은 몰랑이 홍보사이트입니다</h1>
+                <p>아래에 보이는 귀여운 캐릭터에 대해 아십니까?</p>
+            </div> <!-- .slide -->
+				  
+		  <div class="cycle-slideshow">
+					<img src="img/the3.png" alt="sc-3">
+					<img src="img/the2.png" alt="sc-2">
+					<img src="img/the1.png" alt="sc-1"> </div>
+        </div> <!-- .container -->  
+
+        <span class="featured-overlay"></span>  
+    </div> <!-- #featured -->
+</div> <!-- .section-area -->
+<!-- end Feature Section area -->
+
+<!-- Service Section area -->
+<div class="section-area">
+    <div id="service-area" style="background-color: #ffffff;">
+        <div class="container">
+            <div id="services" class="clearfix">
+                <div class="service one-third">
+                	    
+                    <div class="thumb"><img src="img/mol9.gif" alt="1st" /></div>
+                    <h3 class="title" style="color: #666666;">보기만해도 귀엽지 않나요?</h3>
+					<p style="color: #666666;">창조주가 우울한 감정이 가득한<br> 이 지구에 내린<br>
+					귀여운 선물일지도 모릅니다<br>
+</a></p>
+                </div>  <!-- end .service -->
+                <div class="service one-third">
+                	    
+                    <div class="thumb"><img src="img/mol2.png" alt="2rd" /></div>
+                    <h3 class="title" style="color: #666666;">볼때마다 엄마미소가 자동으로 지어집니다</h3>
+					<p style="color: #666666;">몰랑이를 보고도 미소가 지어지지 않는다면 당신은 정신감정이 필요합니다<br>
+                </div>  <!-- end .service -->        
+                <div class="service one-third last">
+                	    
+                    <div class="thumb"><img src="img/mol3.png" alt="3th" /></div>
+                    <h3 class="title" style="color: #666666;">당신을 춤추게 할 수도 있습니다</h3>
+					<p style="color: #666666;">몰랑이와 함께 춤을 추어 보세요!<br>
+                </div>  <!-- end .service -->                     
+            </div> <!-- end #services -->
+        </div> <!-- .container -->
+    </div> <!-- #service-area -->
+</div> <!-- .section-area -->
+<!-- end Service Section area -->
+
+
+<!-- Column Section area -->
+<div class="section-area">
+	        
+    <div class="img-section" style="background-color: #ededed;">
+        <div class="container one-column-bottom clearfix">
+            <div class="entry">
+                <h1 class="section-title" style="color: #666666;">몰랑이의 첫번째 특징</h1>
+                <p style="color: #666666;">몰랑이는 매사 여유롭게 잠이 무척 많습니다. 자는동안 깨지않게 조용히 해주세요.
+				<br>몰랑이는 잠을 방해받는다면 극도로 민감해집니다.<br> 하루 10시간은 숙면해야 몰랑이는 즐거움을 유지할 수 있습니다.</p>
+            </div>
+            <div class="thumb"><img src="img/mol4.png" alt="첫번째 특징" /></div>
+        </div> <!-- .container -->        
+    </div>
+</div> <!-- .section-area -->
+<!-- end Background area -->
+
+
+<!-- Column Section area -->
+<div class="section-area">
+	        
+    <div class="img-section" style="background-color: #ff8d60;">
+        <div class="container two-column-left clearfix">
+            <div class="entry">
+                <h1 class="section-title" style="color: #ffffff;">몰랑이의 두번째 특징</h1>
+                <p style="color: #ffffff;">몰랑이는 파티에 민감합니다 <br>
+				서로 춤추고 번쩍번쩍 빛나는것을 좋아합니다 <br>
+				이 귀여운 몰랑이와 바로 친해지는 방법은 바로 <br>
+				"즐거운 파티"에 초대하는 것입니다 <br>
+				몰랑이는 파티에 초대된다면 나흘전부터  <br>
+				잠을 이루지못할정도로 극도의 즐거움상태에 빠져있게되며<br>
+				이는 곧 당신에대한 호감으로 이어집니다			
+				</p>
+            </div>
+            <div class="thumb"><img src="img/mol6.png" alt="두번째 특징" /></div>
+        </div> <!-- .container -->        
+    </div>
+</div> <!-- .section-area -->
+<!-- end Background area -->
+
+
+<!-- Column Section area -->
+<div class="section-area">
+	        
+    <div class="img-section" style="background-color: #9d8e8a;">
+        <div class="container two-column-right clearfix">
+            <div class="entry">
+                <h1 class="section-title" style="color: #353030;">몰랑이의 세번째 특징</h1>
+                <p style="color: #353030;">몰랑이는 식탐이 매우 많습니다.<br>
+				몰랑이는 자는것, 파티 다음으로 좋아하는것이 '먹는것'입니다<br>
+			 몰랑이에게 달콤한 과자를 선물해보세요. <br>
+			 몰랑이가 초롱초롱한 눈망울로 당신에게 감사를 표할 것입니다<br>
+			 그리고 당신은 그 귀여움에 흠뻑 빠지게 될 것입니다</p>
+            </div>
+            <div class="thumb"><img src="img/mol7.gif" alt="세번째 특징" /></div>
+        </div> <!-- .container -->        
+    </div>
+</div> <!-- .section-area -->
+<!-- end Background area -->
+
+
+<!-- Page Section area -->
+<div class="section-area">
+    <div class="page-section" style="background-color: ;">
+        <div class="container">
+            <h1 class="section-title">몰랑이 동영상</h1><p>
+			  <article class="at3">
+	    <embed src="vd/main_vd1.mp4" [width:"1050px" height:"900px"]>
+	  </article>
+			</p>
+
+<button class="b1" onclick="location.href='https://www.youtube.com/channel/UCUkslTRrWDdmZmncHpb9sLQ'">
+이 버튼을 클릭하시면 <br> 더 다양한 동영상을 보실 수 있습니다</button>
+		
+		
+		</div> <!-- .container -->
+    </div>
+</div> <!-- .section-area -->
+<!-- end Page Section area -->
+
+
+
+
+	</div><!-- #content -->
+
+	<footer id="colophon" class="site-footer" role="contentinfo" style="background-color: #666666;">
+
+		<div class="container">    
+            <div id="footer-sidebar" class="secondary clearfix">
+                <div id="footer-sidebar1" class="one-third">
+					<aside id="text-2" class="widget widget_text"><h3 class="widget-title">(주)몰랑이</h3>			<div class="textwidget">대표이사 : 우리모두 ㅣ 사업자번호: 000-00-00000 ㅣ 주소 : 서울특별시 강남구 역삼동 819-10 세경빌딩3층 </div>
+		</aside>                </div>
+                <div id="footer-sidebar2" class="one-third">
+					<aside id="text-3" class="widget widget_text"><h3 class="widget-title">전화상담</h3>			<div class="textwidget">상담시간: 평일 정각 오전5시
+<h1 style="color:#ef6b49; font-weight:bold;font-size: 24px; ">010-5533-0061</h1></div>
+		</aside>                </div>
+                <div id="footer-sidebar3" class="one-third last">
+					<aside id="text-4" class="widget widget_text"><h3 class="widget-title">이메일상담</h3>			<div class="textwidget"><h1 style="color:#ef6b49; font-weight:bold; font-size: 24px;">kihsssp@gmail.com</h1></div>
+		</aside>                </div>
+            </div><!-- #footer-sidebar -->
+		</div><!-- .container -->
+                    
+    	<div class="container">
+            <div class="site-info">
+               
+            </div><!-- .site-info -->
+        </div><!-- .container -->
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<script type='text/javascript' src='http://wonpage.co.kr/wonpageproduct/wp-content/themes/wonpageproduct/js/navigation.js?ver=20120206'></script>
+<script type='text/javascript' src='http://wonpage.co.kr/wonpageproduct/wp-content/themes/wonpageproduct/js/skip-link-focus-fix.js?ver=20130115'></script>
+<script type='text/javascript' src='http://wonpage.co.kr/wonpageproduct/wp-includes/js/wp-embed.min.js?ver=4.4.10'></script>
+
+</body>
+</html>

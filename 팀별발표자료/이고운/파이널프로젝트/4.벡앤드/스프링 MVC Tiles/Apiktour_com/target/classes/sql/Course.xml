@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="course">
+ 	<!--
+ 		cosnum      Integer(3)           코스 id값(1~999)
+ 		play            CHAR(4)             쉴래?(REST) 놀래?(PLAY) 구분
+ 		cosname    VARCHAR(40)      코스명(한글 20글자)
+ 		lv               Integer(1)            에너지 & 피로도 level 값 (1~5)
+ 		intro           VARCHAR(200)    간략한 소개글 (in 상세정보)
+ 	 -->
+ <select id="selectCosCount" resultType="int">
+		select count(*) 
+		from COURSE 
+	</select>	
+	
+	<select id="selectCourseOne"  parameterType="Integer" resultType="courseDto">
+		select cosnum, play, cosname, lv, intro 
+		from COURSE 
+		where cosnum=#{cosnum}
+	</select>
+	
+	<select id="selectCourseList" parameterType="map" resultType="courseDto">
+		select cosnum, play, cosname, lv 
+		from COURSE 
+		where play=#{play} and lv=#{lv}
+	</select>
+	
+	
+	<select id="selectCourseCount" parameterType="map" resultType="int">
+		select count(*) 
+		from COURSE 
+		where play=#{play} and lv=#{lv}
+	</select>	
+	
+	
+	<!-- 코스번호 n에 대한 정보, 사이드바에 표현될 영역 -->
+	<select id="selectCourseNumList" parameterType="Integer" resultType="courseVo">
+		select c.cosnum, c.cosname, l.locnum, m.locname, m.locationx, m.locationy, m.loctype, d.address, d.imgname, d.tel, d.time, d.contents 
+		from COURSE c, COSLOC l, MAP m, DETAILS d, ICONTYPE i 
+		where d.locnum=l.locnum   
+		and l.locnum=m.locnum 
+		and c.cosnum=l.cosnum 
+		and m.loctype=i.loctype 
+		and c.cosnum=#{cosnum};
+	</select>	
+	
+	<!-- 코스넘버 n에 해당되는 개수 -->
+	<select id="selectCourseNumCount" parameterType="Integer" resultType="int">
+		select count(*) 
+		from COSLOC where cosnum=#{cosnum}
+	</select>	
+	
+ 	<!-- 코스유형과 레벨에 따른 코스위치, 좌표 -->
+ 	<select id="selectCourseMarker" parameterType="map" resultType="courseVo">
+	select c.play, c.lv, c.cosnum, c.cosname, l.locnum, m.locname, m.locationx, m.locationy, m.loctype 
+	from COURSE c, COSLOC l, MAP m 
+	where l.locnum=m.locnum and c.cosnum=l.cosnum 
+	and c.play=#{play} and lv=#{lv}
+	</select>
+
+ 	
+ 	<!-- 전체 불러오기 -->
+	<select id="listcourse" resultType="courseDto">
+		select * from COURSE order by cosnum desc
+	</select>
+	
+	<!-- 전체 개수 id = selectCosCount  -->
+    
+    <!-- 상세보기 -->
+    <select id="detailscourse" parameterType="String" resultType="courseDto">
+    	select * from COURSE where cosnum=#{cosnum}
+    </select>
+	
+	<!-- 코스 검색 -->
+	<select id="searchcourse" parameterType="courseDto" resultType="courseDto">
+		select * from COURSE where ${keyField} LIKE '%${keyWord}%'					
+	</select>
+	
+	<!-- 검색된 코스 수  -->
+	<select id="countsearchcourse" parameterType="courseDto" resultType="Integer">
+		select count(*) from COURSE where ${keyField} LIKE '%${keyWord}%' 
+	</select>
+	
+	<!-- 코스등록 -->
+	<insert id="insertcourse" parameterType="courseDto">
+		insert into COURSE values(#{cosnum},#{play},#{cosname},#{lv},#{intro})
+	</insert>
+	
+	<!-- 코스 수정 -->
+	<update id="updatecourse" parameterType="courseDto">
+		update COURSE set cosnum=#{cosnum},play=#{play},cosname=#{cosname},lv=#{lv},intro=#{intro} where cosnum=#{cosnum}
+	</update>
+	
+	<!-- 코스 삭제 -->
+	<delete id="deletecourse" parameterType="String">
+		delete from LIKET where cosnum=#{cosnum};
+		delete from COSLOC where cosnum=#{cosnum};
+		delete from COURSE where cosnum=#{cosnum};
+	</delete>
+ </mapper>

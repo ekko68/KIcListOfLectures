@@ -1,0 +1,187 @@
+package bag.design.page;
+
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.util.ArrayList;
+import java.sql.*;
+
+import bag.handle.sql.HandleProductDB;
+import bag.lend.connection.MakeConnection;
+import bag.lend.dbdata.Product;
+
+public class ProductPage extends JFrame {
+
+	private JTextField txtB_Num, txtB_Title, txtB_Check;// 제품번호, 제품제목, 제품정보, 상태여부
+	private JTextArea txtB_Infor;
+	private JLabel pdPic, pdRec;// 제품번호, 제품제목, 제품정보, 상태여부
+	private Canvas Product_image;
+	private JButton C_Insert, C_delete, C_Update, C_Select, btnClose, C_Back, C_Next;
+
+	JFrame frame = new JFrame();
+
+	// 생성자
+	public ProductPage() {
+
+		Design();
+		frame = new JFrame();
+		setExtendedState(Frame.MAXIMIZED_BOTH);
+		// setBounds(800,0,500,800);
+		setVisible(true);
+		display();
+	}
+
+	// 디자인
+	public void Design() {
+
+		// 테두리 설정
+		// this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // x,y,w,h
+
+		// btnsu=new JButton("그림 수정");
+
+		/*
+		 * this.getContentPane().add(C_Insert); this.getContentPane().add(C_delete);
+		 * this.getContentPane().add(C_Update); this.getContentPane().add(C_Select);
+		 */
+
+		// 버튼 생성
+		C_Insert = new JButton("신규");
+		C_Insert.setPreferredSize(new Dimension(79, 29));
+		C_delete = new JButton("삭제");
+		C_delete.setPreferredSize(new Dimension(79, 29));
+		C_Update = new JButton("수정");
+		C_Update.setPreferredSize(new Dimension(79, 29));
+		C_Select = new JButton("검색");
+		C_Select.setPreferredSize(new Dimension(79, 29));
+		btnClose = new JButton("닫기");
+		btnClose.setPreferredSize(new Dimension(79, 29));
+		C_Back = new JButton("이전");
+		C_Next = new JButton("다음");
+		pdRec = new JLabel("0 / 0");
+
+		// 전체 박스 부착
+		// getContentPane().setLayout(new BoxLayout(getContentPane(),
+		// BoxLayout.X_AXIS));
+		getContentPane().setLayout(null);
+
+		// 이미지 패널----------------------------------------------------
+		JPanel picPn = new JPanel(); // new JPanel(new BorderLayout())
+		picPn.setBorder(
+				new TitledBorder(new TitledBorder("제품 사진"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		picPn.setBounds(10, 20, 906, 809);
+		// picPn.setLayout(null);
+		JPanel aPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel aPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		// 제품 이미지
+		pdPic = new JLabel();
+		Product_image = new Canvas();
+		Product_image.setBounds(27, 33, 866, 718);
+		aPn1.add(Product_image);
+		Product_image.setBackground(Color.LIGHT_GRAY);
+
+		// 레코드이동 패널
+		// aPn2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		aPn2.add(C_Back);
+		aPn2.add(pdRec);
+		aPn2.add(C_Next);
+
+		// 부착
+		aPn1.add(pdPic);
+		picPn.add(aPn1);
+		picPn.add(aPn2);
+		this.getContentPane().add(picPn);
+
+		// 테두리 설정
+		// this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // x,y,w,h
+
+		// 제품정보 패널
+		JPanel infoPn = new JPanel();
+		infoPn.setBorder(
+				new TitledBorder(new TitledBorder("제품 정보"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		infoPn.setBounds(936, 20, 640, 630);
+		infoPn.setLayout(null);
+
+		JPanel bPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn1.setBounds(20, 25, 600, 60);
+		JPanel bPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn2.setBounds(20, 90, 600, 60);
+		JPanel bPn3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn3.setBounds(20, 155, 600, 60);
+		JPanel bPn4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn4.setBounds(20, 220, 600, 30);
+		JPanel bPn5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn5.setBounds(20, 250, 610, 360);
+
+		txtB_Num = new JTextField("", 53);
+		txtB_Check = new JTextField("", 53);
+		txtB_Title = new JTextField("", 53);
+		txtB_Infor = new JTextArea(19, 53);
+
+		txtB_Num.setEditable(false);
+		txtB_Check.setEditable(false);
+		txtB_Title.setEditable(false);
+		txtB_Infor.setEditable(false);
+		// JScrollBar scroll=new JScrollBar();
+
+		// 라벨-패널-패널 부착
+		bPn1.add(new JLabel("제품번호 :"));
+		bPn1.add(txtB_Num);
+		bPn2.add(new JLabel("제품이름 :"));
+		bPn2.add(txtB_Check);
+		bPn3.add(new JLabel("상태유무 :"));
+		bPn3.add(txtB_Title);
+		bPn4.add(new JLabel("제품 상세 정보"));
+		bPn5.add(txtB_Infor);
+		// bPn5.add(scroll);
+		infoPn.add(bPn1);
+		infoPn.add(bPn2);
+		infoPn.add(bPn3);
+		infoPn.add(bPn4);
+		infoPn.add(bPn5);
+		this.getContentPane().add(infoPn);
+
+		// 신규, 수정, 버튼
+		JPanel btnPn = new JPanel();
+		// btnPn.setLayout(null);
+		btnPn.setBounds(936, 659, 640, 50);
+		btnPn.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+		btnPn.add(C_Insert);
+		btnPn.add(C_delete);
+		btnPn.add(C_Update);
+		btnPn.add(C_Select);
+		this.getContentPane().add(btnPn);
+
+		JPanel delPn = new JPanel();
+		// delPn.setLayout(null);
+		delPn.setBounds(936, 780, 640, 70);
+		delPn.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		delPn.add(btnClose);
+		this.getContentPane().add(delPn);
+
+	}
+
+	private void display() {
+		HandleProductDB productDB = new HandleProductDB();
+
+		ArrayList<Product> product = productDB.selectAllData(MakeConnection.getInstance());
+
+		System.out.println("size"+product.size());
+		for (int i = 0; i < product.size(); i++) {
+			txtB_Num.setText(product.get(i).getNum() + "");
+			txtB_Title.setText(product.get(i).getTitle());
+			txtB_Infor.setText(product.get(i).getInfo());
+	
+		}
+
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ProductPage ProductInfo = new ProductPage();
+
+	}
+
+}

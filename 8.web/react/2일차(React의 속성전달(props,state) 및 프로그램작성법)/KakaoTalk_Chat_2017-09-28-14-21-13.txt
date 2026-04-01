@@ -1,0 +1,345 @@
+﻿2일차(컴포넌트를 생성 및 모듈화 방법,
+         ***React의 속성전달(props),state) 및 프로그램작성법***)
+
+이번주 금요일 오후5시
+
+(앵귤러(10문제)), 리액트(5문제))
+-------------------------------------
+  프로젝트명->ng serve===>react (npm start)
+       |
+        -node_modules->다운로드 받은 모듈등록(로컬)
+       |
+        -public ->저장 위치 지정->webpack.config.js에서 설정
+            |
+             -index.html->메인페이지(bundle.js로 통합)
+        |
+          -src =>소스저장 위치(dev)
+             |
+              -components->App.js(컴포넌트만 저장 시킬 목적)
+                                     App2.js
+                                     App3.js
+             |
+              -index.js->컴포넌트를 불러와서 화면에 출력
+                              React,ReactDOM(화면에 출력->랜더링)
+                                                        render()
+---------------------------------------------------------------------------
+다양한 화면디자인의 컴포넌트 제작->속성을 전달->속성값전달,이벤트처리
+---------------------------------------------------------------------------
+ index.html
+ <body>
+  <div id='root2'>
+     <App2>
+          <Header />
+          <Content />
+     </App2>
+  <div>
+</body>
+=================
+index.html
+ <body>
+  <div id='root'>
+     <Card>  ====>책의 예제
+          <Square />
+          <Label />
+     </Card>
+  <div>
+</body>
+================
+부모->자식 컴포넌트1-> 자식컴포넌트2에게 전달
+
+ReactDOM.render(<App2 headerTitle="전달연습!"
+                      contentTitle="전달연습2!!" 
+                      contentBody="부모에서 자식에게 전달함"/>,rootElement2); 
+
+******************************************
+부모입장-> render(<자식태그명 매개변수명="값"~ />
+                전달할값(문자,숫자,객체,함수->이벤트처리
+                                                            가능)
+  var test="전달연습!";
+ 앵귤러 <App2 [headerTitle]="test"
+                           =>@Input() 변수명:string;
+                           =>리엑트
+                           =>{this.props.전달받은 매개변수명}
+                                {this.props.headerTitle}
+******************************************
+모듈화->자식컴포넌트들을 따로 각각의 파일로 만들어서
+             저장한 뒤 필요로하는 경우 import로 불러오는
+             방법
+
+export class 클래스명->Angular
+export default class 클래스명->React의 경우 
+===========================
+
+import React from 'react';
+
+export default class Header extends React.Component{
+    render(){
+        //return(<h1>Header</h1>);
+        return(<h1>{this.props.title}</h1>);
+    }
+}
+//export default Header; //다른 모듈에서 불러올 수 있다.
+==================================
+...배열명=>spread연산자를 사용=>1.babel-preset-stage-0 모듈 설치
+                                                  2.webpack-config.json파일에서 preset등록
+                                                       presets: ['es2015','stage-0','react'] 
+                                                                                   =====>추가할것.
+
+C:\webtest\8.web\react\react-backup>npm install --save babel-preset-stage-0
+npm WARN react-tutorial@1.0.0 No description
+npm WARN react-tutorial@1.0.0 No repository field.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.2 (node_modules\fse
+vents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
+1.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"}
+)
+
++ babel-preset-stage-0@6.24.1
+added 146 packages in 26.649s
+
+***값을 전달하지 못했을 경우의 대처방법***
+
+->에러유발 화면에 결과X
+
+ String pageNum=request.getParameter("pageNum")
+           ======null
+ if(pageNum==null){
+    pageNum="1"; //기본적인 값을 설정->defaultProps라고 한다.
+ }
+
+1.defaultProps=>원래 props값을 전달받지 못했을 경우 기본적은 이 값을 받을 수 있도록
+                         설정한 props값=>자식클래스에서 설정
+
+2.올바른 값을 전달을 받았는지 검증(Type 검증(Validate))
+  ->내가 원하는 데이터가 아니라면 에러를 유발시킬 수 있도록 설정 방법
+
+//자식입장에서 만약에 props를 못받는 경우
+//형식) 자식클래스명.defaultProps={매개변수명:기본값,~}
+App2.defaultProps = {
+    headerTitle:'기본값 header',
+    contentTitle:'기본값 contentTitle',
+    contentBody:'기본값 contentBody'
+};
+
+자식클래스.propTypes={
+   매개변수명:React.PropTypes.자료형 자료형을 지정----------->var test:string; //int
+   매개변수명:React.PropTypes.자료형.isRequired   /*필수 전달 요소 체크*/
+}
+==================================================
+css을 불러올때 자동으로 프로젝트을 구성한 경우
+
+ import '.App.css'
+
+ <태그명 className="클래스명(no)">
+
+</태그명>
+-----------------------------------------------------
+수동인 경우->따로 스타일에 적용되는 모듈을 설치해야 된다.
+
+1.스타일을 적용하는 Module을 다운로드 받음(style-loader,css-loader)
+C:\webtest\8.web\react\react-test2>
+npm install --save-dev style-loader css-loader
+
+npm WARN react-tutorial@1.0.0 No description
+npm WARN react-tutorial@1.0.0 No repository field.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.2 (node_modules\fse
+vents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
+1.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"}
+)
+
++ css-loader@0.28.7
++ style-loader@0.18.2
+added 233 packages in 33.753s
+
+C:\webtest\8.web\react\react-test2>
+
+2.모듈을 환경설정에 추가(webpack.config.json파일)
+
+module.exports = {
+    entry: './src/index.js',  /* 불러오는 처음 시작위치(자바스크립트파일)  */
+
+    output: { /* 최종적으로 화면에 출력 */
+        path: __dirname + '/public/',  /* 메인페이지의 위치 */
+        filename: 'bundle.js' /* js파일들이 묶어서 만들어진 최종파일 */
+    },
+
+    devServer: {  /* 개발 서버의 설정 부분 */
+        inline: true,
+        port: 7777,  /* 포트번호 */
+        contentBase: __dirname + '/public/' /* index.html */
+    },
+
+    module: {
+            loaders: [  
+                {
+                    test: /\.js$/,  /* 불러오는 자바스크립트 파일 확장자*/
+                    loader: 'babel-loader', /* 소스코딩 변경->반영 */
+                    exclude: /node_modules/, /* 불러오는 모듈 배제위치 */
+                    query: {
+                        cacheDirectory: true,
+                        presets: ['es2015','stage-0','react'] /* es6, react */
+                    },
+                //----추가한 부분
+                },
+                    {
+                        test:/\.css$/ ,   ->css파일 설정
+                        loaders:['style-loader','css-loader?modules']
+                          ->설치한 2개의 모듈을 로드하도록 설정
+                    },
+                //--------------------------------------------------------
+            ]
+        }
+};
+=============================
+3.App.css파일 작성
+
+.no {
+    list-style:none;
+    background-color:yellow;
+    color:red;
+}
+
+==============================
+4.
+ App.js에서 
+//추가
+import styles from './App.css'; =>별칭을 부여해서 불러옴
+//----------------------------------
+
+//반드시 파일명과 클래스명이 같아야 되는것은 아니다.
+class GroceryList extends Component{
+  render(){
+      //화면에 출력할 수 있도록 element하는 반환
+      return(
+        <ul className={styles.no}>  
+              =================>{별칭.클래스 선택자명}
+
+5.개발서버 가동->npm start시켜서 결과 확인(이미지 캡처 확인할 것)
+
+-------------------------------------------------------------
+화면디자인할때 컴포넌트 10개로 구성한 페이지를 작성
+
+컴포넌트별로 출력할 데이터가 존재
+
+부모<div>color=4,num=5,size=6 =>멤버변수로 선언 (state)
+        <Shirt> color=4,num=5,size=6
+            <Label>color=4,num=5,size=6
+               <Display>=>color,num,size 값을 출력
+
+props->하나의 부모에서 설정된 값을 다른 자식클래스에서 불러다 사용하는 경우(출력)
+state->그 클래스에서 멤버변수형태에 저장->값이 변동사항->
+           생성자에서 설정->{속성명:설정값,,,}==>직접 접근해서 수정X
+                                                              ->setState()을 통해서 수정 O
+   App2를 작성
+-----------------------------------------------------------------------------------
+            ex) Thread객체명.start()->run()호출
+                  Thread객체명.run()호출
+
+
+public Test extends JFrame{  //생성자를 이용
+
+     Test(String s){
+        //setTitel(s);
+       super(s);      
+ }
+}
+    Test t=new Test("창의제목");
+
+리엑트에서도 생성자의 값을 초기화할때 부모로부터
+ 넘겨받은 값을 먼저 초기화시켜주고 나서 자기 클래스의
+ state값을 초기화시켜준다.
+----------------------------------------------------
+es6 버전업->이벤트를 처리해주는 함수를 작성 바로 연결X (bindig X)
+=======>수동으로 이벤트처리해주는 함수를 연결시켜라(권장)
+
+자바)-->이벤트 연결
+      이벤트소스객체명.addActionListener(this)
+------------------------------------------------->이와 비슷한 구문을 사용
+형식) 1.this.호출할함수명=this.호출할함수명.bind(this)=>생성자
+   이벤트를 처리해주는 함수가 많아지면 생성자의 소스코드가 늘어난다.
+   (단점)
+
+형식) <태그 on이벤트종류={this.호출할 함수명.bind(this)}
+                                                                  ======
+
+import React,{Component} from 'react';
+//state,이벤트를 처리하는 방법
+export default class App2 extends Component{
+
+    //생성자->constructor(){}
+    constructor(props){
+       super(props);
+       //이 자식클래스에서 필요로하는 멤버변수(state) 초기화
+       this.state={
+           //속성명:값,,,
+           name:''
+       };
+       //호출할 함수를 이벤트연결하는 구문
+       this.buttonClick=this.buttonClick.bind(this);
+       //this.clear=this.clear.bind(this);
+    }
+    buttonClick(){//name값을 수정하기
+        //this.state.name='ddd'; setState()를 이용->권장
+        this.setState({
+            name:'수정연습'//name:value(전달받은 매개변수값)
+        });
+        console.log('buttonClick 호출됨!'+this.state.name);
+    }
+    clear(){  //화면을 지우기
+        this.setState({
+            name:''//
+        });
+        console.log('정상적으로 화면이 지워집니다.');
+    }
+
+    render(){
+        //let test="imsi"
+        return(
+            <div>
+             <h1>state연습 {this.state.name}</h1>
+             <button onClick={this.buttonClick}>클릭</button>&nbsp;
+             <button onClick={this.clear.bind(this)}>지우기</button>
+            </div>
+        );
+    }
+}
+
+=====================================
+{this.props.매개변수명}   {this.state.속성명}=>mix
+================================
+react-totorial
+========
+
+  App.js
+  App2.js
+      Header
+      Content
+      RandomNumber
+====================
+1.props<->state을 같이 혼합했을때의 처리방법
+
+2.컴포넌트의 생명주기 11장(읽어오기)
+3.데이터에서 UI로  9장
+4.이벤트 10장
+===========================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

@@ -1,0 +1,114 @@
+/*전체 화면*/
+.golog{
+    width: 564px;
+    margin: 100px auto;
+
+}
+.poplog{
+
+   display: inline-block;
+    border: 16px solid #fdf2d5;
+    vertical-align: baseline;
+    width: 500px;
+    position: absolute;
+    padding: 16px;
+    background: white;
+    z-index: 100;
+}
+
+h3 {
+    color: gray;
+    font-size: 30px;
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+    padding-right: 32px;
+    margin: 14px 0;
+}
+
+/*아이디와 비밀번호 위치*/
+
+.name{
+    position: relative;
+    top: -4px;
+    padding: 9px;
+    display: inline-block;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    width: 142px;
+}
+.bname hover{		
+	right:0;	
+}
+
+.pwd{
+	position: relative;
+    top: -8px;
+    padding: 9px;
+    display: inline-block;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    width: 142px;
+
+}
+
+
+
+/*로그인버튼과 회원가입 버튼 위치*/
+
+.poplog a{
+	
+	display:inline-block;
+}
+
+.bname{
+   background-color: lightblue;
+    border: none;
+    color: white;
+    padding: 18px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 1px 2px;
+    cursor: pointer;
+    position: relative;
+    float: right;
+    top: 63px;
+    right: 62px;
+    z-index: 101;
+}
+
+.gaip{
+    border: none;
+    color: darkgray;
+    padding: 16px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    position: relative;
+    float: right;
+    right: -243px;
+    top: 118px;
+    z-index: 101;
+}
+
+.find{
+    border: none;
+    color: darkgray;
+    padding: 16px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    position: relative;
+    float: right;
+    right: -79px;
+    top: 103px;
+    z-index: 101;
+}

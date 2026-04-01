@@ -1,0 +1,95 @@
+@CHARSET "UTF-8";
+/* 메인 공통 CSS */
+
+/* 웹 폰트 사용 */
+@import url(../fonts/nanumgothic.css);
+@import url(../fonts/SpoqaHanSans-kr.css);
+@import url(../fonts/ElegantIcons.woff);
+@import url(../fonts/NotoSansKR_Bold.woff);
+@import url(../fonts/NotoSansKR_Regular.woff);
+
+a:link, a:visited, a:active{color:#333; text-decoration:none;}
+a:hover{color:#666; text-decoration:underline;}
+
+#mfmServiceLogo:hover{color:#333; text-decoration:none;}
+.products a, .more_board_news a{color:#fff}
+
+/* 기본 폰트, 가운데 정렬 */
+#wrapper{
+	font-family:'HanSans', 'nanumgothic', 'Spoqa Han Sans', 'Sans-serif';
+	margin:0 auto;
+	/* padding-top:20px; */
+}
+/* 웹 접근성 글자 숨김 */
+#mfmIndex{
+	display:none;
+}
+
+#mfmLogo{
+	float:left
+}
+
+/* 본문 */
+
+#mfmContent, .products, hr{clear:both}
+hr{border:1px solid #ccc}
+
+/* 영상 컨테이너*/
+#mfmContent .main{overflow:hidden; position:relative;z-index:0;background:#fff}
+/* //영상 컨테이너*/
+
+/* 영상 */
+#main_morning{min-height:500px;width:100%; min-width:360px; z-index:0}
+/* // 영상 */
+
+/* 영상 카피 */
+.main p{
+	font-family:HanSans;
+	font-weight:bold;
+	color:#fff;
+	text-shadow:1px 1px #666;
+}
+/* //영상 카피 */
+
+/* 게시판 */
+.board>div>p, footer{
+    font-family:HanSans;
+	color:#333
+}
+.board ul{list-style-type:disc}
+/* 게시판 자세히*/
+.more_board_news{
+	margin:0 auto;
+	color:#fff;
+	text-align:center;
+	background-color:rgb(52, 152, 219);
+}
+/* //게시판 자세히*/
+
+/* //게시판 */
+
+/* 주문-상품 목록*/
+.products{
+	margin:0 auto;
+	background-image:url("../imgs/bg_sale_large.jpg");
+	background-size:cover;
+	/* 투명배경 */
+	/* opacity:0.4;
+    filter:alpha(opacity=40);  *//* IE8 and earlier */
+}
+/* .wrap_product > div{background-color:rgba(255,255,255,.5)} */
+.products > div{background-color:rgba(255,255,255,.5)}
+.wrap_product li{float:left}
+/* 상품설명, 가격 */
+.box_products li{clear:both}
+/* .box_products figure{background-color:rgba(0,0,0,.4);width:158px;color:#fff;text-align:center} */
+.box_products figure{background-color:rgba(10,10,10,.4);width:158px;color:#fff;text-align:center}
+/* 이전 상품가격 */
+.prv_price{text-decoration:line-through;color:#ee7a66}
+/* //주문-상품 목록*/
+
+/* //본문 */
+
+footer{
+	background-color:#e0e0e0;	
+}

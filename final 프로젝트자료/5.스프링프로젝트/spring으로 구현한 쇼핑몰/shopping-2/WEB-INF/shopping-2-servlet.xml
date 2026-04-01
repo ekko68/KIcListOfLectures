@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- HandlerMapping -->
+	<bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/index.html">indexController</prop>
+                <prop key="/detail.html">detailController</prop>
+            </props>
+        </property>
+	</bean>
+
+	<!-- Controller -->
+	<bean id="indexController" class="controller.IndexController">
+		<property name="shopService"><ref bean="shopService" /></property>
+	</bean>
+	
+	<bean id="detailController" class="controller.DetailController">
+		<property name="shopService"><ref bean="shopService" /></property>
+		<property name="cacheSeconds">
+		               <value>30</value>
+		</property>
+	</bean>
+	
+	<!-- ViewResolver -->
+	<bean id="internalResourceViewResolver" 
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+		<property name="prefix">
+			<value>WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,27 @@
+package bag.db.data;
+
+public class CustomerPageData {
+	private int product_num;
+	private String name;
+	private String tel;
+	private String gender;
+	private int age;
+	private String address;
+	private String coupon_info;
+	private String product_info;
+	private String path;
+	
+	public CustomerPageData() {}
+	public CustomerPageData(int product_num,String name,String tel,String gender, int age,String address,
+			String coupon_info,String product_info,String path) {
+		this.product_num=product_num;
+		this.name = name;
+		this.tel = tel;
+		this.gender = gender;
+		this.age = age;
+		this.address = address;
+		this.coupon_info = coupon_info;
+		this.product_info = product_info;
+		this.path = path;
+	}
+}

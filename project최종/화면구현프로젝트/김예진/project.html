@@ -1,0 +1,174 @@
+<!doctype html>
+ <head>
+  <meta charset="UTF-8">
+  <title>오늘모먹지</title>
+<!-- 스타일시트 -->
+ <link href="css/main.css" rel="stylesheet" type="text/css"> 
+ <link href="css/log.css" rel="stylesheet" type="text/css">
+<!-- 자바소스 -->
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/jquery.cycle2.js"></script>
+<!-- 로그인창-->
+<script>
+		function test(){
+			if (document.myform.name.value==""){
+				alert("아이디를 입력하지 않았습니다.") 
+				document.myform.name.focus()
+				return false
+			}
+			if (document.myform.pwd.value==""){
+				alert("비밀번호를 입력하지 않았습니다") 
+				document.myform.pwd.focus()
+				return false
+			}
+			document.myform.submit();
+		}
+</script>
+</head>
+
+<body>
+ <div class="main">
+
+ <!-- 상단 부분 , 로고와 로그인창 -->
+	<header class="h1">
+		<!-- 좌측 상단 로고 -->
+		<div id="" class="logo">
+			<h1>오늘 모먹지</h1>			
+		</div>
+	
+		<!-- 우측 상단 로그인창 ..-->
+		<nav class="log">
+			<ul class="log_ul">
+				<li><a href="project_log.html"  target="_blank">로그인</a></li>
+				<li><a href="#">마이페이지</a></li>
+			</ul>
+		</nav>
+
+	</header>
+
+<!-- 상단에 차지하는 이미지 움직이게 ! -->
+	<div class="cycle-slideshow">
+		<img src="./image/1.jpg" width="100%" height="" border="0" alt="">	
+		<img src="./image/3.jpg" width="100%" height="" border="0" alt="">
+  </div>
+
+
+<!-- 메뉴 : 하단에 위치! -->
+<div class="menu">
+	<nav>
+		<ul class="dropdownmenu">
+			<li class="li1"><a href="#">지역별</a> <!-- 1 -->
+				<ul>
+					<li><a href="#">서울</a><!-- 2 -->
+					</li>
+					<li class="li3"><a href="#">경기/강원</a>
+						<ul>
+							<li><a href="#">인천</a></li><!-- 3 -->
+							<li><a href="#">수원</a></li>
+							<li><a href="#">경기북부</a></li>
+							<li><a href="#">경기남부</a></li>
+						</ul></li>
+					<li><a href="#">전라/경상</a></li>
+					<li><a href="#">제주</a></li>	
+				</ul>
+			</li>
+			<li class="li2"><a href="#">지하철노선별</a><!-- 1 -->
+				<ul >
+					<li><a href="#">서울</a><!-- 2 -->
+						<ul>
+							<li><a href="#">1호선</a></li><!-- 3 -->
+							<li><a href="#">2호선</a></li>
+							<li><a href="#">3호선</a></li>
+							<li><a href="#">4호선</a></li>
+						</ul></li>
+					<li><a href="#">부산</a>
+						<ul>
+							<li><a href="#">1호선</a></li>
+							<li><a href="#">2호선</a></li>
+						</ul></li>
+				</ul>
+			</li>		
+		</ul>
+	</nav>
+</div>
+<!-- 본문1 이달의 추천 맛집 및 소개, 위치 -->
+	<div id="" class="mat1">
+		<h4>이달의 추천 맛집</h4>
+		<figure class="mat1_1">
+			<img src="./image/mat1_1.jpg" width="300px" height="" border="0" alt="">
+			<img src="./image/mat1_11.jpg" width="300px" height="" border="0" alt="">
+		</figure>		
+		<figure class="mat1_loc"><img src="./image/mat1_loc.jpg" width="250px" height="200px" border="0" alt=""></figure><figcaption class="mat1_loc2">제주도 협재 해변 근처에 위치한 우동 전문점으로 미리 웨이팅 리스트에 적어 놓아야 할 정도로 인기 있는 곳! 주위의 경관과 식당에 앉아 보이는 경관이 아름답다. </figcaption>
+	</div>
+<!-- 본문 2 추천맛집 : 지역별, 종류별 -->
+	<section class="mat2">
+	<h4 >지역별 추천 맛집</h4>
+	<!-- 1 -->
+		<div id="" class="mat2_1">
+				<figure class="mat2_1_1">
+					<img src="./image/mat2_1_1.jpg" width="300px" height="200px" border="0" alt="">
+					<!-- <img src="./image/mat2_1_1_1.jpg" width="" height="" border="0" alt=""> -->
+					<figcaption class="mat2_1_2">가로수길에 위치한 <a href="#">"가티</a>"는 한국적인 식재료들을 이용한 생면 파스타를 맛볼 수 있는 곳입니다. 베스트는 '저염 명란, 관자 크림 먹물 생면'과 '완도 전복과 성게알 리조또', '매운 계란 베이컨 생면'입니다. </figcaption>
+				</figure>
+		</div>
+	<!-- 2 -->
+		<div  id="" class="mat2_2">
+				<figure class="mat2_2_1">
+					<img src="./image/mat2_1_1kk.jpg" width="300px" height="200px" border="0" alt="">
+					<!-- <img src="./image/mat2_1_1kk_1.jpg" width="" height="" border="0" alt=""> -->
+					<figcaption class="mat2_2_2">이름과 다르게 수원시에 위치한 <a href="#">군포해물탕</a>! 싱싱한 해산물과 넉넉한 양으로 승부하는 맛집! 예약은 필수!</figcaption>
+				</figure>	
+		</div>
+	<!-- 3 -->
+		<div id="" class="mat2_3">				
+			<figure class="mat2_3_1">
+				<img src="./image/mat2_2.jpg" width="300px" height="200px" border="0" alt="">
+				<!-- <img src="./image/mat2_2_1.jpg" width="" height="" border="0" alt=""> -->
+				<figcaption class="mat2_3_2">이태원역 근처에 있는 <a href="#">"왕타이"</a> 새우샐러드와 비슷하지만 새콤달콤한 플라꿍과 게살이 들어간 커리인 뿌팟뽕커리를 추천합니다. 연령대 구분없이 다양해서 온가족이 무난히 즐기기 좋은 타이 음식점입니다.</figcaption>
+			</figure>
+		</div>
+	</section>
+<!-- 티비에 소개된 맛집 : 맛집에 대한 정보와 동영상 -->
+<section class="mat4">
+		<article class="mat4_1">
+					<h4>방송에 소개된 맛집</h4>
+				 <video src="./video/mat.mp4" width="480" height="320" 
+               autoplay loop  poster="../image/ms.jpg"></video>			   
+		</article>
+		<article class="mat4_2">	
+			<figure class="mat4_2_1">
+				<img src="" width="" height="" border="0" alt="">
+			</figure>
+		</article>
+</section>
+<!-- 최신 후기 목록? 표 추가하는 것 넣고싶은데 일단 이미지.. -->
+	<div id="hoogi">	
+		<h4>실시간 후기</h4>
+		<div id="hoo2" class="cycle-slideshow">
+		<img src="./image/hoogii.jpg" width="500px" height="" border="0" alt="">
+		<img src="./image/hoogii2.jpg" width="500px" height="" border="0" alt="">
+		<img src="./image/hoogii3.jpg" width="500px" height="" border="0" alt="">
+		<img src="./image/hoogii4.jpg" width="500px" height="" border="0" alt="">
+		<img src="./image/hoogii5.jpg" width="500px" height="" border="0" alt="">
+		</div>
+		
+	</div>
+<!-- footer 이용 약관, 개인정보, 관리자 등의 정보  -->
+	<footer class="foo">
+		<ul class="foo_ul1"><!-- 이용약관 및 개인정보 -->
+			<li><a href="#">서비스이용약관</a></li>
+			<li><a href="#">개인정보처리방침</a></li>
+			<li><a href="#">고객서비스센터</a></li>
+		</ul>
+		<ul class="foo_ul2"><!-- 관리자정보 -->
+			<li>email : everyday@hungry.com</li>
+			<li>instagram : @babjo</li>
+			<li>twitter : @ggorrrrc</li>
+		</ul>
+	</footer>
+
+
+ </div>
+ </body>
+</html>

@@ -1,0 +1,21 @@
+package bag.test.main;
+import bag.handle.sql.HandleCustomDB;
+import bag.lend.connection.*;
+
+public class BagLend1 {
+
+	public static void main(String[] args) {
+		String custom[] = new String[7];
+		
+		HandleCustomDB customDB= new HandleCustomDB();
+	
+		customDB.selectAllData(MakeConnection.getInstance());
+	//	customDB.insertData(MakeConnection.getInstance());
+	//	customDB.deleteData(MakeConnection.getInstance(),2);
+		System.out.println("--------------------------------");
+		customDB.selectAllData(MakeConnection.getInstance());
+	//	customDB.insertData(MakeConnection.getInstance());
+		
+		
+	}
+}

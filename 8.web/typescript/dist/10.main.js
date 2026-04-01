@@ -1,0 +1,13 @@
+"use strict";
+//형식) import {불러올 클래스,상수,함수} from '상대경로 및 불러올파일명';
+//import {pi,square,Person} from './10.lib';  //확장자는 생략
+Object.defineProperty(exports, "__esModule", { value: true });
+var lib = require("./10.lib"); //별칭명.불러올 상수,함수,클래스,,,,
+//형식) import * as 별칭명 from '상대경로 및 불러올파일명';
+console.log(lib.pi); //console.log(pi);
+console.log(lib.square(10)); //console.log(square(10));
+console.log(new lib.Person('Lee')); //const 객체명=new 클래스명(매개변수)
+//console.log(new Person('Lee'));
+//dist>node 10.main.js 
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIjEwLm1haW4udHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBLGtEQUFrRDtBQUNsRCx1REFBdUQ7O0FBRXZELDhCQUErQixDQUFDLHVCQUF1QjtBQUN2RCwyQ0FBMkM7QUFFM0MsT0FBTyxDQUFDLEdBQUcsQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLENBQUMsQ0FBQSxrQkFBa0I7QUFDdEMsT0FBTyxDQUFDLEdBQUcsQ0FBQyxHQUFHLENBQUMsTUFBTSxDQUFDLEVBQUUsQ0FBQyxDQUFDLENBQUMsQ0FBQSwwQkFBMEI7QUFDdEQsT0FBTyxDQUFDLEdBQUcsQ0FBQyxJQUFJLEdBQUcsQ0FBQyxNQUFNLENBQUMsS0FBSyxDQUFDLENBQUMsQ0FBQyxDQUFBLDBCQUEwQjtBQUM3RCxpQ0FBaUM7QUFDakMsc0JBQXNCIiwiZmlsZSI6IjEwLm1haW4uanMiLCJzb3VyY2VzQ29udGVudCI6WyIvL+2YleyLnSkgaW1wb3J0IHvrtojrn6zsmKwg7YG0656Y7IqkLOyDgeyImCztlajsiJh9IGZyb20gJ+yDgeuMgOqyveuhnCDrsI8g67aI65+s7Jis7YyM7J2866qFJztcclxuLy9pbXBvcnQge3BpLHNxdWFyZSxQZXJzb259IGZyb20gJy4vMTAubGliJzsgIC8v7ZmV7J6l7J6Q64qUIOyDneuetVxyXG5cclxuaW1wb3J0ICogYXMgbGliIGZyb20gJy4vMTAubGliJyAvL+uzhOy5reuqhS7rtojrn6zsmKwg7IOB7IiYLO2VqOyImCztgbTrnpjsiqQsLCwsXHJcbi8v7ZiV7IudKSBpbXBvcnQgKiBhcyDrs4Tsua3rqoUgZnJvbSAn7IOB64yA6rK966GcIOuwjyDrtojrn6zsmKztjIzsnbzrqoUnO1xyXG5cclxuY29uc29sZS5sb2cobGliLnBpKTsvL2NvbnNvbGUubG9nKHBpKTtcclxuY29uc29sZS5sb2cobGliLnNxdWFyZSgxMCkpOy8vY29uc29sZS5sb2coc3F1YXJlKDEwKSk7XHJcbmNvbnNvbGUubG9nKG5ldyBsaWIuUGVyc29uKCdMZWUnKSk7Ly9jb25zdCDqsJ3ssrTrqoU9bmV3IO2BtOuemOyKpOuqhSjrp6TqsJzrs4DsiJgpXHJcbi8vY29uc29sZS5sb2cobmV3IFBlcnNvbignTGVlJykpO1xyXG4vL2Rpc3Q+bm9kZSAxMC5tYWluLmpzIl19

@@ -1,0 +1,91 @@
+AES 사용하기
+
+자바에서 AES 알고리즘을 적용하여 중요한 데이터를 암호화하고 복호화하는 
+것은 아주 쉬운 일이다.
+
+import javax.crypto.Cipher;
+
+import javax.crypto.KeyGenerator;
+
+import javax.crypto.SecretKey;
+
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Hex;
+
+import org.junit.Test;
+
+ 
+
+public class AESTest {
+
+ 
+  private static String sKeyString = "" ;
+
+  private static String message= "This is just an example";
+
+ 
+
+  @Test
+
+  public void testAESEncode() throws Exception {
+
+ 
+
+    // 1. 128 비트 비밀키 생성
+
+    KeyGenerator kgen = KeyGenerator.getInstance("AES");
+
+    kgen.init(128);
+
+    SecretKey skey = kgen.generateKey();
+
+ 
+
+    // 2. 비밀 키를 이렇게 저장하여 사용하면 암호화/복호화가 편해진다.
+
+    sKeyString = Hex.encodeHexString(skey.getEncoded());
+
+ 
+
+    // 3. 암호화 수행
+
+    SecretKeySpec skeySpec = new SecretKeySpec(skey.getEncoded(), "AES");
+
+    Cipher cipher = Cipher.getInstance("AES");
+
+    cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+
+    byte[] encrypted = cipher.doFinal(message.getBytes());
+
+ 
+
+    System.out.println("encrypted string: " + Hex.encodeHexString(encrypted));
+
+ 
+
+    // 4. 복호화 수행
+
+    cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+
+    byte[] original = cipher.doFinal(encrypted);
+
+    String originalString = new String(original);
+
+    System.out.println("Original string: " + originalString + " " + Hex.encodeHexString(original));
+
+ 
+
+  }
+
+}
+
+
+예제와 같이 비밀키를 문자로 변환하여 저장해놓고 사용하면된다.
+
+참조 : http://samse.tistory.com/entry/java-AES-128
+
+출처 :
+http://andang72.blogspot.kr/2012/02/aes.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed:+blogspot/VHwJi+(%EC%95%88%EB%8B%B9+%EB%B8%94%EB%A1%9C%EA%B7%B8)
+
+AES 알고리즘 애니메이션 http://www.formaestudio.com/rijndaelinspector/

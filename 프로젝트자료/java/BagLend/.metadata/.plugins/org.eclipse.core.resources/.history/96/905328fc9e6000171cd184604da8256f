@@ -1,0 +1,147 @@
+package bag.design.page;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
+
+public class ResgisterNewPage extends JFrame {
+	
+	private JFrame fInsert;
+	private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	private JPanel picPn,aPn1,aPn2,bPn1,bPn2,bPn3,bPn4,bPn5;
+	private JLabel Product_Image,pdPic;
+	private JButton add;
+	private Color trans;
+	
+	public ResgisterNewPage() {
+		Color trans = new Color(0,0,0,0);
+	}
+	
+	public void NewDesign() {
+		//winIsert = new JWindow(this);
+		fInsert.setTitle("신규 제품 등록");
+		fInsert.setBounds(screen.width/9,screen.height/9, 1280, 720);
+		//fInsert.setVisible(true);
+		
+		// 전체 박스 부착
+		fInsert.getContentPane().setLayout(null);
+
+		// 이미지 패널----------------------------------------------------
+		picPn = new JPanel(); // new JPanel(new BorderLayout())
+		picPn.setBorder(new LineBorder(new Color(255, 255, 255), 2));
+		picPn.setBounds(10, 20, 585, 640);
+		picPn.setBackground(new Color(255, 255, 255, 90));
+
+		aPn1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		//aPn1.setBackground(trans);
+		aPn1.setPreferredSize(new Dimension(565, 520));
+
+		// 제품 이미지
+		pdPic = new JLabel();
+		pdPic.setBackground(Color.DARK_GRAY);
+		Product_Image = new JLabel();
+		Product_Image.setBounds(0, 0, 565, 520);
+		Product_Image.setBackground(Color.DARK_GRAY);
+		aPn1.add(Product_Image);
+	
+		// 부착
+		aPn1.add(pdPic);
+		picPn.add(aPn1);
+		fInsert.getContentPane().add(picPn);
+
+		aPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		add = new JButton("이미지 등록");
+		add.setPreferredSize(new Dimension(200,80));
+		aPn2.add(add);
+		picPn.add(aPn2);
+
+
+		// 제품정보 패널
+		JPanel infoPn = new JPanel();
+		infoPn.setBorder(new LineBorder(new Color(255, 255, 255), 2, true));
+		infoPn.setBounds(612, 20, 640, 520);
+		infoPn.setLayout(null);
+		infoPn.setBackground(new Color(255, 255, 255, 90));
+		
+		
+		bPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn1.setBounds(20, 25, 600, 60);
+		bPn1.setBackground(trans);
+		
+		bPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn2.setBounds(20, 90, 600, 60);
+		bPn2.setBackground(trans);
+		
+		bPn3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn3.setBounds(20, 155, 600, 60);
+		bPn3.setBackground(trans);
+		
+		bPn4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn4.setBounds(20, 220, 600, 30);
+		bPn4.setBackground(trans);
+		
+		bPn5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn5.setBounds(20, 250, 600, 271);
+		bPn5.setBackground(trans);
+
+		P_Num = new JLabel("Product No :");
+		P_Num.setFont(new Font("Noto Sans", Font.BOLD, 14));
+		P_Title = new JLabel("Product Name :");
+		P_Title.setFont(new Font("Noto Sans", Font.BOLD, 14));
+		P_Infor = new JLabel("Product Info :");
+		P_Infor.setFont(new Font("Noto Sans", Font.BOLD, 14));
+		P_Check = new JLabel("Product Condition :");
+		P_Check.setFont(new Font("Noto Sans", Font.BOLD, 14));
+
+		txtB_Num = new JTextField("", 53);
+		txtB_Check = new JTextField("", 53);
+		txtB_Title = new JTextField("", 53);
+		txtB_Infor = new JTextArea(13, 53);
+		
+		txtB_Infor.setEnabled(true);
+		txtB_Num.setEditable(true);
+		txtB_Check.setEditable(false);
+		txtB_Title.setEditable(true);
+
+		// 라벨-패널-패널 부착
+		bPn1.add(P_Num);
+		bPn1.add(txtB_Num);
+		bPn2.add(P_Title);
+		bPn2.add(txtB_Check);
+		bPn3.add(P_Check);
+		bPn3.add(txtB_Title);
+		bPn4.add(P_Infor);
+		bPn5.add(txtB_Infor);
+
+		infoPn.add(bPn1);
+		infoPn.add(bPn2);
+		infoPn.add(bPn3);
+		infoPn.add(bPn4);
+		infoPn.add(bPn5);
+		fInsert.getContentPane().add(infoPn);
+
+		// 닫기 버튼
+		JPanel delPn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		delPn.setBounds(612, 580, 640, 80);
+		JButton closebtn = new JButton("확인");
+		closebtn.setPreferredSize(new Dimension(100,50));
+		JButton canclebtn = new JButton("취소");
+		canclebtn.setPreferredSize(new Dimension(100,50));
+		
+		delPn.add(closebtn); delPn.add(canclebtn);
+		fInsert.getContentPane().add(delPn);
+		
+
+		// 배경 이미지라벨
+		JLabel bgImg = new JLabel();
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon("C:/img/bg01.jpg").getImage().getScaledInstance(screen.width,
+				screen.height, Image.SCALE_DEFAULT));
+		// bgImg.setToolTipText("배경이미지");
+		bgImg.setBounds(0, 0, screen.width, screen.height);
+		bgImg.setIcon(imageIcon);
+		fInsert.setBackground(Color.BLACK);
+		fInsert.getContentPane().add(bgImg);
+		
+	}
+}

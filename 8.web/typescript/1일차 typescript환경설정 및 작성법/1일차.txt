@@ -1,0 +1,328 @@
+1일차 typescript 환경설정 및 작성법
+
+ angular=>typescript 언어,es6 혼합형
+ react->es6(거의)
+================================
+=>이번달 시험 9/29(5시에 시험) angular(10),react(10)
+=================================
+1.설치 순서->node.js를 설치->angular,react->다운로드 모듈(라이브러리)
+                   npm package 프로그램이 설치
+
+http://nodejs.org/en
+
+C:\Program Files\nodejs\->설치 경로
+*****************************
+1)npm package가 자동으로 같이 설치
+2)npm 명령어->위치에 상관없이 사용할 수있도록 PATH에 자동으로 등록을 해준다.
+-----------------------------------------------------------------------------
+*****************************
+설치확인->cmd->콘솔로 버전을 확인
+
+C:\Users\kitcoop>node -v
+v8.4.0
+
+C:\Users\kitcoop>npm -v
+5.3.0
+
+C:\Users\kitcoop>
+
+모듈간의 충돌을 막아준다.->설치순서가 있다 A모듈-> B모듈
+                                       자동으로 설치해 준다.
+p25
+
+1.설치 2가지-->전역->한번 설치->모든 디렉토리에서 다 사용이 가능 (-g)
+                             ex) npm install(옵션) -g 설치할 패키지명(@버전명)
+                       지역->현재 설치된 디렉토리에서만 사용이 가능
+                             ex) npm install(옵션)  설치할 패키지명(@버전명)
+
+C:\Users\kitcoop>npm install -g typescript
+C:\Users\kitcoop\AppData\Roaming\npm\tsserver -> C:\Users\kitcoop\AppData\Roamin
+g\npm\node_modules\typescript\bin\tsserver                            계정명
+C:\Users\kitcoop\AppData\Roaming\npm\tsc -> C:\Users\kitcoop\AppData\Roaming\npm
+\node_modules\typescript\bin\tsc
++ typescript@2.5.2
+added 1 package in 2.403s
+==================
+
+설치경로=>C:\Users\kitcoop\AppData\Roaming\npm\= >
+                   tsc 명령어 (컴파일 할때 사용하는 명령어)->~.ts=>~.js
+                                          타입스크립트,es6--->javascript 코드변환
+                   node 명령어->~.js을 실행시킬때 사용하는 명령어
+               
+                   ex)javac  Test.java->Test.class
+                       실행=> java Test
+
+1.node.js 설치
+2.typescript 프로그램 설치(모듈)
+3.편집기->Visual Studio Code 사용(Angular 할때)->도스콘솔에서 작업
+                  =>내장(콘솔)
+
+https://www.typescriptlang.org/index.html
+
+C:\Program Files\Microsoft VS Code->설치경로
+
+ ->64bit 운영체제->64bit 설치가 이상인데 ->32bit visual studio code가
+                                                        이미 설치가 되어있으면 64bit설치가
+                                                         안되기에 32bit를 먼저 제거한 후에
+                                                          설치가 가능하다.
+  64bit
+ 설치안되는 경우->운영체제가 32bit인 경우->32bit인 visual studio code설치
+                                                                해야 한다.
+-------------------------------------------------------------------------------
+
+2.설치->제거
+
+1.작업영역 위치->폴더 열기->새파일, 새폴더를 적절히 선택
+2.src
+       test1.ts(~.ts)
+   dist
+3.파일->기본설정->설정=>원하는 항목=>오른쪽으로 배치
+
+"editor.fontSize": 24,
+   ->글꼴크기
+
+ "files.autoSave": "afterDelay" =>적절하게 입력한 후에
+                                                  알아서 자동 저장
+====================================
+오click 터미널 열기->visual studio code 2.x버전부터 추가된 기능
+
+ 타입->자바스크립트코드로 변경
+           javac test1.java->  tsc test1.ts =>컴파일할때
+                                   ex)tsc 파일명.ts -t es6
+                                         node test1.js (컴파일된 자바스크립트파일)
+                                                               실행할때(es5)->es6->es7
+              ->Typescript->상위버전->es5,es6 문법은 문제없다.(예외있다.)
+===========================================
+*주의할점 =>Visual Studio Code를 설치하고나서 반드시 재부팅할 것
+===== ->console 이 컴파일,실행 안될수도 있다.
+-------------------------------------------------------------------------------
+
+C:\webtest\8.web\typescript>npm install -g gulp-cli
+C:\Users\kitcoop\AppData\Roaming\npm\gulp -> C:\Users\kitcoop\AppData\Roamin
+m\node_modules\gulp-cli\bin\gulp.js
++ gulp-cli@1.4.0
+added 139 packages in 10.031s
+
+C:\webtest\8.web\typescript>
+
+=>npm install 패키지명 패키지명2 패키지명 ~(한꺼번에 설치할때 사용)
+
+C:\webtest\8.web\typescript>npm install gulp gulp-typescript gulp-sourcemaps gul
+p-webserver gulp-livereload
+npm WARN deprecated minimatch@2.0.10: Please update to minimatch 3.0.2 or higher
+ to avoid a RegExp DoS issue
+npm WARN deprecated minimatch@0.2.14: Please update to minimatch 3.0.2 or higher
+ to avoid a RegExp DoS issue
+npm WARN deprecated graceful-fs@1.2.3: graceful-fs v3.0.0 and before will fail o
+n node releases >= v7.0. Please update to graceful-fs@^4.0.0 as soon as possible
+. Use 'npm ls graceful-fs' to find it in the tree.
+npm WARN saveError ENOENT: no such file or directory, open 'C:\webtest\8.web\typ
+escript\package.json'
+npm notice created a lockfile as package-lock.json. You should commit this file.
+
+npm WARN enoent ENOENT: no such file or directory, open 'C:\webtest\8.web\typesc
+ript\package.json'
+npm WARN gulp-typescript@3.2.2 requires a peer of typescript@~2.0.3 || >=2.0.0-d
+ev || >=2.1.0-dev || >=2.2.0-dev || >=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev ||
+ >=2.6.0-dev but none was installed.
+npm WARN typescript No description
+npm WARN typescript No repository field.
+npm WARN typescript No README data
+npm WARN typescript No license field.
+========================>경고 메세지 출력돼도 설치하는데
+                                                          문제 없다.
+
+ p24 package.json파일생성->미리 지정(설치할 모듈명)->설치=>기록
+
+
++ gulp-typescript@3.2.2
++ gulp@3.9.1
++ gulp-webserver@0.9.1
++ gulp-livereload@3.8.1
++ gulp-sourcemaps@2.6.1
+added 427 packages in 26.551s
+
+C:\webtest\8.web\typescript>
+
+ jQuery함수->chain method방법->메서드가 연달아서 실행
+                 ->gulp->앞의 작업한 내용=>이어서 계속해서 pipe()->연결작업   
+
+
+ gulp 설명=>http://programmingsummaries.tistory.com/377
+=======================================
+//1.gulp에 대한 모듈을 전부 불러오기-> import->es6 ->es5으로 코딩
+var gulp = require('gulp');//require('불러올 패키지명')
+var ts = require('gulp-typescript');//gulp에서 typescript사용해주는 패키지(모듈)
+//컴파일 버전 버전을 지정 es5 or es6 target(자바스크립트버전 지정)
+//noImplicitAny ->type을 쓰지 않으면 경고메세지를 출력하겠다.
+var tsProject = ts.createProject({'target':'es5','noImplicitAny':true});
+var sourcemaps = require('gulp-sourcemaps');//소스코드의 위치를 설정할때 파일 기록
+var webserver = require('gulp-webserver');//웹서버
+var livereload = require('gulp-livereload');//변경된 사항 재로드하기위해 필요
+
+//2.gulp를 이용해서 자동적으로 컴파일->코드를 수정->자동으로 반영->웹에서 출력->순서대로 실행
+//작업(task) 설정(1.작업내부 구분자 문자열,실행시킬 콜백함수 지정->1) 웹서버를 가동->포트번호(9400)
+gulp.task('server',function(){
+     return glup.src('./') //src함수=>작업영역을 설정할때(1.경로,2.옵션)
+     .pipe(webserver({port:9400}));//gulp서버를 가동시키는데 포트번호는 9400 지정
+});
+
+//2) 컴파일할 파일,실행할 파일의 위치를 지정
+gulp.task('scripts',function(){
+      // "src/**/*.ts"       //src/let/let.ts, src/const/const.ts
+      var tsResult=gulp.src("src/*.ts")
+      .pipe(sourcemaps.init()) //소스코드의 위치를 기록하기위해서 소스맵을 생성
+      .pipe(tsProject());//생성
+    return tsResult.js.pipe(sourecemaps.write())//js파일에 기록(컴파일및 관련정보)
+                      .pipe(gulp.dest('dist'));//목적지폴더(dist폴더에 ) js파일을 저장
+});
+
+//3. 변경된 소스를 다시 읽어들여서 다시 반영하라
+gulp.task('watch',function(){
+       livereload.listen();//읽어들일 준비
+       //1.경로및 파일확장자 지정,2.옵션(다시 실행시킬 task이름을 부여)
+       gulp.watch('src/*.ts',['scripts']);
+       //2.js파일을 웹상에서도 변화가 있을때마다(F5(새로고침))->다시 읽어들여라
+       gulp.watch('dist/*.js').on('change',livereload.changed)
+});
+
+//4.gulp를 실행시킬때 기본적으로 작동되는 순서를 지정->배열표시
+//실행시키는 방법->typescript>gulp 실행시킬 task작업명 
+//                          >gulp   X ->default task작업이 작동
+gulp.task('default',['server','scripts','watch'])
+-----------------------------------------------------------------------------
+ gulp경우->로컬에서 typescript가 없으면 작동이 안되기때문에
+               이 typescript폴더에서 다시 typescript를 설치(패키지를 다운받아야
+                                                                               된다.)
+------------------------------------------------------------------------------
+
+C:\webtest\8.web\typescript>gulp
+gulp-typescript: TypeScript not installed - install with `npm install typescript
+ --save-dev`
+  As of gulp-typescript 3.0, TypeScript isn't bundled with gulp-typescript any m
+ore.
+  Install the latest stable version with `npm install typescript --save-dev`
+  or a nightly with `npm install typescript@next --save-dev`
+  More information: http://dev.ivogabe.com/gulp-typescript-3/
+C:\webtest\8.web\typescript\node_modules\gulp-typescript\release\main.js:42
+        throw new Error("TypeScript not installed");
+        ^
+
+Error: TypeScript not installed
+    at getTypeScript (C:\webtest\8.web\typescript\node_modules\gulp-typescript\r
+elease\main.js:42:15)
+    at Function.createProject (C:\webtest\8.web\typescript\node_modules\gulp-typ
+escript\release\main.js:97:26)
+    at Object.<anonymous> (C:\webtest\8.web\typescript\gulpfile.js:6:20)
+    at Module._compile (module.js:573:30)
+    at Object.Module._extensions..js (module.js:584:10)
+    at Module.load (module.js:507:32)
+    at tryModuleLoad (module.js:470:12)
+    at Function.Module._load (module.js:462:3)
+    at Module.require (module.js:517:17)
+    at require (internal/module.js:11:18)
+
+C:\webtest\8.web\typescript>
+--------------------------------------------------------------------
+웹상에서 실행해서 결과를 보고 싶다.
+
+index.html=><script src="dist/test1.js"></script>
+                                              =====>리로드해서 브라우저(chrome)
+                                              =>요소검사해서 확인
+============================================
+chrome의 url창에 file:///C:/webtest/8.web/typescript/index.html
+
+es6 ->let,const,template string(공통),spread연산자(...) ,arrow function,
+          destructuring(디스트럭처링 지원),class
+
+typescript->유니언 타입 |, ?,tuple,class,interface, <자료형)->제너릭도 가능
+=============================================
+ var=>1.중복선언이 가능하다.
+           2.블럭레벨범위가 적용X
+           3.호이스팅 문제가 발생이 된다.->지역변수의 선언이 전역변수에 영향을
+                                                         미치는 경우
+
+
+ let->1.중복선언이 X
+        2.블럭레벨범위가 적용 O ->블럭레벨 범위 밖에서 변수를 참조X
+        3.호이스팅 문제가 발생 X ->영향 X
+=========================================
+
+
+//1.1et,var의 차이점->변수를 선언할때 사용
+//var ->전역변수 ,let->block level scope
+var foo=123;
+console.log(foo);//변수를 선언하지 않고 출력X
+{
+  var foo=456; //중복선언이 가능하다. 
+}
+console.log(foo);
+//node let1.js
+let foo2=789;
+console.log(foo2);
+{
+  let foo2:number=456;//중복선언X
+  let bar:number=456;//블럭 범위내에서만 사용
+  console.log(bar);//456
+}
+console.log(foo2);//789->456 변경X(호이스팅문제가 해결)
+//console.log(bar); 블럭범위 밖에서는 let 으로 선언된 변수를 참조X
+
+src->let2.ts
+----------------------------------------------------------
+2.const ->상수를 선언->중간에 값을 변경X(상수화)
+              1.기본적으로 let와 성격이 같다.(기능이 같다)
+              2.const로 상수를 선언하시면 반드시 초기값을 설정해야 한다.
+       
+  주의)=>형식) const  변수명=값
+                       let  변수명=값;
+-------------------------------------------------------------
+const1.ts 
+
+//const 상수화 시킬때 사용(react)
+const TOO = 123;
+//const TOO2;//1.const를 사용할때에는 반드시 상수화된 변수에 초기값을 설정
+//TOO = 456; 2.중간에 값을 변경할 수가 없다.(불가능)
+
+{
+    const TOO = 10;
+    console.log(TOO);//10
+    const TOO2 = 45;
+}
+console.log(TOO);
+//console.log(TOO2); 블럭 밖에서 TOO2를 참조 X
+
+----------------------------------------------------
+상수화 1. 일반변수의 저장된 값=>중간에 변경X(상수)
+          2. 객체->주소값을 저장한 변수->주소값이 변경X(상수화)=>const2.ts
+                          |
+                         "test"---->"imsi"
+--------------------------------------------------------------------------------
+let,const
+문자열 표현->백틱 문자열-> 'test' or "test" =>여러줄에 나누어서 출력하는 경우
+                    'test'+'test'+\n->공백이나 줄바꿈=>+, \n =>번거로운 작업
+`test
+
+ ddd 
+ddd
+aaaa
+`
+===>자동으로 공백,줄바꿈을 인식=><pre> ~</pre>
+===>`${변수명} `=>+
+
+let multi_line=`
+one=1
+two=2
+`
+-------------------------------------
+src=>temp1.ts  ==>System.out.println("당신의 이름은"+name+"입니다")
+         temp2.ts=>'   ${출력할 변수명} ' =>문자열 결합할때 + 을 대치할 수있다
+----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+

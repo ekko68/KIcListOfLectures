@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximumscale=1.0,minimum-scale=1.0,user-scalable=no,target-densitydpi=medium-dpi">
+<title>아침 과일가게 | HTMl 과제(이연호)</title>
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.18.1/build/cssreset/cssreset-min.css">
+<style type="text/css">
+/*
+@media all and (min-width:260px) and (max-width:759px){
+}
+*/
+</style>
+<!-- PC -->
+<link rel="stylesheet" href="css/main.css" />
+<link rel="stylesheet" href="css/main_pc.css" media="screen and (min-width:1025px)" />
+<!-- Pad -->
+<link rel="stylesheet" href="css/main_pad.css" media="screen and (min-width:760px) and (max-width:1024px)" />
+<!-- mobile -->
+<link rel="stylesheet" href="css/main_mobile.css" media="screen and (min-width:260px) and (max-width:759px)" />
+<!-- HTML 미지원 브라우저용 -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<![endif]-->
+<script src="lib/js/jquery-1.12.4.min.js"></script>
+<script src="lib/js/jquery.mousewheel.js"></script>
+<script src="js/main.js"></script>
+
+</head>
+<body>
+	<div id="wrapper">
+		<!-- 웹 접근성을 위한 바로가기 -->
+		<div id="mfmIndex">
+			<a href="#mfmBody">본문 바로가기</a>
+			<a href="mfmGnb">메뉴 바로가기</a>
+		</div>
+		<section>
+		<article id="mfmHeadWrap">
+			<header id="mfmHead">
+				<h1><a id="mfmLogo" class="mnuHome" href="javascript:void(0)"><img alt="아침 과일가게 로고" src="imgs/gnb_logo.gif" width="75" height="59"></a><a id="mfmServiceLogo" class="mnuHome" href="javascript:void(0)">아침 과일가게</a></h1>
+				<!-- mobile menu -->				
+				<div id="mnuMobile" class="mnuMobileOpen"></div>
+				<!-- //mobile menu-->
+				<nav id="mfmGnb">
+					<ul>
+						<li class="mnuHome"><a href="javascript:void(0)">Home</a></li>
+						<li class="mnuBoard"><a href="javascript:void(0)">게시판</a></li>
+						<li class="mnuOrder"><a href="javascript:void(0)">주문</a></li>
+						<li class="mnuBasket"><a href="javascript:void(0)">장바구니</a></li>
+						<li class="mnuLogin"><a href="javascript:void(0)">로그인</a></li>
+						<li class="mnuJoin"><a href="javascript:void(0)">회원가입</a></li>
+					</ul>
+				</nav>
+			</header>
+		</article>
+		</section>
+		<!-- 소개, 게시판, 주문 -->
+		<section id="mfmContent">
+			<article class="main">
+				<p>아침의 신선함을 담아<br />농장에서 과일을 직배송해 드립니다.</p>
+				<video id="main_morning" autoplay="autoplay" loop="loop" muted volume="0">
+					<source src="movs/moring.mp4">
+					경고 : 이 브라우저는 video 재생을 지원하지 않습니다.
+				</video>
+				<img id="main_morning_poster" alt="아침과일가게 농장전경" src="imgs/main_morning_mobile.jpg" width="261" height="203"/>
+			</article>
+			<hr/>			
+			<article class="board">
+				<div style="border-radius:25%;background-color:rgb(224, 224, 224);">
+					<p>공지사항</p>
+					<ul>
+						<li><a href="#">가정의 달 맞이 할인 이벤트 실시!</a></li>
+						<li><a href="#">아침과일페이 서비스 고객님께...</a></li>
+						<li><a href="#">배송 공지사항입니다.</a></li>
+						<li><a href="#">1+1 행사를 진행합니다.</a></li>
+						<li><a href="#">신규농장 직배송 실시!</a></li>
+					</ul>
+					<div class="more_board_news"><a href="#">자세히</a></div>
+				</div>
+				<div style="border-radius:25%;background-color:rgb(224, 224, 224);">
+					<p>고객문의</p>
+					<ul>
+						<li><a href="#">가정의 달 행사문의 드려요.</a></li>
+						<li><a href="#">배송주소를 변경할려는데 어..</a></li>
+						<li><a href="#">과일교환해주세요!!ㅠ</a></li>
+						<li><a href="#">1+1 행사 문의드려요.</a></li>
+						<li><a href="#">정말 맛있게 먹었습니다^^</a></li>
+					</ul>
+					<div class="more_board_news"><a href="#">자세히</a></div>
+				</div>
+			</article>
+			<hr />
+			<article class="products">
+				<div>
+				<ul class="wrap_product">
+					<li>
+						<div class="box_products">
+							<figure>
+								<a href="#"><img src="imgs/products/apricots.jpg" alt="" width="158" height="105" /></a>
+								<figcaption><a href="#">복숭아</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">우리농장 직배송</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">10,000</span>&rarr;8,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/beach.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">제주바다 파인애플</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">푸른농장 직배송</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">9,000</span>&rarr;7,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/mandarinorange.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">제주감귤</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">제주농장 1Box</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">11,000</span>&rarr;9,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/oranges.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">제주오렌지</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">제주농장 1Box</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">15,000</span>&rarr;12,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/plums.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">경산포도</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">신선농장 직배송</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">18,000</span>&rarr;15,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/pomegranate.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">석류</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">3개들이 1Box</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">10,000</span>&rarr;8,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/raspberry.png" alt="" width="158" height="105" />
+								<figcaption><a href="#">고령 산딸기</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">고령하우스농장</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">10,000</span>&rarr;8,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/strawberries.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">고령딸기</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">고령하우스농장</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">12,000</span>&rarr;10,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/watermelons.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">올해첫수박</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">작아도 달아요</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">18,000</span>&rarr;15,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/bananas.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">제주바나나</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">바다농장 직배송</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">20,000</span>&rarr;18,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/blueberry.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">블루베리</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">냉동포장 배송</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">10,000</span>&rarr;8,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+					<li>
+						<div class="box_products">
+							<figure>
+								<img src="imgs/products/cherry.jpg" alt="" width="158" height="105" />
+								<figcaption><a href="#">체리</a></figcaption>
+								<ul>
+									<li>&nbsp;·&nbsp;<a href="#">냉동포장 배송</a></li>
+									<li>&nbsp;·&nbsp;<a href="#"><span class="prv_price">10,000</span>&rarr;8,000</a></li>
+								</ul>
+							</figure>
+						</div>
+					</li>
+				</ul>
+				</div>
+			</article>
+		</section>
+		<!--//소개, 게시판, 주문 -->
+		<!-- footer -->
+		<footer>
+			<p>&copy; 아침과일가게</p>
+			<address>서울시 신구 신동 SS501번지 015B호</address>
+			<p>사업자등록번호 : 000-00-00000</p>
+			<p><a href="#">이용약관</a> &nbsp; <a href="#">개인정보처리방침</a> &nbsp; <a href="#">고객센터</a></p>			
+		</footer>
+		<!--//footer -->
+	</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>MainPage</title>
+  <!-- media속성(반응형)웹의 크기를 지정할때 사용(해상도)
+        screen and (min-width:768px(최소해상도픽셀)->이하 main-1.css적용)
+  -->
+ <link href="css/main.css" rel="stylesheet" type="text/css"
+          media="screen and (min-width:768px)">
+<link href="css/main-1.css" rel="stylesheet" type="text/css"
+          media="screen and (max-width:767px)">
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="js/main.js"></script>
+<script src="http://malsup.github.com/jquery.cycle2.js"></script> 
+ </head><!-- src="js/jquery.cycle2.jsp" -->
+ <body>
+   <div class="wrap">
+        <header class="hd1">
+            <h1>Hello My Little PONY</h1>
+            <nav class="nv1">
+            <div><a href="#" class="main1">SHOPPING</a>
+                    <ul class="sub">
+                        <li><a href="#" class="a1">유형별 제품</a>
+                       <ul class="sub1">
+                           <li><a href="#">트와일라잇</a></li>
+                           <li><a href="#">핑키파이</a></li>
+                           <li><a href="#">래리티</a></li>
+                           <li><a href="#">애플잭</a></li>
+                           <li><a href="#">플러터샤이</a></li>
+                           <li><a href="#">레인보우</a></li>
+                           <li><a href="#">레인보우 대시</a></li>
+                           <li><a href="#">애슐리 볼</a></li>
+                           <li><a href="#">필리</a></li>
+                           <li><a href="#">스쿠틀루</a></li>
+                           <li><a href="#">스위티벨</a></li>
+                           <li><a href="#">더피 후브즈</a></li>
+					    </ul>
+					   </li>
+                        <li><a href="#">라인별 제품</a></li>
+                        <li><a href="#">온라인 전용</a></li>
+                        <li><a href="#">온라인 핫딜</a></li>
+                    </ul>
+			</div>
+                <div><a href="#" class="main2">행사상품</a></div>
+                <div><a href="aboutus.html" class="main3">ABOUT US</a></div>
+            </nav>
+           
+  <nav class="nv2">
+		      <ul>
+		         <li><a href="login.html">Login</a></li>
+				 <li><a href="#">My Page</a></li>
+		      </ul>
+		  </nav>
+	  </header><!-- 반응형으로 상단메뉴를 따로 이미지로 보여주기위해 -->
+	  <header class="hd2"><img src="img/hd2.png" alt="mb"></header>
+	  <div class="cycle-slideshow">
+	     <img src="img/1.PNG" width="1000px" height="300" alt="sc-3">
+	     <img src="img/2.PNG" width="1000px" height="300" alt="sc-2">
+		 <img src="img/3.PNG" width="1000px" height="300" alt="sc-1"> 
+	  </div>
+	  <!-- 소제목이 있는 단락 -->
+	  <section class="sc2"><img src="img/sc2.png" alt="sc2"></section>
+	  <section class="sc3"><img src="img/sc3.png" alt="sc3"></section>
+	  <!--article 4개 구체적인 본문내용(베스트셀러 목록,자세한 항목) -->
+	  <article class="at1">
+	      <h3>BEST SELLER</h3>
+            <div class="d1">
+                <figure><!-- 이미지태그를 배치,figcaption(이미지 설명할때) -->
+                  <img src="img/88.PNG"  alt="at-1">
+				  <figcaption class="fc1">
+				  크리스탈왕국 플레이세트 20,000원</figcaption>
+				</figure>
+			</div>
+            <div class="d2">
+                 <figure>
+                  <img src="img/과제3.PNG"  alt="at-2">
+				  <figcaption class="fc2">
+				<P><P> 마이리틀포니 미니 스티커북 2,800원</figcaption>
+				</figure>
+			</div>
+			<div class="d3">
+                 <figure>
+                  <img src="img/과제4.PNG"  alt="at-3">
+				  <figcaption class="fc3">
+				 마이리틀포니 프렌즈펄  피규어 12,800원</figcaption>
+			
+				</figure>
+			</div>
+	  </article>
+        <!--  제품에 관련된 내용 소개(상세항목) -->
+	  <article class="at2">
+		
+		 <h3>포니의 소개</h3>
+		 <div>
+		 <div id="f1"><img src="./img/포니.png"></div>
+		 <div id="f2">스파이크 (Spike)보라색 몸에 초록색 볏을 가진 아기 드래곤이다
+		                      <p>트와일라잇의 조수로 잡일을 도맡아 하고 있으며 
+							 <p> 트와일라잇과 셀레스티아 공주가 편지를 주고받을 때 도움을 준다.
+
+</div>
+		 </div>
+		 
+		 <figure>
+	 </figure>
+		 
+	  </article>
+	  <!-- 동영상부분 -->
+	  <article class="at3">
+	    <embed src="vd/This Strange World Song - MLP- Equestria Girls (1).mp4"></a>
+
+	  </article>
+	  <article class="at4"><img src="img/캡쳐.PNG" alt=""> 
+	  </article>
+	  <!-- footer(이용약관,개인정보,관리자) -->
+	  <footer class="ft1">
+         <nav class="nv3">
+		   <ul>
+               <li><a href="#">서비스 이용약관</a></li>
+			   <li class="l1">|</li>
+			   <li><a href="#">개인정보처리 방침</a></li>
+			   <li class="l1">|</li>
+			   <li><a href="#">고객서비스 센터</a></li>
+			   <li class="l1">|</li>
+			   <li><a href="#">영상정보처리기 운영방침</a></li>
+		   </ul><br>
+		 </nav>
+		 <nav class="nv4">
+		     <ul>
+                 <li>facebook:gotqlctksid8@naver.com</li>
+				 <li>e-mail:gotqlctksid8@naver.com</li>
+				 <li>Tel:010-1234-5678</li>
+				 <li>Fax:02-123-5678</li>
+			 </ul>
+		 </nav>
+	  </footer>
+   </div>
+ </body>
+</html>
+
+
+
+
+

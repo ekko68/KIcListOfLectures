@@ -1,0 +1,479 @@
+@charset "utf-8";
+/* CSS Document */
+html,body{ width:100%; height:100%;}
+/*body{ font:12px/18px "나눔고딕", "돋움", Dotum, Helvetica, sans-serif, NanumGothic; color:#fff;}*/
+body,p,h1,h2,h3,h4,h5,h6,ul,li,ol,tr,td,img{ margin:0; padding:0; border:none;}
+h1,h2,h3,h4,h5,h6{ text-decoration:none; font-weight:normal;}
+ul,li,ol{ list-style:none;}
+a{ text-decoration:none;}
+
+body,li,ul,ol,a,img{margin:0 auto; text-decoration:none; color:#333;
+	}
+
+
+/*------------------------------------------------------ */
+/*-------------------        헤 더      --------------- */
+/* -----------------------------------------------------*/
+
+div#topWrap{ background:url(img/cm26008160.jpg) no-repeat center center;
+		background-size:cover;	
+		width:100%; height:550px;
+		position:relative;
+}
+
+
+/* hd-pc 노출 안함 */
+
+header#hd-pc { display:none;}
+
+
+
+
+/* 메인메뉴 */
+	
+#hd-m{ background-color:rgba(255,255,255,.8);
+		width:100%; height:70px;
+		border-top:5px solid black;
+} 
+
+#hd-m a{ display:block;}
+
+#hd-m p.m-icn{/*background:#ccc;*/
+	width:20%; height:100%;
+	margin-top:10px;	
+	margin-left:20px;
+	float:left;
+}
+
+
+#hd-m p.m-srch{
+	width:20%; height:100%;
+	margin-top:10px;	
+	padding-right:20px;
+	float:right;
+	text-align:right;
+}
+
+
+/* 메인비주얼 */
+
+#visualMain{
+	background-size:cover;	
+	width:100%; height:550px;
+	both:celar;
+	position:absolute;
+	left:0; top:0;
+	overflow:hidden;
+}
+
+#vid{display:none;}
+
+div.slide-con1{
+	width:100%; height:100%;
+	}
+
+
+/* 메인비주얼 텍스트 */
+
+	div.visual-content{ /*background-color:rgba(204,204,204,0.5);*/
+			text-align:center;	
+			width:100%; height:50%;
+			color:#FFF;
+			margin-top:80px;
+			position:absolute;
+			left:0; top:100px;
+		}
+	
+		p.text01{ /* background-color:#FFF;*/			
+			font:36px/48px Verdana, Geneva, sans-serif;
+			font-weight:400;
+			text-shadow: 2px 2px 5px #000;
+			/*text-align:center;
+			vertical-align:central;*/  		
+		}
+		
+		p.sub-text{
+			margin:30px auto 70px auto;
+			}
+		
+		div.visual-btn01{ 
+			width:200PX; height:40px;
+			background-color:rgba(255,255,255,0.3);
+			border-radius: 5px; 
+			-moz-border-radius: 5px; 
+			-webkit-border-radius: 5px; 
+			border: 2px solid #fff;
+			display:flex;
+			align-items: center;
+			justify-content: center;
+			margin:0 auto;
+			color:#FFF;
+			font-weight:600;
+
+			}
+
+		div.visual-btn01:hover{
+		background-color:rgba(255,255,255,0.5);
+		z-index:10;
+		}
+	
+/*------------------------------------------------------ */
+/*------------------------- 컨텐츠 -------------------- */
+/* -----------------------------------------------------*/
+
+	#srch{display:none;} /* 상단메뉴에 아이콘화 */
+
+		
+/*------------------------------------------------------ */
+/*------------------- 컨텐츠 : 인기여행--------------- */
+/* -----------------------------------------------------*/
+
+	
+	section#item_rcm{ /*background-color:#3F8;*/
+		width:100%; height:100%;
+		padding-top:60px
+	}
+	
+		#item_rcm h2{
+			text-align:center;
+			margin-bottom:30px;
+			}
+
+
+		ul.item_list{
+			display:flex;
+			flex-direction: row;
+			flex-wrap: wrap;    		
+    		justify-content: center; 
+			}
+
+		ul.item_list li.listWrap{ background-color:#333;
+			position:relative;
+			margin:10px 10px;
+			width:960px; height:320px;
+			text-align:center;			
+			}
+			
+			
+		.more-btn02{
+			width:200PX; height:40px;			
+			border-radius: 5px; 
+			-moz-border-radius: 5px; 
+			-webkit-border-radius: 5px; 
+			border: 2px solid #333;
+			display:flex;
+			align-items: center;
+			justify-content: center;
+			margin:30px auto;
+			color:#333;
+			font-weight:600;			
+			}
+
+		.more-btn02:hover{
+			background-color:#333;
+			color:#fff;
+			cursor: pointer;
+		
+		}
+
+/*------------------------------------ figure 박스 속성 */
+		
+		.listWrap figure.item-box { background-color:#11085D;
+			width:100%; height:100%;
+			overflow: hidden;
+			position:absolute;
+			left:-40px; top:-16px;
+			/*cursor: pointer;*/
+		}
+			
+		.listWrap figure.item-box img {
+			position: relative;
+			display: block;
+			min-height: 100%;
+			max-width: 100%;
+			opacity: 0.8;
+		}
+	
+		.listWrap figure.item-box figcaption { /*background-color:#333;*/
+			height: 100%; width: 100%;
+			/*padding: 2em;*/
+			position:absolute;
+			left:0; top:0;
+			color: #fff;
+			text-transform: uppercase; /*소문자를 대문자로 변경*/
+			font-size: 1.25em;
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;			
+		}
+		
+		figure.item-box figcaption div{ /*background-color:#666;*/
+			margin-top:25%;
+			margin-left:25%;
+			height: 50%; width: 50%;			
+			opacity: 0.8;
+		}
+		
+		figure.item-box figcaption div h3{
+			margin-bottom:20px;
+			-webkit-transform: translate3d(0,40px,0);
+			transform: translate3d(0,40px,0);
+			-webkit-transition: -webkit-transform 0.35s;
+			transition: transform 0.35s;
+		}
+
+		figure.item-box figcaption div p{
+			font-size:16px;
+			-webkit-transform: translate3d(0,40px,0);
+			transform: translate3d(0,40px,0);
+			-webkit-transition: -webkit-transform 0.35s;
+			transition: transform 0.35s;
+			opacity: 0;
+
+		}
+
+
+
+/*------------------------------------------------------ */
+/*------------------- 컨텐츠 : 프로모션 --------------- */
+/* -----------------------------------------------------*/
+	#promotion{
+		background-color:#fff;
+		width:100%; height:100%;
+		margin-top:100px;
+		padding-bottom:100px;
+		padding-top:60px;
+		/*display:flex;
+			flex-direction: row;
+			flex-wrap: wrap;    		
+    		justify-content: center; */
+	}
+
+		#promotion h2{
+			text-align:center;
+			margin-bottom:30px;
+			}
+
+	article.pm-article{		
+		width:930px; height:230px;
+		margin:0 auto;
+		padding:15px;
+		position:relative;
+		border-top:1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+		/*display:flex;
+			flex-direction: row;
+			flex-wrap: wrap;    		
+    		justify-content: center; */
+	}
+
+	#promotion div article:first-child{
+		border-bottom: 0;
+	}
+
+
+	p.numbering{ background:black;	
+		border-radius:50px;
+		width:60px; height:60px;
+		position:absolute;
+		top:25px; left:30px;
+		text-align:center;		
+		color:#fff;
+		font-size: 30px;
+		line-height: 60px;
+		font-family: 'Open Sans', sans-serif;
+	}
+
+	h3.text-1{
+		position:absolute;
+		top:25px; left:120px;
+		font-size:24px;
+		font-weight:800;
+	}
+
+	p.text-2{
+		position:absolute;
+		top:80px; left:120px;
+		width:35%; height:55%;
+		overflow:hidden;
+	}
+
+	span.ctn-img{ background:black;
+		display:inline-block;
+		width:50%; height:220px;		
+		position:absolute;
+		top:20px; right:20px;
+	}
+
+	span.ctn-img img{
+		display:block;
+		width:100%; height:100%;
+		opacity:0.7;
+	
+	}
+
+	article.pm-article a:hover h3,
+	article.pm-article a:hover p.text-2{
+		text-decoration:underline;
+		color:#666;
+	}
+
+
+
+
+/*------------------------------------------------------ */
+/*------------------- 컨텐츠 : 여행후기--------------- */
+/* -----------------------------------------------------*/
+
+		
+		section#review{ display:none;
+	}
+	
+
+
+/*------------------------------------------------------ */
+/*------------------- 컨텐츠 : 이벤트배너 --------------- */
+/* -----------------------------------------------------*/
+	#event-BN{
+		
+		width:100%; height:100%;
+		margin-top:100px;
+		/*padding-bottom:100px;
+		padding-top:60px;*/
+		display:flex;
+			flex-direction: row;
+			flex-wrap: wrap;    		
+    		justify-content: center;
+	}
+
+	#event-BN article{ background:url(img/bg_postcard_1.jpg) no-repeat center bottom;		
+		width:100%; height:500px;;
+		background-size:cover;	
+		position:relative;		
+		text-align:center;	
+		color:#fff;		
+	}
+
+	#event-BN article span{
+		display:block;
+		margin-top:100px
+	}
+
+	#event-BN article h3{
+		font-size:36px;
+		margin:10px 0 10px;
+	}
+
+	#event-BN article p{
+		
+	}
+
+	#event-BN article button{
+		background-color:rgba(255,255,255,0.3);
+		width:200px; height:48px;
+		border:2px solid #fff;
+		border-radius:30px;
+		margin:30px 15px;
+		color:#fff;
+		font-size:16px;
+		line-height:26px;
+		cursor: pointer;
+	}
+
+	#event-BN article button:hover{
+		background-color:rgba(255,255,255,1);
+		width:200px; height:48px;
+		border:2px solid #fff;
+		border-radius:30px;
+		margin:30px 15px;
+		color:#000;
+		font-size:16px;
+		line-height:26px;
+		cursor: pointer;
+	}
+
+
+
+
+/* 푸터 */
+
+footer{  background:black;
+			width:100%; height:550px;
+			both:clear;	
+			/*border-top:1px solid #ccc;*/
+			
+						
+	}
+
+footer div.ft-wrap{  /*background-color:#666;	*/
+			margin:0 auto;
+			display:flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+    		justify-content: space-around; 
+			}
+
+	footer div.ft-wrap nav{
+		margin-top:50px;
+		width:200px; height:230px;		
+	}
+	
+	footer div.ft-wrap nav h4{
+		margin-bottom:15px;
+		font-weight:800;
+		padding-left:30px;
+		color:#eee;
+	}
+
+	footer div.ft-wrap nav ul{
+		padding-left:30px;
+	}
+
+	footer div.ft-wrap nav li{
+		display:block;
+		margin:5px;
+		
+	}
+
+	footer div.ft-wrap nav li a{
+		font-size:14px;
+		color:#eee;
+	}
+
+	footer div.ft-wrap nav li a:hover{
+		text-decoration:underline;
+	}
+
+
+	div.ft-wrap2{
+		max-width:960px;
+		/*height:100%;*/
+		margin:0 auto;
+
+	}
+
+	p.logo-btn{  background:url(img/ic_logo_128_w.png) no-repeat top left;
+		background-size:100px, 0px, auto;
+		width:100px; height:40px;
+		float:left;
+		margin-top:25px;
+	}
+
+	div.ft-wrap2 nav ul li{
+		float:right;
+		margin-top:25px;	
+		margin-left:10px;
+	}
+
+	div.ft-wrap2 nav ul li a{
+		color:#eee;	
+	}
+
+	p.info{
+		padding-top:80px;
+		both:clear;	
+		color:#eee;
+		font-size:12px;
+		line-height:20px;
+		text-align:right;
+	}
+

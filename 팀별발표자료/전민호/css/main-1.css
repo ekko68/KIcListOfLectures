@@ -1,0 +1,23 @@
+.menu-head>.sns-util,
+#slidebanner1,
+.dropmenu,
+#at2,
+.footer01, 
+.at3,
+.at4,
+.at1_1{
+    display: none;
+}
+
+.bodybody {
+    width: 80%;
+    background: #fff;
+    position: relative;
+    margin: 0 auto;
+    top: 0px;
+}
+.footer02{top:100px;}
+#at1{
+    top:-60px;
+}
+

@@ -1,0 +1,113 @@
+@CHARSET "UTF-8";
+/* 스마트폰 용 CSS */
+
+#wrapper{width:260px}
+/* 로고 이미지 */	
+#mfmLogo{padding-top:5px}
+#mfmLogo > img{width:38px;height:30px}
+	
+#mfmServiceLogo{
+	font-family:HanSans;
+	font-weight:bold;
+	font-size:25px;
+	color:#333;
+	margin-left:15px
+}
+	
+#main_morning{min-height:202px}
+    
+#mfmGnb{
+	clear:both;
+	display:none
+}
+.board>div{height:230px}
+.board>div>p{
+	color:#333;
+	font-size:20px;
+	text-align:center;
+	margin-top:8px;
+	font-weight:bold;
+	padding-top:10px
+}
+.board ul{
+/*말줄임표 추가*/
+	width:260px;text-overflow:ellipsis;white-space:nowrap; /*overflow:hidden;*/
+	font-size:15px;
+	line-height:1.7em;
+	margin-top:10px;
+	margin-left:40px;
+	-moz-binding:url(../lib/moz_ellipsis/ellipsis.xml);
+	-o-text-overflow:ellipsis; -ms-text-overflow:ellipsis;
+	margin-bottom:10px
+}
+    
+.more_board_news{
+	width:150px;
+	font-size:16px;
+	line-height:2em;
+	border-top-left-radius:4px;
+	border-top-right-radius:4px;
+	border-bottom-right-radius:4px;
+	border-bottom-left-radius:4px
+}
+	 
+/* 주문 - 제품목록*/
+.products{
+	width:260px;
+	height:1000px
+}
+.products > div{
+	overflow-y:scroll;
+	overflow-x:hidden;
+	height:1000px
+}
+.products ul{height:50px}
+
+/* 모바일 메뉴 버튼 */	
+#mnuMobile{
+	width:27px;
+	height:19px;
+	float:right;
+	position:relative;
+	top:-22px;
+	cursor:pointer
+}
+/* 모바일 메뉴 열기/닫기 이미지 변경 */
+.mnuMobileOpen{background-image:url(../imgs/mnu_hamburger.png)}
+.mnuMobileClose{background-image:url(../imgs/mnu_hamburger_close.png)}
+
+.main p{
+	margin-top:154px;
+	margin-left:9px;
+	z-index:9;
+	position:absolute;
+	font-size:11pt
+}
+   
+#main_morning{display:none}
+#main_morning_poster{display:block}
+	
+	
+/* footer */
+footer{
+	width:260px;
+	height:140px;
+	margin-top:40px;
+	font-size:10pt;
+	padding-top:17px;
+	margin-bottom:22px
+}
+footer p:first-child{
+	width:125px;
+	font-size:12pt;
+	float:left
+}
+footer *{
+	float:left;
+	margin-left:15px;
+	line-height:18pt
+}
+footer p:last-child{
+	margin-left:0;
+	font-weight:bold
+}	

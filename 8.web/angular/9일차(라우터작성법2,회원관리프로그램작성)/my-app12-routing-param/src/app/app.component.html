@@ -1,0 +1,6 @@
+<h1>{{title}}</h1>
+<h3>매개변수를 전달하는 라우팅!!!</h3>
+<a routerLink="firstView/100">first 화면</a>
+<a routerLink="secondView">second 화면</a>
+<a [routerLink]="['thirdView',{xxx:'홍길동',yyy:200}]">third 화면</a>
+<router-outlet></router-outlet>

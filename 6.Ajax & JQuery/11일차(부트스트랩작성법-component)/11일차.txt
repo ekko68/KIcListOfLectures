@@ -1,0 +1,126 @@
+11일차(부트스트랩작성법-component)
+
+https://www.w3schools.com/
+
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+
+->예제에서 언급한 클래스 선택자=>bootstrap.min.css 선언(압축)
+                                                  bootstrap.css파일 확인
+
+.radio label,
+.checkbox label {
+  min-height: 20px;
+  padding-left: 20px;
+  margin-bottom: 0;
+  font-weight: normal;
+  cursor: pointer;
+} 
+
+수직정렬(default) checkbox,radio선택자 지정->div태그 감싸기
+수평정렬->label->checkbox-inline, radio-inline선택자부여
+----------------------------------------------------------------------
+.radio-inline,
+.checkbox-inline {
+  display: inline-block;
+  padding-left: 20px;
+  margin-bottom: 0;
+  font-weight: normal;
+
+테이블+입력양식+버튼부착=>디자인
+5.button폴더->button.html
+
+**버튼을 생성하는 방법**
+
+1.<button></button>
+2.<input type="button">
+3.<a href="링크주소> =>a태그를 이용한 버튼
+-------------------------------------------------
+3번 시험->2번(Spring과 연관)
+===========================
+8/29(화)->Ajax,JQuery,BootStrap(오후 5시)
+
+9/8(금)->스프링시험(2과목)
+===========================
+6.imgage-> image.html
+
+<!-- 이미지도 그리드시스템과 혼합해서 사용 
+      1.img-rounded->둥근테두리
+      2.img-circle->원형이미지
+      3.img-thumnail->썸네일(그림 주위에 테두리 쳐진형태)
+      + 반응형->img-responsive(브라우저 크기를 줄이면 기본이미지를 제외한
+                                              크기가 작아진다.)
+     -->
+-----------------------------------------------------------
+bootstrap->css영역 종료
+---------------------------
+bootstrap->component->메인페이지 작성(상단메뉴)
+                                  ->그리드 시스템
+             ->상단메뉴
+              ->드롭다운->버튼->버튼그룹=>툴바처럼 사용(버튼툴바)
+              ->버튼 드롭다운->네비게이션(nav~)
+              ->페이지네이션(페이징처리->list.jsp)
+                    1 2 3
+              ->badge
+-----------------------------------------------------------------------
+
+www.jspstudy.co.kr
+
+
+  vertical-align: middle;
+  cursor: pointer;
+}
+ 7.component->dropdown.html
+  생성
+
+**드롭다운 특성**
+
+1.메뉴를 눌렀을때 하단으로 펼쳐지는 것
+2.단독으로 사용할 수없고 부트스트랩에 포함된 자바스크립트와 jQuery를 같이 사용 해야 한다.
+3.일반적으로 드롭다운 부분은 ul과 li로 구성된 리스트 태그에 적용된다.
+  --><nav></nav>와 연관->메뉴부분과 연관
+4.jquery에 관련된 파일을 불러와야 제대로 작동이 된다.
+
+<!--   ***
+                드롭다운해서 나오는 메뉴부분을 감싸주는 선택자(dropdown) 
+                 메뉴->role(menu) ,메뉴항목->role(menuitem)
+                 ul class="dropdown-menu->메뉴항목은 현재 화면에 안보이게 설정
+                 클릭했을때 드롭다운할 수있도록 설정(data-toggle="dropdown") 
+                 tab키를 이용해서 특정 메뉴를 선택해서 처리(tabindex=-1)
+                 tab키로 여기를 클릭하세요로 이동 enter->메뉴펼쳐질수 있도록 설정
+                 -->
+          <div class="dropdown">
+             <a data-toggle="dropdown" href="#">여기를 클릭하세요</a>
+             <ul class="dropdown-menu"  role="menu">
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="#">회원로그인</a></li>
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="#">자유게시판</a></li>
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="#">설문조사</a></li>
+             </ul>
+          </div>
+
+<!--1.버튼의 그룹을 설정(div태그내부에  btn-group 선택자로 설정)
+                2.버튼그룹의 크기를 일괄적으로 조절(btn-group-lg,~-sm,~-xs)  -->
+          <div class="btn-group btn-group-lg">
+          <input type="button" class="btn btn-default" value="기본 모양 버튼">
+          <input type="button" class="btn btn-primary" value="중요한버튼">
+          <input type="button" class="btn btn-success" value="긍정적 의미">
+          <input type="button" class="btn btn-info" value="정보제공 버튼">
+          </div>
+          <p>
+          <hr>
+          <!-- 버튼그룹(1개이상)을 툴바형식으로 변환
+             3.div태그로 묶어준뒤 class="btn-toolbar로 설정
+             툴바형태의 버튼그룹에서는 버튼의 크기를 일정하게 유지
+           -->
+          <div class="btn-toolbar">
+          <div class="btn-group btn-group-sm">
+          <input type="button" class="btn btn-default" value="버튼1">
+          <input type="button" class="btn btn-default" value="버튼2">
+          <input type="button" class="btn btn-default" value="버튼3">
+          <input type="button" class="btn btn-default" value="버튼4">
+          </div>
+          
+          <div class="btn-group btn-group-xs">
+          <input type="button" class="btn btn-default" value="버튼5">
+          <input type="button" class="btn btn-default" value="버튼6">
+          </div>
+=====================================

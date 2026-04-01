@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+	
+	<!--
+		id          VARCHER(50)      관리자 id
+		passwd VARCHAR(25)      관리자 passwd
+		name    VARCHAR(20)      관리자 명
+	-->
+
+	<!-- Login SQL -->
+	<!-- admin Table에서 해당하는 id와, passwd가 일치하는지 검색 -->
+	<select id="loginadmin">
+		select count(id) from ADMIN where id=#{id}
+	</select>
+</mapper>

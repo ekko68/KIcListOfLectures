@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+   <!-- 테이블의 필드에 대한 정보를 담고있는 객체(DTO) 자료형의 별칭부여  -->
+	<typeAliases>
+	    <typeAlias alias="BoardCommand" 
+	                    type="com.board.domain.BoardCommand"/>
+	</typeAliases>
+	
+	<mappers>
+	    <mapper resource="com/board/dao/BoardMapper.xml"/>
+	</mappers>
+</configuration>
+
+
+
+
+

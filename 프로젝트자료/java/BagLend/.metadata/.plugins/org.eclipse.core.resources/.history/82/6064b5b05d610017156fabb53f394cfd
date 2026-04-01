@@ -1,0 +1,265 @@
+package bag.design.page;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.Statement;
+import java.io.File;
+import java.sql.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
+import bag.db.data.Product;
+import bag.get.connection.MakeConnection;
+import bag.handle.sql.HandleProductDB;
+
+
+public class InsertProductPage extends JFrame implements ActionListener {
+
+	private JTextField txtB_Num, txtB_Title, txtB_Check; // 상품번호,이름,상태
+	private JTextArea txtB_Infor; //상품 정보
+	private JLabel P_Num, P_Title, P_Infor, P_Check, pdPic,Product_Image;
+	private JLabel bgImg;
+	private ImageIcon imageIcon;
+	private JButton confirmbtn, cancelbtn, imgAdd;
+	private JPanel aPn2, aPn1, picPn, delPn,infoPn,bPn1,bPn2,bPn3,bPn4,bPn5;
+
+	private JFrame fInsert;
+	private Dimension screen;
+	private Color trans;
+	
+	private String imgPath;
+	private File file;
+	
+	//DB 연동
+	private HandleProductDB productDB;
+	private ProductInfoPage page;
+
+	public InsertProductPage(ProductInfoPage page) {
+		
+	}
+	public InsertProductPage() {
+		productDB = new HandleProductDB();
+		fInsert = new JFrame();
+		
+		trans = new Color(0, 0, 0, 0);
+		screen = Toolkit.getDefaultToolkit().getScreenSize();
+		NewDesign();
+		
+		fInsert.setVisible(true);
+		fInsert.setResizable(false);
+		addListener();
+	}
+	
+	public void NewDesign() {
+		fInsert.setTitle("신규 제품 등록");
+		fInsert.setBounds(screen.width / 9, screen.height / 9, 1280, 720);
+		//fInsert.setVisible(true);
+		
+		// 전체 박스 부착
+		fInsert.getContentPane().setLayout(null);
+
+		// 이미지 패널----------------------------------------------------
+		picPn = new JPanel(); // new JPanel(new BorderLayout())
+		picPn.setBorder(new LineBorder(new Color(255, 255, 255), 2));
+		picPn.setBounds(10, 20, 585, 640);
+		picPn.setBackground(new Color(255, 255, 255, 90));
+
+		aPn1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		// aPn1.setBackground(trans);
+		aPn1.setPreferredSize(new Dimension(565, 520));
+
+		// 제품 이미지
+		pdPic = new JLabel();
+		pdPic.setBackground(Color.DARK_GRAY);
+		Product_Image = new JLabel();
+		Product_Image.setBounds(0, 0, 565, 520);
+		Product_Image.setBackground(Color.DARK_GRAY);
+		aPn1.add(Product_Image);
+
+		// 부착
+		aPn1.add(pdPic);
+		picPn.add(aPn1);
+		fInsert.add(picPn);
+
+		// 이미지 추가 버튼
+		aPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		aPn2.setBackground(trans);
+		imgAdd = new JButton();
+		imgAdd.setIcon(new ImageIcon("C:/image/icn_imgadd.png"));
+		imgAdd.setPreferredSize(new Dimension(200, 80));
+		aPn2.add(imgAdd);
+		picPn.add(aPn2);
+
+		// 제품정보 패널
+		infoPn = new JPanel();
+		infoPn.setBorder(new LineBorder(new Color(255, 255, 255), 2, true));
+		infoPn.setBounds(612, 20, 640, 520);
+		infoPn.setLayout(null);
+		infoPn.setBackground(new Color(255, 255, 255, 90));
+
+		bPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn1.setBounds(20, 25, 600, 60);
+		bPn1.setBackground(trans);
+		bPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn2.setBounds(20, 90, 600, 60);
+		bPn2.setBackground(trans);
+		bPn3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn3.setBounds(20, 155, 600, 60);
+		bPn3.setBackground(trans);
+		bPn4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn4.setBounds(20, 220, 600, 30);
+		bPn4.setBackground(trans);
+		bPn5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn5.setBounds(20, 250, 600, 271);
+		bPn5.setBackground(trans);
+
+		P_Num = new JLabel("Product No :");
+		P_Num.setFont(new Font("Noto Sans", Font.BOLD, 14));
+		P_Title = new JLabel("Product Name :");
+		P_Title.setFont(new Font("Noto Sans", Font.BOLD, 14));
+		P_Infor = new JLabel("Product Info :");
+		P_Infor.setFont(new Font("Noto Sans", Font.BOLD, 14));
+		P_Check = new JLabel("Product Condition :");
+		P_Check.setFont(new Font("Noto Sans", Font.BOLD, 14));
+
+		txtB_Num = new JTextField("", 53);
+		txtB_Check = new JTextField("", 53);
+		txtB_Title = new JTextField("", 53);
+		txtB_Infor = new JTextArea(13, 53);
+
+		txtB_Num.setEditable(true);
+		txtB_Check.setEditable(true);
+		txtB_Title.setEditable(true);
+		txtB_Infor.setEditable(true);
+
+		// 라벨-패널-패널 부착
+		bPn1.add(P_Num);
+		bPn1.add(txtB_Num);
+		bPn2.add(P_Title);
+		bPn2.add(txtB_Check);
+		bPn3.add(P_Check);
+		bPn3.add(txtB_Title);
+		bPn4.add(P_Infor);
+		bPn5.add(txtB_Infor);
+
+		infoPn.add(bPn1);
+		infoPn.add(bPn2);
+		infoPn.add(bPn3);
+		infoPn.add(bPn4);
+		infoPn.add(bPn5);
+		fInsert.getContentPane().add(infoPn);
+
+		// 닫기 버튼
+		delPn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		delPn.setBounds(612, 580, 640, 80);
+		delPn.setBackground(trans);
+		confirmbtn = new JButton();
+		confirmbtn.setIcon(new ImageIcon("C:/image/btn_confirm.jpg"));
+		confirmbtn.setBackground(Color.white);
+		confirmbtn.setPreferredSize(new Dimension(100, 30));
+		cancelbtn = new JButton();
+		cancelbtn.setIcon(new ImageIcon("C:/image/btn_cancel.jpg"));
+		cancelbtn.setPreferredSize(new Dimension(100, 30));
+
+		delPn.add(confirmbtn);
+		delPn.add(cancelbtn);
+		fInsert.getContentPane().add(delPn);
+
+		// 배경 이미지라벨
+		bgImg = new JLabel();
+		imageIcon = new ImageIcon(new ImageIcon("C:/image/bg01.jpg").getImage()
+				.getScaledInstance(screen.width, screen.height, Image.SCALE_DEFAULT));
+		// bgImg.setToolTipText("배경이미지");
+		bgImg.setBounds(0, 0, screen.width, screen.height);
+		bgImg.setIcon(imageIcon);
+		fInsert.setBackground(Color.BLACK);
+		fInsert.getContentPane().add(bgImg);
+
+	}
+	
+	
+	
+	public void displayImage() {
+		ImageIcon icon = createImageIcon(imgPath);
+		// 이미지 리사이징
+		Image pd_Img = icon.getImage();
+		Image imgResize = pd_Img.getScaledInstance(565, 520, Image.SCALE_DEFAULT);
+		ImageIcon imgIcon = new ImageIcon(imgResize);
+		Product_Image.setIcon(imgIcon);
+
+		// 이미지를 불러오지 못한 경우
+		if (icon != null) {
+			Product_Image.setText(null);
+		} else {
+			Product_Image.setText("이미지가 없습니다.");
+		}
+	}
+
+	// 경로를 지정하면 이미지를 만들어서 불러오는 메소드
+	private ImageIcon createImageIcon(String path) {
+		if (path != null) { // 불러올 이미지의 경로가 있다면 이미지 객체 생성
+			// swing에서 이미지를 생성하면 이미지를 만들어주는 ImageIcon이 있다
+			// ImageIcon 객채명 = new ImageIcon(경로포함 파일명)
+			return new ImageIcon(path);
+
+		} else {
+			System.out.println("이미지를 불러오기 실패(경로 불분명)");
+			return null; // 이미지 객체 정보를 만들 수 없다
+		}
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new InsertProductPage();
+	}
+
+	
+	// 이벤트 처리 메소드
+	private void addListener() {	
+		confirmbtn.addActionListener(this); // 확인
+		cancelbtn.addActionListener(this); // 취소
+		imgAdd.addActionListener(this); // 이미지 등록 버튼
+
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource() == imgAdd) {
+			file = null; // 불러올 이미지의 파일 정보를 담을 객체
+			JFileChooser fileChooser = new JFileChooser();
+			// fileChooser.setFileFilter(new FileNameExtensionFilter("jpg", "png", "gif"));
+			// // 파일 필터
+			fileChooser.setMultiSelectionEnabled(false);// 다중 선택 불가
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int result = fileChooser.showOpenDialog(fInsert);
+
+			if (result == JFileChooser.CANCEL_OPTION) {
+				file = null;
+			} else {
+				file = fileChooser.getSelectedFile(); // 선택한 이미지 파일명
+				imgPath = file.getPath().replace("\\", "/"); // getPath(); 현재 불러올 경로,
+				System.out.println("선택한 이미지 파일 경로 확인(imgPath) : " + imgPath);
+				displayImage(); // 이미지+JLabel 화면에 출력
+			} 
+		} // imgAdd
+		
+		else if(e.getSource() == cancelbtn) {
+			fInsert.setVisible(false);
+			//C_Insert.setEnabled(true);
+		} // cancelbtn
+		
+		
+		else if(e.getSource() == confirmbtn) {
+			
+			Product product = new Product(Integer.parseInt(txtB_Num.getText()),txtB_Check.getText(),
+			txtB_Infor.getText(),txtB_Title.getText(),imgPath);
+			
+			productDB.insertProduct(MakeConnection.getInstance(), product);
+			fInsert.dispose();
+		}
+
+	}
+
+}

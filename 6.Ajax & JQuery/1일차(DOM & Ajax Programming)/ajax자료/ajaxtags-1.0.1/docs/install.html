@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><title>AjaxTags - Usage</title><style type="text/css" media="all">
+          @import url("./style/maven-base.css");
+          
+			    @import url("./style/maven-theme.css");</style><link rel="stylesheet" href="./style/print.css" type="text/css" media="print"></link><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta><meta name="author" content="Darren L. Spurgeon"></meta><meta name="email" content="kalitai@yahoo.com"></meta></head><body class="composite"><div id="banner"><a href="http://ajaxtags.sourceforge.net" id="projectLogo"><span>AjaxTags</span></a><div class="clear"><hr></hr></div></div><div id="breadcrumbs"><div class="xleft">
+                	Last published: 11 August 2005 22:37 EDT
+                  | Doc for 1.0.1</div><div class="xright">
+        
+        <a href="http://ajaxtags.no-ip.info/" class="externalLink" title="External Link">AjaxTags Live Demo</a>
+      </div><div class="clear"><hr></hr></div></div><div id="leftColumn"><div id="navcolumn"><div id="menuOverview"><h5>Overview</h5><ul><li class="none"><a href="index.html">Home</a></li><li class="none"><a href="quickstart.html">Quick Start</a></li><li class="none"><a href="install.html">Installation</a></li><li class="expanded"><a href="usage.html">Tag Reference</a><ul><li class="none"><a href="usage.html#ajax:autocomplete">ajax:autocomplete</a></li><li class="none"><a href="usage.html#ajax:callout">ajax:callout</a></li><li class="none"><a href="usage.html#ajax:select">ajax:select</a></li><li class="none"><a href="usage.html#ajax:toggle">ajax:toggle</a></li><li class="none"><a href="usage.html#ajax:updateField">ajax:updateField</a></li></ul></li><li class="none"><a href="advanced.html">Advanced Usage</a></li><li class="none"><a href="ajaxlinks.html">Ajax Links &amp; Resources</a></li></ul></div><div id="menuDownloads"><h5>Downloads</h5><ul><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=140499" class="externalLink" title="External Link">Binaries</a></li><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=140499" class="externalLink" title="External Link">Source</a></li><li class="none"><a href="release-notes.txt">Release Notes</a></li></ul></div><div id="menuProject_Documentation"><h5>Project Documentation</h5><ul><li class="none"><a href="index.html">About AjaxTags</a></li><li class="collapsed"><a href="project-info.html">Project Info</a></li><li class="collapsed"><a href="maven-reports.html">Project Reports</a></li><li class="none"><a href="http://maven.apache.org/development-process.html" class="externalLink" title="External Link">Development Process</a></li></ul></div><div><ul><li class="none"><a href="http://www.sourceforge.net/projects/ajaxtags" class="externalLink" title="External Link"><img title="SourceForge.net" style="border: 1px" src="http://sourceforge.net/sflogo.php?group_id=120046&amp;type=1" alt="SourceForge.net"></img></a></li></ul></div><a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy"><img alt="Built by Maven" src="./images/logos/maven-button-1.png"></img></a></div></div><div id="bodyColumn"><div class="contentBox"><div class="section"><a name="Requirements"></a><h2>Requirements</h2><p>To use the tag library, you'll need the following:</p><ul>
+        <li>JDK 1.4+</li>
+        <li>
+          Servlet container running Servlets 2.3+ and JSP 1.0+ (Note: sample application requires
+          Servlet 2.4 and JSP 2.0)
+        </li>
+      </ul><p>If you intend to build from the source, you'll need the following:</p><ul>
+        <li>Maven 1.0.2</li>
+        <li>All <a href="dependencies.html">source dependencies</a></li>
+      </ul></div><div class="section"><a name="Installation_and_Set_Up"></a><h2>Installation and Set Up</h2><div class="subsection"><a name="Step_1:_Copy_TLD"></a><h3>Step 1: Copy TLD</h3><p>Copy the <code>ajaxtags.jar</code> into your <code>WEB-INF/lib</code> directory.</p></div><div class="subsection"><a name="Step_2:_Define_TLD_Reference"></a><h3>Step 2: Define TLD Reference</h3><p>
+          For JSP 1.x users, copy the <code>ajaxtags.tld</code> file to your <code>WEB-INF</code>
+          directory and include a taglib reference in your <code>web.xml</code> file.
+        </p>
+    <div class="source"><pre>
+&lt;taglib&gt;
+  &lt;uri&gt;http://ajaxtags.org/tags/ajax&lt;/uri&gt;
+  &lt;location&gt;/WEB-INF/ajaxtags.tld&lt;/location&gt;
+&lt;/taglib&gt;
+        </pre></div>
+  </div><div class="subsection"><a name="Step_3:_Create_Server-side_Handler"></a><h3>Step 3: Create Server-side Handler</h3><p>
+          There must be a server-side handler that will process the AJAX request.  This could be a
+          servlet, Struts action, another JSP, or even a non-Java, server-side component.  The only
+          requirement of this component is that it return an XML file that represents a list of
+          results based on the query passed to it from the client-side AJAX functions.
+        </p><p><strong>XML Format</strong></p>
+    <div class="source"><pre>
+&lt;?xml version="1.0"?&gt;
+&lt;list&gt;
+  &lt;item value="1"&gt;Record 1&lt;/item&gt;
+  &lt;item value="2"&gt;Record 2&lt;/item&gt;
+  &lt;item value="3"&gt;Record 3&lt;/item&gt;
+&lt;/list&gt;
+        </pre></div>
+  </div><div class="subsection"><a name="Step_4:_Declare_TLD_Reference_on_JSP"></a><h3>Step 4: Declare TLD Reference on JSP</h3><p>For each JSP in which you wish to use the AJAX tag, simply define it as with any other
+          tag library.</p>
+    <div class="source"><pre>
+&lt;%@ taglib uri="http://ajaxtags.org/tags/ajax" prefix="ajax" %&gt;
+        </pre></div>
+  </div><div class="subsection"><a name="Step_5:_Include_JavaScript_Core"></a><h3>Step 5: Include JavaScript Core</h3><p>
+          With AJAX, you'll need JavaScript.  Fortunately, everything you'll need is contained in
+          the <code>ajaxcore.js</code> file.  Just include it in your project and declare its
+          location using the following as an example.  It's best to include this in the head.
+        </p><p>
+          Incidentally, the reason why a (bulky) JavaScript source file was chosen versus having
+          each JSP tag generate only what it needs is because it's assumed that most browsers cache
+          external resources like stylesheets, images, and JavaScript files.  This should increase
+          performance slightly.  Besides, this core JavaScript is generic enough to use for other
+          purposes that the tag library does not yet provide.
+        </p>
+    <div class="source"><pre>
+&lt;script type="text/javascript" src="ajaxcore.js"&gt;&lt;/script&gt;
+        </pre></div>
+  </div><div class="subsection"><a name="Step_6:_Define_CSS_Styles"></a><h3>Step 6: Define CSS Styles</h3><p>
+          The <code>ajax:autocomplete</code> and <code>ajax:callout</code> tags rely on CSS to help
+          visually represent their function.  In the case of the former, CSS transforms a simple
+          unordered list (i.e., <code>UL &gt; LI</code> tags) into a dropdown list, while the
+          <code>ajax:callout</code> tag uses CSS to build and display its popup box.
+        </p><p>
+          While the content is fairly constrained, it is basically up to the user to define the
+          exact CSS s/he would like to use.  The example application provides a fairly good starting
+          point (if we do say so ourselves).  Still, you CSS gurus will likely find more visually
+          pleasing routes to success.
+        </p><p>
+          The following is an example used to decorate the <code>ajax:autocomplete</code> tag's
+          dropdown list.
+        </p>
+    <div class="source"><pre>
+.autocomplete {
+  position: absolute;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #666;
+  visibility: hidden;
+  font-family: Arial;
+  overflow: hidden;
+}
+
+.autocomplete ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.autocomplete li {
+  display: block;
+  white-space: nowrap;
+  cursor: pointer;
+  margin: 0px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px solid #fff;
+}
+
+.autocomplete li.selected {
+ background-color: #cef;
+ border-top: 1px solid #9bc;
+ border-bottom: 1px solid #9bc;
+}
+        </pre></div>
+  </div></div><div class="section"><a name="Next:_Usage"></a><h2>Next: Usage</h2><p>
+        Once everything is set up, all that's left is to pick you tag.  See
+        <a href="usage.html">how they're used</a>.
+      </p></div></div></div><div class="clear"><hr></hr></div><div id="footer"><div class="xright">© 2005, Darren L. Spurgeon</div><div class="clear"><hr></hr></div></div></body></html>

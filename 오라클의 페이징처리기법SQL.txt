@@ -1,0 +1,82 @@
+SELECT * FROM
+(
+
+    필드를 출력하되 앞에 번호를 매기면서 출력하라
+    SELECT ROWNUM AS RNUM, GET.* FROM 
+
+    (             
+
++ query + (이곳에 데이터를 불러오는 쿼리문이 들어간다.)
+
+
+
+    ) GET(테이블의 별칭)
+
+   ORDER BY ROWNUM desc
+
+)
+
+WHERE RNUM BETWEEN 1 AND 10 ORDER BY RNUM ASC;
+
+
+페이징 처리를 하기 위해선 전체 줄 수도 알아야 하기 때문에, 그를 알기위한 쿼리문
+
+
+SELECT COUNT(*) CNT FROM ( + query + ) 
+
+
+
+출처: http://notpeelbean.tistory.com/36 [Storm Of Two Yellow Beans]
+======================================
+<문15>emp테이블에서 가장 최근에 입사한 5명의 사원의 이름과 입사일을
+출력하시오.=>내부적으로 순위를 매기면서 출력(Top-N)->N->5
+
+공식) select rownum "별칭명",필드명,,,테이블별칭.*
+        from (
+          select 필드명,,,
+          from 테이블명
+          order by top-N 필드명(정렬이 되는 필드명) desc ->가장 최근
+       ) 별칭
+       where 조건식(rownum<=top-N) ->에 맞는 값을 부여
+
+sql>select rownum "num",ename,hiredate
+      from (
+              select ename,hiredate
+              from emp
+              order by hiredate desc
+     )
+     where rownum<=&num;
+
+SQL> select rownum "num",ename,hiredate
+  2        from (
+  3                select ename,hiredate
+  4                from emp
+  5                order by hiredate desc
+  6       )
+  7       where rownum<=&num;
+num의 값을 입력하십시오: 5
+구   7:      where rownum<=&num
+신   7:      where rownum<=5
+
+       num ENAME      HIREDATE
+---------- ---------- --------
+         1 ADAMS      87/05/23
+         2 SCOTT      87/04/19
+         3 MILLER     82/01/23
+         4 JAMES      81/12/03
+         5 FORD       81/12/03
+
+SQL> /
+num의 값을 입력하십시오: 3
+구   7:      where rownum<=&num
+신   7:      where rownum<=3
+
+       num ENAME      HIREDATE
+---------- ---------- --------
+         1 ADAMS      87/05/23
+         2 SCOTT      87/04/19
+         3 MILLER     82/01/23
+
+SQL>
+===========================
+

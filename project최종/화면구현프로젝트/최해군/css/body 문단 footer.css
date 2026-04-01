@@ -1,0 +1,38 @@
+     
+	  
+	  
+   body{
+	     background:#66cccc;
+	}
+     
+	body div img{
+	               width:300px;
+	               height:500px;
+	               margin-left:50px;
+	}
+   
+   .hua div{
+                   width:300px;
+	               float:left;
+	
+}
+   .hua figure{
+                   margin:0px;
+}
+   
+	footer{
+	             clear:both;
+	
+	}
+  
+	
+	 .textmen{
+	              clear:both;
+				  text-align:center;
+				  text-indent:30px;
+				  
+	 }
+	 .susi{
+	              color:red;
+			      font-size:30px;
+	 }

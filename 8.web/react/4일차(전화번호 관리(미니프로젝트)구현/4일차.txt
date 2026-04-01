@@ -1,0 +1,388 @@
+4일차(전화번호 관리(미니프로젝트)구현)
+ =>앵귤러 10문제,리액트 5문제+5문제=10문제
+============================
+1.특정항목을 선택(키)->0,1,2,3,4(인덱스번호)
+
+1) {this.props.contact.phone} 생략
+
+import React from 'react';
+
+export default class ContactInfo extends React.Component{
+    render(){
+        return(
+            <div>
+            {this.props.contact.name}  ->클릭->항목 인덱스번호
+            </div>
+        );
+    }
+}
+
+2)Contact->특정항목을 클릭=>키를 검색
+
+  this.handleClick = this.handleClick.bind(this);
+    }
+    //검색어가 변경될때마다 호추할 함수 선언
+    handleChange(e){   //event객체->이벤트발생시킨 컴포넌트를 얻어올때
+      this.setState({keyword:e.target.value}) //e.target.name=>input박스, e.taget.value
+    }
+    //항목을 클릭했을때 항목의 인덱스번호출력
+    handleClick(key){
+        //this.state.selectedKey=1;//사용X
+        this.setState({
+            selectedKey:key
+        });
+        console.log(key,'is selected');
+    }
+
+//-----------------------------------------------------
+          return data.map((contact,i)=>{
+              return(<ContactInfo contact={contact} key={i}
+                                  onClick={()=>this.handleClick(i)}/>);
+      })                         ====>매개변수로 전달
+================================
+
+ContactInfo
+
+import React from 'react';
+
+export default class ContactInfo extends React.Component{
+    render(){
+        return(
+            <div onClick={this.props.onClick}>{this.props.contact.name} </div>
+        );         ====이벤트이름      =====매개변수
+    }
+}
+//export default ContactInfo;
+----------------------------------------------------------------------------
+2.항목을 클릭->index번호 출력
+
+항목에 세부항목을 출력->ContactDetails.js
+
+import React from 'react';
+
+export default class ContactDetails extends React.Component{
+    render(){
+        return(<div>ContactDetails</div>);
+    }
+}
+----------------------------------------------------------------------
+                                         selectKey값을 전달
+3.Contact->항목을 클릭->항목이 선택됐는지 X =>ContactDetails
+                                                                <div>selected!!!</div>
+                                                                <div>Not selected!!!</div>
+ <ContactDetails isSelected={this.state.selectedKey!=-1}/>=>리액트방식
+
+<ContactDetails [isSelected]="selectedKey"/>=>앵귤러방식
+--------------------------------------------------------------------
+//추가
+        const details=(<div>Selected !!!</div>);
+        const blank=(<div>Not Selected !!!</div>);
+        return(
+               <div>  =>if이 안되기에 삼항연산자를 사용-><c:if구문 (성립X)
+                {this.props.isSelected?details:blank}   
+               </div>                    ->*ngIf를 이용(앵귤러)
+              );
+--------------------------------------------------------------------
+<ContactDetails isSelected={this.state.selectedKey!=-1}
+           contact={this.state.contactData[this.state.selectedKey]}/>
+           매개변수                   전체배열[내개 선택한 항목의 키값]
+------------------------------------------------------------------------
+ContactDetail에서 코딩
+
+//추가
+        //const details=(<div>Selected !!!</div>);
+        const details=(
+             <div>
+                <p>{this.props.contact.name}</p>
+                <p>{this.props.contact.phone}</p>
+             </div>
+        );
+ 
+=>String pageNum=request.getParameter("pageNum")
+    pageNum-> null이 된다.->NullPointerException
+
+ if(pageNum==null){
+    pageNum="1";
+}
+
+---------------------------------------------------------
+->처음에는 선택을 할 수가 없다=>초기값을 설정할 수 있도록 조치
+
+Uncaught TypeError: Cannot read property 'name' of undefined
+   
+ at ContactDetails.render (bundle.js:32780)
+    at bundle.js:28767
+   
+ at measureLifeCyclePerf (bundle.js:28047)
+    at ReactCompositeComponentWrapper._renderValidatedComponentWithoutOwnerOrContext
+
+//형식)->props값을 전달->자식 못받는경우 발생->초기값
+//자식클래스명.defaultProps={키:초기값,~}
+ContactDetails.defaultProps={
+    contact:{
+        name:'',
+        phone:'' //,age=0,address='',,,
+    }
+};
+---------------------------------------------------------------------------
+ 기존의 자바스크립트 배열에 입력,수정,삭제
+
+this.setState({                                   + 새로운 값
+    list(키):this.state.list(배열객체명).concat(newObj)
+ })
+  =>기존의 배열에 push를 사용하면 변경 되기때문에
+    concat 함수를 사용하여 새로운 배열을 만들어서 리턴 받아야 한다
+
+ push->기존의 배열에 계속 추가->키:항목,,,
+ concat->기존의 배열은 그대로 유지
+              기존의 배열+추가한 내용===>새로운 배열을 가지고 작업
+---------------------------------------------------------------------
+immutablility Helper->immutable.js을 사용=>다운로드 받아서 설치
+-----------------------------------------------------------------------
+npm install --save react-addons-update
+
+C:\webtest\8.web\react\react-telephone>
+          npm install --save react-addons-update
+
+npm WARN react-tutorial@1.0.0 No description
+npm WARN react-tutorial@1.0.0 No repository field.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.2 (node_modules\fse
+vents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
+1.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"}
+)
+
++ react-addons-update@15.6.2
+added 116 packages in 18.84s
+
+C:\webtest\8.web\react\react-telephone>
+
+1.배열의 값을 추가
+
+this.setState({
+    list:update( //update함수를 이용
+          this.state.list, //처리해야할 배열이나 객체(첫인수)
+                                contactData
+           {           
+            //{name:"홍길동", phone:"010-123-0987"}=>contact
+            $push:[저장할객체명(contact),newObj2] //처리명령어 객체
+                //$push를 이용해서 newObj,newObj2 두개를
+                //한 개의 객체를 추가해도 배열형태로 감싸줘
+                //야 된다.
+            }
+      });
+-----------------------------------------------------------------------
+this.setState({
+    list:update(
+          this.state.list, //처리해야할 배열이나 객체(첫인수)
+           {        //1.시작하는 인덱스 2.몇 개나 삭제
+//{name:"홍길동", phone:"010-123-0987"}->1인경우
+//{name:"임시", phone:"010-456-0987"},
+------------------------------------------------>2
+   {name:"테스트", phone:"010-987-1234"},->3
+   {name:"테스트2", phone:"010-765-1111"}->4
+============================
+                    삭제하는 경우(현재 선택된 selectKey)
+            $splice:[[index,1]] //list배열이 index부터 시작
+               //해서 1개의 데이터를 제거한다는 의미
+              //배열을 지니고 있는 배열을 감싸준다.
+            }
+      });
+------------------------------------------------------------
+3.배열의 수정 ->update 수정t set 수정필드명=값,수정필드명2=값2
+                       where id=1;
+
+this.setState({
+    list:update(
+          this.state.list, //이 부분이 배열이 아니라 객체도 괜찮다
+           {  //객체라면 index가 아닌 그 객체의 키가 들어간다.       
+            [index]:{ //list배열의 index번째 아이템의
+                       //field1, field2를 변경하는 코드
+               field:{ $set: “value”}, ==>name
+               field2:{ $set: “value2”},==>phone
+               field3:{ $set: “value3”} ==>age
+               ,,,
+            }  //field2도 키가 들어가면 그 부분의 특정부분만
+          }    //변경이 가능하게 된다.
+      });
+----------------------------------------------------------------
+Contact.js에 데이터 추가함수 코딩
+//데이터추가
+    handleCreate(contact){ //name,phone,age,address
+       this.setState({
+           //1.집어넣어줄 데이터(객체),2.$push이용->값저장->[]로 묶어줘야 된다.
+           //배열객체명:update(1,2)
+           contactData:update(this.state.contactData,{$push:[contact]})
+       });
+    }
+-------------------------
+ContactCreate
+-------------------------
+import React from 'react';
+//사용자로부터 값을 입력폼
+export default class ContactCreate extends React.Component{
+    render(){
+       return(
+         <div>
+           <h2>Create Contact</h2>
+           <p>
+             <input type="text" name="name" placeholder="name" />
+             <input type="text" name="phone" placeholder="phone" />
+           </p>
+           <button>Create </button>==>onClick=>부모의 함수호출
+                                                               =>입력을 받은 값을 전달
+                                                                =>onChange이벤트를 발생
+                                                                     따로 내데이터를 저장함수호출
+
+                                                           =>이미 저장된 상태에서 부모에게 전달
+         </div>
+       );
+    }
+}
+
+ onChange={this.handleChange}/>=>react방식
+----------------------------------------------------------
+  ContactCreate.js에서 코딩
+
+(onChange)="handleChange($event)"=>angular방식
+  app.component.html에서
+
+     this.handleChange = this.handleChange.bind(this);
+    }
+    //
+    handleChange(e){  //contact->부모에게 전달 {}
+                      // {name:'이민수',phone:'010-234-0981'}
+    let nextState = {}
+    //nextState[name]='이민수'->{name:'이민수'}
+    //nextState[phone]='010-123-0983'
+     nextState[e.target.name] = e.target.value
+     this.setS
+===================================
+// 함수 호출시 binding 수동으로 연결하기 주의할것
+----------------------------------------------------
+    handleClick(){
+     //자기 클래스(name,phone)=>객체->contact->부모함수에게 매개변수를 전달
+     const contact={
+         name:this.state.name,//handleChange에 의해서 저장된 이름
+         phone:this.state.phone
+     };
+     //부모의 함수 <ContactCreate onCreate={this.handleCreate} />
+     this.props.onCreate(contact);//호출
+     //다시 입력을 받기위해서 초기화
+     this.setState({
+        name:'',
+        phone:''
+     });
+    }
+--------------------------------------------------------------------------
+<ContactCreate onCreate={this.handleCreate} />
+                                           함수이름을 onCreate매개변수로 전달
+-------------------------------------------------------------------------
+->부모의 ContactCreate함수를 호출
+==================================
+
+//데이터추가->ContactCreate
+    handleCreate(contact){ //name,phone,age,address
+       this.setState({
+           //1.집어넣어줄 데이터(객체),2.$push이용->값저장->[]로 묶어줘야 된다.
+           //배열객체명:update(1,2)
+           contactData:update(this.state.contactData,{$push:[contact]})
+       });
+       console.log('contact의 handleCreate호출됨!')
+    }
+-----------------------------------------------------------------
+데이터를 수정,삭제
+
+1.Contact에서 수정,삭제해주는 함수 작성
+
+//데이터 삭제->this.state.selectedKey을 이용
+    handleRemove(){
+      this.setState({
+        contactData:update(this.state.contactData,
+            //1.현재 선택된 객체항목의 인덱스번호,삭제할 갯수
+            //선택된키로부터 1개를 삭제->역시 배열이기에 배열표시로 해준다.
+            {$splice:[[this.state.selectedKey,1]]}),
+            selectedKey:-1 //추가로 -1 설정해->다시 초기화 사용가능 
+      });
+    }
+    
+    //$set->키값에 해당하는 값을 변경
+    handleEdit(name,phone){
+        this.setState({
+            contactData:update(this.state.contactData,
+                {  //수정할 인덱스번호
+                  [this.state.selectedKey]:{
+                      name:{$set:name}, //name(키명):{$set:수정할값}
+                      phone:{$set:phone}//, age:{$set:age},,,
+                  }
+                }
+            )
+       });
+     }
+------------------------------------------------------------------
+2.ContactDetail->상세보기->edit 버튼,remove 버튼
+ 삭제 경우
+
+  Contact.js에서 자식(ContactDetail에게 전달)
+
+<ContactDetails isSelected={this.state.selectedKey!=-1}
+                     contact={this.state.contactData[this.state.selectedKey]}
+                     ----------------------------------------------------------
+                     onRemove={this.handleRemove}/>
+                                        부모의 함수를 호출할 수있도록 부모이름전달
+------------------------------------------------------------------------------
+//데이터 삭제->this.state.selectedKey을 이용
+    handleRemove(){
+      //삭제하면 안되는 조건->-1(선택하지 않았다면)
+      if(this.state.selectedKey < 0){
+          return;//함수종료
+      }
+     //-------------------------------------------------
+      this.setState({
+        contactData:update(this.state.contactData,
+            //1.현재 선택된 객체항목의 인덱스번호,삭제할 갯수
+            //선택된키로부터 1개를 삭제->역시 배열이기에 배열표시로 해준다.
+            {$splice:[[this.state.selectedKey,1]]}),
+            selectedKey:-1 //추가로 -1 설정해->다시 초기화 사용가능 
+      });
+    }
+======================================
+ContactDetail의 버튼의 전환 기능
+
+화면 전환 기능을 구현
+
+//생성자->초기화
+    constructor(props){
+        super(props);
+        this.state={//1.현재 상태(편집모드) 2.변경된 값 name,phone
+          isEdit:false, //편집유무 체크
+          name:'',
+          phone:''
+        };
+        this.handleToggle = this.handleToggle.bind(this);
+    }
+    handleToggle(){
+        this.setState({ //토글기능
+            isEdit:!this.state.isEdit
+        });
+        console.log(!this.state.isEdit) //true or false
+    }
+--------------------------------------------
+const details=(
+             <div>
+                <p>{this.props.contact.name}</p>
+                <p>{this.props.contact.phone}</p>
+             </div>
+        );
+        //추가->화면에 보여줄 부분
+        const view = this.state.isEdit?(<div></div>):details;
+        //----------------------------------------------------------
+        const blank=(<div>Not Selected !!!</div>);
+        return( //onRemove={this.handleRemove}
+               <div>
+                   <h2>Details</h2>
+                {this.props.isSelected?view:blank} 
+                <button onClick={this.handleToggle}>
+                    {this.state.isEdit?'OK':'Edit'}
+                </button>
+

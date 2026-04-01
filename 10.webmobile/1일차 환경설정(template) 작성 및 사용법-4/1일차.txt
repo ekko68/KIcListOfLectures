@@ -1,0 +1,92 @@
+1일차 환경설정(template) 작성 및 사용법
+
+모바일->사이트->모바일(핸드폰)
+  사이트->www.naver.com=>모바일에 특화된 페이지를 작성
+               m.naver.com
+
+모바일 사이트->DB연동,화면디자인(jQuery,jQueryMobile)
+                                                            ========
+->jquerymobile.com
+->jQueryMobile->프로젝트를 하나 생성
+=======================
+1.모바일에 대한 화면디자인->예제->
+2.모바일 DB->jsp(모델1), 브라우저 자체에서 제공 db(웹 저장소)->오라클,mysql
+3.모바일->하이브리드앱(코르드바)(폰캡) 설정
+===========================
+
+  jQueryMobile
+       |
+        -WebContent
+                |
+                  -ch1-ui->01.html
+
+1.네이티브앱->안드로이드에서 처리
+2.모바일웹->사이트 개발->핸드폰(반응형웹)->모바일에 최적화된 속성
+3.하이브리드앱->핸드폰에 ~.apk을 생성->설치->ppt 참조
+-------------------------------------------------
+
+<!-- 
+ 버튼의 속성->data-*                  속성              
+ 속성                    설명                                        값
+ data-corners    모서리를 둥글게 할것인지 여부    true(기본)|false
+ data-icon            아이콘             home | delete | plus,,,,, jquerymobile사이트
+ data-iconpos       아이콘위치       left|right|top|bottom|notext(글자만 출력)
+ data-iconshadow 아이콘그림자      true(기본)|false
+ data-shadow       버튼그림자      true(기본)|false
+ data-thema         버튼테마         letter(a~e)
+ -->
+
+ 05prev.html
+
+<!-- page지정 -->
+<div data-role="page">
+    <!-- 1.header지정   < ,>
+         버튼은 data-role="button"은 생략이 가능,자동으로 좌우배치
+         강제로 일반버튼을 오른쪽에 배치-> class="ui-btn-right"
+     -->
+    <div data-role="header">
+         <h1>이전,다음버튼을 생성</h1>
+         <a href="#" data-icon="arrow-l">이전버튼</a>
+         <a href="#" data-icon="arrow-r">다음버튼</a>
+    </div>
+    <div data-role="header">
+         <h1>Header2</h1>
+         <a href="#" data-icon="arrow-r" data-iconpos="right"
+                             class="ui-btn-right">다음</a>
+    </div>
+    <!-- 2.content 지정
+       버튼을 생성->반드시 data-role="button"을 생략하면 안된다.
+    -->
+    <div data-role="content">
+         <a href="#" data-icon="arrow-r">data-icon="arrow-r"버튼</a>
+         <a href="#" data-role="button" data-icon="arrow-r">data-role="button" 추가</a>
+    </div>
+    <!-- 3.Footer 지정 
+       data-role="button"은 생략가능하지만 좌우로 자동으로 배치가 안된다.
+       좌우배치를 할려면 클래스속성을 부여(ui-btn-left,ui-btn-right)->
+    -->
+    <div data-role="footer">
+         <h1>화면하단</h1>
+         <a href="#" data-icon="arrow-l" class="ui-btn-left">이전버튼</a>
+         <a href="#" data-icon="arrow-r"  data-iconpos="right"
+                             class="ui-btn-right">다음버튼</a>
+    </div>
+</div>
+</body>
+</html>
+---------------------------------
+ch2-form->form.html
+------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+

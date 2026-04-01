@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!--@Autowired ->모든 클래스에 @Autowired적용 -->
+	<context:annotation-config />
+
+	<!--요청클래스를 등록 -->
+	
+	<!-- 관리자 메인 페이지 -->
+	<bean class="com.apik.admin.admin_main_Controller" />	
+	<!-- cos 관리 페이지 -->
+	<!-- <bean class="com.apik.admin.admin_cos_se_Controller"/> -->
+	<bean class="com.apik.admin.admin_cos_in_Controller"/>
+	<!-- cosloc 관리 페이지 -->
+	<bean class="com.apik.admin.admin_cosloc_se_Controller"/>
+	<bean class="com.apik.admin.admin_cosloc_in_Controller"/>
+	<!-- icon 관리 페이지 -->
+	<bean class="com.apik.admin.admin_icon_se_Controller"/>
+	<bean class="com.apik.admin.admin_icon_in_Controller"/>
+	<!-- member 관리 페이지 -->
+	<!-- <bean class="com.apik.admin.admin_m_se_Controller"/> -->
+	<bean class="com.apik.admin.admin_m_in_Controller"/>	
+	<!-- map 관리 페이지 -->
+	<bean class="com.apik.admin.admin_map_se_Controller"/>
+	<bean class="com.apik.admin.admin_map_in_Controller"/>
+	
+	<!-- person 등록 --> 
+	<bean class="com.apik.person.service.PersonDaoImpl"/>
+	<bean class="com.apik.person.service.InsertpersonController"/>
+	<bean class="com.apik.person.service.ListpersonController"/>
+	<bean class="com.apik.person.service.PersonController"/>
+	<bean class="com.apik.person.service.SearchpersonController"/>
+	<bean class="com.apik.person.service.DetailspersonController"/>
+	<bean class="com.apik.person.service.UpdatepersonController"/>
+	<bean class="com.apik.person.service.DeletepersonController"/>
+	
+	
+	<!-- course 등록 --> 
+	<bean class="com.apik.course.service.IntroController"/>
+	<bean class="com.apik.course.service.ResultController"/>
+	<bean class="com.apik.course.service.ContentController"/>
+	<bean class="com.apik.course.service.CourseDaoImpl"/>
+	<bean class="com.apik.course.service.DeletecourseController"/>
+	<bean class="com.apik.course.service.DetailscourseController"/>
+	<bean class="com.apik.course.service.InsertcourseController"/>
+	<bean class="com.apik.course.service.ListcourseController"/>
+	<bean class="com.apik.course.service.SearchcourseController"/>
+	<bean class="com.apik.course.service.UpdatecourseController"/>
+	
+
+	<!-- 리소스 번들을 이용해서 처리 -->
+    <bean id="messageSource" 
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages.label</value>
+                <value>messages.validation</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 예외 페이지 작성 -->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">pageError</prop>
+            </props>
+        </property>
+    </bean>
+
+	    <!-- tiles에 관련된 환경설정을 불러오기 (일반 xml보다 viewResolver가 조금 변환됨) 
+        기존의 prefix,suffix를 이용해서 경로명 및 파일의 확장자를 지정하는 부분이 없어졌다.
+    -->
+    <bean id="tilesConfigurer"
+            class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/tiles-def/tiles-def.xml</value>
+            </list>
+        </property>
+    </bean>
+
+	<!-- viewResolver 설정 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.tiles3.TilesView" />
+	</bean>
+</beans>

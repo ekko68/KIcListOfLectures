@@ -1,0 +1,488 @@
+12일차(파일업로드의 게시판의 글목록보기구현)
+
+1.pom.xml ->oracle driver 누락
+                  ->오라클만 따로 다운로드 받을 수있는 위치를 지정해주는 
+                      옵션
+<!-- 복사-->
+  <repositories>
+     <repository>
+        <id>oracle</id>
+        <name>ORACLE JDBC Repository</name>
+        <url>http://maven.jahia.org/maven2</url>
+     </repository>
+  </repositories>
+=====================================
+          <dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>12.1.0.1</version>
+          </dependency>
+=======================================
+2.menu.jsp에서
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+    //현재 실행중인 http://localhost:8090/Springfileboard/board/list.do
+	String contextPath = request.getContextPath();
+%>
+<ul>
+	<li><a href="<%=contextPath%>/board/list.do">목록</a></li>
+	<li><a href="<%=contextPath%>/board/write.do">글쓰기</a></li>
+</ul>
+--------------------------------------------------------------------
+3.index.jsp->맨 마지막에 실행
+
+<%
+  response.sendRedirect(request.getContextPath()+"/board/list.do");
+%>
+---------------------------------------------------------------------
+4.web.xml을 읽어들여서 실행
+
+<!-- 1.외부의 DB에 관련된 환경설정을 불러오는 경우(관련클래스,매개변수)
+            다른 경로에 DB연동파일을 설정하고 불러오는 방법
+            접두어(classpath):경로포함해서 불러올 환경설정파일명
+  -->
+  <context-param>
+     <param-name>contextConfigLocation</param-name>
+     <param-value>classpath:config/applicationContext.xml</param-value>
+  </context-param>
+  
+  <listener>
+      <listener-class>
+         org.springframework.web.context.ContextLoaderListener
+      </listener-class>
+  </listener>
+  
+  <servlet>
+     <servlet-name>dispatcher</servlet-name>
+     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  </servlet>
+  
+  <!--(1)어떻게 요청이 들어왔을때 처리할 것인가?  -->
+  <servlet-mapping>
+     <servlet-name>dispatcher</servlet-name>
+     <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+---------------------------------------------------------------------
+5.
+  환경설정을 하는데 2가지로 분류
+
+  1) src
+        |
+          -컨트롤러 클래스,DAO,DTO
+           리소스번들파일,로그파일 설정,Mybatis 설정파일
+            (C,M)
+----------------------------------------------------------
+      webapp (View)
+          |
+           - tiles환경설정파일~.xml
+  2)        dispatcher-servlet.xml
+ 
+
+ config/applicationContext.xml
+
+ <bean id="propertyConfigurer" 
+              class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config/jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+    
+    <!-- 커넥션 풀을 이용한 DataSource 설정 -->
+	<bean id="dataSource"
+       class="org.apache.commons.dbcp.BasicDataSource">
+	    <property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		<!-- 최대 커넥션 개수 -->
+		<property name="maxActive" value="50"></property>
+		<!-- 접속이 없을 경우 최대 유지 커넥션 개수 -->
+		<property name="maxIdle" value="30"></property>
+		<!-- 접속이 없을 경우 최소 유지 커넥션 개수 -->
+		<property name="minIdle" value="50"></property>
+		<!-- 최대 대기시간(초) : 초과시 연결실패 오류 발생 -->
+		<property name="maxWait" value="5"></property>
+	</bean>
+
+<!-- Mybatis설정이 필요(SqlSessionFactoryBean)  -->
+<!-- 3.(Mybatis) bean등록(SqlSessionFactoryBean)
+        1)configLcation->테이블에 대한 xml 파일을 불러올때 
+        2)dataSource->DB연결정보 멤버변수
+-->
+
+<bean id="sqlSessionFactory" 
+           class="org.mybatis.spring.SqlSessionFactoryBean">
+     <property name="configLocation" value="classpath:config/SqlMapConfig.xml" />
+                                                        ===========================
+     <property name="dataSource" ref="dataSource" />     
+</bean>
+
+<!-- 4 SqlSessionTemplate(sqlSession객체를 더 쉽게 얻어오기 위해서 설정 -->
+<bean id="sqlSessionTemplate" 
+           class="org.mybatis.spring.SqlSessionTemplate">
+         <constructor-arg index="0" ref="sqlSessionFactory" />
+</bean>
+----------------------------------------------------------------------
+6.SqlMapConfig.xml 파일 불러오기
+
+<configuration>
+
+   <!-- 테이블의 필드에 대한 정보를 담고있는 객체(DTO) 자료형의 별칭부여  -->
+	<typeAliases>
+	    <typeAlias alias="BoardCommand" 
+	                    type="com.board.domain.BoardCommand"/>
+	</typeAliases>
+	
+	<mappers>
+	    <mapper resource="com/board/dao/BoardMapper.xml"/>
+	</mappers>
+</configuration>
+
+7.com/board/dao/BoardDao인터페이스를 작성(설계)
+package com.board.dao;
+
+//게시판의 공통적으로 사용하는 추상메서드
+import java.util.*;
+import com.board.domain.BoardCommand; //서로 다른 패키지는 import 건다.
+
+public interface BoardDao {
+  //글목록보기
+  public List<BoardCommand> list(Map<String,Object> map); //검색분야,검색어
+  //총갯수->페이징 처리때문에(검색분야,검색어)->검색어에 대해서 갯수가 달라진다
+  public int getRowCount(Map<String,Object> map);
+}
+
+8.BoardMapper.xml에 추가
+
+  resultType="Integer" =>resultType="int" 
+                                   =>resultType="java.lang.Integer"
+
+공식) select rownum "별칭명",필드명,,,테이블별칭.*
+        from (
+          select 필드명,,,
+          from 테이블명
+          order by top-N 필드명(정렬이 되는 필드명) desc ->가장 최근
+       ) 별칭
+       where 조건식(rownum<=top-N) ->에 맞는 값을 부여
+
+   <h1>
+
+  <,>대소비교 연산자로 인식이 안된다.
+ xml에서는 <,> 인식시키기 위해서는 
+
+ <![CDTA[
+          >,<을 사용해야 인식이 인다.(xml문법 구조)
+  ]]>
+
+<select id="selectList" parameterType="map" resultType="BoardCommand">
+     select seq,writer,title,content,pwd,hit,regdate,filename
+        from (select  
+                a.*,rownum rnum
+           from (
+               select * from springboard2
+               <where>  ->동적으로 웹상에서 입력을 받는 경우에 <where> Dynamic 부분
+                               ->조건식의 체크는 <if test="조건식"></if>
+                   검색분야가 title을 선택했고  검색어를 입력했다면
+                 <if test="keyWord!=null and keyField=='title'">
+                      title  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='writer'">
+                      writer  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='content'">
+                       content  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='all'">
+                      title  like  '%' || #{keyWord} || '%' or
+                      writer  like  '%' || #{keyWord} || '%' or
+                      content  like  '%' || #{keyWord} || '%' 
+                 </if>
+               </where>
+               order by seq desc) a)
+           <![CDATA[  //특수기호를 인식이 불가->xml문법에서 > ,< 때문에
+                  where rnum >=#{start} and rnum<=#{end}
+            ]]>
+ </select>
+
+<select id="selectList" parameterType="map" resultType="BoardCommand">
+     select seq,writer,title,content,pwd,hit,regdate,filename
+        from (select  
+                a.*,rownum rnum
+           from (
+               select * from springboard2
+               <where>
+                 <if test="keyWord!=null and keyField=='title'">
+                      title  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='writer'">
+                      writer  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='content'">
+                       content  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='all'">
+                      title  like  '%' || #{keyWord} || '%' or
+                      writer  like  '%' || #{keyWord} || '%' or
+                      content  like  '%' || #{keyWord} || '%' 
+                 </if>
+               </where>
+               order by seq desc) a)
+           <![CDATA[
+                  where rnum >=#{start} and rnum<=#{end}
+            ]]>
+ </select>
+ 
+ <select id="selectCount" parameterType="map" resultType="Integer">
+     select count(*) from springboard2 
+     <where>
+                 <if test="keyWord!=null and keyField=='title'">
+                      title  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='writer'">
+                      writer  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='content'">
+                       content  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='all'">
+                      title  like  '%' || #{keyWord} || '%' or
+                      writer  like  '%' || #{keyWord} || '%' or
+                      content  like  '%' || #{keyWord} || '%' 
+                 </if>
+           </where>
+ </select>
+ ===============================================
+9.BoardDaoImp.java
+
+public class BoardDaoImpl extends SqlSessionDaoSupport implements BoardDao {
+   //SqlSession sqlSession; =>Setter Method 작성->getSqlSession()
+   //ListController에서 호출->keyField,keyWord,start,end(페이징처리)
+	
+	public List<BoardCommand> list(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		List<BoardCommand> list=getSqlSession().selectList("selectList",map);
+		System.out.println("list()호출됨!");
+		return list;
+	}
+
+	public int getRowCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub //->Object->Integer->int로 변환
+		System.out.println("getRowCount()호출됨!");
+		return getSqlSession().selectOne("selectCount",map);
+	}
+
+}
+-------------------------------------------------------------------------
+*요청을 받아서 처리해주는 부분->web.xml->
+  ->dispatcher-servlet.xml->ListController
+*tiles를 설정=>boardList.jsp를 출력
+------------------------------------------------
+
+<!--리소스번들을 이용해서 처리(~.properties)
+       1.jdbc.properties(DB) 2.공통 문자열 메세지를 파일로 등록->불러와서 출력
+       3.유효성 검사를 위한 에러메세지를 파일로 등록->불러와서 출력
+       messages.label->패키지명.불러올파일명.properties(확장자가 생략됨)
+       messages.validation->messages패키지에 있는 validattion.properties파일
+      -->
+    <bean id="messageSource" 
+        class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+	        <list>
+	            <value>messages.label</value>
+	            <value>messages.validation</value>
+	        </list>
+        </property>
+    </bean>
+
+   =>src/main/java
+               |
+                -messages
+                           label.properties ->글쓰기
+                           validation.properties->글쓰기
+----------------------------------------------
+ dispacter-servlet.xml파일 설정
+-----------------------------------
+<!-- @Autowired 사용을 위해 -->
+    <context:annotation-config/> 
+    
+    <!-- /board/list.do(ListActionController) -->
+    <bean class="com.board.dao.BoardDaoImpl" />
+    <bean class="com.board.controller.ListController" />
+---------------------------------------------------------------
+웹에 출력
+
+1.tiles설정=>boardList.jsp가 출력 설정
+   tiles-def.xml파일 설정부분
+  ================
+
+<tiles-definitions>
+    <definition name="boardList" template="/WEB-INF/tiles-view/template/layout.jsp">
+        <put-attribute name="title" value="메인 페이지"/>
+        <put-attribute name="css" 
+                    value="/WEB-INF/tiles-view/script/boardDefaultCss.jsp"/>
+         <put-attribute name="js" 
+                    value="/WEB-INF/tiles-view/script/boardSearchJs.jsp"/>   
+         <put-attribute name="menu" 
+                               value="/WEB-INF/tiles-view/template/menu.jsp" />
+        <put-attribute name="header" 
+                               value="/WEB-INF/tiles-view/template/header.jsp" />
+        <put-attribute name="body" 
+                               value="/WEB-INF/tiles-view/boardList.jsp" />
+         <put-attribute name="footer" 
+                               value="/WEB-INF/tiles-view/template/footer.jsp" />        
+    </definition>
+    
+   	<!--글쓰기-->
+   	<!-- error 페이지 처리 -->
+   	<definition name="pageError" extends="boardList">
+   	  <put-attribute name="title" value="에러 페이지"/>
+   	  <put-attribute name="js"  value=""/> 
+   	  <put-attribute name="body"  value="/WEB-INF/tiles-view/pageError.jsp" />
+   	</definition>
+  ====================================== 	
+  <title><tiles:getAsString name="title" /></title>
+                      문자만 불러오는 전용액션태그명(getAsString)
+<tiles:insertAttribute name="css" />
+  식별자    액션태그명    속성명=>지정한 속성명에 해당하는 파일 불러오기
+<tiles:insertAttribute name="js" />
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="1" bgcolor="#a0a0a0" width="100%">
+	<tr height="100" valign="middle" bgcolor="#ffffff">
+  <td colspan="2"><tiles:insertAttribute name="header" /></td>
+	</tr>
+	<tr height="600" bgcolor="#ffffff">
+		<td width="15%" valign="top"><tiles:insertAttribute name="menu" /></td>
+		<td width="85%" valign="top"><tiles:insertAttribute name="body" /></td>
+	</tr>
+	<tr bgcolor="#ffffff">
+		<td colspan="2"><tiles:insertAttribute name="footer" /></td>
+	</tr>
+-----------------------------------------------------------------
+2.ListController<----페이징처리 (PagingUtil 클래스)
+3.boardList.jsp
+4.index.jsp에서 실행->에러유발->테이블에 데이터를 하나 넣어주면 에러
+                                                 X
+-----------------------------------------------------------------
+로그객체를 출력
+
+<dependency>
+  		<groupId>log4j</groupId>
+  		<artifactId>log4j</artifactId>
+  		<version>1.2.17</version>
+  	</dependency>
+---------------------------------------------------------------------
+String query=request.getParameter("q");
+ if(query==null) query="";  ->defaultValue-> null값을 체크
+                                                                     하지않고 기본값을 설정
+ 
+int pageNumber=Integer.parseInt(request.getParameter("p"));
+                1                                             "1"
+
+@Controller
+public class ListController {
+
+	//1)Logger객체를 생성->(Logger.getLogger(오류를 체크해주는 클래스명.class);
+	//private Logger log=Logger.getLogger(ListController.class);
+	private Logger log=Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private BoardDao boardDao; //BoardDaoImpl  ->Setter Method X(소스코드줄이기)
+	
+	//@RequestParam(value="매개변수명",
+	// defaultValue="매개변수 전달 못할때 기본으로 설정할값")
+	
+	@RequestMapping("/board/list.do")
+	public ModelAndView process
+	     (@RequestParam(value="pageNum",defaultValue="1") int currentPage,
+	      @RequestParam(value="keyField",defaultValue="") String keyField,
+	      @RequestParam(value="keyWord",defaultValue="") int keyWord) {
+		//현재 페이지 0->1,keyField,keyWord이 매개변수로 전달 p294
+		//if(request.getParameter(pageNum)==null) pageNum="1"
+		//int currentPage=Integer.parseInt(request.getParameter("pageNum"));
+		//if(request.getParameter("keyField")==null) keyField="";
+		//String keyField=request.getParameter("keyField")
+		if(log.isDebugEnabled()) {  //현재 로그객체가 현재 Debug상태라면
+			System.out.println("process()호출됨!");
+			log.debug("currentPage=>"+currentPage);//내부적인 처리과정확인
+			log.debug("keyField=>"+keyField);
+			log.debug("keyWord=>"+keyWord);
+		}
+		//검색분야,검색어를 Map에 담아야 된다.
+		Map<String,Object>map=new HashMap<String,Object>();
+		map.put("keyField", keyField); //map.get("keyField")
+		map.put("keyWord", keyWord);
+		//검색분야,검색어에 해당하는 총갯수
+		int count=boardDao.getRowCount(map);
+		//페이징처리(1.현재페이지 2.갯수,3페이지별로 레코드갯수,4.블럭당보여주는페이지수
+		//                 5.요청url
+		//list.do로 요청->현재페이지(1) 2개  페이지별로 3개씩,블럭당 3페이지씩 출력
+		PagingUtil page=new PagingUtil(currentPage,count,3,3,"list.do");
+		//map추가
+		map.put("start",page.getStartCount());//시작레코드번호 #{start}
+		map.put("end",page.getEndCount()); //#{end}
+		List<BoardCommand> list=null;//레코드담을 객체선언
+		
+		if(count > 0) {
+			list=boardDao.list(map);//4개의 키값이 전달
+		}else {
+			list=Collections.EMPTY_LIST;//상수값을 설정(아무것도 없다)
+		}
+		
+		ModelAndView mav=new ModelAndView();
+		mav.setViewName("boardList");
+		mav.addObject("count",count);//갯수
+		mav.addObject("list",list);
+		mav.addObject("pagingHtml",page.getPagingHtml());//링크문자열(이전,다음)
+		return mav;
+	}
+}
+-----------------------------------------------------------------------
+boardList.jsp
+
+<c:if test="${count==0}">
+	  <tr>
+	     <td colspan="5" align="center">등록된 게시물이 없습니다.</td>
+	  </tr>
+	</c:if>
+	<c:forEach var="article"   items="${list}">
+		<tr>
+			<td align="center">${article.seq}</td>
+			<td><a href="detail.do?seq=${article.seq}">${article.title}</a></td>
+			<td>${article.writer}</td>
+			<td>${article.regdate}</td>
+			<td>${article.hit}</td>
+		</tr>
+	</c:forEach>
+	<tr>
+		<td align="center" colspan="5">${pagingHtml}</td>
+	</tr>
+-------------------------------------------------------------------
+ index.jsp     
+
+게시판에 오류가 발생 했습니다. 
+org.springframework.beans.TypeMismatchException: Failed to convert value of type 'java.lang.String' to required type 'int'; nested exception is java.lang.NumberFormatException: For input string: ""
+
+레코드가 0->""->테이블에 데이터를 임의로 하나 저장
+------------------------------------------------------------------------
+SQL> insert into springboard2 values(1,'테스트김','아무거나','내용확인중','1234'
+,23,sysdate,'c:\webtest\aaa.txt');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> commit;
+
+커밋이 완료되었습니다.
+------------------------------------------------------------------------------------
+=>index.jsp를 다시 실행
+
+
+

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>두번째 검색화면</title>
+</head>
+<body>
+<!-- page지정 -->
+<div data-role="page" data-position="fixed">
+    <!-- 1.header지정 -->
+    <div data-role="header">
+         <h1>My Title</h1>
+    </div>
+    <!-- 2.content 지정
+        1) header영역사이에 공백을 주고싶다. ->data-inset="true"
+        2) 실시간 검색=>data-filter="true"
+        3) listview항목의 구분선->data-role="list-divider"
+       -->
+    <div data-role="content">
+         <ul data-role="listview" data-inset="true" data-filter="true">
+            <li data-role="list-divider">Divider(구분선)</li>
+            <li><a href="#">방화</a></li>
+            <li><a href="#">개화산</a></li>
+            <li><a href="#">김포공항</a></li>
+            <li><a href="#">송정</a></li>
+            <li><a href="#">마곡</a></li>
+            <li><a href="#">발산</a></li>
+         </ul>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer" data-id="persistFooter" data-position="fixed">
+         <div data-role="navbar">
+             <ul>
+               <li><a href="a.html" data-icon="plus">회원가입</a></li>
+                <li><a href="b.html" data-icon="search"
+                          class="ui-btn-active ui-state-persist">검색</a></li>
+                <li><a href="c.html" data-icon="gear">목록보기</a></li>
+             </ul>
+         </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

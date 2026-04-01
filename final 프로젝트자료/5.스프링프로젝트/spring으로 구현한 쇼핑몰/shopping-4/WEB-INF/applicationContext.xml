@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+  <!-- Data Source -->
+  <bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+ 	  <property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+    <property name="url">
+      <value>jdbc:mysql://localhost:3306/spring</value>
+    </property>
+    <property name="username">
+      <value>root</value>
+    </property>
+    <property name="password">
+      <value>1234</value>
+    </property>
+  </bean>
+
+	<!-- Shop -->
+	<bean id="shopService" class="logic.ShopImpl">
+		<property name="userCatalog">
+			<ref bean="userCatalog" />
+		</property>
+	</bean>
+
+	<!-- UserCatalog -->
+	<bean id="userCatalog" class="logic.UserCatalogImpl">
+		<property name="userDao">
+			<ref bean="userDao" />
+		</property>
+	</bean>
+
+	<!-- UserDao -->
+	<bean id="userDao" class="dao.UserDaoImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	
+	<!-- Validator -->
+	<bean id="userEntryValidator" class="utils.UserEntryValidator" />
+	
+	<!-- MessageSource -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages</value>
+			</list>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="reply">
+	
+	<!-- 1. 댓글 입력 -->
+	<insert id="insertReply">
+		INSERT INTO tbl_reply (rno, bno, replytext, replyer, secret_reply)
+		VALUES (reply_seq.NEXTVAL, #{bno}, #{replytext}, #{replyer}, #{secretReply})
+	</insert>
+	
+	<!-- 2. 댓글 목록 -->
+	<select id="listReply" resultType="com.example.spring02.model.board.dto.ReplyVO">
+		<include refid="pagingHeader"/>
+			<!-- SELECT rno, bno, replytext, replyer, user_name AS userName, r.regdate, r.updatedate
+			FROM tbl_reply r, tbl_member m
+			WHERE  r.replyer = m.user_id AND bno=#{bno}
+			ORDER BY rno -->
+			SELECT
+			  r.rno, bno, r.replytext, r.replyer, r.secret_reply AS secretReply, r.regdate, r.updatedate,
+			  m.user_name AS userName,
+			  (SELECT writer FROM tbl_board WHERE bno = r.bno) AS writer
+			FROM tbl_reply r, tbl_member m
+			WHERE
+			  r.replyer = m.user_id
+			  AND bno = #{bno}
+			ORDER BY rno
+		<include refid="pagingFooter"/>
+	</select>
+	
+	<!-- 3. 댓글 상세보기 -->
+	<select id="detailReply" resultType="com.example.spring02.model.board.dto.ReplyVO">
+		SELECT rno, bno, replytext, replyer, regdate, updatedate, secret_reply AS secretReply FROM tbl_reply
+		WHERE rno = #{rno}
+	</select>
+	
+	<!-- 4. 댓글 수정 -->
+	<select id="updateReply">
+		UPDATE tbl_reply 
+		SET replytext = #{replytext}
+		WHERE rno = #{rno}
+	</select>
+	
+	<!-- 5. 댓글 삭제 -->
+	<delete id="deleteReply">
+		DELETE FROM tbl_reply
+		WHERE rno = #{rno}
+	</delete>
+	
+	<!-- 6 .댓글 갯수(for 페이징처리) -->
+	<select id="countReply" resultType="int">
+		SELECT COUNT(*) FROM tbl_reply WHERE bno=#{bno}
+	</select>
+	
+	<!-- 페이징 sql -->
+	<sql id="pagingHeader">
+		SELECT * FROM (
+			SELECT ROWNUM AS rn, A.* FROM (
+	</sql>
+	<sql id="pagingFooter">
+			) A
+		) WHERE rn BETWEEN #{start} AND #{end}
+	</sql>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

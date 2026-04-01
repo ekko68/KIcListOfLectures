@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.quantum.erd.feature"
+      label="ERD Feature"
+      version="3.3.10"
+      provider-name="quantum.sourceforge.net">
+
+   <description>
+      Contains a graphical editor of entities (tables-views) and relationships,
+allowing for generation of SQL and DDL.
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      Copyright (c) 2000-2005 Quantum DB developers.
+All rights reserved.   This program and the accompanying materials
+are made available under the terms of the Common Public License
+v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/cpl-v10.html
+Copyright of the beanshell library belongs to its developers.
+See http://www.beanshell.org for more details.
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      Common Public License - v 1.0
+See http://www.eclipse.org/legal/cpl-v10.html for more details.
+   </license>
+
+   <plugin
+         id="com.quantum.erd"
+         download-size="760"
+         install-size="760"
+         version="3.3.10"
+         unpack="false"/>
+
+</feature>

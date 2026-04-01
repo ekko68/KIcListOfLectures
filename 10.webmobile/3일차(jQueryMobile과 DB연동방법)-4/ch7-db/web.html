@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,
+                                     maximum-scale=1.0,minimum-scale=1.0,
+                                     user-scalable=no">
+<title>jquery 친구데이터를 저장</title>
+<link rel="stylesheet" href="../mobile/jquery.mobile-1.3.2.min.css">
+<script type="text/javascript" src="../mobile/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../mobile/jquery.mobile-1.3.2.min.js"></script>
+<script type="text/javascript">
+    var db;//생성된 DB정보를 저장할 전역변수
+    //~.on(연결시킬 이벤트종류명,처리할 페이지id,처리할 함수명)
+    $(document).on('pageinit','#page1',function(){
+    	//alert('pageinit이벤트 호출됨')
+    	dbInit()//DB생성 및 오픈
+    })
+    //pagebeforeshow->페이지를 보여주기전에 해야할 작업
+    $(document).on('pagebeforeshow','#page1',function(){
+    	//weekfriend->데이터가 있으면 화면에 출력 ,없으면 없는대로 출력
+    	//alert('pagebeforeshow')
+    	load();
+    })
+    $(document).ready(function(){ //DB생성 //추가버튼이벤트,팝업창(확인)
+    	if(!db){ //pageinit,pagebeforeshow이벤트가 제대로 발생이 안될경우
+    		dbInit();//DB생성
+    		load();
+    	}
+        //이벤트 처리(추가,대화상자의 확인)
+        $('#btnAdd').bind('click',function(){ //<a link~>링크
+        	 add();
+        //기본기능 제거
+          return false;
+        });
+        //popup창의 데이터추가 메세지 나온 후 확인버튼을 클릭시 이벤트처리
+        $('#btn_confirm').bind('click',function(){
+        	//response.sendRedirect(현재페이지)
+        	/*
+        	 <a href="#page1" data-role="button" data-inline="true"
+                    data-mini="true" id="btn_confirm">확인</a>
+        	*/
+        	var href=$(this).attr('href');//<a href="#page1"~>
+        	alert(href)
+        	$.mobile.changePage(href);//response.sendRedirect(현재페이지)와 동일
+        	//$.mobile.changePage(이동할 페이지id)
+        	return false;
+        })// $('#btn_confirm').bind(
+    })//ready
+    
+    //DB목록 함수 작성->for문을 이용 출력
+    function load(){
+    	//alert('load')
+    	db.transaction(function(tx){
+    		//select->1.실행시킬 sql구문 2.검색필드명부여(배열)[필드명],
+    		// 콜백함수(3.데이터존재시 출력),4.DB오류가 발생됐을때 처리
+    		//select * from 테이블명 where id=3
+    		tx.executeSql('select * from weekfriend order  by num desc',
+    				             [],
+    				         function(tx,rs){ //정상 콜백 tx(실행할 sql),rs(resultSet)
+    			 var rows=rs.rows;//테이블의 모든 레코드를 반환(rows)
+    			 //화면에 출력->ul태그 초기화
+    			 $('#output').empty()//데이터 지우기
+    			 for(var i=0;i<rows.length;i++){
+    				 //if(rs.next()==true){} ->ArrayList->FriendDTO row와 같다
+    				 var row=rows.item(i);//한건의 레코드를 읽어오기
+    				 //row.필드명->필드별로 불러오기 rs.getInt('num'),rs.getString('name')
+    				 var new_r='<li>';
+    				 new_r+='<h4>'+row.num+' '+row.name+'</h4>';
+    				 new_r+='<p>'+row.address+'</p>';
+    				 new_r+='<span class="ui-li-aside">'+row.phone+'</span>';
+    				 new_r+='</li>';
+    				 //ul태그에 추가
+    				 $('#output').append(new_r);
+    			 }//for
+    			 //listview를 자동으로 refresh를 호출
+    			 $('#output').listview('refresh');//refresh(새로고침 기능)
+    		    },
+    		    function(error){//실패시 에러 메세지 출력
+    		    	alert('에러발생'+error)
+    		})//tx.executeSql(
+    	})//db.transaction(
+    }//load
+    //등록
+    function add(){
+    	var name=$('#name').val();
+    	var phone=$('#phone').val();
+    	var address=$('#address').val();
+    	
+    	if(name=="" || phone=="" || address==""){
+    		alert('필수로 입력해야 됩니다.');
+    		return;
+    	}
+    	//insert->pstmt.setString(1,name),
+    	//pstmt.setString(2,phone),pstmt.setString(3,address)
+    	//-> [name,phone,address]
+    	db.transaction(function(tx){
+    		tx.executeSql('insert into weekfriend(name,phone,address) values(?,?,?)',
+    		                  [name,phone,address]	,
+    		                  function(tx,rs){//정상적으로 sql구문을 수행한 경우
+    			                  loadMessage(rs.insertId+'번 자료 추가 성공!');
+    		                  //input태그 초기화
+    		                  $('#name').val('');
+    		                  $('#phone').val('');
+    		                  $('#address').val('');
+    		                 },
+    		                 function(error){
+    		                	 alert('insert 오류'+error);
+    		                 })//tx.executeSql(
+    	       })//db.transaction(
+    }//add()
+    //팝업창에 메세지를 출력시켜주는 함수
+    function loadMessage(msg){
+    	$('#notice').popup('open');//대화상자가 출력(popup함수('open'))
+    	$('.notice-content').text(msg);//문자열만  출력
+    }
+    //DB생성 및 호출(html5)
+    function dbInit(){
+    	//현 브라우저가 DB생성을 할 수있는 지를 체크하기위해서
+    	if(!window.openDatabase){//window객체에 openDatabase속성유무
+    		alert('openDatabase를 지원하지 않습니다.');
+    		return;
+    	}
+    	//DB생성 및 열기
+    	//1.생성할DB명,2.버전명(1.0) 3.DB설명문 4.DB용량(1MB)
+    	db=openDatabase('weekDb','1.0','frend DB',1024*1024);
+    	alert(db)
+    	//2.테이블을 생성->transaction함수를 이용(tx)
+    	//tx->jsp의 PreparedStatement객체와 기능이 비슷(pstmt)
+    	//pstmt=con.prep~
+    	db.transaction(function(tx){ //tx->sql구문을 실행
+    		//tx.executeSql('실행시킬 sql구문')->테이블이 없으면 생성,
+    		//숫자(integer),autoincrement,
+    		tx.executeSql('create table if not exists weekfriend(num integer primary key autoincrement,name,phone,address)'); 		  
+    	});
+    }
+
+</script>
+
+</head>
+<body>
+<!-- 첫번째 페이지(친구목록 보기) -->
+<div data-role="page" id="page1">
+    <!-- 1.header지정 -->
+    <div data-role="header" data-position="fixed">
+         <h1>친구 목록</h1>
+      <a href="#page2" data-icon="plus" class="ui-btn-right" 
+                                   data-iconpos="right">등록</a>
+    </div>
+    <!-- 2.content 지정(listview) 검색기능(data-filter=true)
+             output(listview)->append(자식)-->
+    <div data-role="content">
+         <ul data-role="listview" data-filter="true" id="output"></ul>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer" data-position="fixed">
+         <h1>footer</h1>
+    </div>
+</div>
+
+<!-- 두번째 페이지(친구가입) -->
+<div data-role="page" id="page2">
+    <!-- 1.header지정 -->
+    <div data-role="header" data-position="true">
+         <h1>친구추가</h1><!-- data-rel="back"(이전기능) -->
+         <a data-icon="arrow-l" data-rel="back">이전</a> 
+    </div>
+    <div data-role="content">
+         <form id="insfrm">
+            <div data-role="fieldcontain">
+               <label for="name">이름</label>
+               <input type="text" id="name">
+            </div>
+            <div data-role="fieldcontain">
+               <label for="phone">전화</label>
+               <input type="text" id="phone">
+            </div>
+            <div data-role="fieldcontain">
+               <label for="address">주소</label>
+               <input type="text" id="address">
+            </div>
+           <a data-role="button" id="btnAdd">추가</a>
+         </form>
+         <!-- 팝업창 효과(스타일 적용) data-mini=true
+          data-overlay-theme="b"(부모창과 자식창과 화면이 겹쳐서 보일때 세련
+                                                되게 보여주는 테마)
+         -->
+         <div data-role="popup" id="notice" data-theme="d"
+                 data-overlay-theme="b" class="ui-content"
+                 style="max-width:340;text-align:center">
+            <p class="notice-content"></p>
+              <a href="#page1" data-role="button" data-inline="true"
+                    data-mini="true" id="btn_confirm">확인</a>
+         </div>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer" data-position="fixed">
+         <h1>나의 친구들</h1>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

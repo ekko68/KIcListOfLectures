@@ -1,0 +1,23 @@
+
+import bag.lend.controller.Controller;
+
+
+public class BagLend {
+
+	public static void main(String[] args) {
+		
+		new Controller();
+
+		//customDB.selectAllData(MakeConnection.getInstance());
+		
+		
+		//customDB.insertData(MakeConnection.getInstance());
+		//productDB.insertData(MakeConnection.getInstance());
+		
+		//customDB.deleteData(MakeConnection.getInstance(), 2);
+		//productDB.deleteData(MakeConnection.getInstance())
+		
+		// customDB.insertData(MakeConnection.getInstance());
+
+	}
+}

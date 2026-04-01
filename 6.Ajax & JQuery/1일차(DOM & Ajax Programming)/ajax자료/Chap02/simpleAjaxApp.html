@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=euc-kr" />
+	<title>간단한 Ajax 어플리케이션!</title>
+	<script type="text/javascript">
+	var httpRequest = null;
+	
+	function getXMLHttpRequest() {
+		if (window.ActiveXObject) {
+			try {
+				return new ActiveXObject("Msxml2.XMLHTTP");
+			} catch(e) {
+				try {
+					return new ActiveXObject("Microsoft.XMLHTTP");
+				} catch(e1) {
+					return null;
+				}
+			}
+		} else if (window.XMLHttpRequest) {
+			return new XMLHttpRequest();
+		} else {
+			return null;
+		}
+	}
+	function load(url) {
+		httpRequest = getXMLHttpRequest();
+		httpRequest.onreadystatechange = viewMessage;
+		httpRequest.open("GET", url, true);
+		httpRequest.send(null);
+	}
+	function viewMessage() {
+		if (httpRequest.readyState == 4) {
+			if (httpRequest.status == 200) {
+				alert(httpRequest.responseText);
+			} else {
+				alert("실패: "+httpRequest.status);
+			}
+		}
+	}
+	</script>
+</head>
+<body>
+<input type="button" value="simple.txt" onclick="load('simple.txt')"/>
+<input type="button" value="simple2.txt" onclick="load('simple2.txt')"/>
+<input type="button" value="simple.jsp" onclick="load('simple.jsp')"/>
+<input type="button" value="simple2.jsp" onclick="load('simple2.jsp')"/>
+</body>
+</html>

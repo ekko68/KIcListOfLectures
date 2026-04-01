@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+    <title>부트스트랩 101 템플릿</title>
+
+    <!-- 부트스트랩 -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/custom1.css" rel="stylesheet">
+    <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
+    <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+          <h1>버튼 그룹을 설정</h1>
+          <h4 class="text-primary">버튼 그룹 미설정한 경우</h4>
+          <input type="button" class="btn btn-default" value="기본 모양 버튼">
+          <input type="button" class="btn btn-primary" value="중요한버튼">
+          <input type="button" class="btn btn-success" value="긍정적 의미">
+          <input type="button" class="btn btn-info" value="정보제공 버튼">
+          <p>
+          <hr>
+          <!--1.버튼의 그룹을 설정(div태그내부에  btn-group 선택자로 설정)
+                2.버튼그룹의 크기를 일괄적으로 조절(btn-group-lg,~-sm,~-xs)  -->
+          <div class="btn-group btn-group-lg">
+          <input type="button" class="btn btn-default" value="기본 모양 버튼">
+          <input type="button" class="btn btn-primary" value="중요한버튼">
+          <input type="button" class="btn btn-success" value="긍정적 의미">
+          <input type="button" class="btn btn-info" value="정보제공 버튼">
+          </div>
+          <p>
+          <hr>
+          <!-- 버튼그룹(1개이상)을 툴바형식으로 변환
+             3.div태그로 묶어준뒤 class="btn-toolbar로 설정
+             툴바형태의 버튼그룹에서는 버튼의 크기를 일정하게 유지
+           -->
+          <div class="btn-toolbar">
+          <div class="btn-group btn-group-sm">
+          <input type="button" class="btn btn-default" value="버튼1">
+          <input type="button" class="btn btn-default" value="버튼2">
+          <input type="button" class="btn btn-default" value="버튼3">
+          <input type="button" class="btn btn-default" value="버튼4">
+          </div>
+          
+          <div class="btn-group btn-group-xs">
+          <input type="button" class="btn btn-default" value="버튼5">
+          <input type="button" class="btn btn-default" value="버튼6">
+          </div>
+          </div>
+          
+    </div>
+    <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
+    <script src="../js/bootstrap.min.js"></script>
+  </body>
+</html>

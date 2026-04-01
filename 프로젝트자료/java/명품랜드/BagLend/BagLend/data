@@ -1,0 +1,13 @@
+ create table custom(
+	 product_num number(10),
+	 name varchar2(30) not null,
+	 tel varchar2(15) primary key,
+	 gender varchar2(6) not null,
+	 age number(3) not null,
+	 address varchar2(350) not null,
+	 coupon_num varchar2(35),
+	 start_date varchar2(35),
+	 end_date varchar2(35),
+ constraint num_fk foreign key(coupon_num) references coupon(coupon_num),
+ constraint gender_ck check(gender in('M','W'))
+ );

@@ -1,0 +1,417 @@
+﻿3일차(컴포넌트의 이벤트 처리방식 및 생명주기(3단계),미니프로젝트)
+
+수동인 경우->따로 스타일에 적용되는 모듈을 설치해야 된다.
+
+1.스타일을 적용하는 Module을 다운로드 받음(style-loader,css-loader)
+C:\webtest\8.web\react\react-test2>npm install --save-dev style-loader css-loader
+
+npm WARN react-tutorial@1.0.0 No description
+npm WARN react-tutorial@1.0.0 No repository field.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.2 (node_modules\fse
+vents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
+1.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"}
+)
+
++ css-loader@0.28.7
++ style-loader@0.18.2
+added 233 packages in 33.753s
+
+C:\webtest\8.web\react\react-test2>
+
+2.모듈을 환경설정에 추가(webpack.config.json파일)
+
+module.exports = {
+    entry: './src/index.js',  /* 불러오는 처음 시작위치(자바스크립트파일)  */
+
+    output: { /* 최종적으로 화면에 출력 */
+        path: __dirname + '/public/',  /* 메인페이지의 위치 */
+        filename: 'bundle.js' /* js파일들이 묶어서 만들어진 최종파일 */
+    },
+
+    devServer: {  /* 개발 서버의 설정 부분 */
+        inline: true,
+        port: 7777,  /* 포트번호 */
+        contentBase: __dirname + '/public/' /* index.html */
+    },
+
+    module: {
+            loaders: [  
+                {
+                    test: /\.js$/,  /* 불러오는 자바스크립트 파일 확장자*/
+                    loader: 'babel-loader', /* 소스코딩 변경->반영 */
+                    exclude: /node_modules/, /* 불러오는 모듈 배제위치 */
+                    query: {
+                        cacheDirectory: true,
+                        presets: ['es2015','stage-0','react'] /* es6, react */
+                    },
+                //----추가한 부분
+                },
+                    {
+                        test:/\.css$/ ,   ->css파일 설정
+                        loaders:['style-loader','css-loader?modules']
+                          ->설치한 2개의 모듈을 로드하도록 설정
+                    },
+                //--------------------------------------------------------
+            ]
+        }
+};
+=============================
+3.App.css파일 작성
+
+.no {
+    list-style:none;
+    background-color:yellow;
+    color:red;
+}
+
+,,,,,
+==============================
+4.
+ App.js에서 
+//추가
+import './App.css'; =><ul className="no">=>자동
+---------------------------------------------------------
+
+import 별칭명 from '상대경로 포함해서 불러올 파일명';
+================================
+import styles from './App.css'; =>별칭을 부여해서 불러옴
+//----------------------------------
+
+//반드시 파일명과 클래스명이 같아야 되는것은 아니다.
+class GroceryList extends Component{
+  render(){
+      //화면에 출력할 수 있도록 element하는 반환
+      return(
+        <ul className={styles.no}>  
+              =================>{별칭.클래스 선택자명}
+
+5.개발서버 가동->npm start시켜서 결과 확인(이미지 캡처 확인할 것)
+  =>결과 확인
+------------------------------------------------------------------------
+컴포넌트의 이벤트 처리방식
+
+1. 이벤트를 발생시켰을때 ->이벤트를 처리해주는 함수,값(수정,가져오기)
+   constructor(){
+     this.state={
+           //속성명:값,,,
+           name:''
+       };
+   }
+  
+   함수(){
+    this.setState({
+         name의 값을 변경
+   })
+  }
+
+ <button onClick={this.호출할 함수명(test)} ">
+----------------------------------------------------
+화면에 출력하는 값==>부모의 state
+1.부모의 매개변수가 있는 함수를 호출하는 경우
+-----------------------------------------------
+ 1.현재의 state->자식에게 this.proprs을 통해서 전달
+  => <RandomNumber number={this.state.value}/> 
+ 3.부모컴포넌트에서는 버튼이 없기때문에 자식에게 대신 처리
+    해달라는 함수를 매개변수로 전달
+    onUpdate={this.updateValue}
+
+이벤트를 발생->처리해주는 함수==>자식의 버튼
+ 2.전달받은 props을 이용해서 화면에 출력
+             <h1>{this.props.number}</h1>
+       <button onClick={this.updateNumber}>랜덤값 출력</button>
+ 
+4.부모로부터 받은 함수를 이용해서 자식컴포넌트의 함수를 대신
+    호출해서 부모에게 값을 전달시킨다.
+
+updateNumber(){
+        //부모로 넘겨받은 this.props.updateValue를 호출할 수 있도록
+    let value = Math.round(Math.random()*100)//0~99
+    //부모 컴포넌트의 updateValue에게 전달->updateValue호출
+    this.props.onUpdate(value);
+    }
+--------------------------------------------------
+
+2.부모의 매개변수가 없는 함수를 호출하는 경우
+
+ 자식-><자식태그 매개변수={this.부모의 함수명}>
+
+자식-><button  onClick="{this.props.매개변수명}"/>
+                                       =============
+------------------------------------------------------------------------
+ 컴포넌트 생명주기->react-lifecycle(수동)
+
+App.js
+
+//1.컴포넌트를 작성하기위해서는 패키지 불러오기
+import React from 'react'// import 클래스명 from '불러올 경로 명 및 파일명'
+
+export default class App extends React.Component{
+
+  constructor(props){
+     super(props);
+     this.state={  //외부에서 this.state.data=5;//X->setState()
+       data:0
+     }
+     this.setNewNumber=this.setNewNumber.bind(this);
+  }
+  //증가
+  setNewNumber(){ //->10이상이면 더이상 증가가 안된다고
+                                    에러메세지를 출력(alert)->11
+     this.setState({data:this.state.data+1})
+  }
+  setDownNumber(){ //-10보다 적으면 더이상 감소가 안된다.
+                                //에러메세지를 출력(alert)
+     this.setState({data:this.state.data-1})
+  }
+  render(){
+      //화면에 출력할 수 있도록 element하는 반환
+      return(
+        <div>
+         <button onClick={this.setNewNumber}>증가</button>
+         <button onClick={this.setDownNumber.bind(this)}>감소</button>
+         <Content myNumber={this.state.data}/>
+        </div>
+      );
+  }
+}
+
+class Content extends React.Component{
+  render(){
+    return(
+      <h3>{this.props.myNumber}</h3>
+    );
+  }
+}
+=================================
+리액트에서 화면에 출력될때 내부적인 처리과정
+
+App의 render()호출됨!
+
+bundle.js:1018 Warning: ==>부모의 render()가 제일 먼저 호출
+
+getDefaultProps was defined on Content, 
+a plain JavaScript class. 
+This is only supported for classes created using React.createClass. 
+Use a static property to define defaultProps instead.
+
+print
+Warning @ bundle.js:1018
+bundle.js:32606 
+
+컴포넌트가 DOM과 연결전에 호출됨(componentWillMount()
+bundle.js:32616 
+Content의 render()호출됨!
+bundle.js:32611
+ 컴포넌트가 DOM과 연결후에 호출됨(componentDidMount()
+bundle.js:13957 
+[WDS] Hot Module Replacement enabled.
+2bundle.js:13960 [WDS]
+ App updated. Recompiling...
+bundle.js:13969 [WDS]
+ Nothing changed.
+bundle.js:32559 
+App의 render()호출됨!
+bundle.js:32616
+ Content의 render()호출됨!
+------------------------------------------------------
+컴포넌트가 화면에 출력->증가버튼을 클릭할때 까지의 내부처리 과정
+
+App의 render()호출됨!
+bundle.js:32607
+ 컴포넌트가 DOM과 연결전에 호출됨(componentWillMount()
+bundle.js:32635 
+Content의 render()호출됨!
+bundle.js:32612 
+컴포넌트가 DOM과 연결후에 호출됨(componentDidMount()
+bundle.js:13957
+ [WDS] Hot Module Replacement enabled.
+bundle.js:32559
+ App의 render()호출됨!
+bundle.js:32625
+ 컴포넌트가 수정되기전에 호출됨 componentWillUpdate()호출
+bundle.js:32635
+ Content의 render()호출됨!
+bundle.js:32630 
+컴포넌트가 수정후에 호출됨 componentDidUpdate()호출
+
+속성변경--->componentWillReceivePros()
+
+p167->getDefaultProps() ,getInitialState()=>호출X =>초기값을 설정(생성자에 설정)
+ ---->React.createClass()이용하는 경우->호출되기 때문에
+----------------------------------------------------------------------------------------
+9장 데이터에서 UI로 ->this.state.변수(JSON객체,배열,문자,숫자,,,,)
+                                                      ======><table>(표)
+
+미니프로젝트 용(react-telephone)
+------------------------------------
+react-tutorial
+        App.js
+        App2.js
+        App3.js
+
+
+***  es6--->es5로 변환==>접속X 때가 있다.****
+
+https://es6console.com/j7fyi2na/
+=============================
+
+import React from 'react';
+//추가
+import ContactInfo from './ContactInfo';//파일로 독립적으로 분리->import
+
+export default class App3 extends React.Component{
+      render(){
+          return(<Contacts />);
+      }
+}
+class Contacts extends React.Component{
+    //(3)생성자->초기값을 설정 
+    constructor(props){
+        super(props);
+        //따로 배열형태로 데이터 저장
+        this.state={
+            contactData:[
+                {name:"홍길동", phone:"010-123-0987"},
+                {name:"임시", phone:"010-456-0987"},
+                {name:"테스트", phone:"010-987-1234"},
+                {name:"테스트2", phone:"010-765-1111"}
+            ]
+        }
+    }
+    render(){
+        return(
+         <div>
+            <h1>Contacts</h1>
+            <ul>
+            {this.state.contactData.map((contact,i)=>{
+                return (<ContactInfo name={contact.name} 
+                          phone={contact.phone} key={i} />);
+            })}
+            {/* (1)->ContactInfo.js
+              <li>홍길동 010-123-0987 </li> contact 0
+              <li>테스트 010-456-0987 </li> contact  1
+              <li>임시 010-987-1234 </li>
+              <li>테스트2 010-765-1111 </li>
+                 (2)
+            <ContactInfo name="홍길동" phone="010-123-0987"/>
+            <ContactInfo name="테스트" phone="010-456-0987"/>
+            <ContactInfo name="임시" phone="010-987-1234"/>
+            <ContactInfo name="테스트2" phone="010-765-1111"/> */}
+            </ul>
+        </div>
+        );
+    }
+}
+----------------------------------------------------------------------------------
+react-telephone
+
+Contact.js
+
+
+import React from 'react';
+//추가
+import ContactInfo from './ContactInfo';
+
+export default class Contacts extends React.Component{
+    //(3)생성자->초기값을 설정 
+    constructor(props){
+        super(props);
+        //따로 배열형태로 데이터 저장
+        this.state={
+            contactData:[
+                {name:"홍길동", phone:"010-123-0987"},
+                {name:"임시", phone:"010-456-0987"},
+                {name:"테스트", phone:"010-987-1234"},
+                {name:"테스트2", phone:"010-765-1111"}
+            ]
+        }
+    }
+    render(){
+        //화살표함수를 이용 따로 함수호출
+       //1.data->배열의 전체값
+        const mapToComponents=(data)=>{ //data=>this.state.contactData의미
+          //2. 배열명.map-->하나씩 꺼내온다.
+          //contact->배열의 요소값(0,1,2,3,4)
+          //{name:"홍길동", phone:"010-123-0987"},->0
+         return data.map((contact,i)=>{
+              return(<ContactInfo contact={contact} key={i}/>);
+                                             =====
+                                             부모->자식에게 전달하는 매개변수
+                         this.props.contact-->자식에게 분리해서 화면에 출력
+                                         =====
+          })
+        }
+        return(
+         <div>
+            {mapToComponents(this.state.contactData)} //4개
+        </div>
+        );
+    }
+}
+===================
+검색하기까지 구현
+
+import React from 'react';
+//추가
+import ContactInfo from './ContactInfo';
+
+export default class Contacts extends React.Component{
+    //(3)생성자->초기값을 설정 
+    constructor(props){
+        super(props);
+        //따로 배열형태로 데이터 저장
+        this.state={
+            //추가
+            keyword:'', //검색할 값을 기억할 변수선언
+            contactData:[
+                {name:"홍길동", phone:"010-123-0987"},
+                {name:"임시", phone:"010-456-0987"},
+                {name:"테스트", phone:"010-987-1234"},
+                {name:"테스트2", phone:"010-765-1111"}
+            ]
+        };
+        //생성자
+        this.handleChange = this.handleChange.bind(this);
+    }
+    //검색어가 변경될때마다 호추할 함수 선언
+    handleChange(e){   //event객체->이벤트발생시킨 컴포넌트를 얻어올때
+      this.setState({keyword:e.target.value}) //e.target.name=>input박스, e.taget.value
+    }
+    render(){
+        //화살표함수를 이용 따로 함수호출
+        const mapToComponents=(data)=>{ //data=>this.state.contactData의미
+          //1.배열의 값을 정렬->배열객체명.sort()
+          //2.특정배열의 값을 찾을때 사용->filter()이용
+          data=data.sort();
+          //contact.name(배열의 각 이름).indexOf(찾는값)->못찾으면 -1이 리턴
+          //-1보다 크다는 얘기->조건에 만족하는 데이터를 찾았다면 리턴(data)
+          data=data.filter((contact)=>{
+              return contact.name.indexOf(this.state.keyword) > -1;
+          })
+          //-----------------------------------------------------
+          return data.map((contact,i)=>{
+              return(<ContactInfo contact={contact} key={i}/>);
+          })
+        }
+        //검색항목을 만들어주자 (onChange)=handelChange($event) />
+        return( 
+           <div>
+               <h1>전화번호부 목록</h1>
+               <input name="keyword" placeholder="search"  value={this.state.keyword}
+                 onChange={this.handleChange} />
+              <div>
+                {mapToComponents(this.state.contactData)}
+              </div>
+           </div>
+        );
+    }
+}
+--------------------------------------------------------------
+
+
+
+
+
+
+

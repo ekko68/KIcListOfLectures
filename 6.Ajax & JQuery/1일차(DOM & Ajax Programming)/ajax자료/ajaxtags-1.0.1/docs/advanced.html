@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><title>AjaxTags - Advanced Usage</title><style type="text/css" media="all">
+          @import url("./style/maven-base.css");
+          
+			    @import url("./style/maven-theme.css");</style><link rel="stylesheet" href="./style/print.css" type="text/css" media="print"></link><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta><meta name="author" content="Darren L. Spurgeon"></meta><meta name="email" content="kalitai@yahoo.com"></meta></head><body class="composite"><div id="banner"><a href="http://ajaxtags.sourceforge.net" id="projectLogo"><span>AjaxTags</span></a><div class="clear"><hr></hr></div></div><div id="breadcrumbs"><div class="xleft">
+                	Last published: 11 August 2005 22:37 EDT
+                  | Doc for 1.0.1</div><div class="xright">
+        
+        <a href="http://ajaxtags.no-ip.info/" class="externalLink" title="External Link">AjaxTags Live Demo</a>
+      </div><div class="clear"><hr></hr></div></div><div id="leftColumn"><div id="navcolumn"><div id="menuOverview"><h5>Overview</h5><ul><li class="none"><a href="index.html">Home</a></li><li class="none"><a href="quickstart.html">Quick Start</a></li><li class="none"><a href="install.html">Installation</a></li><li class="expanded"><a href="usage.html">Tag Reference</a><ul><li class="none"><a href="usage.html#ajax:autocomplete">ajax:autocomplete</a></li><li class="none"><a href="usage.html#ajax:callout">ajax:callout</a></li><li class="none"><a href="usage.html#ajax:select">ajax:select</a></li><li class="none"><a href="usage.html#ajax:toggle">ajax:toggle</a></li><li class="none"><a href="usage.html#ajax:updateField">ajax:updateField</a></li></ul></li><li class="none"><a href="advanced.html">Advanced Usage</a></li><li class="none"><a href="ajaxlinks.html">Ajax Links &amp; Resources</a></li></ul></div><div id="menuDownloads"><h5>Downloads</h5><ul><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=140499" class="externalLink" title="External Link">Binaries</a></li><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=140499" class="externalLink" title="External Link">Source</a></li><li class="none"><a href="release-notes.txt">Release Notes</a></li></ul></div><div id="menuProject_Documentation"><h5>Project Documentation</h5><ul><li class="none"><a href="index.html">About AjaxTags</a></li><li class="collapsed"><a href="project-info.html">Project Info</a></li><li class="collapsed"><a href="maven-reports.html">Project Reports</a></li><li class="none"><a href="http://maven.apache.org/development-process.html" class="externalLink" title="External Link">Development Process</a></li></ul></div><div><ul><li class="none"><a href="http://www.sourceforge.net/projects/ajaxtags" class="externalLink" title="External Link"><img title="SourceForge.net" style="border: 1px" src="http://sourceforge.net/sflogo.php?group_id=120046&amp;type=1" alt="SourceForge.net"></img></a></li></ul></div><a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy"><img alt="Built by Maven" src="./images/logos/maven-button-1.png"></img></a></div></div><div id="bodyColumn"><div class="contentBox"><div class="section"><a name="Chaining"></a><h2>Chaining</h2><p>
+        Multiple fields can be hooked together in a way that implies
+        dependencies between fields. The most common use case is when
+        using multiple select or dropdown fields. For example, let's say
+        we want to have the user select a make, model, and year of car.
+        The form may look like this:
+      </p>
+    <div class="source"><pre>
+&lt;form&gt;
+  Make:
+  &lt;select id="make" name="make"&gt;
+    &lt;option value=""&gt;Select make&lt;/option&gt;
+    &lt;c:forEach items="${makes}" var="make"&gt;
+      &lt;option value="${make}"&gt;${make}&lt;/option&gt;
+    &lt;/c:forEach&gt;
+  &lt;/select&gt;
+
+  Model:
+  &lt;select id="model" name="model" disabled="true"&gt;
+    &lt;option value=""&gt;Select make&lt;/option&gt;
+  &lt;/select&gt;
+
+  Year:
+  &lt;select id="year" name="year" disabled="true"&gt;
+    &lt;option value=""&gt;Select model&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/form&gt;
+      </pre></div>
+  <p>
+        In this case, we're not defining any values for model or year
+        because we'll have our AJAX component populate them when the
+        user selects a make and model, respectively.
+      </p><p>
+        Now, we need to define two ajax:select tags. The first will link
+        the make and model fields. The second will link the model and
+        year fields.
+      </p>
+    <div class="source"><pre>
+&lt;ajax:select
+  fieldId="make"
+  targetId="model"
+  baseUrl="${pageContext.request.contextPath}/GetCarModel.view"
+  paramName="make"
+  postFunc="doOtherThings"/&gt;
+
+&lt;ajax:select
+  fieldId="model"
+  targetId="year"
+  baseUrl="${pageContext.request.contextPath}/GetCarYear.view"
+  paramName="model"
+  postFunc="doOtherThings"/&gt;
+      </pre></div>
+  </div><div class="section"><a name="Pre-_and_Post-Functions"></a><h2>Pre- and Post-Functions</h2><p>
+        Let's face it, every framework has limitations.  So, in order to provide you with some way
+        to incorporate your existing JavaScript with these tags, the concept of pre- and
+        post-functions was developed.  A pre-function is a JavaScript function that is called
+        <em>before</em> the XMLHttpRequest (i.e., to your backend action servlet) is executed.  A
+        post-function is, naturally, one called <em>after</em> the XMLHttpRequest (and AJAX tag's
+        base function) is completed.  So, for those of you only reading bullets:
+      </p><ul>
+        <li><strong>Pre-Function:</strong> JavaScript executed <em>before</em> AJAX executes.</li>
+        <li>
+          <strong>Post-Function:</strong> JavaScript executed <em>after</em> AJAX tag's base
+          function completes.
+        </li>
+      </ul><div class="subsection"><a name="Post-Function_Example"></a><h3>Post-Function Example</h3><p>
+          Let's say we're using the ajax:select tag to help populate a list of automobile model
+          names when the user selects an automobile make.  This is the same example used in the
+          demo application.  However, we want to take it a step further and display an image of the
+          auto maker's logo when that first selection is made.
+        </p><p>
+          For instance, if the user selects "Ford" from the list of makes, we not only populate the
+          second dropdown field with names of Ford models but we also get that classic Ford emblem
+          displayed on the page.  This second action merely requires a bit of JavaScript to replace
+          a blank placeholder image with that of the auto maker's.  Because we AJAX JSP Tag authors
+          didn't anticipate such fantastic uses for web interfaces, we provided the means to attach
+          a post-function to the AJAX tags so that you more creative developers could tackle these
+          harsh, real-world problems.  Observe...
+        </p>
+    <div class="source"><pre>
+&lt;div&gt;
+  &lt;img id="makerEmblem" src="images/placeholder.gif" width="76" height="29" /&gt;
+&lt;/div&gt;
+
+&lt;form name="carForm"&gt;
+  &lt;label&gt;Make:&lt;/label&gt;
+  &lt;select id="make" name="make"&gt;
+    &lt;option value=""&gt;Select make&lt;/option&gt;
+    &lt;c:forEach items="${makes}" var="make"&gt;
+      &lt;option value="${make}"&gt;${make}&lt;/option&gt;
+    &lt;/c:forEach&gt;
+  &lt;/select&gt;
+
+  &lt;label&gt;Model&lt;/label&gt;
+  &lt;select id="model" name="model" disabled="true"&gt;
+    &lt;option value=""&gt;Select make&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/form&gt;
+
+&lt;script type="text/javascript"&gt;
+function showMakerEmblem() {
+  var index = document.forms["carForm"].make.selectedIndex;
+  if (index &gt; 0) {
+    var automaker = document.forms["carForm"].make.options[index].text;
+    var imgTag = document.getElementById("makerEmblem");
+    imgTag.src = "images/" + automaker.toLowerCase() + "_logo.gif";
+  }
+}
+&lt;/script&gt;
+
+&lt;ajax:select
+  fieldId="make"
+  targetId="model"
+  baseUrl="${contextPath}/GetCarModel.view"
+  paramName="make"
+  postFunc="showMakerEmblem"/&gt;
+        </pre></div>
+  </div></div></div></div><div class="clear"><hr></hr></div><div id="footer"><div class="xright">© 2005, Darren L. Spurgeon</div><div class="clear"><hr></hr></div></div></body></html>

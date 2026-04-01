@@ -1,0 +1,425 @@
+7일차(Spring 자유게시판-목록보기,글쓰기,상세보기,글수정 하기)
+   
+SpringBoard
+       |
+        -src->빈즈->Board
+                           4.BoardDAO->JNDI명을 이용(DB접속)->list()
+                           5.ListActionController->list()
+       |
+         -WebContent->화면에 출력할 page(~)->6.list.jsp
+                 |
+                  -META-INF->3.Context.xml(DB정보->태그형태로 설정)->명함철
+                 |
+                  -WEB-INF->1.web.xml(DispatcherServlet 컨트롤러 등록)
+                                     2.board-servlet.xml(요청명령어 등록)
+                         |
+                          -lib->spring 라이브러리 복사(0순위)    
+
+*** JNDI(Java Naming Directory Interface)->DB연결의 정보->Context.xml저장
+ ->DB정보이름(default jdbc/orcl,,,) 등록=>DAO=>url,driver,계정,암호X
+                                                                   JNDI이름을 검색(연결객체가져옴)
+----------------------------------------------------------------------------------
+1.글목록보기 부터 구현=>BoardDAO(list()작성)
+
+package lee;
+
+import java.sql.*;//Connection,PreparedStatement,,,
+import java.util.*;//ArrayList,List~
+//--------------------------------------------------------------
+//추가(JNDI 방식)
+import javax.sql.*;//DataSource객체->getConnection()
+import javax.naming.*;//Context(인터페이스),InitialContext객체->
+                                    //lookup(찾고자하는 이름(JNDI명)
+//----------------------------------------------------------------
+
+public class BoardDAO{
+   
+   DataSource ds; //has a 관계 ->DBConnectionMgr pool=null;
+   
+   public BoardDAO(){
+		//생성자 : DataSource 얻기 :  InitialContext  와  JNDI 명
+		try{
+			//InitialContext ctx=new InitialContext(); 도 가능하다.
+			Context ctx=new InitialContext();
+			//lookup("java:comp/env/찾고자하는 jndi명")
+			ds=(DataSource)ctx.lookup("java:comp/env/jdbc/orcl");
+			System.out.println("ds=>"+ds);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public ArrayList  list(){  // 목록보기(레코드 한개이상)
+		
+		ArrayList list = new ArrayList();
+		try{
+			String sql = "SELECT * FROM springboard ORDER BY num desc";
+			Connection con = ds.getConnection();
+			//Connection con = pool.getConnection();
+			PreparedStatement stmt = con.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				Board data = new Board();
+				data.setNum( rs.getInt( "num" ) );
+				data.setAuthor(rs.getString( "author" ));
+				data.setTitle(rs.getString( "title"));
+				data.setContent(rs.getString( "content" ));
+				data.setDate(rs.getString( "writeday" ));
+				data.setReadcnt(rs.getInt( "readcnt" ));
+				list.add( data );
+			}//end while
+			rs.close();	stmt.close(); con.close();
+		}catch(Exception e){ e.printStackTrace(); }
+		
+		return  list;
+	}//end list
+	
+--------------------------------------------------------------------
+2.요청명령어를 등록->처리해주는 컨트럴러클래스 작성->
+
+<!--
+     DB접속방법->JNDI 방법
+     -->
+<bean id="boardDAO"   class="lee.BoardDAO" />
+
+<!--1.글목록보기  -->
+<bean name="/list.do"  class="lee.ListActionController">
+    <property name="dao">
+         <ref bean="boardDAO" />
+    </property>
+</bean>
+
+3.ListActionController작성
+
+public class ListActionController implements Controller {
+
+	BoardDAO dao; //BoardDAO dao=new BoardDAO();
+	
+	public void setDao(BoardDAO dao) {
+		this.dao = dao;
+		System.out.println("setDao()호출됨(dao)=>"+dao);
+	}
+
+	@Override
+	public ModelAndView handleRequest(HttpServletRequest request, 
+			                                 HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println("ListActionController 실행됨!");
+		ArrayList list=dao.list();
+		ModelAndView mav=new ModelAndView();
+		mav.setViewName("list");
+		//request.setAttribute("list",list);
+                              mav.addObject("list",list); //${list}
+		return mav;
+	}
+}
+---------------------------------------------------------------------------
+
+
+4.list.jsp작성
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@page import="java.util.*,lee.*" %>
+<html>
+<body>
+<table border="1">
+	<tr>
+	  <td align="center" colspan="5">
+		*** 게시판 목록 ***&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="writeui.do">글쓰기</a>
+	  </td>
+	</tr>
+	<tr>
+<th>번호</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회수</th>
+</tr>
+<%
+    ArrayList list=(ArrayList)request.getAttribute("list");
+   if(list!=null){ //데이터가 존재한다면
+	   Iterator iter=list.iterator();
+       while(iter.hasNext()){//꺼낼 데이터가 존재하는한
+    	   Board data=(Board)iter.next();
+           int num=data.getNum();
+           String title=data.getTitle();
+           String author=data.getAuthor();
+           String content=data.getContent();
+           String writeday=data.getDate();//날짜출력시
+           int readcnt=data.getReadcnt();
+%>
+	<tr>
+		<td align="center"><%= num %></td>
+		<td><a href="retrieve.do?num=<%= num %>"><%= title %></a></td>
+		<td><%= author %></td>
+		<td><%= writeday.substring(0,10)%></td>
+		<td><%= readcnt%></td>
+	</tr>
+<%
+	}//end while
+}//end if
+%>
+<!-- 검색 기능 시작 -->
+	<tr><td colspan="5" align="center">
+		<form action="search.do">
+		   <select name="searchName" size="1">
+	          <option value="author">작성자</option>
+    	          <option value="title">제목</option>
+                 </select>
+		   <input type="text" name="searchValue">
+		   <input type="submit" value="검색">
+		</form>
+	</td></tr>
+</table>
+</body></html>
+
+----------------------------------------------------------------------
+글쓰기 구현
+1.요청명령어 등록
+
+<bean name="/writeui.do" 
+           class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+          <property name="viewName" value="write"></property> 
+  </bean>
+
+<!-- 3.글쓰기(글수정하기와 거의 유사) -->
+  <bean name="/write.do"  class="lee.WriteActionController">
+    <property name="dao">
+         <ref bean="boardDAO" />
+    </property>
+    <property name="commandClass"  value="lee.BoardCommand" />
+</bean>
+
+->스프링에서 컨트롤러 역할->1.Controller
+                                          2.AbstractCommandController
+                                        ->사용자로부터 값을 입력(로그인폼,글쓰기폼,
+                                           글수정폼,,,)
+=================================
+Board->레코드중심(조회수,게시물번호)
+2.BoardCommand(순수 입력받는 필드만 따로 설계)
+
+package lee;
+//사용자로부터 순수 입력받는값만 처리해주는 클래스
+public class BoardCommand {
+     String author,title,content;
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+}
+--------------------------------------------------------------
+3.BoardDAO에서 글쓰기 메서드 구현
+
+public int getNewNum(){ //글쓰기 번호 얻기->최대값+1
+		int newNum=1;
+		try {
+			String sql="select max(num) from springboard";
+			Connection con=ds.getConnection();
+			PreparedStatement stmt=con.prepareStatement(sql);
+			ResultSet rs=stmt.executeQuery(sql);
+			if(rs.next()) {
+				newNum=rs.getInt(1)+1;
+			}
+		}catch(Exception e) {e.printStackTrace();}
+		return newNum;
+	}//end getNewNum();
+	
+	//public void write(BoardCommand board)
+	public void write(String author, String title , String content){
+		try{
+			int newNum = getNewNum();//최대값을 구해주는 메서드호출
+			System.out.println("newNum=>"+newNum);
+			String sql ="insert into springboard(num,author,title,content) values(";
+			sql +=  newNum + ",'" + author + "','" + title + "','" + content + "')";
+			System.out.println(sql);//한글이 깨지는지 확인
+			
+	  	  	Connection con = ds.getConnection();
+	  	  	PreparedStatement stmt = con.prepareStatement(sql);
+	  	  	stmt.execute(sql);//stmt.executeUpdate(sql);
+	  	  	stmt.close(); con.close();
+	  	}catch(Exception e ) {e.printStackTrace();}
+	}//end write
+
+4.WriteActionController만 작성->list.jsp->write.jsp(글입력)->list.jsp
+
+
+
+<실습결과>
+ListActionController 실행됨!
+setAuthor()호출됨
+setContent()호출됨
+setTitle()호출됨
+newNum=>2
+insert into springboard(num,author,title,content) values(2,'테스트','스프링연습','스프링연습을 준비중입니다.
+ㅁㅇ
+ㅁ
+ㅁㅇ
+ㅁ
+ㅁㅇㅁ
+ㅁ
+')
+ListActionController 실행됨!(redirect:/list.do)->ListActionController->list.jsp
+--------------------------------------------------------------------------------
+글상세보기
+
+1.요청명령어 등록->board-servlet.xml(RetrieveActionController)
+
+ list.jsp
+<td><a href="retrieve.do?num=<%= num %>"><%= title %></a></td>
+ ->num & pageNum(페이지)->페이징 처리할때
+
+<!-- 4.글상세보기(글입력X) -->
+  <bean name="/retrieve.do"  class="lee.RetrieveActionController">
+    <property name="dao">
+         <ref bean="boardDAO" />
+    </property>
+</bean>
+
+2.BoardDAO->retrieve() 작성->레코드 한개
+//select * from springboard where num=?
+	public Board retrieve(String num){ // 글 자세히 보기->조회수 증가 
+		Board data=new Board();
+		try {
+			//1.조회수 증가시키기
+			String sql = "update springboard set readcnt=readcnt+1 where num="+num;
+			Connection con = ds.getConnection();
+			PreparedStatement stmt = con.prepareStatement(sql);
+			int update=stmt.executeUpdate(sql);
+			System.out.println("조회수 증가유무(update)=>"+update);
+			stmt=null;
+			
+			sql="select * from springboard where num="+num;
+			stmt=con.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery(sql);
+			 if (rs.next()){
+				data.setNum( rs.getInt( "num" ) );
+				data.setAuthor(rs.getString( "author" ));
+				data.setTitle(rs.getString( "title"));
+				data.setContent(rs.getString( "content" ));
+			}//end while
+			rs.close();	stmt.close(); con.close();
+		}catch(Exception e) {e.printStackTrace();}
+	   return data;
+	}//end retrieve
+
+3.RetrieveActionController에서 retrieve()호출->Board
+
+@Override
+	public ModelAndView handleRequest(HttpServletRequest request, 
+			                                 HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println("RetrieveActionController 실행됨!");
+		String num=request.getParameter("num");
+		System.out.println("num=>"+num);
+		//레코드 한개를 담을 객체 필요
+		Board data=dao.retrieve(num);
+		//----------------------------------
+		ModelAndView mav=new ModelAndView("retrieve");//이동할 페이지명
+		//mav.setViewName("retrieve");//list.jsp
+        mav.addObject("data",data); //${data} request.getAttribute("data");
+		return mav;
+	}
+
+4.retrieve.jsp에서 Board를 출력
+-------------------------------------------------------------
+<%@ page import="lee.*" %>
+<%
+    Board data=(Board)request.getAttribute("data");//${data}
+    int num=data.getNum();
+    String title=data.getTitle();
+    String author=data.getAuthor();
+    String content=data.getContent();
+%>
+-------------------------------------------------------------------
+ 글수정=글쓰기 동일 한 기능
+
+1.요청명령어를 등록->board-servlet.xml에 등록->
+    update.do=>lee.UpdateActionController가 처리할 수있도록 환경설정
+
+<!-- 5.글수정하기 -->
+  <bean name="/update.do"  class="lee.UpdateActionController">
+    <property name="dao">
+         <ref bean="boardDAO" />
+    </property>
+    <property name="commandClass"  value="lee.BoardCommand" />
+ </bean>
+
+2.BoardDAO->수정메서드->update() 완성
+
+public void update( String num , String author, 
+			            String title , String content){ // 글 수정하기
+	     try{
+		  String sql ="update springboard set title='" + title + "',";
+		  sql += " content='" + content+"',";
+		  sql += " author ='" + author+"'";
+		  sql += " where num=" + num;
+		  System.out.println(sql);
+
+		  Connection con = ds.getConnection();
+		  PreparedStatement stmt = con.prepareStatement(sql);  
+		  int update=stmt.executeUpdate(sql);
+		  System.out.println("데이터 수정유무(update)=>"+update);
+		  stmt.close();  con.close();
+	     }catch(Exception e){e.printStackTrace();}
+	  }//end update
+
+3.UpdateActionController->작성->update()호출->list.jsp로 이동
+protected ModelAndView handle(HttpServletRequest request, 
+			HttpServletResponse response, Object command, BindException error)
+			throws Exception {
+		// TODO Auto-generated method stub
+		request.setCharacterEncoding("utf-8");
+		BoardCommand data=(BoardCommand)command;
+		//게시물번호
+		String num=request.getParameter("num");
+		String author=data.getAuthor();
+		String content=data.getContent();
+		String title=data.getTitle();
+		/*
+		 * String num=request.getParameter("num");
+		 * String author=request.getParameter("author");
+		    String content=request.getParameter("content");
+		    String title=request.getParameter("title");
+		 */
+		dao.update(num,author, title, content);
+		return new ModelAndView("redirect:/list.do");
+	}
+}
+
+   WriteActionController를 save as
+=========================================
+삭제하기
+
+1.요청명령어 등록->/delete.do--->DeleteActionController처리
+
+2.BoardDAO->delete() 메서드 작성->num
+
+3.DeleteActionController->delete()호출->list.jsp
+----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+         

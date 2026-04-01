@@ -1,0 +1,16 @@
+/*배경색을 설정*/
+* {
+	margin:0; padding:0;
+	background-color:white;
+}
+
+.all{
+	width:350px;
+	height:200px;
+	border:2px solid black;
+	float:left;
+	left:1%;
+	position:absolute;
+	top:1%;
+	z-index:7;
+}

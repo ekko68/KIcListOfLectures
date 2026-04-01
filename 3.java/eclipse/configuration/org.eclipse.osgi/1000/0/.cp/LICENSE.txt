@@ -1,0 +1,6 @@
+All of Quantum is release under the CPL (Common Public License) v 1.0
+
+The text of the license is to be had in the file CPLv1.0.htm, in this distribution.
+The source of Quantum is to be found in http://sourceforge.net/projects/quantum
+
+

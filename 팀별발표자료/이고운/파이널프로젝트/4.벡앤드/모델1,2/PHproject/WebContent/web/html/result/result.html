@@ -1,0 +1,204 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+      <link href="../../css/common.css" type="text/css" rel="stylesheet">
+      <link href="../../css/cos_Info.css" rel="stylesheet">
+      <link href="../../css/result.css" type="text/css" rel="stylesheet">
+      <link href="../../css/slick.css" type="text/css" rel="stylesheet">
+      <link href="../../css/slick-theme.css" type="text/css" rel="stylesheet">
+
+      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+      <script src="../../js/nav.js"></script>
+      <!--<script src="../../js/jquery.scrollbox.js"></script>-->
+
+      <!-- <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAB_ImVdT5sLLK3qg1h7obBSI8hqbvk0ZE"></script> -->
+
+      <!-- leafmap style & necessary url address -->
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" integrity="sha512-wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw==" crossorigin=""/>
+      <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js" integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA==" crossorigin=""></script>
+      <script src="../../js/leafmap.js"></script>
+      <script src="../../js/slick.js"></script>
+      
+      <script>
+        $(document).ready(function() {
+            $("#cosInfo").load("cos_info.html");            
+            $('#wrapBg').click(function(evt) {
+                $('#cosInfo').css('left','-28vw')
+                $('#wrap').css('marginLeft','0')        
+                $('#wrapBg').css('display','none')     
+               evt.preventDefault();
+            });
+        
+        });
+      </script>
+        <style type="text/css">
+         .slider { /*background-color: coral;*/
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .slick-list{/*background-color: cadetblue;*/}
+
+        .slick-slide { background-color: #fff;
+          height: 70px; /*width: 300px !important;*/
+          margin: 0px 3px;
+          border: 2px solid #ccc;
+          border-radius: 3px;
+        }
+
+        </style>
+
+      <title>쉴래? 놀래?</title>
+  </head>
+  <body>
+    <section id="cosInfo">
+    </section>
+
+  <div id="wrap">
+    <div id="wrapBg">우측 사이드바 나올 시 음영처리</div>
+    <div id="container">
+      <div id="cosListContainer">
+          <div id="cosList" class="cos slider">
+              <div>
+                <a id="cos" class="flexCol" href="javascript:void(0)" onclick="openCosInfo()" onmouseout="outMarker()">코스1</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스2</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스3</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스4</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스5</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스6</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스7</a>
+              </div>
+              
+              <div>
+                <a id="cos" class="flexCol" href="javascript:void(0)" onclick="openCosInfo()" onmouseout="outMarker()">코스8</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스9</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스10</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스11</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스12</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스13</a>
+              </div>
+              <div>
+                <a class="flexCol" href="javascript:void(0)" onclick="openCosInfo()">코스14</a>
+              </div>
+          </div>
+        <!--  <button class="btn" id="list-backward"><</button>
+          <button class="btn" id="list-forward">></button>-->
+      </div> <!-- cosListContainer -->
+    <div id="map"></div>
+    </div>
+    <!-- container -->
+  </div>
+  <!-- wrap-->
+ <!-- <script>
+  $(function () {
+    $('#cosList').scrollbox({
+      direction: 'h',
+      distance: 134
+    });
+    $('#list-backward').click(function () {
+      $('#cosList').trigger('backward');
+    });
+    $('#list-forward').click(function () {
+      $('#cosList').trigger('forward');
+    });
+  });
+  </script>-->
+  <script>
+      var map = L.map('map').setView([33.505468, 126.496122], 13);
+
+	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
+      
+    var LeafIcon = L.Icon.extend({
+		options: {
+			iconSize:     [33, 50],
+			iconAnchor:   [22, 94],
+			popupAnchor:  [-3, -76]
+		}
+	});
+
+	var maker_off = new LeafIcon({iconUrl: '../../image/icon/icn_maker_off.png'});
+      
+    var maker_on = new LeafIcon({iconUrl: '../../image/icon/icn_maker_on.png'});
+      
+
+	L.marker([33.505468, 126.496122], {icon: maker_off}).addTo(map);
+    
+   //Create empty geojson with mouseover and mouseout events
+/*geojson_feature = L.geoJson(false, {
+    pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {icon: maker_off});
+    },
+    onEachFeature: function(feature,layer)
+            {
+            layer.on("mouseover",function(e){
+                layer.setIcon(maker_off)
+            });
+            layer.on("mouseout",function(e){
+                layer.setIcon(maker_on)
+            });
+            }
+}).addTo(this.map);*/
+      
+      
+ /*   function openmap(div, locationx, locationy, num, zoom) {
+    var mymap = L.map(div).setView([
+    locationx, locationy
+    ], num);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      maxZoom: zoom,
+      attribution: '© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(mymap);
+    
+    var greenIcon = new LeafIcon({iconUrl: 'http://fineweb.dothome.co.kr/pj_judico/images/icn_01.png'});
+
+	L.marker([33.505468, 126.496122], {icon: greenIcon}).bindPopup("I am a green leaf.").addTo(mymap);
+
+
+    }*/
+    
+      
+      
+      
+</script>
+<script>
+ /* openmap(map, 33.505468, 126.496122, 13, 18);*/
+</script>
+<script type="text/javascript">
+    $(document).on('ready', function() {
+      $("#cosList").slick({
+        infinite: true,
+        centerMode: false,
+        slidesToShow: 5,
+        slidesToScroll: 5
+      });
+    });
+</script> 
+  </body>
+</html>

@@ -1,0 +1,364 @@
+3일차(앵글러의 설치및 환경설정,컴포넌트 작성법)
+
+설치시 다운로드->에러유발
+===============
+폴더위치에 상관없이 전역(-g)으로 설치
+                             지역으로 설치->gulp->typescipt 설치X->npm install typescript
+
+C:\Users\kitcoop>npm install(i) -g @angular/cli->4.x버전(패키지명)
+                                                 angular-cli-->3.5버전
+
+                          npm unstall -g @angular/cli 
+------------------------------------------------------------------------------------
+*** 설치가 안되는 경우의 tip ***
+
+1.C:\Users\kitcoop\AppData\Roaming\npm\node_modules
+              =====
+               계정명
+@angular폴더를 통째로 복사해서 설치되는 위치에 복사
+------------------------------------------------------------------------------
+2.
+c:\webtest\8.web\angular\ng new 프로젝트명(myapp)
+에러발생 O (지원해주지 않은 특수기호를 사용하거나 angular 에서 사용하는 문자열이
+                  포함이 되면 에러발생 O->다시 생성 =>-,_(에러유발 O)
+--------------------------------------------------------------------------------
+유니온,export,import ->모듈
+-------------------------------
+
+c:\webtest\8.web\typescript\dist>node 9.func.js
+id=> 123
+Name=> John
+id=> 111
+Name=> Mary
+email_id mary@xyz.com
+
+c:\webtest\8.web\typescript\dist>
+
+//src/9.func.ts
+/*
+  함수의 매개변수뒤에 ?을 주면 함수의 실행을 위해서 매개변수를 강제로
+  전달하지 않아도 될때 사용한다.
+  전달할 값이 있으면 전달하고 전달할 값이 없을 경우 전달하지 않을때
+  에러가 나지 않도록 해주는 옵션(선택적)
+*/
+function display_detail(id:number,name:string,mail_id?:string){
+    console.log("id=>",id);
+    console.log("Name=>",name);
+    if(mail_id!=undefined){
+        console.log("email_id",mail_id);
+    }
+}
+display_detail(123,"John");
+display_detail(111,"Mary","mary@xyz.com");
+
+//형식->유니언->나열하는 자료형의 목록중에서 해당하는 자료형을 선택해서 값을 저장
+//             시켜주는 예약어(ex or연산자) 타입1 | 타입2 | 타입3
+
+var valu:string | number //선언
+valu=12; //숫자저장
+console.log('숫자 valu=>',valu);
+console.log(typeof valu,valu);//number
+
+//함수->문자열 or 문자열배열
+//반환값->유니언을 사용이 가능하다. 함수명(~):타입 | 타입2 
+function disp2(name:string | string[]):string | string[]{
+    if(typeof name=="string"){
+        console.log('name->',name);
+    }else{
+        var i;
+        for(i=0;i<name.length;i++){
+            console.log(name[i]);
+        }
+    }
+    return name;//return 반환할 값
+}
+console.log(disp2("Mark"));
+console.log(disp2(["Mark","Tom","Mary","John"]));
+//dist/node 9.func.js
+----------------------------------------------------------------
+외부에서 모듈(=라이브러리)을 불러올때 자바-=>import
+
+es5문법            
+var gulp = require('gulp');//require('불러올 모듈명(=패키지명))
+
+es6,typescript
+
+import {모듈의 클래스} from '경로명 포함해서 불러올 모듈(패키지명)'
+
+export class AppHelo(){}
+================>
+src->10.lib.ts
+
+//10.lib.ts
+//함수,const(상수),클래스도 작성이 가능
+//1.함수,상수,클래스명 앞에 일일이 export를 쓰는 방법
+/*
+export const pi = Math.PI;  //export const 선언부분
+
+export function square(x){
+    return x + x;
+}
+
+console.log(square(10));
+
+export class Person{
+    name:string;//es6에서는 멤버변수->생성자를 통해서 초기화
+    constructor(name){
+        this.name=name;
+    }
+}
+*/
+//2.ts파일 밑에 한꺼번에 export를 지정하는 방법
+const pi = Math.PI;  //export const 선언부분
+
+function square(x){
+    return x + x;
+}
+
+console.log(square(10));
+
+class Person{
+    name:string;//es6에서는 멤버변수->생성자를 통해서 초기화
+    constructor(name){
+        this.name=name;
+    }
+}
+export {pi,square,Person};
+//형식) export { pi,square,Person };  export{ 상수,함수,클래스를 ,나열 };
+
+src=>10.main.ts
+
+c:\webtest\8.web\typescript\dist>node 10.main.js
+20
+3.141592653589793
+20
+Person { name: 'Lee' }
+
+//형식) import {불러올 클래스,상수,함수} from '상대경로 및 불러올파일명';
+//import {pi,square,Person} from './10.lib';  //확장자는 생략
+
+import * as lib from './10.lib' //별칭명.불러올 상수,함수,클래스,,,,
+//형식) import * as 별칭명 from '상대경로 및 불러올파일명';
+
+console.log(lib.pi);//console.log(pi);
+console.log(lib.square(10));//console.log(square(10));
+console.log(new lib.Person('Lee'));//const 객체명=new 클래스명(매개변수)
+//console.log(new Person('Lee'));
+//dist>node 10.main.js
+--------------------------------------------------------------------------------
+ 예제를 가져갈때 ->src만 복사해서 가져갈것
+  ng new 프로젝트명(mapp)->myapp->src(집)
+---------------------------------------------------
+
+파일->폴더선택->eclipse의 workspace전환과 같다.
+-------------------------------------------------------
+//1.컴포넌트->화면에 보여줄 수있도록 설계된 Template(html)과 연관된 클래스
+//import  ->@angular/core->컴포넌트
+import { Component } from '@angular/core';
+
+//장식자(@Component->이 클래스가 컴포넌트 역할을 하는 클래스라고 지정)
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'app'; //멤버변수 선언, 메서드작성(Setter,Getter),이벤트처리 메서드
+}
+
+//2.어플리케이션 루트 모듈(컴포넌트 만들때 마다 등록)
+
+/**
+  브라우저에서 실행할때 필요로하는 모듈
+ */
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+//컴포넌트를 추가할때마다 자동적으로 등록
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [  //현재 추가된 컴포넌트가 클래스로 등록되는 부분
+    AppComponent
+  ],
+  imports: [  //현재 사용하고자하는 모듈을 등록
+    BrowserModule
+  ],
+  providers: [], //서비스(클래스(의존객체))를 불러올때 사용
+  bootstrap: [AppComponent] //맨처음 실행시 등록된 컴포넌트를 가지고 실행
+})
+export class AppModule { }
+
+//3. main.ts->에서 어플리케이션 루트 모듈을 불러와서 최종적으로 실행
+
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+//최종적으로 화면에 보여줄 컴포넌트를 지정하는 역할
+import { AppModule } from './app/app.module';
+//---------------------------------------------
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+//내부적으로 맨 처음 호출되는 앵귤러 프로그램의 시작점(모듈지정)
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.log(err));
+
+ ng serve --open
+
+  서버가동->main.ts-->AppModule-->app.component->지정한 html을 이용
+                                                                                 화면에 출력
+                                                                                  (index.html로 통합)
+-----------------------------------------------------------------------------
+  ${출력할 변수명}=>표현식
+
+  앵귤러 표현식-> {{멤버변수 또는 호출할 함수명 }}=>복잡한 연산을 요구하는
+                                                                          함수호출X=>화면출력X
+
+  src--app
+           컴포넌트를 추가->갯수가 많아지는 경우->화면 디자인이 복잡(메인페이지)
+-----------------------------------------------------------------------------------
+         app2->hello
+              1.~component.css
+              2.~component.html
+              3.~component.ts(컴포넌트 클래스)
+              4.~.module.ts
+           
+@Component({
+  selector: 'app-root',
+  //templateUrl: './hello.component.html',
+  template:`<h1>Hello Testing</h1>
+            <p>template연습중</p>
+  `,
+  //styleUrls: ['./hell.component.css']
+  styles:[`
+        p{
+           color:blue;
+           background:yellow;
+        } 
+  `]
+})
+--------------------------------------------------------------------
+자동으로 컴포넌트를 작성=> ng new my-app2
+
+@Component({
+  selector: 'app-root',
+  //templateUrl: './hello.component.html',
+  template:`<h1>Hello Testing</h1>
+            <p>template연습중</p>
+  `,
+  //styleUrls: ['./hell.component.css']
+  styles:[`
+        p{
+           color:blue;
+           background:yellow;
+        } 
+  `]
+})
+
+      App
+        ch1
+           ch2
+             ch3
+
+             ng new 프로젝트명=>작업영역에 새로 프로젝트를 만드는 경우
+
+C:\webtest\8.web\angular>ng g component book
+-->컴포넌트,서비스,지시자,,,->만들고자하는 프로젝트명으로 이동
+
+node_modules appears empty, you may need to run `npm install`
+
+C:\webtest\8.web\angular>cd my-app2
+
+C:\webtest\8.web\angular\my-app2>ng g component book
+  create src/app/book/book.component.html (23 bytes)
+  create src/app/book/book.component.spec.ts (614 bytes)
+  create src/app/book/book.component.ts (261 bytes)
+  create src/app/book/book.component.css (0 bytes)
+  update src/app/app.module.ts (388 bytes)
+
+C:\webtest\8.web\angular\my-app2>
+
+1.book.component.html 출력용
+
+<p>
+  이 화면을 웹에서 보시면 자식컴포넌트가 부모컴포넌트에
+ 
+         포함됨을 증명하는것입니다.
+</p>
+
+angular표현식->{{title}}
+
+2.book.component.ts->
+
+export class BookComponent 
+ {
+   title="중첩연습입니다.!"
+  
+//constructor() { }
+}
+-----------------------------------------------------
+** 컴포넌트가 생성X 이유 **
+
+ ng g component 생성할 컴포넌트명
+***********************************************
+ node_modules is empty try 'npm install' 에러메세지 해결책
+-------------------------------------------------------------------
+->프로젝트내부에  node_modules폴더가 생성X  or node_modules안의
+   모듈에 문제가 발생X-->잘 실행된 node_modules복사->없는 프로젝트에
+   넣어주면 된다.
+-------------------------------------------------------------------------------
+**********************************************************
+C:\webtest\8.web\angular>ng new myapp3
+  create myapp3/e2e/app.e2e-spec.ts (288 bytes)
+  create myapp3/e2e/app.po.ts (208 bytes)
+  create myapp3/e2e/tsconfig.e2e.json (235 bytes)
+  create myapp3/karma.conf.js (923 bytes)
+  ...
+
+=====================================
+C:\webtest\8.web\angular\myapp3>ng g component book
+  create src/app/book/book.component.html (23 bytes)
+  create src/app/book/book.component.spec.ts (614 bytes)
+  create src/app/book/book.component.ts (261 bytes)
+  create src/app/book/book.component.css (0 bytes)
+  update src/app/app.module.ts (388 bytes)
+------------------------------------------------------------------
+  화면에 출력하는 경우 ->2가지
+
+  1.app.component.html에 출력하는 구문
+  2.app.component.ts->이미지의 정보를 저장->배열코딩
+
+
+---------------------------------------------------------------
+  1.app.component.html에 출력하는 구문->적절한 위치에 <app-자식컴포넌트명>
+  2.app.component.ts->
+
+     book.component.html->도서 이미지를 출력구문
+     book.component.ts->이미지의 정보를 저장->배열코딩
+                                      <app-컴포넌트이름>
+
+export class BookComponent  {
+   //멤버변수,메서드,이벤트 함수
+   titlename:string="도서목록" //{{titlename}}
+   //배열명=[{}]->id,name,price,date,imag->경로 저장
+   books=[
+      {id:'p01',name:'위험한 식탁',price:2000,date:'2017913',img:'a.jpg'},
+      {id:'p02',name:'공부의 비결',price:3000,date:'2017911',img:'b.jpg'},
+      {id:'p03',name:'오메르타',   price:4500,date:'2017909',img:'c.jpg'},
+      {id:'p04',name:'행복한 여행',price:8000,date:'2017912',img:'d.jpg'},
+      {id:'p05',name:'해커스 토익',price:5000,date:'2017911',img:'e.jpg'},
+      {id:'p06',name:'도로 안내서',price:2600,date:'2017908',img:'f.jpg'}
+   ];
+}
+=><c:forEach  var="꺼낼객체명" items=${컬렉션객체명}
+                   ${객체명.필드명}
+                                                                               선택의 문제
+=><div *ngFor="let 꺼낼객체명 of 컬렉션객체명;let i(인덱스번호)=index">
+             {{꺼낼객체명.키명}}
+    </div>
+
+=>map
+==============================================

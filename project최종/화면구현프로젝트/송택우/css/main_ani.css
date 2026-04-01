@@ -1,0 +1,103 @@
+			/*logo라는 사진이 투명한 상태에서 원래이미지로 돌아오면서 화면에 나타남.그 이후에 Z축으로 살짝회전하는 애니메이션*/
+			
+			@-webkit-keyframes logo{
+				0%{
+					opacity:0.2;
+					-webkit-transform:translateZ(1000px); /*perspective설정으로 인한 3d효과 z축으로 1000px만큼이동*/
+					-moz-transform:translateZ(1000px);
+					transform:translateZ(1000px);						
+				}
+				40%{
+					opacity:0.4;
+					-webkit-transform:translateZ(0);/*z축으로 0만큼이동. (1000px만큼 가있던 logo가 다시 제자리로 돌아옴)*/
+					-moz-transform:translateZ(0);
+					transform:translateZ(0);
+
+				}
+				80%{
+					opacity:0.6;
+					-webkit-transform:rotateZ(4deg);/*logo를 Z축으로 10도만큼 회전*/
+					-moz-transform:rotateZ(4deg);
+					transform:rotateZ(4deg);
+				}
+				100%{
+					opacity:0.8;
+					-webkit-transform:rotateZ(0);/*logo를 Z축으로 0도만큼 회전.제자리로 돌아옴*/
+					-moz-transform:rotateZ(0);
+					transform:rotateZ(0);
+				}
+
+			}
+
+			@keyframes logo{
+				0%{
+					opacity:0.2;
+					-webkit-transform:translateZ(1000px);
+					-moz-transform:translateZ(1000px);
+					transform:translateZ(1000px);							
+				}				
+
+				40%{
+					opacity:0.4;
+					-webkit-transform:translateZ(0);
+					-moz-transform:translateZ(0);
+					transform:translateZ(0);
+				}
+				80%{
+					opacity:0.6;
+					-webkit-transform:rotateZ(4deg);
+					-moz-transform:rotateZ(4deg);
+					transform:rotateZ(4deg);
+
+				}
+				100%{
+					opacity:0.8;
+					-webkit-transform:rotateZ(0);
+					-moz-transform:rotateZ(0);
+					transform:rotateZ(0);
+				}
+			}
+
+
+
+			@keyframes content_img1{
+				0%{
+					-webkit-transform:rotateX(0deg);
+					-moz-transform:rotateX(0deg);
+					transform:rotateX(0deg);
+				}
+
+				50%{
+					-webkit-transform:rotateX(50deg);
+					-moz-transform:rotateX(50deg);
+					transform:rotateX(50deg);
+				}
+
+				100%{
+					-webkit-transform:rotateX(0deg);
+					-moz-transform:rotateX(0deg);
+					transform:rotateX(0deg);
+				}
+
+			}
+
+			@-webkit-keyframes content_img1{
+				0%{
+					-webkit-transform:rotateX(0deg);
+					-moz-transform:rotateX(0deg);
+					transform:rotateX(0deg);
+				}
+
+				50%{
+					-webkit-transform:rotateX(50deg);
+					-moz-transform:rotateX(50deg);
+					transform:rotateX(50deg);
+				}
+
+				100%{
+					-webkit-transform:rotateX(0deg);
+					-moz-transform:rotateX(0deg);
+					transform:rotateX(0deg);
+				}
+
+			}

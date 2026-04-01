@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=euc-kr" />
+	<title>책정보 보기</title>
+	<script type="text/javascript" src="httpRequest.js"></script>
+	<script type="text/javascript">
+	function loadBooks() {
+		sendRequest("books.jsp", null, loadedBooks, "GET");
+	}
+	function loadedBooks() {
+		if (httpRequest.readyState == 4) {
+			if (httpRequest.status == 200) {
+				var xmlDoc = httpRequest.responseXML;
+				var bookList = xmlDoc.getElementsByTagName("book");
+				var message = "책 개수 : "+bookList.length+"권\n";
+				for (var i = 0 ; i < bookList.length ; i++) {
+					var book = bookList.item(i);
+					var titleValue = book.getElementsByTagName("title").item(0)
+					                     .firstChild.nodeValue;
+					var authorValue = book.getElementsByTagName("author").item(0)
+					                      .firstChild.nodeValue;
+					message += titleValue + "(" + authorValue + ")\n";
+				}
+				alert(message);
+			}
+		}
+	}
+	
+	window.onload = function() {
+		loadBooks();
+	}
+	</script>
+</head>
+<body>
+책 정보를 alert 으로 출력
+</body>
+</html>

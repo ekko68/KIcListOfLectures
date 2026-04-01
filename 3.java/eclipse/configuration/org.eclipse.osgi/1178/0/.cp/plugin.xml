@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+	<extension-point id="com.springsource.sts.ide.ui.dashboard" name="STS Dashboard"
+		schema="schema/dashboard.exsd" />
+
+
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			class="org.springsource.ide.eclipse.dashboard.internal.ui.editors.MultiPageDashboardEditor"
+			contributorClass="org.springsource.ide.eclipse.dashboard.internal.ui.editors.StsTaskEditorActionContributor"
+			icon="icons/view16/spring.png"
+			id="com.springsource.sts.internal.ide.ui.editors.MultiPageDashboardEditor"
+			name="Dashboard">
+		</editor>
+	</extension>
+
+	<extension
+         	point="org.eclipse.ui.intro.configExtension">
+      	<configExtension
+ 			configId="org.eclipse.ui.intro.universalConfig"
+            content="content/overviewExtensionContent.xml">
+      	</configExtension>
+   	</extension>
+	
+<!--	<extension point="org.eclipse.mylyn.tasks.core.templates">
+		<repository addAutomatically="true" anonymous="false"
+			characterEncoding="UTF-8" label="SpringSource" repositoryKind="jira"
+			urlNewAccount="https://issuetracker.springsource.com/secure/Signup!default.jspa"
+			urlRepository="https://issuetracker.springsource.com" />
+		<repository addAutomatically="true" anonymous="false"
+			characterEncoding="UTF-8" label="Spring Framework" repositoryKind="jira"
+			urlNewAccount="http://jira.springsource.org/secure/Signup!default.jspa"
+			urlRepository="http://jira.springsource.org">
+		</repository>
+	</extension> -->
+	
+<!--	<extension point="org.eclipse.mylyn.tasks.bugs.support">
+		<category description="Commercial support"
+			id="org.eclipse.mylyn.tasks.bugs.commercial" name="Commercial Support"
+			weight="500">
+		</category>
+		<provider categoryId="org.eclipse.mylyn.tasks.bugs.commercial"
+			description="Support for Spring Tool Suite" icon="icons/prod/spring_32.png"
+			id="com.springsource" name="SpringSource" url="http://www.springsource.com/services">
+		</provider>
+		<product featureId="org.springsource.sts" id="org.springsource.sts"
+        	providerId="com.springsource">
+		</product>
+		<mapping namespace="org.springsource.sts" productId="org.springsource.sts">
+			<repository kind="jira" url="https://issuetracker.springsource.com">
+			</repository>
+			<property name="product" value="STS">
+			</property>
+		</mapping>
+		<mapping namespace="com.vmware.vfabric.ide" productId="org.springsource.sts">
+			<repository kind="jira" url="https://issuetracker.springsource.com">
+			</repository>
+			<property name="product" value="STS">
+			</property>
+			<property name="component" value="SERVER">
+			</property>
+		</mapping>
+		<mapping namespace="org.springframework.ide" productId="org.springsource.sts">
+			<repository kind="jira" url="https://issuetracker.springsource.com">
+			</repository>
+			<property name="product" value="STS">
+			</property>
+		</mapping>
+		<mapping namespace="org.springsource.ide" productId="org.springsource.sts">
+			<repository kind="jira" url="https://issuetracker.springsource.com">
+			</repository>
+			<property name="product" value="STS">
+			</property>
+		</mapping>
+		<mapping namespace="org.cloudfoundry.ide" productId="org.springsource.sts">
+			<repository kind="jira" url="https://issuetracker.springsource.com">
+			</repository>
+			<property name="product" value="STS">
+			</property>
+			<property name="component" value="CLOUDFOUNDRY">
+			</property>
+		</mapping>
+	</extension> -->
+
+	<extension point="com.springsource.sts.core.resources">
+		<propertyDefinition id="dashboard.bug.tracker"
+			defaultValue="https://issuetracker.springsource.com/browse/STS">
+		</propertyDefinition>
+		<propertyDefinition
+        defaultValue="%dashboard.feeds.blogs.defaultValue"
+        id="dashboard.feeds.blogs"
+        label="%dashboard.feeds.blogs.label"
+        multiValue="true"
+        userConfigurable="true">
+		</propertyDefinition>
+		<propertyDefinition id="dashboard.feeds.update"
+			defaultValue="http://dist.springsource.com/release/STS/doc/updates.xml">
+		</propertyDefinition>
+		<propertyDefinition id="dashboard.logo"
+			defaultValue="http://spring.io">
+		</propertyDefinition>
+		<propertyDefinition id="dashboard.subscribe"
+			defaultValue="https://spring.io/#newsletter">
+		</propertyDefinition>
+		<propertyDefinition id="dashboard.new.and.noteworthy"
+			defaultValue="http://static.springsource.org/sts/nan/latest/NewAndNoteworthy.html">
+		</propertyDefinition>
+		<propertyDefinition id="dashboard.product.page"
+			defaultValue="https://spring.io/tools/">
+		</propertyDefinition>
+		<propertyDefinition id="dashboard.search"
+			defaultValue="https://spring.io/search?q=">
+		</propertyDefinition>
+		<propertyDefinition id="dashboard.support.commercial"
+			defaultValue="http://www.springsource.com/support/springsupport">
+		</propertyDefinition>
+		<propertyDefinition id="dashboard.support.community"
+			defaultValue="http://forum.spring.io/forum/spring-projects/springsource-tool-suite">
+		</propertyDefinition>
+		<propertyDefinition id="knowledge.base.help.regexp"
+			defaultValue="http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html">
+		</propertyDefinition>
+		<propertyDefinition id="discovery.directory"
+			defaultValue="http://dist.springsource.com/release/STS/discovery/directory-%SHORT_VERSION%.xml">
+		</propertyDefinition>
+	</extension>
+
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.springsource.ide.eclipse.commons.preferencePage"
+			class="org.springsource.ide.eclipse.dashboard.internal.ui.preferences.MainPreferencesPage"
+			id="com.springsource.sts.ide.ui.preferencePage" name="Dashboard">
+		</page>
+	</extension>
+ 
+ 	<extension point="org.eclipse.ui.elementFactories">
+    	<factory
+          class="org.springsource.ide.eclipse.dashboard.internal.ui.editors.DashboardEditorInputFactory"
+          id="org.springsource.ide.eclipse.dashboard.ui.dashboard.elementFactory">
+    	</factory>
+ 	</extension>
+ 	
+ 	<extension point="org.eclipse.mylyn.tasks.ui.editors">
+		<pageFactory
+			class="org.springsource.ide.eclipse.dashboard.internal.ui.editors.StsTaskPageFactory"
+			id="com.springsource.sts.ide.ui.pageFactory.BugReport">
+		</pageFactory>
+	</extension>
+<!-- Now uses Lazy initialization instead of early startup. See https://issuetracker.springsource.com/browse/STS-3755
+     <extension
+        point="org.eclipse.ui.startup">
+     <startup
+           class="org.springsource.ide.eclipse.dashboard.internal.ui.feeds.FeedMonitor">
+     </startup>
+  </extension> -->
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           id="org.springsource.ide.eclipse.dashboard.ui.showDashboard"
+           name="Dashboard">
+     </command>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           allPopups="false"
+           locationURI="toolbar:org.eclipse.ui.main.toolbar">
+        <toolbar
+              id="org.springsource.ide.eclipse.dashboard.ui.toolbar1"
+              label="Spring Tool Suite Dashboard">
+           <command
+                 commandId="org.springsource.ide.eclipse.dashboard.ui.showDashboard"
+                 icon="icons/view16/spring.png"
+                 label="Dashboard"
+                 style="push">
+           </command>
+        </toolbar>
+     </menuContribution>
+  </extension>
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.springsource.ide.eclipse.dashboard.ui.actions.ShowDashboardCommand"
+           commandId="org.springsource.ide.eclipse.dashboard.ui.showDashboard">
+     </handler>
+  </extension>
+
+ 
+	<extension point="org.eclipse.ui.actionSets">
+		<actionSet id="com.springsource.sts.ide.ui.actionSet.workbench"
+			label="SpringSource Tool Suite" visible="true">
+			<action
+				class="org.springsource.ide.eclipse.dashboard.ui.actions.ShowDashboardAction"
+				icon="icons/view16/spring.png" id="com.springsource.sts.ide.ui.action.dashboard"
+				label="Dashboard" menubarPath="help/group.intro" style="push">
+			</action>
+		</actionSet>
+	</extension>
+ 
+
+</plugin>

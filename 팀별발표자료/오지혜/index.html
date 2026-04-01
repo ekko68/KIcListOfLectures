@@ -1,0 +1,340 @@
+<!doctype html>
+<html>
+ <head>
+	<meta charset="UTF-8">
+	<title>미니프로젝트_오지혜</title>
+	<link rel="stylesheet" href="./css/style.css">
+	<script src="./js/script.js"></script>
+ </head>
+ <body>
+	<div id="wrap">
+		<!-- Header -->
+		<header>
+			<h1><a href="#"><img src="./images/hanwha.png" alt="Hanwha in"></a></h1>
+			<section id="gnb" onmouseover="openNav()" onmouseout="closeNav()">
+				<ul class="nav">
+					<li><a href="#">Hanwha</a></li>
+					<li><a href="#">Dream</a></li>
+					<li><a href="#">Meet</a></li>
+					<li class="on"><a href="#">Apply</a>
+						<div class="lay-sub" style="z-index:1; opacity:1; visibility:visible;">
+							<section>
+								<p>한화와 함께<br>꿈을 실현하세요.</p>
+								<ul>
+									<li><a href="#">채용 절차<span></span></a></li>
+									<li><a href="#">FAQ<span></span></a></li>
+									<li class="on"><a href="#">채용 공고<span></span></a></li>
+									<li><a href="#">인재 DB<span></span></a></li>
+								</ul>
+							</section>
+						</div>
+					</li>
+				</ul>
+				<div class="line"></div>
+			</section>
+			<ul id="util">
+				<li><a href="#" class="eng">english</a></li>
+				<li><a href="#" class="menu">팝업메뉴 띄움</a></li>		
+			</ul>
+			<div class="tit-area">
+				<h2>채용 공고 상세 <strong>지원서 작성하기</strong></h2>
+				<a href="#" class="back">이전 페이지로 가기</a>
+				<a href="#" class="my">나의 지원현황 보기</a>
+			</div>
+		</header>
+		<!-- // Header -->
+		<!-- Container -->
+		<div id="container" class="wide">
+			<section id="contents">
+				<div class="visual apply">
+					<img src="./images/top_apply.jpg" alt>
+					<h3>SharePoint 개발 및 운영 경력사원 채용</h3>
+				</div>
+				<ul class="tab-type">
+					<li class="on"><a href="#">개인정보</a></li>
+					<li><a href="#">학력정보</a></li>
+					<li><a href="#">외국어/자격증</a></li>
+					<li><a href="#">경력사항</a></li>
+					<li><a href="#">자기소개서</a></li>
+				</ul>
+				<!-- mainForm -->
+				<form id="mainForm" name="mainForm" method="post" action="a.jsp">
+					<section class="apply">
+						<!-- 지원 희망 분야 -->
+						<h4 class="apply">지원 희망 분야 <small>필수 입력 항목 입니다.</small></h4>
+						<table class="tbl-type">
+							<caption>지원회사,희망직무,희망연봉,희망직급,희망 근무지1,희망 근무지2로 구성된 지원희망분야 등록테이블입니다.</caption>
+							<colgroup>
+								<col style="width:116px"/>
+								<col style="width:140px"/>
+								<col style="width:125px"/>
+								<col style="width:140px"/>
+								<col style="width:125px"/>
+								<col style="width:140px"/>
+							</colgroup>
+							<tbody>
+								<tr>
+									<th scope="row">지원회사</th>
+									<td colspan="5">
+										<input type="text" name="subsidiary.nm" value="한화S&amp;C" title="지원회사 입력" class="readonly exist" readonly>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">희망직무</th>
+									<td>
+										<select name="tempSeq" title="희망직무 선택">
+											<option value="">선택해주세요</option>
+											<option value="29:3367">SharePoint 개발 및 운영</option>
+										</select>
+									</td>
+									<th scope="row">희망연봉</th>
+									<td>
+										<select name="hopeSalCd" title="희망연봉 선택">
+											<option value="">선택해주세요</option>
+											<option value="AAAAAA">1억 이상</option>
+											<option value="AAAAAB">9,000~1억</option>
+											<option value="AAAAAC">8,000~9,000</option>
+											<option value="AAAAAD">7,000~8,000</option>
+											<option value="AAAAAE">6,000~7,000</option>
+											<option value="AAAAAF">5,000~6,000</option>
+											<option value="AAAAAG">4,000~5,000</option>
+											<option value="AAAAAH">3,000~4,000</option>
+											<option value="AAAAAI">2,000~3,000</option>
+										</select>
+									</td>
+									<th scope="row">희망직급</th>
+									<td>
+										<select name="hopeJbpsCd" title="희망직급 선택">
+											<option value="">선택해주세요</option>
+											<option value="ABAAAC">사원</option>
+											<option value="ABAAAD">대리</option>
+											<option value="ABAAAE">과장</option>
+											<option value="ABAAAF">차장</option>
+											<option value="ABAAAG">부장</option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- 인적사항 -->
+						<h4 class="pers">인적사항 <small>필수 입력 항목 입니다. ( ※생년월일은 <strong>'마이페이지 &gt; 개인정보수정'</strong>에서 변경할 수 있습니다. )</small></h4>
+						<div class="column-2 resume">
+							<figure>
+								<a href="#"><img src="./images/resume.gif" alt="이력서사진"></a>
+								<figcaption>사진 크기는 100px 120px로<br>
+								업로드 해주시기 바랍니다.<br>
+								가능파일 jpg, gif, png</figcaption>
+							</figure>
+							<table class="tbl-type">
+								<caption>이름(한글),이름(한문),이름(영문),국적,생년월일,주소(으)로 구성된 인적사항 등록테이블입니다.</caption>
+								<colgroup>
+									<col style="width:105px">
+									<col style="width:140px">
+									<col style="width:120px">
+									<col style="width:140px">
+								</colgroup>
+								<tbody>
+									<tr>
+										<th scope="row">이름(한글)</th>
+										<td><input type="text" name="nm" value="오지혜" title="이름(한글) 입력" class="readonly exist" readonly maxlength="30"></td>
+										<th scope="row">이름(한문)</th>
+										<td><input type="text" name="hanNm" placeholder="한문이름을 입력하세요." title="이름(한문) 입력" maxlength="150"></td>
+									</tr>
+									<tr>
+										<th scope="row">이름(영문)</th>
+										<td colspan="3"><input type="text" name="engNm" placeholder="영문이름을 입력하세요. 예) KIL DONG HONG" title="이름(영문) 입력" style="width:100%" maxlength="150"></td>
+									</tr>
+									<tr>
+										<th scope="row">국적</th>
+										<td colspan="3">
+											<label for="ntnty_0"><input type="radio" name="ntnty" value="1" checked title="국적 선택"> 내국인</label>
+											<label for="ntnty_1"><input type="radio" name="ntnty" value="2" title="국적 선택"> 외국인</label> 
+										</td>
+									</tr>
+									<tr>
+										<th scope="row">성별</th>
+										<td colspan="3">
+											<label for="sex_0"><input type="radio" name="sex" value="1" title="성별 선택"> 남자</label>  
+											<label for="sex_1"><input type="radio" name="sex" value="2" checked title="성별 선택"> 여자</label>
+										</td>
+									</tr>
+									<tr>
+										<th scope="row">생년월일</th>
+										<td colspan="3"><input type="text" name="showBrtd" title="생년월일 입력" class="readonly exist" value="1991.03.10" readonly></td>
+									</tr>
+									<tr>
+									<th scope="row">주소</th>
+									<td colspan="3">
+										<fieldset class="address">
+											<legend>주소</legend>
+											<ul>
+												<li>
+													<input type="text" name="zipcd" title="우편번호 입력" class="code" readonly>
+													<a href="#" class="btn zipcode" title="팝업띄움">우편번호 검색</a>
+												</li>
+												<li><input type="text" name="addr" title="기본주소 입력" class="readonly" maxlength="500" readonly style="width:100%"></li>
+												<li><input type="text" name="addrDtl" title="상세주소 입력" maxlength="500" style="width:100%"></li>
+											</ul>
+										</fieldset>
+									</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- 자격증 -->
+						<h4 class="license">자격증</h4>
+						<table class="tbl-type" id="license_table">
+							<caption>자격면허(으)로 구성된 '자격증' 등록 테이블입니다.</caption>
+							<colgroup>
+								<col style="width:110px">
+								<col style="width:158px">
+								<col style="width:110px">
+								<col>
+							</colgroup>
+							<thead>
+								<tr>
+									<th scope="row">자격면허</th>
+									<td>
+										<fieldset class="search">
+											<input type="text" id="LicenseName" name="license" title="자격면허 입력" maxlength="50">
+										</fieldset>
+									</td>
+									<th scope="row">자격 취득일</th>
+									<td>
+										<fieldset class="date">
+											<legend>자격취득일</legend>
+											<select id="CertificateYear" name="license" title="자격취득 년도 선택" class="exist">
+												<option value="">년도</option>
+												<option value="2017">2017</option>
+												<option value="2016">2016</option>
+												<option value="2015">2015</option>
+												<option value="2014">2014</option>
+												<option value="2013">2013</option>
+												<option value="2012">2012</option>
+												<option value="2011">2011</option>
+												<option value="2010">2010</option>
+												<option value="2009">2009</option>
+											</select>
+											<select id="LicenseMonth" name="license" title="자격취득 월 선택" class="exist">
+												<option value="">월</option>
+												<option value="01">01</option>
+												<option value="02">02</option>
+												<option value="03">03</option>
+												<option value="04">04</option>
+												<option value="05">05</option>
+												<option value="06">06</option>
+												<option value="07">07</option>
+												<option value="08">08</option>
+												<option value="09">09</option>
+												<option value="10">10</option>
+												<option value="11">11</option>
+												<option value="12">12</option>
+											</select>
+											<select id="LicenseDay" name="license" title="자격취득 일 선택" class="exist">
+												<option value="">일</option>
+												<option value="01">01</option>
+												<option value="02">02</option>
+												<option value="03">03</option>
+												<option value="04">04</option>
+												<option value="05">05</option>
+												<option value="06">06</option>
+												<option value="07">07</option>
+												<option value="08">08</option>
+												<option value="09">09</option>
+												<option value="10">10</option>
+												<option value="11">11</option>
+												<option value="12">12</option>
+												<option value="13">13</option>
+												<option value="14">14</option>
+												<option value="15">15</option>
+												<option value="16">16</option>
+												<option value="17">17</option>
+												<option value="18">18</option>
+												<option value="19">19</option>
+												<option value="20">20</option>
+												<option value="21">21</option>
+												<option value="22">22</option>
+												<option value="23">23</option>
+												<option value="24">24</option>
+												<option value="25">25</option>
+												<option value="26">26</option>
+												<option value="27">27</option>
+												<option value="28">28</option>
+												<option value="29">29</option>
+												<option value="30">30</option>
+												<option value="31">31</option>
+											</select>
+										</fieldset>
+									</td>
+									<td><a onclick="fnAdd('license');" class="add">자격증 추가하기</a> <a onclick="fnClean('license');" class="btn small clear">지우기</a></td>
+								</tr>
+							</thead>
+							<tbody id="license_tbody">
+<!-- 								<tr id="license1"> -->
+<!-- 									<th>자격면허</th> -->
+<!-- 									<td>정보처리기사</td> -->
+<!-- 									<th>자격 취득일</th> -->
+<!-- 									<td>2016년 1월 1일</td> -->
+<!-- 									<th><a onclick="fnDel(1);" class="del btn small">삭제하기</a></th> -->
+<!-- 								</tr> -->
+							</tbody>
+						</table>
+						<p class="option">두 개 이상의 자격증을 소지 한 경우, '+추가'를 선택하여 작성해 주세요.(최대 4개까지 입력가능)</p>
+						<!-- 지원동기 -->
+						<h4 class="resume main_ttl">지원동기(상세히 기재)</h4>
+						<table class="tbl-type">
+							<tbody><tr>
+								<td class="textarea">
+									<textarea name="selfIntroductionList[0].cont" maxlength="500" placeholder="500자 이내로 작성해 주세요." title="지원동기/이직사유(상세히 기재)" rows="6"></textarea>
+								<small>0/500</small>
+								</td>
+							</tr></tbody>
+						</table>
+						<div class="lay-tip">
+							<dl id="tip-content-introduction">
+								<dt>자기소개서 작성 가이드</dt>
+								<dd>
+									<ul>
+										<li>개인 네트워크 환경에 따라 작성중인 내용이 사라질 수 있으니 먼저 메모장, 워드 등에서 작성하시기 바랍니다.</li>
+									</ul>	
+								</dd>
+							</dl>
+							<ul>
+								<li>궁금하신 사항이 있으신가요?<br>
+								1:1 문의를 해주시면 최대한 빨리 답변해드립니다.<br>
+								<a href="javascript:fnQnaWritePopup();" class="btn small qna">1:1 문의하기</a>
+								</li>
+							</ul>
+						</div>
+					</section>
+					<div class="btn-area wide">
+						<a href="#" class="btn2 apply">지원서 제출하기</a>
+					</div>
+				</form>
+				<!-- // mainForm -->
+			</section>
+		</div>
+		<!-- // Container -->
+		<!-- Footer --> 
+		<footer>
+			<section>
+				<img src="./images/hanwha2.png" alt="Hanwha" class="bi">
+				<ul class="util">
+					<li><a href="#">한화그룹</a></li>
+					<li><a href="#">한화인재경영원</a></li>
+					<li><a href="#">이용약관</a></li>
+					<li><a href="#">개인정보처리방침</a></li>
+				</ul>
+				<address><img src="./images/copyright.png" alt="Copyright © 2015 Hanwha Group. All rights reserved."></address>
+				<ul class="share">
+					<li><a href="#" class="facebook">한화데이즈 페이스북</a></li>
+					<li><a href="#" class="twitter">한화데이즈 트위터</a></li>
+					<li><a href="#" class="blog">한화데이즈 블로그</a></li>
+					<li><a href="#" class="family">계열사 바로가기</a></li>
+				</ul>
+			</section>
+		</footer>
+		<!-- // Footer -->
+	</div>	
+ </body>
+</html>

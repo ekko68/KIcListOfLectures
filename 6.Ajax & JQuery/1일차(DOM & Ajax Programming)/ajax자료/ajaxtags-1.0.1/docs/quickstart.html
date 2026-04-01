@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><title>AjaxTags - Quick Start</title><style type="text/css" media="all">
+          @import url("./style/maven-base.css");
+          
+			    @import url("./style/maven-theme.css");</style><link rel="stylesheet" href="./style/print.css" type="text/css" media="print"></link><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta><meta name="author" content="Darren L. Spurgeon"></meta><meta name="email" content="kalitai@yahoo.com"></meta></head><body class="composite"><div id="banner"><a href="http://ajaxtags.sourceforge.net" id="projectLogo"><span>AjaxTags</span></a><div class="clear"><hr></hr></div></div><div id="breadcrumbs"><div class="xleft">
+                	Last published: 11 August 2005 22:37 EDT
+                  | Doc for 1.0.1</div><div class="xright">
+        
+        <a href="http://ajaxtags.no-ip.info/" class="externalLink" title="External Link">AjaxTags Live Demo</a>
+      </div><div class="clear"><hr></hr></div></div><div id="leftColumn"><div id="navcolumn"><div id="menuOverview"><h5>Overview</h5><ul><li class="none"><a href="index.html">Home</a></li><li class="none"><a href="quickstart.html">Quick Start</a></li><li class="none"><a href="install.html">Installation</a></li><li class="expanded"><a href="usage.html">Tag Reference</a><ul><li class="none"><a href="usage.html#ajax:autocomplete">ajax:autocomplete</a></li><li class="none"><a href="usage.html#ajax:callout">ajax:callout</a></li><li class="none"><a href="usage.html#ajax:select">ajax:select</a></li><li class="none"><a href="usage.html#ajax:toggle">ajax:toggle</a></li><li class="none"><a href="usage.html#ajax:updateField">ajax:updateField</a></li></ul></li><li class="none"><a href="advanced.html">Advanced Usage</a></li><li class="none"><a href="ajaxlinks.html">Ajax Links &amp; Resources</a></li></ul></div><div id="menuDownloads"><h5>Downloads</h5><ul><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=140499" class="externalLink" title="External Link">Binaries</a></li><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=140499" class="externalLink" title="External Link">Source</a></li><li class="none"><a href="release-notes.txt">Release Notes</a></li></ul></div><div id="menuProject_Documentation"><h5>Project Documentation</h5><ul><li class="none"><a href="index.html">About AjaxTags</a></li><li class="collapsed"><a href="project-info.html">Project Info</a></li><li class="collapsed"><a href="maven-reports.html">Project Reports</a></li><li class="none"><a href="http://maven.apache.org/development-process.html" class="externalLink" title="External Link">Development Process</a></li></ul></div><div><ul><li class="none"><a href="http://www.sourceforge.net/projects/ajaxtags" class="externalLink" title="External Link"><img title="SourceForge.net" style="border: 1px" src="http://sourceforge.net/sflogo.php?group_id=120046&amp;type=1" alt="SourceForge.net"></img></a></li></ul></div><a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy"><img alt="Built by Maven" src="./images/logos/maven-button-1.png"></img></a></div></div><div id="bodyColumn"><div class="contentBox"><div class="section"><a name="Quick_Start"></a><h2>Quick Start</h2><div class="subsection"><a name="Set_Up_Environment"></a><h3>Set Up Environment</h3><p>
+          <strong>1.</strong> Copy the <code>ajaxtags.jar</code> into your <code>WEB-INF/lib</code>
+          directory.
+        </p><p>
+          <strong>2.</strong> Add taglib definition to your application's <code>web.xml</code> file.
+          Not required for JSP 2.0 users.
+        </p>
+    <div class="source"><pre>
+&lt;taglib&gt;
+  &lt;uri&gt;http://ajaxtags.org/tags/ajax&lt;/uri&gt;
+  &lt;location&gt;/WEB-INF/ajaxtags.tld&lt;/location&gt;
+&lt;/taglib&gt;
+        </pre></div>
+  </div><div class="subsection"><a name="Create_Server-side_Handler"></a><h3>Create Server-side Handler</h3><p>
+          A servlet or other component must return an XML result in the following format, though the
+          element names are not important.  So far, we've been able to write the JavaScript in such
+          a way that the tag names aren't used.  The attribute <code>value</code> must, however, be
+          named as such. Just think of it as an HTML select field option list.
+        </p>
+    <div class="source"><pre>
+&lt;?xml version="1.0"?&gt;
+&lt;list&gt;
+  &lt;item value="1"&gt;Record 1&lt;/item&gt;
+  &lt;item value="2"&gt;Record 2&lt;/item&gt;
+  &lt;item value="3"&gt;Record 3&lt;/item&gt;
+&lt;/list&gt;
+        </pre></div>
+  </div><div class="subsection"><a name="Prepare_JSP_View"></a><h3>Prepare JSP View</h3><p>
+          Your JSP, of course, is where it all comes together.  You must (1) declare the taglib, (2)
+          include a reference to the JavaScript source, (3) include a reference to any CSS required
+          (of which at least two tags currently do), (4) add your content (often times a web form),
+          and lastly (5) include the AJAX tag you want to use.
+        </p>
+    <div class="source"><pre>
+&lt;%@ taglib uri="http://ajaxtags.org/tags/ajax" prefix="ajax" %&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;AJAX JSP Tag Library&lt;/title&gt;
+  &lt;script type="text/javascript" src="ajaxcore.js"&gt;&lt;/script&gt;
+  &lt;link type="text/css" rel="stylesheet" href="ajax.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;form&gt;
+  Make:
+  &lt;select id="make" name="make"&gt;
+    &lt;option value=""&gt;Select make&lt;/option&gt;
+    &lt;c:forEach items="${makes}" var="make"&gt;
+      &lt;option value="${make}"&gt;${make}&lt;/option&gt;
+    &lt;/c:forEach&gt;
+  &lt;/select&gt;
+
+  Model:
+  &lt;select id="model" name="model"&gt;
+    &lt;option value=""&gt;Select model&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/form&gt;
+
+&lt;ajax:select
+  fieldId="make"
+  targetId="model"
+  baseUrl="${pageContext.request.contextPath}/GetCarModel.view"
+  paramName="make"
+  emptyLabel="No results, Make another selection"
+  emptyValue=""
+  postFunc="doOtherThings"/&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+        </pre></div>
+  </div></div></div></div><div class="clear"><hr></hr></div><div id="footer"><div class="xright">© 2005, Darren L. Spurgeon</div><div class="clear"><hr></hr></div></div></body></html>

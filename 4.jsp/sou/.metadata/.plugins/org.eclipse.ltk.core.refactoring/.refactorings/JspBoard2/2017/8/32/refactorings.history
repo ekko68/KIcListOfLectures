@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy package &apos;lys.board&apos; to &apos;jQueryTest/src&apos;&#x0D;&#x0A;- Original project: &apos;JspBoard2&apos;&#x0D;&#x0A;- Destination element: &apos;jQueryTest/src&apos;&#x0D;&#x0A;- Original element: &apos;JspBoard2/src/lys.board&apos;" description="Copy package" destination="=jQueryTest/src" element1="/src&lt;lys.board" flags="589830" fragments="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1502243546142" version="1.0"/>
-</session>

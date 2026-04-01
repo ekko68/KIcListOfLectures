@@ -1,0 +1,116 @@
+package bag.design.page;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+
+import javax.swing.*;
+
+public class MainPage extends JFrame implements ActionListener{
+
+	private JFrame frame;
+	private JDesktopPane desktop;
+	private JInternalFrame childWinCostomer, childWinBag;
+	private ImageButton btnCustomer, btnBag;
+	//public JButton btnCustomer, btnBag;
+	
+	//생성자
+	public MainPage() {	
+		frame = new JFrame("BagLend");	
+		
+		desktop = new JDesktopPane();
+		frame.setContentPane(desktop);
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+		//frame.setBounds(100, 100, 700, 700);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		frame.setResizable(false);
+		//desktop.setBackground(Color.DARK_GRAY );
+		desktop.setOpaque(false);
+		
+		// 버튼 생성, 디자인
+		btnCustomer = new ImageButton("고객관리");
+		btnCustomer.setBounds(650, 320, 140, 140);
+		btnCustomer.setIcon(new ImageIcon("C:/img/icnc_d.png"));
+		btnCustomer.setRolloverIcon(new ImageIcon("C:/img/icnc_o.png"));
+		btnCustomer.setPressedIcon(new ImageIcon("C:/img/icnc_p.png"));
+		btnCustomer.setBorderPainted(false);
+		btnCustomer.setVisible(true);
+		btnCustomer.addActionListener(this);
+		
+		btnBag = new ImageButton("상품관리");
+		btnBag.setIcon(new ImageIcon("C:/img/icnp_d.png"));
+		btnBag.setRolloverIcon(new ImageIcon("C:/img/icnp_o.png"));
+		btnBag.setPressedIcon(new ImageIcon("C:/img/icnp_p.png"));
+		btnBag.setBounds(850, 320, 140, 140);
+		btnBag.setVisible(true);
+		btnBag.addActionListener(this);
+		
+		// 버튼 부착
+		desktop.add(btnCustomer, JLayeredPane.DEFAULT_LAYER);
+		desktop.add(btnBag, JLayeredPane.DEFAULT_LAYER);
+		
+		// 라벨
+		JLabel bgImg = new JLabel();
+		ImageIcon imageIcon = new ImageIcon(
+				new ImageIcon("C:/img/bg01.jpg").getImage().getScaledInstance(
+						frame.getWidth(), frame.getHeight(), Image.SCALE_DEFAULT)
+				);
+		
+		bgImg.setToolTipText("배경이미지");
+		bgImg.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+		bgImg.setIcon(imageIcon);
+		desktop.add(bgImg);
+		
+		
+	}	
+
+	
+	class ImageButton extends JButton {
+
+		  public ImageButton(String img) {
+		    this(new ImageIcon(img));
+		  }
+
+		  public ImageButton(ImageIcon icon) {
+		    setIcon(icon);
+		    setMargin(new Insets(0, 0, 0, 0));
+		    setIconTextGap(0);
+		    setBorderPainted(false);
+		    setBorder(null);
+		    setText(null);
+		    setSize(icon.getImage().getWidth(null), icon.getImage().getHeight(null));
+		  }
+	}
+	
+	
+	public ImageButton getBtnCustomer() {
+		return btnCustomer;
+	}
+
+	public ImageButton getBtnBag() {
+		return btnBag;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+		if(e.getSource().equals(btnCustomer)) {
+		CustomerPage cp = new CustomerPage();
+			childWinCostomer.getContentPane().add(cp);
+			childWinCostomer.setLocation(10, 10);
+			frame.getContentPane().add(childWinCostomer, JLayeredPane.PALETTE_LAYER);
+			childWinCostomer.show();
+			btnCustomer.setEnabled(false);
+		} else if(e.getSource().equals(btnBag)) {
+			ProductPage pg = new ProductPage();
+			childWinCostomer.getContentPane().add(pg);
+			childWinCostomer.setLocation(10, 10);
+			frame.getContentPane().add(childWinBag, JLayeredPane.PALETTE_LAYER);
+			childWinBag.show();
+			btnBag.setEnabled(false);
+		}
+	}
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="EUC-KR" ?>
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+<form-validation>
+    <formset>
+        <form name="itemEditForm">
+            <field property="item.itemName" depends="required,maxlength">
+                <arg0 key="itemEditForm.item.itemName" />
+                <arg1 key="${var:maxlength}" resource="false" />
+        <var>
+          <var-name>maxlength</var-name>
+          <var-value>20</var-value>
+        </var>
+            </field>
+            <field property="item.price" depends="required,maxlength,intRange">
+                <arg0 key="itemEditForm.item.price" />
+                <arg1 key="${var:maxlength}" resource="false" />
+        <var>
+          <var-name>maxlength</var-name>
+          <var-value>8</var-value>
+        </var>
+        <var>
+          <var-name>min</var-name>
+          <var-value>1</var-value>
+        </var>
+        <var>
+          <var-name>max</var-name>
+          <var-value>999999</var-value>
+        </var>
+            </field>
+            <field property="item.pictureUrl" depends="required,maxlength">
+                <arg key="itemEditForm.item.pictureUrl" />
+                <arg1 key="${var:maxlength}" resource="false" />
+        <var>
+          <var-name>maxlength</var-name>
+          <var-value>20</var-value>
+        </var>
+            </field>
+            <field property="item.description" depends="required,maxlength">
+                <arg key="itemEditForm.item.description" />
+                <arg1 key="${var:maxlength}" resource="false" />
+        <var>
+          <var-name>maxlength</var-name>
+          <var-value>50</var-value>
+        </var>
+            </field>
+        </form>
+    </formset>
+</form-validation>

@@ -1,0 +1,39 @@
+<!doctype html>
+ <head>
+  <meta charset="UTF-8">
+  <title>HTML5</title>
+  
+ <link href="css/log.css" rel="stylesheet" type="text/css">
+
+<script>
+		function test(){
+			if (document.myform.name.value==""){
+				alert("아이디를 입력하지 않았습니다.") 
+				document.myform.name.focus()
+				return false
+			}
+			if (document.myform.pwd.value==""){
+				alert("비밀번호를 입력하지 않았습니다") 
+				document.myform.pwd.focus()
+				return false
+			}
+
+			document.myform.submit();
+		}
+		
+	</script>
+
+ </head>
+ <body>
+	<div class="golog">
+		<form name="myform" method="post" action="a.jsp" class="poplog">
+				<h3>ID</h3><input type="text" name="name" class="name" placeholder="hungry@bobjo.com"><br>
+				<h3>PW</h3><input type="password" name="pwd" class="pwd" placeholder="password"><p>
+		</form>
+				<a href="#" class="bname" onclick="test()" >로그인</a>
+				<a href="#" class="find">아이디/비밀번호찾기</a>
+				<a href="#" class="gaip">회원가입</a>
+
+	</div>
+ </body>
+</html>

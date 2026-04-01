@@ -1,0 +1,274 @@
+/* main 에 해당 */
+* {
+    margin:0; padding:0;
+	background-color:hsla(110, 100%, 42%, 0.02);/*상하색 계열 배경지정*/
+
+	*/
+}
+.wrap{
+   width:1000px;
+   margin:0 auto;
+ 
+  /*
+    위쪽,아래쪽의 여백을 0으로 설정 및 동일한 크기로 설정
+	auto->좌우의 여백을 똑같이 배분해서 자동적으로 설정
+   */
+}
+
+/* 768이상에서는 hd2,sc2,sc3는 안보이게 설정 */
+.hd2,.sc2,.sc3 {display:none;}
+
+/* 제목의 위치를 지정*/
+h1 {
+     float:left;
+	 position:relative;
+	 left:3%;top:60px;
+}
+
+.nv1{   /*상단 메뉴 */
+  width:60%; height:50px;
+  border:1px solid black;
+  float:left;
+  position:relative; /* h1태그를 기준*/
+  left:7%;top:56px;
+  z-index:5;
+}
+ul { /* 마크안나오게 설정 */
+    list-style-type:none;
+	
+}
+
+/* 상단메뉴->마우스올리면 배경색 설정 */
+.main1:hover{
+  background-color:green;
+  color:#ffff00;
+}
+.main2:hover{
+  background-color:green;
+  color:#ffff00;
+}
+.main3:hover{
+  background-color:green;
+  color:#ffff00;
+}
+/*  테두리 기준*/
+
+.main1{
+     position:absolute;
+	 left:14%; 
+     top:5px; 
+
+}
+  /* 2,3번째 absolute을 설정 */
+.main2{
+     position:absolute;
+	 left:43%;
+	 top:5px;
+}
+.main3{
+    position:absolute;
+	right:17%; /* 오른쪽을 기준 배치 */
+	 top:5px;
+}
+/* 서브메뉴 스타일 적용->jQuery 함수를 이용해서 화면에 출력 */
+.sub {
+     display:none; /* 유형별 제품 안보이게 */
+	 position:absolute;
+	 top:40px;
+	 left:77px;
+}
+ /* 겹치면 맨앞으로 */
+.sub li, .sub li a {
+    z-index:15; 
+	color:purple;
+}
+/* 2level 메뉴 */
+.sub1 {  
+   display:none;
+   float:right; 
+   position:relative;
+}
+
+.nv1 div a {
+   
+   display:inline-block;
+   padding:10px;
+}
+
+/* 상단 메뉴 로그인 부분 */
+.nv2{
+     width:13%;height:50;
+	 float:right; /*오른쪽에 배치*/
+	 position:relative;
+	 top:-72px;
+	 right:3%; 
+	 
+}
+/* 상단메뉴의 정렬,여백설정 */
+.nv2 ul >li {
+  float:left;
+  margin-left:10%; 
+  margin-top:20px;
+  font-size:11px;
+}
+.nv2 ul li a{
+    display:inline-block;
+	padding:5px;
+}
+.nv2 ul li a:hover{
+  background-color:green;
+  color:white;
+}
+/* 상단메뉴 아래 이미지 높이를 지정 */
+.cycle-slideshow{
+  position:relative;
+  top:150px; 
+  z-index:1;
+}
+
+.cycle-slideshow img{
+       height:350px;
+}
+/*이미지 포함 하는 베스트 셀러 설정 */
+.at1{
+
+  width:63%;height:260px;
+  border:1px solid black;
+  float:left;
+  position:relative;
+
+  left:0%;top:100px; 
+  z-index:3;
+}
+
+.d1>figure>img {
+width:200px;height:200px;
+border:1px solid black;
+display:inline-block;
+position:absolute; 
+top:50px; 
+z-index:6
+}
+
+.d2>figure>img {
+width:200px;height:200px;
+border:1px solid black;
+display:inline-block;
+position:absolute; 
+top:50px;left:209px; 
+z-index:6
+}
+
+.d3>figure>img {
+width:200px;height:200px;
+border:1px solid black;
+display:inline-block;
+position:absolute; 
+top:50px;left:423px; 
+z-index:6
+}
+
+/* 첫번째 이미지의 글자크기,위치 */
+.fc1{
+ font-size:11px;
+ float:left;
+ position:relative;
+ left:5px; 
+}
+
+.fc2{
+ font-size:11px;
+ float:left;
+ position:relative;
+ left:18px; 
+}
+
+.fc3{
+ font-size:11px;
+ float:left;
+ position:relative;
+ left:50px; 
+}
+
+/*포니 캐릭터 소개 이미지*/
+
+.at2{
+/*양쪽 여백(7%)*/
+width:33%;height:250px;
+border:1px solid black;
+float:right;/* 오른쪽에 배치*/
+position:relative;
+top:100px;
+background-color:hsla(110, 100%, 42%, 0.02);
+}
+/* 상세보기 이미지 */
+.at2>img{
+  width:147px;height:200px;
+  float:left 
+  left:5px
+  position:relative;
+  top:0px;
+  z-index:0
+  display:block;
+}
+
+/* div포니정렬*/
+.at2 img{ float:left; width:150px;}
+ .at2 #f2 {float:right; width:150px;  font-size:15px}
+
+
+/* 동영상 배치 */
+.at3>embed{
+   position:relative; 
+   top:100px;
+   width:450px; height:300px; 
+   margin:50px;
+
+}
+/* 동영상 오른쪽에 이미지 배치 */
+.at4 > img {
+   float:right; 
+   width:450px;height:300px; 
+   position:relative; 
+   top:-255px;
+   right:20px;
+}
+
+/*footer 설정 */
+.ft1{
+clear:both;/
+border:1px solid black;
+height:100px;
+margin:0 auto;
+position:relative;
+top:-220px;
+
+}
+
+/* 이용 약관 부분*/
+.nv3{
+   position:relative;
+   top:20px; 
+}
+
+.nv3 ul > li{
+  float:left;
+  margin-left:4.3%;
+}
+
+
+
+.nv4{
+     position:relative;
+	 top:40px;
+}
+.nv4 ul{
+   list-style-type:none; 
+}
+.nv4 ul > li{
+   float:left;
+   margin-left:3%;
+   font-size:11px;
+}
+
+

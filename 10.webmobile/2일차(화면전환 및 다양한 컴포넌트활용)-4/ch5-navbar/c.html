@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원 목록보기</title>
+</head>
+<body>
+<!-- page지정 -->
+<div data-role="page">
+    <!-- 1.header지정 -->
+    <div data-role="header">
+         <h1>회원 목록 보기</h1>
+    </div>
+    <!-- 2.content 지정-->
+    <div data-role="content">
+    <!-- 
+      data-role="collapsible-set" -> 전체 화면의 데이터부분을 보여줄 영역을 설정
+      각각의 항목은 collapsible로 설정을 한다.
+     -->
+         <div data-role="collapsible-set">
+            <div data-role="collapsible">
+                <h1>홍길동</h1>
+                <p>홍길동의 나이는 23살이며 주소는 서울시 강남구에 거주합니다.</p>
+            </div>
+            <div data-role="collapsible">
+                <h1>이길수</h1>
+                <p>이길수의 직업은 프로그래머이며 나이는 34살입니다.</p>
+            </div>
+         </div>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer" data-id="persistFooter" data-position="fixed">
+         <div data-role="navbar">
+             <ul>
+               <li><a href="a.html" data-icon="plus">회원가입</a></li>
+                <li><a href="b.html" data-icon="search">검색</a></li>
+                <li><a href="c.html" data-icon="gear"
+                           class="ui-btn-active ui-state-persist">회원 목록보기</a></li>
+             </ul>
+         </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

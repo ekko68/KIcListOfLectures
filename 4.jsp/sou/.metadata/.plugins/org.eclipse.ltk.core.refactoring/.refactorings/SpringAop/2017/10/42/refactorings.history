@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy 2 elements to &apos;SpringAop/src/main/java/sp.aop2&apos;&#x0D;&#x0A;- Original project: &apos;SpringAop&apos;&#x0D;&#x0A;- Destination element: &apos;SpringAop/src/main/java/sp.aop2&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     sp.aop.ResultMain.java&#x0D;&#x0A;     app.xml" description="Copy elements" destination="/src\/main\/java&lt;sp.aop2" element1="src/main/java/sp/aop/app.xml" element2="/src\/main\/java&lt;sp.aop{ResultMain.java" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1508208359558" units="1" version="1.0"/>
-</session>

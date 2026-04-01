@@ -1,0 +1,178 @@
+10일차(Maven 설정 및 메인페이지 작성(스프링 타일즈))
+
+DI,Annotation(java App)->스프링 MVC(모델2 전체흐름도)
+->게시판->메인페이지
+    참고서(이해->찾아봐서 공부)
+
+->메인페이지+게시판+파일업로드,다운로드+에러페이지 작성 처리
+--------------------------------------------------------------------
+ Mybatis로 설정
+------------------
+Maven 기법->pom.xml파일을 이용해서 관련된 jar파일(라이브러리 파일,모듈)
+                ->스프링(클래스,인터페이스)->jar파일(자동으로 다운로드)
+                ->버전관리가 편리(장점)
+                ->다운로드가 안되는 경우->1.방화벽 때문에->방화벽 해제->설정
+                                                       2.
+                                                       C:\Users\kitcoop\.m2\repository
+                                                                     계정이름            하위폴더를 삭제시킨뒤
+                                                         pom.xml에 설정->저장->자동 다운로드
+
+Maven=>lib폴더에 관련된 jar파일을 개별적으로 다운로드 받아서 
+              복사=>스프링 4.x 변경->다시 다운받아서 복사
+          =>버전관리가 어렵다.->불편(단점)
+-------------------------------------------------------------------------
+1.처음부터 Maven Project를 설정하고 나서 작업(권장)=>프로젝트로 활용
+
+2.Dynamic Web Project로 작성을 하고 나중에 Maven Project로 전환할 수 있다.
+  ->디렉토리 구조는 변경X->Maven만 추가(pom.xml에 설정만 가능)->보충
+
+  SpringWeb작성->디렉토리 구조부터 만들고 시작
+
+Group Id:kr.spring.maven ->디렉토리 위치를 지정
+Artifact Id:Springmvc3->프로젝트명을 지정
+
+package:kr.spring.maven.Springmvc3
+---------------------------------------------------------
+next->Springmvc3
+
+1.pom.xml에 설정먼저
+
+spring-webmvc
+spring-web
+===============>스프링의 웹에 관련된 라이브러리
+
+<dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>4.3.10.RELEASE</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>4.3.10.RELEASE</version>
+    </dependency>
+  </dependencies>
+================================
+2.web.xml->Dispatcher설정
+3.board-servlet.xml에서 환경설정
+
+******
+1)<context:component-scan base-package="최상위패키지.하위패키지..." />
+                                                                    kr.spring.mbc
+ @Component가 부여된 클래스를 찾아서 알아서 빈즈로 등록
+
+@Component
+public class Test{}
+
+ 자동으로 등록=>개발자가 작성할 필요가 없다
+<bean id="test" class="kr.spring.mbc.Test"/>
+*******
+<!-- @Autowired을 자동으로 등록-->
+<context:annotation-config />
+
+2)@Autowired->멤버변수위에
+                         @Autowired->Setter Method를 호출하지 않아도 된다.
+                         Car test;    //Car test=new Car();
+                         메서드위에
+                         @Autowired
+                         public setTest(Car test){
+                              this.test=test;
+                          }
+@Autowired
+<property name="test" ref="">
+</property>--->스프링이 인정-->setTest()를 호출
+
+=====================>대신해줄 수있는 어노테이션(환경설정)
+                                                        자바코드를 대신 실행
+------------------------------------------------------------------------------
+****
+SpringTiles->프로젝트->메인페이지를 만들어주는 프레임워크(타일즈3)
+                                   tiles을 환경설정
+****
+-------------------------------------------------------------------------------
+SpringTiles=>프로젝트 이름->Spring web Maven을 선택한 경우
+-----------------------------
+ 1.pom.xml->자바의 경우->버전 1.6->1.8로 변경
+
+<java.version>1.8</java.version>->1.6->1.8로 변경
+
+2.프로젝트 오 click->Build Configurer-> 1.6버전을 지우고->Add library
+                                                         JRE선택(1.8) 선택
+
+3.Java Compiler 항목->1.6->1.8로 설정
+4.Java Facets->Java ->1.8로 되어있는지를 확인
+5.Runtimes ->Apache Tomcat v8.5 버전을 체크
+------------------------------------------------------------------------------
+   
+ SpringTiles
+       |
+        -src=>컨트롤러 3개 작성
+       |
+         -WebContent
+                  |
+                   -WEB-INF
+                         |
+                          -lib
+                         |
+                          -tiles-def폴더(1.타일즈에 대한 환경설정)
+                                 tilesdef.xml(화면에 어떻게 보일것인가에 대한 정보가
+                                                   담겨져있는 파일정보)
+                         |
+                          -tiles-view(2.메인페이지에서 보여줄 폴더 생성)
+                                  |
+                                    -template->header.jsp(머리말)
+                                                      menu.jsp(링크문자열)
+                                                      **layout.jsp (작성)**
+                                                      footer.jsp(꼬리말)
+                              body-menu1.jsp(링크를  걸어서 최종적으로 화면에 보여줄)
+                              body-menu2.jsp
+                              body.jsp
+-------------------------------------------------------------------------------------
+web.xml
+
+<filter>
+        <filter-name>필터의 별칭이름</filter-name>
+        <filter-class>
+           org.springframework.web.filter.CharacterEncodingFilter
+                                    패키지명...한글을 적용시킬 필터 클래스이름
+        </filter-class>
+        <init-param>
+            <param-name>encoding(필터클래스에 전달할 매개변수명)</param-name>
+            <param-value>UTF-8(한글 캐릭터셋)</param-value>
+        </init-param>              euc-kr--->UTF-8로 설정
+    </filter>
+    
+    <!-- 어떻게 요청시 한글이 지원이 되게 할것인가  -->
+    <filter-mapping>
+        <filter-name>encodingFilter(적용시킬 필터별칭 이름)</filter-name>
+        <url-pattern>/*(한글이 적용이 되는 대상자폴더를 지정)</url-pattern>
+    </filter-mapping>
+----------------------------------------------------------------------------------
+<filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>
+           org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    
+    <!-- 어떻게 요청시 한글이 지원이 되게 할것인가  -->
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+
+
+
+
+
+
+
+

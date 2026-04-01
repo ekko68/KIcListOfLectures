@@ -1,0 +1,108 @@
+오라클로 작성한 게시판의 경우(검색어를 뺀 오라클의 SQL구문)
+
+1.scott/tiger로 로그인 후
+
+//정수->int ->오라클 number
+//문자열->varchar->오라클 varchar2
+//긴문자열->text-->varchar2(4000)->한글은 2000자, 영문은 4000자
+                     clob(2000자이상의 많은 데이터를 저장할려면)
+
+create table board(
+    num number not null primary key , /* 글번호를 저장하는 필드 */
+    writer varchar2(10) not null, /*글쓴이 */
+    email varchar2(30), /* 이메일 ->유일하게 null값을 허용 */
+    subject varchar2(50) not null, /*글제목 */
+    passwd varchar2(12) not null, /*글의 비밀번호 */
+    reg_date datetime not null, /*글을 쓴 날짜 */
+    readcount number default 0, /* 글의 조회수 */
+    ref number not null, /* 글을 그룹화하기 위한 필드 */
+    re_step number not null, /* 제목글과 답변글의 순서를 정리*/
+    re_level number not null, /* 글의 레벨을 저장하는 필드 */
+    content varchar2(4000) not null, /* 글내용 */
+   ip varchar2(20) not null /* 글쓴이의 ip주소를 저장하는 필드 */
+);
+
+2.DBConnectionMgr.java에서의 오라클 접속으로 변경한다.
+
+//   MySQL
+    /*
+	private String _driver = "org.gjt.mm.mysql.Driver",
+    _url = "jdbc:mysql://127.0.0.1:3306/mydb?useUnicode=true&characterEncoding=EUC_KR",
+    _user = "root",
+    _password = "1234";  */
+	
+    ==>변경한다.	
+    private String _driver = "oracle.jdbc.driver.OracleDriver",
+    _url = "jdbc:oracle:thin:@localhost:1521:orcl",
+    _user = "scott",
+    _password = "tiger";
+
+=====================================
+파일로 불러오는 경우
+
+lib=>oracle driver 복사
+=========================
+dbtest=>dbmysql.conf->save as dboracle.conf 저장
+                              ==============
+jdbc.drivers=oracle.jdbc.driver.OracleDriver
+jdbc.url=jdbc:oracle:thin:@localhost:1521:orcl
+jdbc.username=scott
+jdbc.password=tiger
+=============================================================
+   BoardDAO 클래스의 SQL구문에 해당하는 메서드 2개
+   ->SQL구문을 MySQL=>Oracle로 변경
+
+3.오라클의 페이징 처리에 대한 SQL구문
+
+pstmt.setInt(1,start);
+pstmt.setInt(2, end);
+=============================
+오류수정=>pstmt.setInt(1,start);//1
+          pstmt.setInt(2,start-1+end);//10  //end->pageSize
+
+start-1+end=>항상 10이 되게 하기위해서 ->파라미터값 endRow
+
+  10,20,30
+
+String sql="select * from (select rownum rnum,num,writer,email, "+
+"subject,passwd,reg_date,readcount,ref,re_step," +
+" re_level,content,ip from (select * from board order by ref desc, " +
+"re_step asc)) where rnum>=? and rnum<=?";
+
+내부적인 실행순서1)->오라클의 rownum과 subQuery를 이용한 페이징 처리방법
+
+(select * from board order by ref desc, re_step asc)
+
+=>그룹번호(=게시물번호)순으로 내림차순으로 정렬하되,같은 레벨의 답변글은 오름
+     차순으로 정렬하라
+
+내부적인 실행순서2)
+ rownum->내부적으로 번호을 매기면서 정렬
+ (select rownum rnum(별칭명),* from(
+
+
+ (select rownum rnum,num,writer,email, "+
+"subject,passwd,reg_date,readcount,ref,re_step," +
+" re_level,content,ip from (select * from board order by ref desc, " +
+"re_step asc))
+
+=>내부적으로 rownum으로 레코드의 순번을 매기면서
+    그룹번호(=게시물번호)순으로 내림차순으로 정렬하되,같은 레벨의 답변글은
+   오름차순으로 정렬하라
+
+내부적인 실행순서 3)
+
+select * from (select rownum rnum,num,writer,email, "+
+"subject,passwd,reg_date,readcount,ref,re_step," +
+" re_level,content,ip from (select * from board order by ref desc, " +
+"re_step asc)) where rnum>=? and rnum<=?
+
+최종적인 SQL구문분석
+
+ex)
+where rnum>=1 and rnum<=10 라면 ==>먼저 번역한다.
+===================================
+레코드의 순번이 1번째부터 10번째까지의 범위에 들어가는 레코드를 찾아서
+내부적으로 rownum으로 레코드의 순번을 매기면서
+그룹번호(=게시물번호)순으로 내림차순으로 정렬하되,같은 레벨의 답변글은
+오름차순으로 정렬하라

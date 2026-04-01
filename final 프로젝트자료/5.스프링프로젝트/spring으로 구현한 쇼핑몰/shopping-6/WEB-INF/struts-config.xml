@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE struts-config PUBLIC
+      "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+      "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+
+  <!-- ActionForm-->
+  <form-beans>
+  <form-bean name="itemMenuForm" type="web.form.ItemMenuForm"></form-bean>
+  </form-beans>
+  
+  <!-- Action-->  
+  <action-mappings>
+  <action path="/mstItemMenu" type="web.action.ItemMenuAction" name="itemMenuForm">
+    <forward name="success" path="/WEB-INF/jsp/itemMenu.jsp" />
+  </action>
+  </action-mappings>
+
+  <!-- Message Resources-->  
+  <message-resources parameter="ApplicationResource" /> 
+
+</struts-config>

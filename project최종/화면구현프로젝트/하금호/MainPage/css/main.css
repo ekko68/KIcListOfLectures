@@ -1,0 +1,45 @@
+/*footer 설정*/
+.ft1{
+clear:both; /* 위에서 설정한 배치속성(float속성 해제)*/
+color:#fff;
+border:0px solid black;
+height:100px;
+margin:0 auto; /*밖의 여백은 자동설정(양쪽)*/
+position:relative;
+/*top:-150px;*/
+}
+
+
+/*이용 약관 부분*/
+.nv3{
+	color:#fff;
+	position:relative;
+	top:20px;
+}
+
+.nv3 ul > li{
+	color:#fff;
+	float:left;
+	margin-left:4.3%; /*왼쪽 기준 퍼트린다*/
+}
+
+/*
+.l1{
+	padding:10px 0px; /* 여백
+}
+*/
+
+/* 페이스북 위치 지정 */
+.nv4{
+	position:relative;
+	top:40px;
+}
+.nv4 ul{
+	list-style-type:none; /* 마크 해제 */
+}
+.nv4 ul > li{
+	color:#fff;
+	float:left;
+	margin-left:3%;
+	font-size:11px;
+}

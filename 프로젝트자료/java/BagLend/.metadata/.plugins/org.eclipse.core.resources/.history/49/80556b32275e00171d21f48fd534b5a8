@@ -1,0 +1,17 @@
+package bag.lend.dbdata;
+
+import java.util.ArrayList;
+
+public class Product {
+	private int num;
+
+	private String title;
+	private String info;
+	private String image;
+
+	public Product() {};
+	public Product(int num,String title,String info,String image) {
+	
+	}
+
+}

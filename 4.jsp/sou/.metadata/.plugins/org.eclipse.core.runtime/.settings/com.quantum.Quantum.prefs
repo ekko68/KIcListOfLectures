@@ -1,5 +1,0 @@
-com.quantum.actions.BookmarkSelectionUtil.bookmark=mysqltest
-eclipse.preferences.version=1
-quantum.dialogs.bookmarkwizard.path=C\:\\webtest\\4.jsp\\5\uC77C\uCC28(\uC790\uBC14\uBE48\uC988 \uC815\uB9AC\uBC0F \uCFE0\uD0A4\uC640 \uC138\uC158,JDBC Programming)\\DB\uC790\uB8CC\\mysql-connector-java-5.1.12-bin.jar
-quantum.dialogs.exportquery.path=C\:\\webtest\\7.spring\\6\uC77C\uCC28(SpringMVC \uD504\uB85C\uADF8\uB798\uBC0D \uC791\uC131\uBC952(\uAC8C\uC2DC\uD310))\\springmvc\uC758 \uD750\uB984\uB3C4 \uC774\uD574\\springboard.sql
-quantum.dialogs.importquery.path=C\:\\webtest\\9.secure\\2\uC77C\uCC28(XSS\uC758 \uB9AC\uBDF0 \uBC0F \uC2E0\uB8B0\uD558\uC9C0 \uC54A\uC740 \uC0AC\uC774\uD2B8\uC758 \uC774\uB3D9 \uAE08\uC9C0 ,SQL Injection \uAC1C\uC694 \uBC0F \uC791\uC131\uBC95)\\test2.sql

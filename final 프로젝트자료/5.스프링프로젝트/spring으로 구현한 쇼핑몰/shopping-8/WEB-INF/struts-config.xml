@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+  <!-- ActionForm -->
+  <form-beans>
+    <form-bean name="itemMenuForm" type="web.form.ItemMenuForm"></form-bean>
+    <form-bean name="itemEditForm" type="web.form.ItemEditForm"></form-bean>
+  </form-beans>
+
+  <!-- Global Exceptions -->
+  <global-exceptions>
+    <exception key="errors.dataNotFound" type="org.springframework.dao.DataRetrievalFailureException" path="/WEB-INF/jsp/dataNotFound.jsp" />
+    <exception key="errors.system" type="java.lang.Exception" path="/WEB-INF/jsp/exception.jsp" />
+  </global-exceptions>
+
+  <!-- Action-->  
+  <action-mappings>
+  	<!-- ForwardAction For Login -->
+		<action path="/mstLogin" type="org.springframework.web.struts.DelegatingActionProxy" parameter="/WEB-INF/jsp/mstLogin.jsp">
+		</action>
+					
+    <!-- ItemMenuController Event -->
+    <action path="/findAll" type="org.springframework.web.struts.DelegatingActionProxy" name="itemMenuForm" parameter="findAll" scope="request">
+      <forward name="success" path="/WEB-INF/jsp/itemMenu.jsp"></forward>
+    </action>
+    <action path="/findByItemName" type="org.springframework.web.struts.DelegatingActionProxy" name="itemMenuForm" parameter="findByItemName" scope="request">
+      <forward name="success" path="/WEB-INF/jsp/itemMenu.jsp"></forward>
+    </action>
+    <action path="/createEdit" type="org.springframework.web.struts.DelegatingActionProxy" name="itemMenuForm" parameter="createEdit" validate="false" scope="request">
+      <forward name="success" path="/WEB-INF/jsp/itemCreate.jsp"></forward>
+    </action>
+    <action path="/updateEdit" type="org.springframework.web.struts.DelegatingActionProxy" name="itemMenuForm" parameter="updateEdit" validate="false" scope="request">
+      <forward name="success" path="/WEB-INF/jsp/itemUpdate.jsp"></forward>
+    </action>
+    <action path="/deleteEdit" type="org.springframework.web.struts.DelegatingActionProxy" name="itemMenuForm" parameter="deleteEdit" validate="false" scope="request">
+      <forward name="success" path="/WEB-INF/jsp/itemDelete.jsp"></forward>
+    </action>
+
+    <!-- ItemEditController Event -->
+    <action path="/createExecute" type="org.springframework.web.struts.DelegatingActionProxy" name="itemEditForm" parameter="createExecute" validate="true" input="/WEB-INF/jsp/itemCreate.jsp" scope="session">
+      <forward name="success" path="/findAll.do"></forward>
+    </action>
+    <action path="/updateExecute" type="org.springframework.web.struts.DelegatingActionProxy" name="itemEditForm" parameter="updateExecute" validate="true" input="/WEB-INF/jsp/itemUpdate.jsp" scope="session">
+      <forward name="success" path="/findAll.do"></forward>
+    </action>
+    <action path="/deleteExecute" type="org.springframework.web.struts.DelegatingActionProxy" name="itemEditForm" parameter="deleteExecute" validate="false" scope="session">
+      <forward name="success" path="/findAll.do"></forward>
+    </action>
+  </action-mappings>
+
+  <!-- Message Resources-->  
+  <message-resources parameter="ApplicationResource" /> 
+
+  <!-- Plug In-->  
+  <plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
+    <set-property value="/WEB-INF/applicationContext.xml,/WEB-INF/shopping-8-servlet.xml" property="contextConfigLocation"/>
+  </plug-in>
+  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+    <set-property value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" property="pathnames"/>
+  </plug-in>
+</struts-config>

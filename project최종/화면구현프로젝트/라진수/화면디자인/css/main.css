@@ -1,0 +1,486 @@
+*{/*전체적인 기본 설정*/
+  margin:0px;
+  padding:0px;
+  box-sizing: border-box;
+}
+body{
+  overflow-y:scroll;/*화면 에 항상 스크롤바가 나타나도록 설정*/
+}
+a{
+  text-decoration: none;
+}
+#container{/*눈에 보이는 화면에 대한 설정*/
+  display: flex;/*디스플레이를 flex로 설정*/
+  box-sizing: border-box;
+  max-width: 1080px;/*최대 넣이가 1080px을 넘기지 않도록*/
+  margin: 0 auto;/*좌우 정렬*/
+}
+#main_nav{/*좌측 네비게이션 설정*/
+  background-color: #2185C5;
+  box-sizing: border-box;
+  width: 300px;
+  min-height: 100vh;/*좌측 네비게이션이 항상 컨텐츠 전체높이로 있도록 설정*/
+  display: flex;
+  flex-direction: column;/*네비게이션에 푸터 부분을 출력시키기 위해 column 설정*/
+}
+#main_nav .sitename{/*로고 꾸미기*/
+  color: white;
+  font-size:50px;
+  text-align: center;
+  font-family: fantasy;
+  text-shadow: 15px 5px 0px black;
+}
+#main_nav p{
+  height: 100px;
+}
+#main_nav ul{
+  list-style: none;
+}
+#main_nav li:hover{
+  background-color: white;
+}
+#main_nav li p{
+  display: inline-block;
+}
+#main_nav i{
+  vertical-align: middle;
+  display: block;
+  cursor: pointer;
+  line-height: inherit;
+}
+#main_nav a{
+  color: white;
+}
+#main_nav .li{
+  display: block;/*메뉴 숨기기*/
+  list-style: none;
+  margin-top: 100px;
+}
+#main_nav li{
+  width: 280px;
+  background-color: #bacee2;
+  height: 50px;
+  margin: 0px 0px 5px 0px;
+  line-height: 50px;
+  text-align: center;
+}
+#main_nav img{
+  display: none;
+}
+#main_nav footer{/*왼쪽 메뉴 하단에 푸터 설정*/
+  flex: 1;/*왼쪽 메뉴 전체 column 설정된 부분중 나머지부분을 차지하도록 설정*/
+  display: flex;
+  flex-direction: column;/*가운데 정렬*/
+  justify-content: flex-end;/*flex된 화면 최하단에 배치*/
+  padding: 20px;
+}
+#main_nav footer p{
+  height: 45px;
+}
+#main_sectionhome{
+  display: flex;/*우측 본문 정렬을 위해 flex설정*/
+  box-sizing: border-box;
+  flex-direction: column;/*column형식으로 화면 정렬*/
+}
+#main_sectionnotice{
+  display: none;/*임시 숨김처리*/
+  box-sizing: border-box;
+  flex-basis: 100%;/*우측 화면부분을 전체적으로 차지하기위해 설정*/
+  flex-direction: column;
+}
+#main_sectionboard{
+  display: none;
+  box-sizing: border-box;
+  flex-basis: 100%;
+  flex-direction: column;
+}
+#main_sectionpic{
+  display: none;
+  box-sizing: border-box;
+  flex-basis: 100%;
+  flex-direction: column;
+}
+#main_sectiontel{
+  display: none;
+  box-sizing: border-box;
+  flex-basis: 100%;
+  flex-direction: column;
+}
+#sub_header{
+  background-image:url('../images/sky_07.jpg');
+  box-sizing: border-box;
+  height: 150px;
+  background-size: cover;/*이미지를 box에 맞게 덮어씌움*/
+  margin: 10px 10px 0px 10px;
+  display: flex; /*내부 글씨 정렬을 위해 flex 설정*/
+  justify-content: center;/*내부 글씨 가운데 정렬*/
+  align-items: center;/*내부 글씨 상하 정렬*/
+}
+#sub_header h1{
+  display: inline-block;
+  font-size: 70px;
+  line-height: 70px;
+  padding: 20px;
+  width: 90%;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius:5px;/*글씨를 감싸고있는 배경 모서리를 둥글게*/
+}
+#sub_nav{
+  background-color: #2185C5;
+  box-sizing: border-box;
+  height: 50px;
+  margin: 10px 10px 0px 10px;
+}
+#sub_nav:hover{
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);/*마우스를 올렸을때 그림자 출력*/
+}
+#sub_nav h3{
+  color: white;
+  margin: 10px;
+}
+#sub_container{
+  margin: 10px 10px 0px 10px;
+  padding: 10px;
+  background-color: #FFF6E5;
+  box-sizing: border-box;
+}
+#main_footer{
+  display: none;/*메인 푸터부분을 숨겨놓음 화면이 작아질때 출력*/
+  height: 100px;
+  padding: 10px;
+  justify-content: center;/*내부 컨텐츠 가운데 정렬*/
+  align-items: center;/*내부 컨텐츠 상하정렬*/
+  background-color: #2185c5;
+}
+
+/*home*/
+.homerow1{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.mainslide{
+  margin-bottom: 20px;
+}
+/*
+.cycle-slideshow img{
+  width: 100%;
+}*/
+.homediv1{/*페이지 인삿말*/
+  font-size: 35px;
+  font-weight: bold;
+  font-family: fantasy;
+  margin-bottom: 30px;
+}
+.homediv1>span{
+  color: skyblue;
+}
+.homerow2{/*메인페이지 4가지 링크 시작*/
+  display: flex;
+  height: 100px;
+  color: white;
+}
+.homediv2{
+  background-color: #2185c5;
+  flex-basis: 50%;/*homediv2 와 homediv3의 넓이를 화면의 각 50%씩으로 설정*/
+  display: block;
+  text-align: right;
+  padding-right: 20px;
+}
+.homediv2 p{
+  top: 15px;
+  position: relative;
+}
+.homediv3{
+  background-color: #5075b5;
+  flex-basis: 50%;
+  display: block;
+  text-align: left;
+  padding-left: 20px;
+}
+.homediv3 p{
+  top: 15px;
+  position: relative;
+}
+.homerow3{
+  display: flex;
+  height: 100px;
+  color: white;
+}
+.homediv4{
+  background-color: #5075b5;
+  flex-basis: 50%;
+  display: block;
+  text-align: right;
+  padding-right: 20px;
+}
+.homediv4 p{
+  top: 15px;
+  position: relative;
+}
+.homediv5{/*메인페이지 4가지 링크 종료*/
+  background-color: #2185c5;
+  flex-basis: 50%;
+  display: block;
+  text-align: left;
+  padding-left: 20px;
+}
+.homediv5 p{
+  top: 15px;
+  position: relative;
+}
+.notice_button{/*4가지 링크 내부의 버튼 설정*/
+  border: 3px solid white;
+  position: relative;
+  top: 30px;
+  display: inline-block;
+  padding: 5px;
+  line-height: 15px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.homefoodiv1{/*공지사항 출력부분*/
+  background-color: rgba(33, 133, 197,0.7);
+  flex-basis: 50%;
+  border: 3px double #fff;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+.homefoodiv2{/*자유게시판 출력부분*/
+  background-color: rgba(33, 133, 197,0.7);
+  flex-basis: 50%;
+  border: 3px double #fff;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+.homefooter{
+  display: flex;
+  margin-top: 40px;
+}
+.homefooter dl{
+  margin:10px;
+}
+.homefooter dt{
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.homefooter dt:after{/*게시판 제목 하단의 밑줄 출력*/
+  content: "";
+  display: block;
+  width: 170px;
+  border-bottom: 1px solid blue;
+  margin-top: 5px;
+}
+.homefooter dd{
+  font-size: 15px;
+  margin-left: 20px;
+  border-bottom: 1px solid white;
+  margin-bottom: 5px;
+  width: 70%;
+}
+
+/*공지사항*/
+.notice_article{
+  border: 1px solid gray;
+  padding: 5px;
+  background-color: white;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  max-width: 600px;
+  cursor: pointer;/*마우스를 올리때 포인터 모양으로 마우스모양을 변경함*/
+}
+.notice_article:hover{/*마우스 올리면 그림자 출력*/
+  box-shadow: 1px 1px 3px 0px black;
+}
+.notice_header{
+  display: flex;
+  justify-content: space-between;
+}
+.notice_header h4::after{/*제목 아래 밑줄*/
+  content: "";/* :after 출력을 위한 공백*/
+  width: 30px;
+  border-bottom: 1px solid black;
+  height: 10px;
+  display: block;
+  box-sizing: border-box;
+}
+.notice_body{
+  min-height: 50px;
+  margin-top: 10px;
+}
+/*게시판 공지사항과 디자인 동일*/
+.board_article{
+  border: 1px solid gray;
+  padding: 5px;
+  background-color: white;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  max-width: 600px;
+  cursor: pointer;
+}
+.board_article:hover{
+  box-shadow: 1px 1px 3px 0px black;
+}
+.board_header{
+  display: flex;
+  justify-content: space-between;
+}
+.board_header h4::after{/*제목 아래 밑줄*/
+  content: "";/* :after 출력을 위한 공백*/
+  width: 30px;
+  border-bottom: 1px solid black;
+  height: 10px;
+  display: block;
+  box-sizing: border-box;
+}
+.board_body{
+  min-height: 50px;
+  margin-top: 10px;
+}
+/*갤러리*/
+#columns{
+  column-width:350px;/*이미지를 감싸고 있는 컬럼넓이를 지정*/
+  column-gap: 15px;/*컬럼사이의 간격을 넓힘*/
+}
+#columns figure{
+  display: inline-block;
+  border:1px solid rgba(0,0,0,0.2);
+  margin:0;
+  margin-bottom: 15px;
+  padding:10px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);;
+}
+#columns figure img{
+  width:100%;/*이미지 넓이가 300이하에서 컬럼 넓이에 맞춰 최대크기를 유지*/
+  max-width: 300px;/*이미지 최대 넓이를 300px로 지정*/
+}
+#columns figure figcaption{
+  border-top:1px solid rgba(0,0,0,0.2);
+  padding:10px;
+  margin-top:11px;
+}
+/*연락하기*/
+.tel_table{
+  width: 100%;
+}
+#table_child{
+  border-top: solid 1px black !important;/*table태그의 기본설정을 강제적으로 설정*/
+}
+.tel_table th{
+  height: 50px;
+  border-bottom: solid 1px black !important;
+}
+.tel_table td{
+  height: 50px;
+  border-bottom: solid 1px black !important;
+}
+.tel_table td > input{
+  height: 25px;
+}
+.tel_table input#area{/*하단 내용 입력부분을 크게 만들음*/
+  width: 100%;
+  min-height: 100px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#tel_button{
+  width: 100px;
+  height: 30px;
+  margin-top: 10px;
+}
+
+/*창 크기에 따른 자동 조절*/
+@media screen and (max-width: 900px){/*화면이 900이하일때 */
+  #main_nav{
+    width: 50px;/*화면이 900이하일때 메인 네비게이션을 50px로 변경*/
+  }
+  #main_nav li{
+    width: 50px;
+  }
+  #main_nav li i{
+    width: 50px;
+  }
+  #main_nav li p{
+    display: none;/*li 내부의 p태그를 숨김처리*/
+  }
+  #main_nav p{/*메인메뉴의 상단 로고를 숨김처리*/
+    display: none;
+  }
+  #main_nav img{
+    display: block;/*숨겨져있는 로고 이미지를 출력*/
+    width: 100%;
+    margin:0 auto;
+  }
+  #sub_footer{
+    display: none!important;/* 메인 메뉴의 하단 푸터를 숨김처리*/
+  }
+  #main_footer{
+    display: flex;/* 숨겨져있던 푸터 부분을 보이도록 표시*/
+  }
+
+  /*home*/
+  .homediv1{
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 600px){
+  .homerow2{
+    flex-direction: column;/* 4가지 링크중 상단 2개를 column 설정하여 위아래로 나뉘도록함*/
+    height: 200px;
+  }
+  .homerow3{
+    flex-direction: column-reverse;/* 위아래 순서를 변경함*/
+    height: 200px;
+  }
+  .homediv2{
+    text-align:center;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;/* 좌우 넓이가 벌어졌을때 내부 컨텐츠를 좌우 벽쪽에 붙임*/
+    align-items: center;
+  }
+  .homerow2 p{
+    display: flex;
+    top:0px;
+  }
+  .homerow3 p{
+    display: flex;
+    top:0px;
+  }
+  .homediv3{
+    text-align:center;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .homediv4{
+    text-align:center;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .homediv5{
+    text-align:center;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .notice_button{
+    top: 0px;
+  }
+  #sub_header h1{
+    font-size: 50px;
+    line-height: 50px;
+  }
+  .homefooter{
+    display: block;
+  }
+}

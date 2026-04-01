@@ -1,0 +1,254 @@
+1일차(시큐어코딩 개요 및 작성법)
+
+=>프로젝트 진행(시큐어 코딩방식 적용)->2015년 의무적
+================================
+시큐어코딩(2일 XSS,SQL Injection,자바 암호화)
+->스프링(AOP,~)=>앵귤러(서비스),폰갭 서버 설정(모바일)
+                                                   (cordovar)
+->다음주 월요일날 마지막
+->10/16~10/27(수료)->최종 발표날(오후 4~4시 30분)
+----------------------------------------------------------
+->스프링(15문제)->환경설정,소스문제,문제 해결(2과목)
+->목요일~10/13일(금요일)->4:30 정도
+----------------------------------------------------------
+
+JAVA 시큐어 코딩 가이드(행자부)=>구글링
+
+***시큐어 코딩***
+
+해킹 등의 공격을 유발할 가능성이
+ 있는 잠재적인 보안 취약점을 
+사전에 제거하여, 외부 공격으로부터
+ 안전한 소프트웨어를 개발하는 기법
+
+XSS,SQL Injection,자바 암호화
+---------------------------------
+XSS =>웹사이트에서 외부에서 공격을 당해서 피해를 입는 경우
+
+해킹(보안 과정)=>공개된 사이트(php 구성)
+---------------------------------------------
+ XSS(cross site script)
+
+정의) 크로스 사이트 스크립트
+접속한 사용자를 공격하는 기법
+삽입한 스크립트 팝업여부 확인이나 심각
+하게는 사용자의 권한을 획득하여 사용자의 중요정보(계정,암호 등)을 
+가로채는 기법
+
+=>외부에서 로그인 창,게시판의 글쓰기에 특정 문자열을 입력
+=>이 문자열(자바스크립트 구문)이 실행이 되는지 안되는지를 체크
+=>자바스크립트구문이 실행이 되면 우선 이 사이트가 보안에 취약판단
+=======================================
+->보안하는지 체크해 보자
+
+1.Reflected XSS
+
+사용자 입력데이터가 웹 어플리케이션의
+응답 페이지에 적용 및 실행되는 취약점
+=>사용자의 입력값이 웹화면에 바로 출력되는 형태의 취약점
+=>입력받은 값을 제대로 체크하지 않고 출력하는 구문을 사용하는 경우
+
+=>사용자로부터 값을 입력을 받았을때 제대로 입력을 했는지 체크하는
+     문장을 반드시 개발자는 염두에 둬야 된다.
+
+=>Dynamic Web Project=>WebSecure(프로젝트명)
+-------------------------------------------------------------------
+  WebSecure
+        |
+         -WebContent->form.jsp(입력)->test.jsp(출력)
+                  |             form2.jsp(입력)->test2.jsp(출력)
+                                form3.jsp(입력)->test3.jsp(출력)
+                   -lib
+
+
+입력받는 부분에 자바스크립트 구문을 입력
+
+ <script>alert("안녕")</script>
+<script>location="http://www.example.com";</script>
+->파밍사이트로 이동하도록 유도->개발자가 이부분을 감안해서 코딩
+
+ <,> 들어오면   ->gt,lt문자로 변환
+
+name->&lt;script&gt;alert("안녕")&lt;/script&gt;
+name->&lt;script&gt;location="http://www.naver.com";&lt;/script&gt;
+========================================
+
+2.크로스 사이트 스크립트 공격 취약점 DOM(화면상에 출력)
+
+ testphp.vulnweb.com 사이트
+
+  form.jsp->save as form2.jsp
+  test.jsp->save as test2.jsp로 다른이름으로 저장
+
+DOM XSS는 DOM 객체를 포함하는 자바스크립트 등을 이용하여 DOM 데이터에
+접근 시, 검증되지 않는 입력 값이 자바스크립트를 통해 삽입되어 발생되는 취약점
+==>사이트의 성격과 맞지 않은 문자열이 출력 
+
+주의해야할 코드
+--------------------------------------------->자바스크립트구문,DOM 코딩
+document.write->악의적인 입력값 출력
+document.write(‘Welcome’+입력값+’!’)
+document.writeln
+Element.innerHTML(outerHTML)
+element.innerHTML=‘<div>+입력값+</div>’
+ 특정태그정보(객체명).innerHTML="원하는 않는 문자열이 포함"->화면에 출력
+============================================
+$(‘#target’).html(악의적인 입력값)==>jQuery를 이용->출력
+$(‘<div id=‘+입력값+’></div>’)
+
+==============================
+<h1>DOM XSS 연습중입니다.</h1>
+<script>alert(t1)</script>=>3번째 예제(eval())
+
+***결론*****
+입력받은 문자열(회원가입,게시판의 글쓰기,회원로그인)할때
+ 입력받은 문자열을 바로 화면에 출력X-><script>태그 문자열
+ <h1>태그로 인식이 가능하게 해주는 문자열을 제거시키고 나서
+ 처리해 달라
+***********************************************
+=>화면에 원하는 부분의 문자열이 출력,
+   ->DB에 저장->DB에 저장된 값이 불러올때 실행이 되는 경우
+   ------3.Stored XSS(게시판의 글쓰기->글상세보기)
+              form2.jsp->save as form3.jsp작성
+              test2.jsp->save as test3.jsp작성(추가 완결)
+              -----------------------------------------------
+              form3.jsp=>test3.jsp(추가된 부분까지->공통의
+                                                                         메서드)
+
+=>이메일->열어보면 작동이 되는 경우
+글내용
+<script>location="http://www.example.com";</script>
+=>식사후에 처리
+
+1.BoardDTO의 Setter Method에다 
+
+public void setWriter(String writer) {
+		//writer.replaceAll("<","&lt;");
+		//writer.replaceAll(">","&gt;");
+		this.writer = writer;
+	}
+ ,,,,
+
+2.BoardDAO->따로 공통의 메서드를 작성->호출해서 처리
+                      권장
+public String setConvert(String name){
+    if(name!=null){
+	  //문자열 메서드->(1.변경전 문자열->2.변경후 문자열)
+	  name=name.replaceAll("<","&lt;");
+	  name=name.replaceAll(">","&gt;");
+                 ,,,,
+  }else{
+	  return;
+  } 
+return name;
+}
+//--------------------------------------------
+
+writePro.jsp에서 처리
+
+<%
+   //BoardDAO 객체->insertArticle(article) =>9개 --->10개->12개(조회수,num)
+   //공통의 메서드를 작성해서 호출하지 않으면 직접 일일이 작성
+   String content=request.getParameter("content");
+   System.out.println("after content=>"+content);
+   //---공통의 메서드로 작성----
+   if(content!=null){
+		  //문자열 메서드->(1.변경전 문자열->2.변경후 문자열)
+		  content=content.replaceAll("<","&lt;");
+		  content=content.replaceAll(">","&gt;");
+	  }
+   //-----------------------------------------------------------------
+   Timestamp temp=new Timestamp(System.currentTimeMillis());
+   article.setReg_date(temp);
+   article.setIp(request.getRemoteAddr());
+   //글내용만 다시 수정하는 작업
+   article.setContent(content);//이미 수정된 문자열이 저장이된 상태
+   //---------------------------------
+   BoardDAO dbPro=new BoardDAO();
+   dbPro.insertArticle(article);
+   response.sendRedirect("list.jsp");
+%>
+================================
+내장 자바스크립트 함수->eval()함수->사용자로부터 값을 입력
+                                                     처리해주는 함수
+
+<script>
+var str="테스트"  //str변수를 선언하면 테스트값을 저장
+document.write(str);// 테스트
+</script> 태그로 감싸줘야 자바스크립트 구문으로 인식
+
+var str="테스트"  //str변수를 선언하면 테스트값을 저장
+document.write(str);// 테스트
+
+<%
+String str="테스트";
+out.println(str);
+%>
+
+->eval(자바스크립트 코드)=>문자열을 자바스크립트 코드로
+                                           변환을 시켜주는 함수
+
+ex) "var re"+"sult=23" =>"var result=23"
+<script>
+var result=23
+</script>
+
+==>eval("var result=23")=>변수 var result=23저장이 된다
+       eval("location='www.example.com'")
+
+<,>와 체크X-> <,> 추가로 ( , )도 체크해야 된다.
+
+ alert(t1)
+-----------------------------------------
+java.util.regex.PatternSyntaxException: Unclosed group near index 1
+(
+
+=>문자열을 취급할때 정규표현식->정규표현식에 사용되는 특수한 문자열이 있는
+                                                 경우에 에러유발->{0-9A-Za-z}, ?,+,(,)
+                                                 정규표현식의 문자열을 사용했기때문에 
+                                                 에러유발->PatternSyntaxException
+ ^
+	java.util.regex.Pattern.error(Pattern.java:1955)
+	java.util.regex.Pattern.accept(Pattern.java:1813)
+	java.util.regex.Pattern.group0(Pattern.java:2908)
+	java.util.regex.Pattern.sequence(Pattern.java:2051)
+	java.util.regex.Pattern.expr(Pattern.java:1996)
+	java.util.regex.Pattern.compile(Pattern.java:1696)
+	java.util.regex.Pattern.<init>(Pattern.java:1351)
+	java.util.regex.Pattern.compile(Pattern.java:1028)
+
+=>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>입력을 받는 값을 출력</title>
+</head>
+<body id="test">
+<h1 id="t1">XSS DOM 연습(DOM구문이 포함된 문장)</h1>
+
+<script>
+    eval(alert&#40;t1&#41;)
+                  ===      ===   (,) 변환이 되게 설정
+</script>
+
+</body>
+</html>
+
+***결론****
+//-----------------------------------------------------------------
+if(name!=null){  //공통 메서드로 작성->처리해달라
+	  //문자열 메서드->(1.변경전 문자열->2.변경후 문자열)
+	  name=name.replaceAll("<","&lt;");
+	  name=name.replaceAll(">","&gt;");
+	  //추가   -> "test"<-\"test\"     \'test\'
+	  name=name.replaceAll("\\(","&#40;");
+	  name=name.replaceAll("\\)","&#41;");
+	  //추가2
+	  name=name.replaceAll("\"","&quot;");
+	  name=name.replaceAll("\'","&apos;");
+  }
+return name;
+//SQL Injection,자바의 암호화
+=================

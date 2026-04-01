@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Register Page of ChanMin</title>
+
+    <!-- 외부 별도 파일로 작성한 스타일시트 불러오기 -->
+    <link rel="stylesheet" type="text/css" href="./res/css/pcm.css" />
+    <!-- 메뉴 클릭시 부드러운 스크롤 이동을 하기 위해 Jquery를 이용. -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <!-- 외부 별도 파일로 작성한 자바스크립트 불러오기 -->
+    <script type="text/javascript" src="./res/js/pcm.js"></script>
+</head>
+
+<body>
+    <nav class="pcm-top-banner">
+        KIC summit 2017 &nbsp;&nbsp;&nbsp;&nbsp; 2017.05.26 &nbsp;&nbsp;&nbsp;&nbsp; KIC Campus Gangnam
+    </nav>
+    <!-- 최상단 행사 이름 -->
+    <header id="pcm-id-home">
+        <div class="pcm-background-img-container">
+            <img class="pcm-background-img" src="./res/images/mainimg.jpg">
+
+            <div class="pcm-header-content">
+                <h1>KIC summit 2017 Seoul</h1>
+                <h4>Web Front-end</h4>
+                <br>
+                <p>
+                    <h3>2017.05.26 Fri.<br />
+                    KIC Campus Gangnam</h3><br />
+                </p>
+            <div>
+        </div>
+    </header>
+    
+    <!-- 메뉴바 -->
+    <nav>
+        <ul>
+            <a id="link-menu-1" href="#pcm-id-home"><li class="pcm-menu-1">홈</li></a>
+            <a id="link-menu-2" href="#pcm-id-schedule"><li class="pcm-menu-2">스케쥴</li></a>
+            <a id="link-menu-3" href="#pcm-id-register"><li class="pcm-menu-3">등록</li></a>
+        </ul>
+    </nav>
+
+    <section id="pcm-id-main-content">
+
+        <!-- 행사 개요 -->
+        <section>
+            <h2 class="pcm-section-title">행사 개요</h2>
+            <article class="pcm-introduction">
+                <p>국내 최고의 IT교육 기관인 KIC의 행사인 KIC Summit 2017가 오는 5월 26일 강남 KIC캠퍼스 3강의장에서 ‘화면구현’이라는 주제로 개최됩니다. 이번 행사는 KIC가 제공하는 ‘웹프론트엔드 교육과정’과 이연수 강사님의 ‘화면공유’ 수업에 대해 함께 공유하고 배우는 행사로, 간단한 등록을 통해 누구나 참석 가능합니다.</p>
+                <p>올해 1회를 맞아 KIC Summit은 수강생들의 밝은 미래를 기원하는 기조연설을 시작으로, 웹프론트엔드에 대한 여러 연사들의 강연이 진행됩니다. 이 밖에도 자리 곳곳에 위치한 수강생들의 화면구현 결과물을 서로 공유할 수 있어서 모두에게 유익한 시간이 될 것으로 예상합니다.</p>
+            </article>
+        </section>
+        <br>
+        <br>
+    
+        <!-- 행사 스케쥴/speaker -->
+        <section id="pcm-id-schedule">
+            <h2 class="pcm-section-title">행사 스케쥴</h2>
+            <article>
+                <!-- 각 스케쥴 / 연사 를 가로 한 줄로 묶어서 다룸 -->
+                <!--제목-->
+                <div class="pcm-schedule-unit-title">
+                    <div class="pcm-schedule-time">시간</div>
+                    <div class="pcm-schedule-content">강연</div>
+                    <div class="pcm-schedule-speaker">Speaker</div>
+                </div>
+                <div style="clear:both;"><div>
+                <!-- 개회사 -->
+                <div class="pcm-schedule-unit">
+                    <div class="pcm-schedule-time">13:00~13:30</div>
+                    <div class="pcm-schedule-content">
+                        <h4>개회사</h4>
+                        <p>
+                            Quis labore tempor aliqua nostrud labore.
+                        </p>
+                    </div>
+                    <div class="pcm-schedule-speaker">
+                        <h4>박찬민</h4>
+                        <p>
+                            Magna excepteur laboris amet commodo occaecat voluptate amet officia consectetur veniam ad proident.<br>
+                            Fugiat quis tempor amet ex ad ullamco.
+                        </p>
+                    </div>
+                </div>
+                <div style="clear:both;"><div>
+                <!-- 강연1 -->
+                <div class="pcm-schedule-unit">
+                    <div class="pcm-schedule-time">13:50~14:30</div>
+                    <div class="pcm-schedule-content">
+                        <h4>AWS의 클라우드가 드리는 슈퍼파워</h4>
+                        <p>
+                            Ut eu esse voluptate est qui sunt qui. Occaecat tempor duis excepteur incididunt occaecat consectetur nostrud laboris consectetur commodo.<br>
+                            Exercitation voluptate ut mollit voluptate et velit officia amet cillum exercitation. Labore incididunt nostrud nulla nulla Lorem do quis quis eu dolore reprehenderit aliqua incididunt in.
+                        </p>
+                    </div>
+                    <div class="pcm-schedule-speaker">
+                        <h4>윤석찬</h4>
+                        <p>
+                            Commodo labore aliquip irure Lorem sit. Sit in voluptate consectetur id commodo laborum cupidatat tempor ad dolor cupidatat quis sit.<br>
+                            Anim ex esse commodo aliquip sint nisi do nisi fugiat cillum reprehenderit exercitation.
+                        </p>
+                    </div>
+                </div>
+                <div style="clear:both;"><div>
+                <!-- 강연2 -->
+                <div class="pcm-schedule-unit">
+                    <div class="pcm-schedule-time">14:50~15:30</div>
+                    <div class="pcm-schedule-content">
+                        <h4>Google이 제시하는 미래의 웹기술(PWA, AMP)</h4>
+                        <p>
+                            Duis nulla aute sit aliquip ad pariatur nostrud. Voluptate amet et sunt nulla. Eu consequat mollit Lorem sunt ullamco proident et dolor cupidatat.<br>
+                            Dolor commodo cillum culpa quis in dolor dolore dolor proident qui ipsum aliquip. Commodo laboris nisi aute incididunt. Ea amet fugiat voluptate deserunt aliquip id reprehenderit.
+                        </p>
+                    </div>
+                    <div class="pcm-schedule-speaker">
+                        <h4>장기효</h4>
+                        <p>
+                            Labore eu aute cillum nisi magna anim sunt labore et ad tempor.Deserunt commodo incididunt ut amet laboris ea ea occaecat nisi nisi proident ea mollit.<br>
+                            Ipsum culpa commodo laborum id aliqua ut enim ipsum. Enim irure pariatur occaecat nostrud aute occaecat adipisicing nisi mollit sint. Culpa est excepteur dolor cupidatat et sint ea deserunt duis.
+                        </p>
+                    </div>
+                </div>
+                <div style="clear:both;"><div>
+                <!-- 폐회사 -->
+                <div class="pcm-schedule-unit">
+                    <div class="pcm-schedule-time">15:50~16:00</div>
+                    <div class="pcm-schedule-content">
+                        <h4>폐회사</h4>
+                        <p>
+                            Culpa in in velit eiusmod laborum aliquip tempor magna nostrud incididunt enim do enim.
+                        </p>
+                    </div>
+                    <div class="pcm-schedule-speaker">
+                        <h4>박찬민</h4>
+                        <p>
+                            Magna excepteur laboris amet commodo occaecat voluptate amet officia consectetur veniam ad proident.<br>
+                            Fugiat quis tempor amet ex ad ullamco.
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </section>
+        <br><br>
+        <!-- 행사 등록 -->
+        <section id="pcm-id-register">
+            <h2 class="pcm-section-title">행사 등록</h2>
+            <strong>모든 항목을 필수로 입력하셔야합니다.</strong><br><br><br>
+
+            <div class="pcm-register-box">
+                <form id="pcm-id-form">
+                    <div class="pcm-register-unit">
+                        <span class="pcm-register-unit-title">성함 : </span><input id="pcm-id-reg-name" type="text" size="20"></div>
+                    <div class="pcm-register-unit">
+                        <span class="pcm-register-unit-title">이메일 : </span><input id="pcm-id-reg-email" type="email" size="20"><br>
+                            <span class="pcm-register-notice">이메일은 등록 확인 시 아이디로 사용됩니다.</span></div>
+                    <div class="pcm-register-unit">
+                        <span class="pcm-register-unit-title">비밀번호 : </span><input id="pcm-id-reg-pwd1" type="password" size="20"></div>
+                    <div class="pcm-register-unit">
+                        <span class="pcm-register-unit-title">비밀번호 확인 : </span><input id="pcm-id-reg-pwd2" type="password" size="20" onchange="checkPwdEq();">
+                        <span id="pcm-id-reg-pwd-eq"></span><br>
+                            <span class="pcm-register-notice">비밀번호는 6자 이상, 16자 이하로 입력하셔야합니다.</span></div>
+                    <div class="pcm-register-unit">
+                        <span class="pcm-register-unit-title">연락처 : </span><input id="pcm-id-reg-phone" type="text" size="20"></div>
+                    <div class="pcm-register-unit">
+                        <span class="pcm-register-unit-title">직군 : </span>
+                        <select id="pcm-id-reg-job" name="pcm-job">
+                            <option>개발자</option>
+                            <option>기획자</option>
+                            <option>CEO</option>
+                            <option>디자이너</option>
+                            <option>기타</option>
+                        </select>
+                    </div>
+                    <div class="pcm-register-unit">
+                        <span class="pcm-register-unit-title">뉴스레터 수신 : </span>
+                        <input id="pcm-id-reg-news" type="radio" name="newsletter" checked="checked">수신 <input type="radio" name="newsletter">미수신
+                    </div>
+                    <br>
+                    <input class="pcm-register-button" type="button" value="등록" onclick="doRegister();">
+                </form>
+            </div>
+
+            <div id="pcm-id-reg-okay">
+                <!--처음에는 아무 TEXT가 없다가 등록을 하면 동적으로 TEXT를 넣음.-->
+            </div>
+        </section>
+        <div style="clear:both;"><div> 
+        <br><br>
+
+        <!-- 행사 동영상 -->
+        <section>
+            <h2 class="pcm-section-title">행사 영상</h2>
+            <div class="pcm-video">
+                <!-- 유투브 동영상은 유투브의 공유하기 기능에서 소스코드를 제공하는데 이를 그대로 넣어야함.-->
+                <iframe id="pcm-youtube-video" src="https://www.youtube.com/embed/qnxaF1-YHrY" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </section>
+    </section>
+    <div style="clear:both;"><div>
+    
+    
+    <br><br><br><br><br><br>
+    <!-- 행사 주최/후원 -->
+    <footer>
+        <p>
+            본 행사는 KIC캠퍼스가 주최하며 Amazon과 Google의 후원으로 진행됩니다.<br>
+            문의 : <a href="mailto:helloKIC@hellokic.com">helloKIC@hellokic.com</a><br>
+        </p>
+    </footer>
+
+    <!-- 반응형으로, 화면이 작을때는 메뉴가 좌측에 고정으로 안 나오기때문에, 맨위로 이동할 수 있는 버튼을 표시함. -->
+    <a id="pcm-id-gotop" href="#pcm-id-home"><div class="pcm-go-top">top</div></a>
+    
+</body>
+
+</html>

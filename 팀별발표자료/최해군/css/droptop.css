@@ -1,0 +1,102 @@
+/*
+ 
+*/ /*좌단 상단*/
+
+body,ul{ 
+     margin:0;
+	 padding:0
+}
+    ul{list-style:none;}
+    a {text-decoration:none;}
+   
+   /*마크삭제 및 기본값으로 밑줄을 긋지 않도록 설정(a태그)*/
+  
+/*
+1레별 메뉴
+*/
+.dropdownmenu > li{
+   float:left;                       /*왼쪽으로 정렬*/
+   position:relative;            /*avsoulte(메뉴겹침)*/
+   background:#67b0d1;
+   width:25%;                   /*4개의 멘뉴*/
+   top:30px;
+   
+}
+.dropdownmenu > li > a{
+            display:block;      /*무조건 한줄은 점유하고 다음줄로 개행*/
+			font-size:16px;
+			color:#ffffff;
+			text-align:center;    /*글자정렬 가운데*/
+			height:60px;          /*높이*/
+			line-height:60px;    /*텍스트 행 사아의 간격*/
+			
+}
+/*1레별 메뉴에 마우스를 올렸을때 배경색 지정
+태그명:hover>>마우스를 올렸을때 표시*/
+
+.dropdownmenu > li:hover {
+   background:#7bbbd7;               
+
+}                                              /*Service메뉴의 위치 지정*/
+.dropdownmenu > li:hover > ul {
+   top:60px;
+   left:0;
+}
+                                                 /*2레별 메뉴 부터의 속성*/
+.dropdownmenu ul{
+   position:absolute;
+   top:-9999px;                            /*위쪽으로 완전히 감춤*/
+   z-index:9999;                            /*숫자가 크면 앞으로 나옴*/
+   width:147px;
+   border:1px solid #cccccc;
+
+}
+                                   /*2레별 메뉴의 위치 속성 지정*/
+.dropdownmenu ul li {
+     position:relative;
+
+
+}
+                                     /*2레별 메뉴의 텍스트속성/배경/여백지정*/
+.dropdownmenu ul a{
+   display:block;
+   color:#aaaaaa;
+   font-size:10px;
+   line-height:30px;
+   background:#ffffff;
+   padding-left:20px;        /*border 와 메뉴 사이의 여백*/
+}
+                                   /*2레별 메뉴에 마우스를 올렸을때 배경색 지정*/
+.dropdownmenu ul a:hover{             
+     color:#ffffff;
+	 background:#67b0d1;
+}
+    /*2레별 메뉴에 마우스를 올렸을대 하위메뉴위치지정*/
+  /*.dropdownmenu > li 바로 밑에 있는 li태그
+  .dropdownmenu li  밑에있는 모든li태그*/
+  .dropdownmenu ul li:hover > ul{
+   position:absolute;
+   top:0;
+   left:100%;
+  
+  }
+  .dropdownmenu2 {
+                 width:6%;height:0px;
+				 
+	             position:relative;
+	             float:right; 
+	             
+	             top:-150px;
+	             right:2%; 
+   } 
+  .dropdownmenu2 > li{
+                  background:#7bbbd7;
+}
+    .film>iframe{
+                position:relative; 
+                top:10px;
+                width:1500px;
+                height:600px;
+                margin-bottom:100px;
+                left:50px;
+}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>Main page </title>
+   <link href="../css/main.css" rel="stylesheet" type="text/css" media="screen and (min-width:768px)">
+   <link href="../css/phone_main.css" rel="stylesheet" type="text/css" media="screen and (max-width:767px)">
+   <script src="../js/main.js"></script>
+ </head>
+ <body> 
+	<!-- main frameset -->
+	<div class="all_container"><span>all-container</span><!-- 모든것을 감싸줄 거대한 container (시각적인 실질적 body의 크기) -->
+		<!-- nav_left controller-->
+		<div id="nav_left_controller" class="nav_left_controller" onclick="nav_left_on()"><!-- div를 클릭했을시 작동할 function -->
+			<span>nav-left-controller"</span>
+		</div>
+		<!-- nav-left-->
+		<div id="nav_left" class="nav_container"><span>nav-container</span><!-- 좌측 fixed된 메뉴가 보여질 nav_left의 container -->
+			<nav class="nav_left"><span>nav-left</span> <!-- 좌측 nav -->
+				<!-- rows of nav-->
+				<section>처음으로</section>
+				<section>회사소개</section>
+				<section>상품주문</section>
+				<section>문의사항</section>
+			<nav class="nav_login"><!-- nav 안에 있는 로그인 container -->
+				<span id="login">로그인</span>&nbsp;&nbsp;&nbsp;<span id="regist">회원가입</span><!-- id 값을 주어서, 후에 js로 구현을 위함 -->
+			</nav>
+		</div>
+
+		<!-- header -->
+		<header class="main_header"><span>main-header</span>		
+			<section class="header_text"><h1 Style="margin:0px auto">Real Life For You</h1><br><!-- 이미 설정되어있는 h1 스타일에 특정 문자만 +로 margin 값을 주었다. -->
+			<article><hr Style="width:16%; margin:0px 0px 20px 0px"></hr><article><!-- 이미 설정되어있는 hr 스타일에 추가 속성을 주었다. -->
+			당신만을 생각합니다.
+			<section>
+		</header>
+		<!-- main container -->
+		<div class="all2_container"><span>all2-container</span>	
+			<!-- big video1 -->
+			<section class="video1">
+				<video class="video1" autoplay="ture" loop="true"><!-- embed 대신 video 사용으로 상태줄 자동 표시X autoplay로 자동재생 및 loop로 재생 반복 -->
+				<source type="video/mp4" src="../video/forest.mp4"></video>
+			</section>
+			<!-- main sections-->
+			<section class="fix_section"><span>fix-section</span>
+				<article class="text"><h1>REAL LIFE 4 U</h1><p><hr></hr></article>
+				<article class="rogo"><img src="../image/main-image/realrogo.png" class="rogo" align="center" alt="rogo"/></article>
+				<article class="text"><font Style="font-family:impact; font-size:15pt">Real Life For You</font><br Style="font-size:15pt">
+				리얼 라이프 포유'는 당신의 건강을 최우선으로 생각'하는 기업입니다.<br>
+				몸이 먼저 반응하는 건강한 식초는 리얼 라이프 포유의 자존심이자 자랑입니다.</article>
+			</section>
+			<!-- video window -->
+			<section class="video"><span>video1</span>	 <!-- CSS에서 배경을 투명으로 줌으로 뒤에있는 영상이 비치도록 하였다. -->
+				<article class="text" Style="margin-top:88px;">
+				<h2>건강한 자연이 <br>건강한 식품을 만듭니다.</h2>
+				<article>
+			</section>
+			<!-- 2nd section -->
+			<section class="fix_section"><span>fix-section2</span>
+				<article class="text"><h1>믿고 먹을 수 있는 식품</h1><p><hr></hr></article>
+				<img src="../image/main-image/mikan6.png" width="200px" height="200px" alt="mikan6" Style="float:left">
+				<article class="text">
+				<p>매일마다 꾸준한 관리로, 믿을 수 있는 농부들이 직접 제배부터 제조까지 함께 합니다.</p>
+				이제는 믿고 건강한 음식들로 하루를 채워보세요!				
+				</article>
+			</section>
+			<!-- 2nd video window -->
+			<section><span>video2</span>	
+				<article class="video2"><span>video2</span>
+					<video class="video2" autoplay="ture" loop="true"><!-- 동영상 자동 재생, 반복 -->
+					<source type="video/mp4" 
+					src="../video/drop-water.mp4" >
+					</video>
+				</article>
+				<article class="video2_text"><span>text</span>
+					<article class="text" Style="padding-top:10%;">청정지역에서 자라는 건강한 식초<br Style="font-size:30pt"><!-- br 사이즈 늘리기 -->
+					<font Style="font-size:30pt; font-weight:bold">마셔보면<br> 몸이 먼저 반응한다!</font></article>
+				</article>
+			</section>
+			<!-- 3rd section store  -->
+			<section class="store"><span>fix-section3</span>
+				<article class="text"><h1>스토어</h1><hr></hr></article>
+				<div class="store_container">
+					<article class="store"><span>store1</span>
+						<figure><!-- figure 로 이미지 나열 -->
+							<a href="#"><img src="../image/main-image/mikanmain.png" width="300px" height="300px" alt="mikan"></a><!-- 이미지에 링크 -->
+							<a href="#"><figcaption>&nbsp;천연발효 감귤식초</figcaption></a><!-- figcaption으로 밑에 설명 -->
+						</figure>
+						1kg의 감귤이 오랜 시간 발효되고 숙성되어 만들어지는 단 한 병. 물은 한 방울도 들어가지 않고 손수 껍질을 깐 귤 알맹이와 소량의 유기농 설탕이 들어가 더욱 맛있는 천연 제주 감귤 발효식초입니다.<p>₩15000</p>
+					</article>						
+					<article class="store"><span>store2</span>
+						<figure><!-- figure 로 이미지 나열 -->
+							<a href="#"><img src="../image/main-image/painmain.png" width="300px" height="300px" alt="pain"></a><!-- 이미지에 링크 -->
+							<a href="#"><figcaption>&nbsp;감귤파인애플식초</figcaption></a><!-- figcaption으로 밑에 설명 -->
+						</figure>
+						1kg의 감귤이 오랜 시간 발효되고 숙성되어 만들어지는 단 한 병. 
+						물은 한 방울도 들어가지 않고 손수 껍질을 깐 귤 알맹이와 파인애플, 소량의 유기농 설탕이 들어가 더욱 맛있는 천연 제주 감귤파인애플 발효식초입니다.<p>₩15000</p>
+					</article>
+				</div>
+			</section>
+
+		</div>
+		<!-- main footer -->
+		<footer class="main_footer"><span>main-footer></span>
+			<article><h1>&nbsp;Real Life For You</h1></article>
+			<article>주소 : 대한민국 대한민국시 대한민국구 대한민국 빌딩 111동 1111호실<br>
+				<a href="#">이용약관</a>&nbsp;|&nbsp;<a href="#">개인 정보 보호</a>
+			<article>
+		</footer>
+	</div> 
+	<section class="phone"><!-- 반응형 웹 container -->
+		<header>
+		<img src="../image/phonemain-image/header.jpg" width="767px" height="337" border="0" alt="">
+		<header>
+		<section><img src="../image/phonemain-image/section1.jpg" width="767px" height="345" border="0" alt=""></section>
+		<section>	<img src="../image/phonemain-image/video1.jpg" width="767px" height="280" border="0" alt=""></section>
+		<section>	<img src="../image/phonemain-image/section2.jpg" width="767px" height="373" border="0" alt=""></section>
+		<section><img src="../image/phonemain-image/video2.jpg" width="767px" height="365" border="0" alt=""></section>
+		<section><img src="../image/phonemain-image/store.jpg" width="767px" height="693" border="0" alt=""></section>
+		<footer><img src="../image/phonemain-image/footer.jpg" width="767px" height="151" border="0" alt=""></footer>
+	<section>
+ </body>
+</html>

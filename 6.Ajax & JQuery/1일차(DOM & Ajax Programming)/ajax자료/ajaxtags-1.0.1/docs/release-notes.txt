@@ -1,0 +1,200 @@
+----------------------------------------
+AJAX JSP TAG LIBRARY RELEASE NOTES
+----------------------------------------
+
+1. Overview
+2. Requirements
+3. Basic Usage
+4. History of Changes
+5. Known Issues
+
+
+----------------------------------------
+1 OVERVIEW
+----------------------------------------
+
+The AJAX Tag Library is a set of JSP tags that simplify the use of Asynchronous
+JavaScript and XML (AJAX) technology in JavaServer Pages. This tag library
+eases development by not forcing J2EE developers to write the necessary
+JavaScript to implement an AJAX-capable web form.
+
+The implementation is a combination of Java classes and JavaScript source
+files. The Java code should be OS independent as there are no client side
+components. However, the Java is dependent on JDK 1.4+ and requires a Servlet
+container to run. The JavaScript should run in at least Firefox 1.0+ and
+Internet Explorer 5.0+.
+
+A demo application is also available that shows how each JSP tag can be used
+in the context of simple use cases such as email address lookup, chained
+select field population, and live form updates.  It should be easy to see how
+these examples could be expanded to a variety of other real-world uses.  In
+addition, the examples demonstrate simple ways to manage the server-side
+callers (i.e, recipients of AJAX calls) in an abstract, reusable way.  Note
+that the demo application is built to run under Servlet 2.4/JSP 2.0 containers
+and has a convenient Ant script to make deploying to Tomcat 5.0+ easy.
+
+FEATURES AND AVAILABLE JSP TAGS
+- Autocomplete: Retrieves a list of values that matches the string entered in
+  a text form field as the user types.
+
+- Callout: Displays a callout or popup balloon, anchored to an HTML element
+  with an onclick event.
+
+- Select: Based on a selection within a dropdown field, a second select field
+  will be populated.
+
+- Toggle: Switches a hidden form field between true and false and at the same
+  time switches an image between two sources.
+
+- Update Field:  Updates one or more form field values based on response to
+  text entered in another field.
+
+For more information, please visit:
+Project Page:   http://ajaxtags.sourceforge.net/
+Downloads:      http://www.sourceforge.net/projects/ajaxtags/
+Demo/Examples:  http://ajaxtags.no-ip.info/
+
+We very much welcome feedback from the community.  Our goal is to simplify
+development and support the Java community in any way we can.  Thank you.
+
+Darren Spurgeon
+and the rest of the AJAX Tag Library team
+
+
+----------------------------------------
+2 REQUIREMENTS
+----------------------------------------
+
+To use the tag library, you'll need the following:
+  * JDK 1.4+
+  * Servlet container running Servlets 2.3+ and JSP 1.0+ (Note: sample application requires
+    Servlet 2.4 and JSP 2.0)
+
+If you intend to build from the source, you'll need the following:
+  * Maven 1.0.2
+  * All source dependencies
+
+
+----------------------------------------
+3 BASIC USAGE
+----------------------------------------
+
+BASIC REQUIREMENTS (found in distribution)
+  /ajaxtags-{version}.jar   ==> core JSP tag library
+  /js/ajaxtags.js           ==> core JavaScript
+  /css/ajaxtags-sample.css  ==> modify to suit
+  /images/throbber.gif      ==> sample image for autocomplete busy signal
+
+SET UP ENVIRONMENT
+1. Copy the ajaxtags.jar into your WEB-INF/lib directory.
+2. Add taglib definition to your application's web.xml file. Not required for JSP 2.0 users.
+
+  <taglib>
+    <uri>http://ajaxtags.org/tags/ajax</uri>
+    <location>/WEB-INF/ajaxtags.tld</location>
+  </taglib>
+
+CREATE SERVER-SIDE HANDLER
+A servlet or other component must return an XML result in the following format, though the element
+names are not important. So far, we've been able to write the JavaScript in such a way that the tag
+names aren't used. The attribute value must, however, be named as such. Just think of it as an HTML
+select field option list.
+
+  <?xml version="1.0"?>
+  <list>
+    <item value="1">Record 1</item>
+    <item value="2">Record 2</item>
+    <item value="3">Record 3</item>
+  </list>
+
+PREPARE JSP VIEW
+Your JSP, of course, is where it all comes together. You must (1) declare the taglib, (2) include a
+reference to the JavaScript source, (3) include a reference to any CSS required (of which at least
+two tags currently do), (4) add your content (often times a web form), and lastly (5) include the
+AJAX tag you want to use.
+
+  <%@ taglib uri="http://ajaxtags.org/tags/ajax" prefix="ajax" %>
+  <html>
+  <head>
+    <title>AJAX JSP Tag Library</title>
+    <script type="text/javascript" src="ajaxcore.js"></script>
+    <link type="text/css" rel="stylesheet" href="ajax.css" />
+  </head>
+  <body>
+  
+  <form>
+    Make:
+    <select id="make" name="make">
+      <option value="">Select make</option>
+      <c:forEach items="${makes}" var="make">
+        <option value="${make}">${make}</option>
+      </c:forEach>
+    </select>
+  
+    Model:
+    <select id="model" name="model">
+      <option value="">Select model</option>
+    </select>
+  </form>
+  
+  <ajax:select
+    fieldId="make"
+    targetId="model"
+    baseUrl="${pageContext.request.contextPath}/GetCarModel.view"
+    paramName="make"
+    emptyLabel="No results, Make another selection"
+    emptyValue=""
+    postFunc="doOtherThings"/>
+  
+  </body>
+  </html>
+
+
+----------------------------------------
+4 HISTORY OF CHANGES
+----------------------------------------
+
+1.0.1 (12-Aug-2005)
+------------------------------
+* Added release notes
+* Removed taglib generation in Maven; conflict in xmlns for TLD validation
+* Fixed initial positioning of callout
+* Fixed problem with post-function not firing on autocomplete; SF feature #1256399
+* Fixed problem with autocomplete firing when tab key pressed on blank field; SF bug #1255730
+* Fixed autocomplete not clearing image on empty result; SF bug #1256096
+* Fixed invalid XML in ajaxtags.tld; SF bug #1256624
+
+
+1.0 (05-Aug-2005)
+------------------------------
+* Fixed some variable initializations to conform to strict JavaScript validation
+
+
+1.0-Beta 3 (01-Aug-2005)
+------------------------------
+* Added ajax:callout tag
+* Now compiled against JDK 1.4 target
+* Revised the documentation to clarify required/nonrequired tag attributes
+
+
+1.0-Beta 2 (16-Jul-2005)
+------------------------------
+* Added ajax:toggle tag
+* Added ajax:updateField tag
+
+
+1.0-Beta 1 (12-Jun-2005)
+------------------------------
+* Added ajax:autocomplete tag
+* Added ajax:select tag
+
+
+----------------------------------------
+5 KNOWN ISSUES
+----------------------------------------
+
+Known issues as of Release 1.0.1
+
+* CSS for autocomplete tag may be troublesome if you've got complex CSS
+  positioning
+* Timeout setting for callout tag does not properly work in IE

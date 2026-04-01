@@ -1,0 +1,52 @@
+<h1>{{title}}</h1>
+number타입:<br>
+{{currentDate}}<br>
+Date타입:<br>
+{{currentDate2}}<br>
+string타입:<br>
+{{currentDate3}}<br>
+<hr>
+<h2>1.날짜를 출력(양식 | date:'형식')</h2>
+<p>01 {{currentDate | date }}</p>
+<p>02 {{currentDate  | date: 'y년 M월 d일'}}</p>
+<p>03 {{currentDate  | date: 'y년 MM월 d일 h시 m분 s초' }}</p>
+<hr>
+<h2>2.통화파이프(양식 | currency:'통화코드':변환여부:숫자형식(자리수,소수점))</h2>
+<p>01 {{1000.125 | currency}}</p>
+<p>01 {{1000.125 | currency:'USD':true}}</p>
+<p>01 {{1000.125 | currency:'USD':true:'4.1-2'}}</p>
+<p>01 {{1000.125 | currency:'KRW':true}}</p>
+<p>01 {{1000.125 | currency:'KRW':true:'8.1-2'}}</p>
+<h2>3.퍼센트파이프(양식 | percent:'숫자형식(자리수.소수점(최소-최대)))</h2>
+<p>01 {{1.25879 | percent}}</p>
+<p>01 {{1.25879 | percent:'.1-2'}}</p>
+<p>01 {{1.25879 | percent:'.2-4'}}</p>
+<p>01 {{1.25879 | percent:'4.3'}}</p>
+<p>01 {{1.25879 | percent:'4.1-1'}}</p>
+<h2>4.문자열 포맷</h2>
+<p>01 {{"abcHello" | lowercase}}</p>
+<p>01 {{"abcHello" | uppercase}}</p>
+<p>01 {{"abcHello" | slice:0:3}}</p>
+<p>01 {{"abcHello" | slice:2:3}}</p>
+<p>01 {{"abcHello" | slice:-3}}</p>
+<h2>i18SelectPipe(키명 | i18nSelect:객체명}} </h2>
+<p>01 {{apple | i18nSelect:fruits}}</p>
+<p>01 {{'mango' | i18nSelect:fruits}}</p>
+<h2>JSON 표기법(객체명) | json </h2>
+<p>01 {{ person }}</p> 
+<p>01 {{ person | json}}</p> 
+<p>01 {{ jsonString }}</p> 
+<h2>decimal 파이프(입력된 숫자값에 대해서 자리수를 정해줌(자리수.소수점(최소-최대)))</h2>
+<p>01 {{2.7182 | number}}</p>
+<p>01 {{2.7182 | number:'3.1-1'}}</p>
+<p>01 {{2.7182 | number:'3.1-2'}}</p>
+<p>01 {{2.7182 | number:'3.1-4'}}</p>
+<hr>
+<h1>myDate라는 사용자정의 파이프를 이용해서 출력양식을 지정</h1>
+기본값:{{str}}<br>
+날짜변환:{{str | myDate:'/'}}<br>
+날짜변환2:{{str | myDate:'-'}}<br>
+날짜변환3:{{str | myDate:'.'}}<br>
+
+
+

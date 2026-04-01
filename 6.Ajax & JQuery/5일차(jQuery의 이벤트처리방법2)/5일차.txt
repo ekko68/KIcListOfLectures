@@ -1,0 +1,60 @@
+5일차(jQuery의 이벤트처리방법2)
+->이번주 발표X (진행부분->ppt 작성->제출)
+->이번주 금요일 5시(21문제)
+----------------------------------------------
+이벤트를 연결하고 해제하는 경우
+
+**
+1.bind(이벤트종류,호출하는 함수)<->unbind()
+-------------------------------------------------
+2.딱 한번만 이벤트를 실행시키는 함수도 존재한다.
+
+$(선택자).one(이벤트종류,호출하는 함수)
+**
+//형식)$('선택자').hover(mouseover|function(){},mouseout|function(){})
+	$('h1').hover(function(){
+		$(this).addClass('reverse')
+	},function(){
+		$(this).removeClass('reverse')
+	})
+
+  이벤트 종류->key이벤트(눌렀다가 손을 떼는 동작->keyUp)
+                     key이벤트->특정키를 누르는 순간동작->keypress
+=====================================
+ 07keyup.html
+=>change이벤트->radio,checkbox,combox->특정한 항목을 선택
+08change.html->09formevent.html
+
+$(document).ready(function(){
+    $('.nv1 div .main1,.sub').mouseover(function(){ //Shopping 에 마우스 오버
+        $('.sub').css('display','block');//유형별 제품 출력
+    });
+    
+    $('.nv1 div .main1,.sub').mouseout(function(){
+        $('.sub').css('display',''); //유형별 제품 출력 안되게 설정
+    });
+    
+    $('.a1,.sub1').mouseover(function(){ //유형별 제품에 마우스 오버
+        $('.sub1').css('display','block');//유형별 항목이 나오게 설정
+    });
+    
+    $('.a1,.sub1').mouseout(function(){//유형별 항목이 안나오게 설정
+        $('.sub1').css('display','');
+    });
+});
+
+10input.html->사용자가 제대로 입력을 했는지를 체크?
+                   ->에러메세지를 내보내도록 처리(input.js)
+----------------------------------------------------
+01selector
+02dom
+03event
+04effect->show(),hide()~정리,01slide.html
+                화면전환
+
+형식) $('선택자').show(유지시간,종료후 처리할 함수)
+     slow()->default(400)  slow(600),fast(200)
+02fade().html
+------------------
+05ajax->json 표기법
+

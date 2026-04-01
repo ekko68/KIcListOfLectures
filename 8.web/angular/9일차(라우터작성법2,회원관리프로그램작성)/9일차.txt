@@ -1,0 +1,353 @@
+9일차(라우터작성법2, 회원관리프로그램 작성)
+->취업세미나 오후 4시~6:00
+========================
+라우터를 리뷰(정리)=>미니 프로젝트 진행
+========================
+angular>ng new my-app12-routing-param
+
+1.FormsModule,HttpModule(http)->접속이 필수적으로 필요
+   (입력([ngModel])
+
+2.Router필요->링크-><a href="~">이용한 링크을 사용X 
+                                ->전체 페이지 로드(속도가 느려짐)
+
+ 1)<a routerLink="요청 path">이동 (요청명령어)->컴포넌트지정=>연결된 페이지이동
+ 2)라우터를 모듈로 따로 만들어서 관리->컴포넌트를 등록,환경설정 부분지정
+
+3.RxJs ->사이트 접속=>정보를 가져와서 화면에 출력(Ajax)
+                                  Promise(정보가져와서 출력),Observable(예외처리를 체크)
+--------------------------------------------------------------------------------------
+C:\webtest\8.web\angular\my-app12-routing-param>ng g module app-routing
+  create src/app/app-routing/app-routing.module.ts (194 bytes)
+
+C:\webtest\8.web\angular\my-app12-routing-param>ng g component first
+  create src/app/first/first.component.html (24 bytes)
+  create src/app/first/first.component.spec.ts (621 bytes)
+  create src/app/first/first.component.ts (265 bytes)
+  create src/app/first/first.component.css (0 bytes)
+  update src/app/app.module.ts (392 bytes)
+
+C:\webtest\8.web\angular\my-app12-routing-param>ng g component second
+  create src/app/second/second.component.html (25 bytes)
+  create src/app/second/second.component.spec.ts (628 bytes)
+  create src/app/second/second.component.ts (269 bytes)
+  create src/app/second/second.component.css (0 bytes)
+  update src/app/app.module.ts (474 bytes)
+
+C:\webtest\8.web\angular\my-app12-routing-param>ng g component third
+  create src/app/third/third.component.html (24 bytes)
+  create src/app/third/third.component.spec.ts (621 bytes)
+  create src/app/third/third.component.ts (265 bytes)
+  create src/app/third/third.component.css (0 bytes)
+  update src/app/app.module.ts (552 bytes)
+
+C:\webtest\8.web\angular\my-app12-routing-param>
+
+//1.링크시켜서 연결할 컴포넌트 정보,
+RouterModule,Routes
+import {FirstComponent} from '../first/first.component';
+
+import {SecondComponent} from '../second/second.component';
+
+import {ThirdComponent} from '../third/third.component';
+
+//추가
+
+import { RouterModule,Routes} from '@angular/router';
+
+
+//2.요청경로->컴포넌트정보->배열 저장(Routes)
+
+const appRoutes:Routes=[
+  {
+    //path:'',  /* 요청 경로*/
+  
+  //component:FirstComponent /* 연결시킬 컴포넌트 명 */
+  
+  path:'',
+    redirectTo:'/firstView/100',pathMatch:'full'
+  },
+ 
+ {
+    //request.getParameter("data") ->/요청경로/:전달받을 매개변수명
+    path:'firstView/:data', component:FirstComponent
+  },
+  {
+    path:'secondView', component:SecondComponent
+  },
+  {
+    path:'thirdView', component:ThirdComponent
+  }
+];
+
+@NgModule({
+  imports: [
+    CommonModule,//화면에 출력에 관련된 정보(컴포넌트,파이프,,,)
+    //초기화
+    RouterModule.forRoot(appRoutes)
+  ],
+  exports:[RouterModule], /* 다른 모듈에서도 참조할 수있도록 설정 */
+  declarations: []
+})
+export class AppRoutingModule { }
+
+
+2.app.module.ts에 등록->제일 먼저 읽어들여서 실행
+
+3.app.component.html에 링크걸기
+
+<h1>{{title}}</h1>
+<h3>매개변수를 전달하는 라우팅!!!</h3>
+
+<a routerLink="firstView/100">first 화면</a>
+
+ ->매개변수값 100을 전달->first.component.ts->first.component.html
+
+<a routerLink="secondView">second 화면</a>
+
+                                   ->second.component.ts->second.component.html
+
+<a routerLink="['thirdView',{xxx:'홍길동',yyy:200}]">third 화면</a>
+                                   ->third.component.ts->third.component.html
+-----------------------------------------------------------------------------------
+4.app.component.ts
+
+export class FirstComponent implements OnInit {
+  //DI방식->현재 선택되어진 라우터정보 객체
+  constructor(private route:ActivatedRoute) { }
+  params;//매개변수를 저장
+  //컴포넌트의 초기값을 설정
+  ngOnInit() {
+    //매개변수를 받는지 체크->subscribe()
+    this.route.params.subscribe(params=>{console.log(params);
+      //if(request.getParameter("data")!=null)
+       if(params['data']!=null)
+         this.params=params['data']
+         console.log('this.params=>',this.params);
+    })
+  }
+}
+
+5.app.component.html
+<p>
+  first works!
+</p>
+
+전달 받은 매개변수명:{{params}}
+-------------------------------------------
+
+second.component.html (이벤트 처리때문에 먼저 작성)
+
+<p>
+  second works!
+</p>
+
+<button (click)="goFirst()">first화면(이전)</button>
+
+second.component.ts
+
+export class SecondComponent implements OnInit 
+{
+
+ 
+ constructor(private router:Router) { }
+  
+ngOnInit() {}
+ 
+ goFirst(){
+    //router객체명.navigate('이동할 path')
+   
+ //router객체명.navigate(['이동할 path',전달할 매개변수값,,,])
+  
+  this.router.navigate(['firstView','200'])
+  }
+}
+
+third.component.ts
+
+export class ThirdComponent implements OnInit {
+
+  constructor(private route:ActivatedRoute) { }
+  params;//매개변수를 저장
+  //컴포넌트의 초기값을 설정
+  ngOnInit() {
+    //매개변수를 받는지 체크->subscribe()
+    this.route.params.subscribe(params=>{console.log(params);
+      //if(request.getParameter("data")!=null)
+       if(params['xxx']!=null && params['yyy']!=null){
+         this.params=params['xxx']
+         this.params+=params['yyy']
+         console.log('third의 this.params=>',this.params);
+       }
+    })
+  }
+}
+
+
+third.component.html
+
+<p>
+  third works!
+</p>
+{{params}}
+===========================
+
+Angular <--------->Jsp(AngularWeb) 진행
+=========================
+angular>ng new my-app13-person=>프로젝트 및 컴포넌트를 생성
+
+
+cd my-app13-person   -->app.component.html-><app-root></app-root>
+
+my-app13-person>ng g component person //회원의 리스트출력, 회원가입(등록)
+
+my-app13-person>ng g component item-edit  //회원의 수정,삭제하기위해서
+
+Installing packages for tooling via npm.
+Installed packages for tooling via npm.
+Project 'my-app13-person' successfully created.
+
+C:\webtest\8.web\angular>cd my-app13-person
+
+C:\webtest\8.web\angular\my-app13-person>ng g component person
+  create src/app/person/person.component.html (25 bytes)
+  create src/app/person/person.component.spec.ts (628 bytes)
+  create src/app/person/person.component.ts (269 bytes)
+  create src/app/person/person.component.css (0 bytes)
+  update src/app/app.module.ts (396 bytes)
+
+C:\webtest\8.web\angular\my-app13-person>ng g component item-edit
+  create src/app/item-edit/item-edit.component.html (28 bytes)
+  create src/app/item-edit/item-edit.component.spec.ts (643 bytes)
+  create src/app/item-edit/item-edit.component.ts (280 bytes)
+  create src/app/item-edit/item-edit.component.css (0 bytes)
+  update src/app/app.module.ts (488 bytes)
+
+C:\webtest\8.web\angular\my-app13-person>cd  src/app/person (person컴포넌트에 작성)
+
+C:\webtest\8.web\angular\my-app13-person\src\app\person>ng g service person
+  create src/app/person/person.service.spec.ts (374 bytes)
+  create src/app/person/person.service.ts (112 bytes)
+
+C:\webtest\8.web\angular\my-app13-person\src\app\person>
+
+2.app.modules.ts파일에 추가
+
+ =>FormsModule,HttpModule등록
+
+3.app.component.html ------>index.html -><body> 
+                                                                 <app-root></app-root>
+                                                                 </body>
+
+<h1>
+
+<app-person></app-person>
+=>자식컴포넌트(person 정보)
+
+</h1>                     =>  person.component.html 호출
+                                    <body>
+                                        <item-edit []=?></item-edit>
+                                    </body>
+
+                                 =>item-edit.component.html (수정,삭제)
+
+ =>자식컴포넌트에서 공통으로 사용되는 메서드필요->서비스를 작성(DAO)
+==========================================
+4.http->접속->값을 가져와서 출력(Rxjs)->
+    rxjs-operator.ts파일 복사->import (자주 사용)
+
+5.서비스는 이미 작성된 상태(person.service.ts)->공통으로 사용메서드 정의
+   서버에 요청
+
+6.person.ts
+
+//서버에서 가져온 데이터의 필드만큼->여기에 맞는 객체
+//client(DTO) <-----server(DTO)->json객체
+
+export class Person{
+    //id:string,name:string,age:number
+    constructor(public id:string,public name:string,public age:number){}
+}
+
+=>회원리스트
+
+7. person.service.ts에서 회원리스트 작성
+
+/각 컴포넌트에서 공통으로 사용될 메서드를 따로 설정
+import {Http} from '@angular/http';
+import './rxjs-operator'; //rxjs->서버에 접속->데이터를 가져오기위해서
+import {Observable} from 'rxjs/Rx';//예외처리->에러메세지 출력(throw)
+import {Person} from './person';//가져온 데이터를 필드별로 담기위해서
+
+
+@Injectable()
+export class PersonService {
+ //생성자의 DI
+  constructor(private http:Http) { }
+ 
+ //1.회원리스트
+ getPersonList(){
+   var url="http://localhost:8090/AngularWeb/getPersonList.jsp";
+   return this.http.get(url).map(res=>res.json());
+   //map(여러개의 데이터를 받아올때->json객체형태로 받아온다)
+ }
+ //2.회원등록
+
+ //3.회원id에 해당되는 데이터 찾기
+
+ //4.회원수정
+
+ //5.회원삭제
+
+ //6.공통으로 에러메세지 호출
+ private handleError(error:Response | any){
+   //Observable.throw(에러객체); //에러정보 출력
+   return Observable.throw("errorMsg=>"+error);
+ }
+}
+
+
+export class PersonComponent implements OnInit {
+   //생성자 DI
+  constructor(private service:PersonService) {
+    this.getPersonList(); //생성자에서 따로 getPersonList()을 호출하기때문에
+   }
+  personList;//서버로부터 가져온 데이터를 저장할 변수선언
+  //회원리스트
+  getPersonList(){
+    //promise객체->비동기처리를 하기위해서 사용되는 객체->1.성공(데이터를 가진 promise객체
+  //                                             2.실패(실패한 정보를 가진 promise객체))
+  //res=>this.personList=res->personList에 받아온 데이터를 저장
+    this.service.getPersonList().toPromise().then(res=>this.personList=res);
+  }
+
+<p>
+  Person 관리 프로그램
+</p>
+<div>
+  <input #newPersonName placeholder="이름을 입력하세요" />
+  <button (click)="addPerson(newPersonName.value)">등록</button>
+</div>
+<ul>
+ <li *ngFor="let person of personList">
+   {{person.id}}  {{person.name}}  {{person.age}}
+ </li>
+</ul>
+
+AngularWeb=>테이블을 작성 Person테이블 (id,name,age)필드를 가진다.
+                       DTO,DAO
+==========================================
+id->최대값+1
+name=>입력받은값이 전달->addPerson.jsp?name=?
+age------------------------------->20
+
+addPerson.jsp?name=?
+=================================
+
+ 
+
+
+
+
+
+

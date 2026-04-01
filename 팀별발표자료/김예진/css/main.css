@@ -1,0 +1,350 @@
+/* 전체 메인 */
+*{
+	margin:0; padding:0;
+}
+
+/*내용이 나타날 전체 크기!*/
+.main{
+	width:1000px;
+	margin:0 auto;
+}
+h4 {
+    text-align: center;
+    font-size: 19px;
+    background-color: #fdf2d5;
+    padding: 8px;
+}
+
+/*상단부*/
+
+/* 상단 제목 : 왼쪽 상단 */
+.logo{	
+   height:50px;
+   float:left;
+   z-index:20;
+   }  
+ h1 {
+	padding-left: 10px;
+    padding-top: 12px;
+}
+ /*로그인창의 위치*/
+ .log{
+    width: 150px;
+    height: 50px;
+    float: right;
+    z-index: 20;
+    padding: 10px;
+    padding-top: 32px;
+ }
+ /*로그인창 디자인*/
+ .log_ul{
+	list-style-type:none;	
+ }
+ .log_ul li{ 
+	display:inline-block;
+	margin:0 auto;
+ }
+ .log_ul li a{
+    font-size: 15px;
+    text-decoration: none;
+    color: darkgray;
+    padding: 6px;
+ }
+
+ /*상단부 이미지*/
+.cycle-slideshow{
+	top: 77px;
+	z-index:-1;
+}
+
+ /*메뉴 */
+ /*nav디자인 */
+li{
+	list-style-type:none;
+}
+a{
+text-decoration:none;
+}
+
+/*메뉴 위치*/
+.menu{
+	position:fixed;
+	bottom:0;
+	width:1000px;
+	z-index:100;
+}
+/*
+	1레벨 메뉴
+*/
+.dropdownmenu > li{ 
+	float:left;
+	position:relative;
+	background:lightblue;
+	width:50%;	
+}
+.dropdownmenu > li > a {
+	display:block; 
+	font-size:16px;
+	color:white;
+	text-align:center;
+	height:60px; /*높이*/
+	line-height:60px; 	
+	top:-200px;
+}
+.dropdownmenu > li:hover {
+	
+	background:#fdf2d5;
+}
+
+.dropdownmenu > .li1:hover > ul {
+	top:60px;
+	left:0;	
+    top: -160px;
+}
+.dropdownmenu  > .li2:hover > ul {
+	top:60px;
+	left:0;	
+    top:-80px;
+}
+
+/*
+	2레벨 메뉴부터의 속성 
+*/
+.dropdownmenu ul {
+	position:absolute;
+	top:-9999px;
+	z-index:9999;
+	width:99%;
+	border:1px solid #fdf2d5;	
+}
+/*
+	2레벨 메뉴의 위치속성 지정
+*/
+.dropdownmenu ul li { 
+	position:relative;
+}
+
+/*2레벨 메뉴의 텍스트속성/배경/여백지정*/
+.dropdownmenu ul a{
+	display:block;
+	color:#aaaaaa;
+	font-size:12px;
+	line-height:40px;
+	background:#ffffff;
+	padding-left:20px; 
+}
+
+/*2레벨 메뉴의 마우스 오버 설정*/
+.dropdownmenu ul a:hover {
+	color:gray;
+	background:#fdf2d5;
+}
+
+/*2레벨 메뉴에 마우스를 올렸을 때*/
+.dropdownmenu ul li:hover > ul {
+	position:absolute; 
+	display:block;
+	top:-5em;
+	/* top대신 bottom은 안되나요! 바닥을 기준으로 뜰 수는 없나요.. 휴ㅠㅠ ! 따로 설정하며 ㄴ될거같다.. ㅎㅎ*/
+	left:40%;
+	width:60%
+}
+
+/*  본문 1 이달의 추천 맛집*/
+.mat1{
+	margin:0 auto;
+	position:relative;
+	top:50px;
+	width:100%;
+	height: 370px;
+	float:left;
+}
+.mat1_1 {/*추천맛집 사진 */
+    position: absolute;
+    display: inline-block;
+    width: 610px;
+    top: 51px;
+    float: left;
+    margin: 10px;
+    left: 48px;
+}
+
+.mat1_loc{/*지도*/
+    margin: 0 auto;
+    position: relative;
+    right: 24px;
+    top: 5px;
+    width: 264px;
+    height: 200px;
+    float: right;
+    margin: 15px;
+}
+
+ .mat1_loc2{ /*지도 아래 설명*/  
+    position: relative;
+    display: block;
+    float: right;
+    width: 249px;
+    text-align: center;
+    font-size: 13px;
+    top: 243px;
+    margin-right: 59px;
+    right: -299px;
+}
+.mat1 >h5{
+    position: absolute;
+    display: block;
+    float: right;
+    width: 300px;
+    left: 680px;
+    text-align: right;
+    font-size: 16px;
+    top: 44px;
+
+}
+mat1_2_1 {
+    border: 1px solid;
+    width: 300px;
+    margin-left: 10px;
+}
+
+/*본문 2 추천맛집 : 지역별, 종류별,에디터*/
+.mat2{
+	display:inline-block;
+	margin:0 auto;
+	position:relative;
+	top:100px;
+	width:100%; height:405px;
+	float:left;
+}
+	/*사진 위치*/
+
+		.mat2_1{ /*서울지역*/
+		   position:absolute;
+		   float:left;
+		   top:50px;
+		 width: 331px;
+
+		}		
+		figure.mat2_1_1 {
+		   margin: 11px;
+		}
+		figcaption.mat2_1_2 {
+			font-size: 15px;
+			padding: 12px;
+			text-align: center;
+		}
+		.mat2_2{/*경기지역*/
+		   position:absolute;
+		   float:left;
+		   left:338px;
+		   top:50px;
+		   width:300px;
+
+		}
+		figure.mat2_2_1 {
+		    padding-top: 10px;
+		}
+
+		figcaption.mat2_2_2 {
+			font-size: 15px;
+			padding: 12px;
+			text-align: center;
+		}
+		.mat2_3{/*에디터의추천*/
+		   position:absolute;
+		   float:left;
+		   left:660px;
+		   top:50px;
+		  width: 331px;
+		 height: 346px;
+
+
+		}
+		.mat2_3_1 >img {
+			width: 331px;
+			padding-top: 11px;
+		}
+
+		figcaption.mat2_3_2 {
+			font-size: 15px;
+			padding: 12px;
+			text-align: center;
+		}
+
+
+/*본문 3  티비와 후기*/
+
+/*티비에 소개된 맛집*/
+.mat4{
+	display:inline-block;
+	position:relative;
+	top:150px;
+	width:48%; height:350px;
+	float:left;
+
+}
+.mat4_1 >article {
+    font-size: 14px;
+    text-align: center;
+    margin-top: 7px;
+}
+
+/*후기*/
+#hoogi{
+	margin:0 auto;
+	position:relative;
+	top:150px;
+	width:50%; height:350px;
+	float:right;
+}
+.mat4_2 >h4 {
+    text-align: center;
+    font-size: 19px;
+    background-color: #fdf2d5;
+    padding: 8px;
+}
+#hoo2{
+	position:absolute;
+	top: 55px;
+}
+/*footer*/
+.foo{
+	clear:both;
+	/* height: 100px; */
+	margin:0 auto;
+	position: relative;
+	width: 98%;
+	height: 69px;
+	background: rgba(173, 216, 230, 0.68);
+	color: white;
+	padding: 10px;
+	margin-bottom: 60px;
+	top: 168px;
+}
+
+.foo_ul1 >li {
+    display: inline-block;
+    width: 50%;
+    position: relative;
+}
+.foo_ul1 a{
+	color:white;
+
+}
+.foo_ul1 {
+    display: inline-block;
+    width: 50%;
+    height: 30px;
+    padding-bottom: 100px;
+    position: relative;
+    float: left;
+}
+.foo_ul2 {
+    display: inline-block;
+    width: 50%;
+    height: 30px;
+    padding-bottom: 100px;
+    position: relative;
+    float: left;
+}

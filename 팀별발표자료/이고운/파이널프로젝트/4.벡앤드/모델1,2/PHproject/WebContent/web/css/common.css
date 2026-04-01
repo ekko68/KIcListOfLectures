@@ -1,0 +1,86 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+html, body {
+  overflow: hidden;
+    background-color: antiquewhite;
+}
+
+a{text-decoration: none; color: #818181;}
+
+
+.sideNav{
+    height: 100%;
+    width: 20vw;
+    position: fixed;
+    z-index: 100;
+    top:0; right: -20vw;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 10px;    
+    transition: 0.5s;
+}
+
+.gnb{
+    padding-bottom: 50px;
+}
+
+.gnb > span{ 
+    display: inline-block;
+    width: auto; height: auto;
+}
+
+.gnb .closebtn {
+    font-size: 3rem;
+    position: absolute;
+    right: 20px;
+}
+
+.gnb .login{
+    position: absolute;
+    top:30px; left:30px;   
+    font-size: 1rem;    
+}
+
+.gnb a{
+   color: #fff;
+}
+
+
+.menu{
+}
+
+.menu a{
+    margin: 15px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sideNav a:hover, .offcanvas a:focus{
+    color: #f1f1f1;
+}
+
+
+#admin > a{
+	height:30px;
+	position:absolute;
+	bottom:10px; right:10px;
+}
+
+
+#navIcn{
+    background-color: yellow;
+    display: block;    
+    position: absolute;
+    width: 7vh; height: 7vh;
+    z-index: 50;
+    top:10px; right: 10px;
+    font-size: 2rem;
+    vertical-align: middle;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#navIcn:hover{cursor:pointer;
+background-color:red;}

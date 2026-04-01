@@ -1,0 +1,7 @@
+﻿이클립스 설치  workspase
+
+폴더안에 내용 모두 삭제​
+
+이클립스 설치위치\workspace\.metadata\.plugins\org.eclipse.e4.workbench
+
+이클립스 설치위치\workspace\.metadata\.plugins\org.eclipse.jdt.core

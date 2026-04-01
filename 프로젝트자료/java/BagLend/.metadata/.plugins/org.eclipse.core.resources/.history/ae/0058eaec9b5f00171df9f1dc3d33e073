@@ -1,0 +1,12 @@
+package bag.process.controller;
+
+import bag.design.page.MainPage;
+
+public class Controller {
+	
+	
+	public Controller(){
+		new MainPage();
+	}
+
+}

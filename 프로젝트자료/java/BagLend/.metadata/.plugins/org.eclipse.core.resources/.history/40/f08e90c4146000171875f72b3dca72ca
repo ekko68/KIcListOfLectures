@@ -1,0 +1,11 @@
+package bag.lend.controller;
+
+import bag.design.page.MainPage;
+
+public class Controller {
+	private MainPage mainPage;
+	
+	public Controller() {
+		mainPage = new MainPage();
+	}
+}

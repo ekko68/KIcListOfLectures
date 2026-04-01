@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(함수를 연결)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//var test=document.getElementsByTagName('h2') 태그의정보=>태그객체
+	var test=$('h2')
+	alert(test)//[object~] ->$('h2').css(~)
+	/*
+	test.css('font-family','궁서체')
+	test.css('font-size','30pt')
+	test.css('color','red')
+	특정 태그에 대해서 함수를 호출할때 여러개를 마치 체인처럼 나열하는 방식
+	->chaining method
+	*/
+	test.css('font-family','궁서체')
+	     .css('font-size','30pt')
+	     .css('color','red')
+})
+</script>
+</head>
+<body>
+   <h2>jQuery CSS 연습</h2>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+import bag.lend.handlesql.HandleCustomDB;
+import bag.lend.handlesql.HandleProductDB;
+
+import bag.lend.connection.*;
+import bag.lend.dbdata.Customer;
+import bag.lend.dbdata.Product;
+
+public class BagLend {
+
+	public static void main(String[] args) {
+		
+	
+
+		HandleCustomDB customDB = new HandleCustomDB();
+		HandleProductDB productDB = new HandleProductDB();
+
+		customDB.selectAllData(MakeConnection.getInstance());
+		
+		//customDB.insertData(MakeConnection.getInstance());
+		//productDB.insertData(MakeConnection.getInstance());
+		
+		//customDB.deleteData(MakeConnection.getInstance(), 2);
+		//productDB.deleteData(MakeConnection.getInstance());
+		
+		System.out.println("--------------------------------");
+		
+
+
+		// customDB.insertData(MakeConnection.getInstance());
+
+	}
+}

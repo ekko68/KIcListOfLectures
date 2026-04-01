@@ -1,0 +1,515 @@
+11일차(스프링타일즈2,파일 업로드 게시판 개요 및 작성)
+
+  ->스프링타일즈를 마무리->최종 final Project(게시판+파일업로드,다운로드)
+                                                                  페이징처리+검색까지
+                                         스프링 타일즈+
+============================================
+  ->이번주 금요일 5:00(2과목->15문제(9,6))
+-------------------------------------------------------------------------------
+
+**********
+JSP->메인페이지->1.include액션태그, 2.forward액션태그
+------------------------------------------------------------------------
+SpringTiles->프로젝트->스프링에서 메인페이지를 만들어주는 프레임워크(타일즈3)
+                                   tiles을 환경설정
+**********
+                ->수동(처음부터 Maven Project로 설정해서 작업하는 방법)
+                ->원본
+-------------------------------------------------------------------------------
+SpringTiles=>프로젝트 이름->Spring web Maven을 선택한 경우(자동)
+-----------------------------
+ 1.pom.xml->자바의 경우->버전 1.6->1.8로 변경
+
+<java.version>1.8</java.version>->1.6->1.8로 변경
+
+2.프로젝트 오 click->Build Configurer-> 1.6버전을 지우고->Add library
+                                                         JRE선택(1.8) 선택
+
+3.Java Compiler 항목->1.6->1.8로 설정
+4.Java Facets->Java ->1.8로 되어있는지를 확인
+5.Runtimes ->Apache Tomcat v8.5 버전을 체크
+------------------------------------------------------------------------------
+** 수동으로 작업(처음부터 maven project 선택)**
+------------------------------------------------
+   Group Id:최상위패키지명.하위패키지명...
+                   kr.spring.maven
+   Artifact Id:프로젝트명(SpringTitle2)
+   Package :kr.spring.maven
+
+  프로젝트를 생성하고 나서 제일 먼저 구성(maven)
+  1.pom.xml->스프링에 관련된 jar(final Spring 3.x->4.x)
+-----------------------------------------------------------
+<dependencies>
+
+   <!-- 스프링은 4.3버전(spring-webmvc,spring-web.jar파일 필수)웹 필수-->
+    <dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-context</artifactId>
+  		<version>4.3.10.RELEASE</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-expression</artifactId>
+  		<version>4.3.10.RELEASE</version>
+  	</dependency>
+              <!-- 파일업로드할때 필요(commons-fileupload)   -->
+  	<dependency>
+  		<groupId>commons-fileupload</groupId>
+  		<artifactId>commons-fileupload</artifactId>
+  		<version>1.3</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-webmvc</artifactId>
+  		<version>4.3.10.RELEASE</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.springframework</groupId>
+  		<artifactId>spring-web</artifactId>
+  		<version>4.3.10.RELEASE</version>
+  	</dependency>
+                <!-- 웹상에서 입력(유효성 검사를 해주는 jar파일) 
+                       에러메세지 출력(리소스 번들과 연관)   -->
+  	<dependency>
+  		<groupId>javax.validation</groupId>
+  		<artifactId>validation-api</artifactId>
+  		<version>1.1.0.Final</version>
+  	</dependency>
+               <!-- ${greeting} jstl을 찾을 수가 없다는 에러메세지 -->
+  	<dependency>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>jstl</artifactId>
+  		<version>1.2</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.aspectj</groupId>
+  		<artifactId>aspectjweaver</artifactId>
+  		<version>1.7.3</version>
+  	</dependency>
+              <!--  스프링의 타일즈를 설정하기위한 jar파일을 다운로드 받는 부분-->
+  	<dependency>
+  		<groupId>org.apache.tiles</groupId>
+  		<artifactId>tiles-extras</artifactId>
+  		<version>3.0.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.tiles</groupId>
+  		<artifactId>tiles-servlet</artifactId>
+  		<version>3.0.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.tiles</groupId>
+  		<artifactId>tiles-jsp</artifactId>
+  		<version>3.0.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-api</artifactId>
+  		<version>1.7.5</version>
+  	</dependency>
+---------------------------------------------------------------------
+ 2.컨트롤러 클래스를 작성->src/main/java가 폴더 존재X->수동으로 작업(폴더생성)
+ 3.web.xml에서 DispatcherServlet을 등록->dispatcher 서블릿 별칭
+   ->스프링에서 요청을 할때 맨 처음 실행(web.xml)
+ 3.dispatcher-servlet.xml파일을 생성->요청명령어를 등록->작업
+
+
+ SpringTiles2
+       |
+        -src=>컨트롤러 3개 작성
+       |
+         -WebContent(/)
+                  |
+                   -WEB-INF
+                         |
+                          -lib(X)->maven project을 사용하지 않은경우->jar 복사해야한다
+                         |
+                          -tiles-def 폴더(1.타일즈에 대한 환경설정)
+                                 tilesdef.xml(화면에 어떻게 보일것인가에 대한 정보가
+                                                   담겨져있는 파일정보)
+                         |
+                          -tiles-view(2.메인페이지에서 보여줄 폴더 생성)
+                                  |
+                                    -template->header.jsp(머리말)
+                                                      menu.jsp(링크문자열)
+                                                      **layout.jsp (작성)**
+                                                      footer.jsp(꼬리말)
+                              body-menu1.jsp(링크를  걸어서 최종적으로 화면에 보여줄)
+                              body-menu2.jsp
+                              body.jsp
+                        web.xml (1)
+                        dispacter-servlet.xml(2)->타일즈 환경설정파일을 읽어들여라
+-------------------------------------------------------------------------------------
+web.xml
+
+<filter>
+        <filter-name>encodingFilter(필터의 별칭이름)</filter-name>
+        <filter-class>
+           org.springframework.web.filter.CharacterEncodingFilter
+                                    패키지명...한글을 적용시킬 필터 클래스이름
+        </filter-class>
+        <init-param>
+            <param-name>encoding(필터클래스에 전달할 매개변수명)</param-name>
+            <param-value>UTF-8(한글 캐릭터셋)</param-value>
+        </init-param>              euc-kr--->UTF-8로 설정
+</filter>
+    
+    <!-- 어떻게 요청시 한글이 지원이 되게 할것인가  -->
+    <filter-mapping>
+        <filter-name>encodingFilter(적용시킬 필터별칭 이름)</filter-name>
+        <url-pattern>/*(한글이 적용이 되는 대상자폴더를 지정)</url-pattern>
+    </filter-mapping>
+----------------------------------------------------------------------------------
+<filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>
+           org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+   -------------------------------------------------------------------
+ 2.dispatcher-servlet.xml에서 tiles환경설정 파일을 불러오기
+
+ <!-- tiles에 관련된 환경설정을 불러오기(viewResolver가 조금 변환)
+        기존의 prefix,suffix를 이용해서 경로명 및 파일의 확장자를 지정하는 부분X
+   -->
+   <bean id="tilesConfigurer" 
+              class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+       <property name="definitions">
+           <list>
+              <value>/WEB-INF/tiles-def/tilesdef.xml</value>
+           </list>
+       </property>      
+   </bean>
+   
+    <!-- viewResolver 설정 -->
+    <bean id="viewResolver"
+ class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" 
+         value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+    </bean> 
+-----------------------------------------------------------------------------
+ 3. tiles-def.xml=>메인 페이지를 불러올때 영역설정(top,left,body,footer) 이름 부여
+                     =>영역에 맞는 불러올 파일명을 상대경로를 통해서 지정
+
+ 요청을 할때(링크문자열이 3개) 1.회원로그인(메인페이지) 2.게시판 글쓰기  3.회원가입
+                 컨트롤러와 연관 <defintion></defintion>=>3개가 필요
+<tiles-definitions>
+                                키워드->컨트롤러와 연관(index.do로 요청했을 경우)
+    <definition name="index" template="/WEB-INF/tiles-view/template/layout.jsp">
+                                                            맨 처음에 불러올 메인페이지 이름을 지정
+        <put-attribute name="title(속성명(영역))" value="메인 페이지(문자열)"/>
+
+        <put-attribute name="menu(왼쪽에 링크문자열)" 
+                               value="/WEB-INF/tiles-view/template/menu.jsp"
+                                         (경로포함해서 불러올 파일명지정) />
+        <put-attribute name="header(머리말)" 
+                               value="/WEB-INF/tiles-view/template/header.jsp" />
+        <put-attribute name="body" 
+                               value="/WEB-INF/tiles-view/body.jsp" />
+         <put-attribute name="footer" 
+                               value="/WEB-INF/tiles-view/template/footer.jsp" />                                                                   
+    </definition>
+   -------------->menu1.do
+    <definition name="menu1" extends="index(상속을 받을 메인페이지영역)">
+    =>위에 상속을 받은 부분중에서 변경하고자 하는 부분만 다시 재설정을 한다.
+     <definition name="menu1" extends="index">
+        <put-attribute name="title" value="두번째 페이지"/>
+        <put-attribute name="body" 
+                               value="/WEB-INF/tiles-view/body-menu1.jsp" />
+    </definition>
+    <definition name="menu2" extends="index">
+        <put-attribute name="title" value="세번째 페이지"/>
+        <put-attribute name="body" 
+                               value="/WEB-INF/tiles-view/body-menu2.jsp" />
+    </definition>   
+    </definition>
+   ----------------->menu2.do
+    <definition name="menu2" extends="index">
+        
+    </definition>
+</tiles-definitions>
+===========================================
+4.layout.jsp(실질적인 메인페이지를 작성)
+
+    ->menu.jsp(링크문자열)
+         <ul>
+        <li><a href="index.do">main</a></li>
+        <li><a href="menu1.do">menu1</a></li>
+        <li><a href="menu2.do">menu2</a></li>
+       </ul>
+-------------------------------------------------------------
+  
+
+  수동->javax.servlet->servlet-api.jar파일이 없어서 에러유발
+            pom.xml에 등록=>servlet-api.jar파일을 다운로드 가능
+                                   ->build path->add extral이용->c:\tomcat8.5\lib->
+                                                                                  servket-api.jar파일추가도
+                                                                                 가능
+              <dependency>
+  		<groupId>javax.servlet</groupId>
+  		<artifactId>javax.servlet-api</artifactId>
+  		<version>3.1.0</version>
+  		<scope>provided</scope>
+  	</dependency>
+--------------------------------------------------------------------------------------
+layout.jsp=><put-attribute name="title" value="메인페이지"  />
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+          <태그구분자(tiles):insertAttribute(액션태그이름) 
+                                     name="지정하고자하는 속성명" />
+<title><tiles:insertAttribute name="title" /></title>
+--------------------------------------------------------------------------
+최종 layout.jsp파일 확인
+
+<table border="1" cellpadding="0" cellspacing="1" bgcolor="#a0a0a0"
+             width="100%">
+  <tr height="100" valign="middle" bgcolor="#ffffff">
+       <td colspan="2">
+       <tiles:insertAttribute name="header" />
+       </td>
+  </tr> 
+  <tr height="600"  bgcolor="#ffffff">
+       <td width="15%" valign="top">
+       <tiles:insertAttribute name="menu" />
+       </td>
+       <td width="85%" valign="top">
+       <tiles:insertAttribute name="body" />
+       </td>
+  </tr> 
+  <tr height="100"  bgcolor="#ffffff">
+       <td colspan="2">
+       <tiles:insertAttribute name="footer" />
+       </td>
+  </tr>         
+ </table>
+-------------------------------------------------------
+5.요청을 받아서 처리해주는 구문을 사용
+
+->menu.jsp(링크문자열)
+         <ul>
+        <li><a href="index.do">main</a></li> ->index.do->IndexController
+        <li><a href="menu1.do">menu1</a></li>->menu1.do->Menu1Controller
+        <li><a href="menu2.do">menu2</a></li>->menu2.do->Menu2Controller
+       </ul>
+
+ 5-1)dispacter-servlet.xml->index.do->IndexController(액션컨트롤러 지정)
+
+     <!--요청클래스(=컨트롤러 클래스를 등록)  -->
+ <bean class="kr.spring.tiles.controller.IndexController" />
+ <bean class="kr.spring.tiles.controller.Menu1Controller" />
+ <bean class="kr.spring.tiles.controller.Menu2Controller" />
+                                    ...
+ 5-2) IndexController 작성-><definition name="index" 연결시키는지를 확인?
+        ...(save as)
+
+ 5-3) index.jsp->/index.do요청할 수 있도록 처리
+==============================
+ 최종 결과를 확인
+ 
+package kr.spring.tiles.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class IndexController {  //index.do
+
+	@RequestMapping("/index.do")
+	public String process() { //ModelAndView을 하지 않은 이유->tiles(이미 설정)
+		//return "문자열(index)"--><definition name="index" 이름과 일치해야 찾아감
+		return "index";//<definition name="index" template="/WEB-INF/tiles-view/template/layout.jsp">
+	}
+}
+
+
+Menu1Controller ,Menu2Controller는 save as로 작성할것.
+-------------------------------------------------------------------
+  index.jsp로 작성
+<%
+ // response.sendRedirect("http://localhost:8090/SpringTiles/index.do");
+response.sendRedirect(request.getContextPath()+"/index.do");
+%>
+---------------------------------------------------------------------------------
+ 에러메세지 해결책->view name 'index'이름이 못찾는다는 에러유발
+                         ->tiles파일을 불러오지 못하는 에러유발
+                         ->tilesdef.xml파일을 오타발생->못 불러옴
+---------------------------------------------------------------------------------
+SprintTiles+Mybatis+Oracle+fileUpload,fileDown+페이징처리+검색어 구현
++유효성검사(에러메세지 등록,예외페이지 처리)
+---------------------------------------------------------------------------------
+=>게시판의 글목록 보기(페이징 처리+검색어 추가)
+=>게시판의 글쓰기(파일 업로드 기능을 구현)
+=>게시판의 글상세보기->다운로드 기능 구현
+=>게시판의 글수정하기(save as 글쓰기(파일 업로드 기능을 구현)),암호체크
+=>게시판의 글삭제하기->암호체크
+-----------------------------------------------------------------------------------
+수동방법(오라클을 먼저 가동)
+---------
+ Springfileboard(프로젝트명)
+-------------------------------
+1.pom.xml 을 복사해서 작성
+2.web.xml에서 DispatcherServlet을 지정+DB연동하는 파일 불러오기(위치가 틀림)
+
+  Spingfileboard
+         |
+          -src
+          |
+            -  webapp
+                    |  2)
+                      -css-board.css
+                      -docs->board.sql
+                      -js->search.js
+                       upload->업로드 할 위치
+                       ================
+                      -WEB-INF
+                             |   1)
+                              -tiles-def->환경설정파일 불러오는 위치
+                                     tilesdef.xml
+                             |
+                              -tiles-view->불러오는 파일
+                                     |
+                                       ->tiles에서 css,js파일을 불러오는 방법
+                                      -script->boardDefaultCss.jsp
+                                                   boardSearchJs.jsp
+
+                                      -template->header.jsp,footer,menu.jsp
+                                                        layout.jsp
+----------------------------------------------------------------------------
+3) 테이블을 생성
+
+create table springboard2(
+  seq number primary key,
+  writer varchar2(50) not null,
+  title varchar2(100) not null,
+  content clob not null,
+  pwd varchar2(10) not null,
+  hit number(5) not null,
+  regdate date not null,
+  filename varchar2(100)    
+);                                      
+
+create sequence board_seq;
+----------------------------------------
+->filename->업로드할 파일명
+
+ test1/t1234로 로그인 한 경우
+
+SQL> create table springboard2(
+  2    seq number primary key,
+  3    writer varchar2(50) not null,
+  4    title varchar2(100) not null,
+  5    content clob not null,
+  6    pwd varchar2(10) not null,
+  7    hit number(5) not null,
+  8    regdate date not null,
+  9    filename varchar2(100)
+ 10  );
+
+테이블이 생성되었습니다.
+
+SQL>
+SQL> create sequence board_seq;
+
+시퀀스가 생성되었습니다.
+
+데이터가 없는 상태에서 boardList.jsp출력->NullPointerException
+=>Mybatis때문에 =>데이터를 하나 입력
+--------------------------------------------------------------------
+***
+ =>select count(*) from springboard2=>0을 리턴X
+                Integer=>Wrapper->NullPointer->데이터를 한개 넣어주면
+                                                                   된다.
+***
+=========================================
+DTO작성->com.board.domain.BoardCommand
+----------
+package com.board.domain;
+//DTO
+import java.sql.Date;
+import org.springframework.web.multipart.MultipartFile;
+
+//파일업로드->클래스파일을 이용->업로드파일 이름 
+public class BoardCommand {
+
+	private int seq;//게시물번호
+	private String writer,title,content,pwd;
+	private int hit;//조회수
+	private Date regdate;//작성날짜
+	//---------------------------------
+	private MultipartFile upload;//파일업로드 하기위해 필요한 업로드객체명
+	                                           //pom.xml->commons-fileupload-버전명.jar
+	//----------------------------------
+	private String filename;//업로드할 파일이름
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+	public String getWriter() {
+		return writer;
+	}
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getPwd() {
+		return pwd;
+	}
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+	public int getHit() {
+		return hit;
+	}
+	public void setHit(int hit) {
+		this.hit = hit;
+	}
+	public Date getRegdate() {
+		return regdate;
+	}
+	public void setRegdate(Date regdate) {
+		this.regdate = regdate;
+	}
+	//------------------------------------
+	public MultipartFile getUpload() {
+		return upload;
+	}
+	public void setUpload(MultipartFile upload) {
+		this.upload = upload;
+	}
+	//---------------------------------------------------
+	public String getFilename() {
+		return filename;
+	}
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}	
+}
+-------------------------------------------------------------------
+
+
+
+
+ 
+
+
+
+
+
+

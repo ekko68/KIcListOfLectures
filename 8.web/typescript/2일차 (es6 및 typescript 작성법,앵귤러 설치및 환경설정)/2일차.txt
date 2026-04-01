@@ -1,0 +1,246 @@
+2일차 (es6 및 typescript 작성법,앵귤러 설치및 환경설정)
+
+[09:44:33] C:\webtest\8.web\typescript\dist\temp2.js reloaded.
+[09:44:33] C:\webtest\8.web\typescript\dist\test1.js reloaded.
+^C일괄 작업을 끝내시겠습니까 (Y/N)? y  =>ctrl+c (강제종료)->y 입력
+
+C:\webtest\8.web\typescript>gulp  =>재가동
+[09:45:42] Using gulpfile C:\webtest\8.web\typescript\gulpfile.js
+[09:45:42] Starting 'server'...
+[09:45:42] Webserver started at http://localhost:9400
+[09:45:42] Starting 'scripts'...
+[09:45:42] Starting 'watch'...
+[09:45:42] Finished 'watch' after 19 ms
+[09:45:42] Finished 'server' after 55 ms
+[09:45:43] Finished 'scripts' after 1.21 s
+[09:45:43] Starting 'default'...
+[09:45:43] Finished 'default' after 52 μs
+[09:45:43] C:\webtest\8.web\typescript\dist\const.js reloaded.
+[09:45:43] C:\webtest\8.web\typescript\dist\const2.js reloaded.
+[09:45:43] C:\webtest\8.web\typescript\dist\let1.js reloaded.
+[09:45:43] C:\webtest\8.web\typescript\dist\temp1.js reloaded.
+[09:45:43] C:\webtest\8.web\typescript\dist\let2.js reloaded.
+[09:45:43] C:\webtest\8.web\typescript\dist\temp2.js reloaded.
+[09:45:43] C:\webtest\8.web\typescript\dist\test1.js reloaded.
+==========================================
+1.let,const  2.template string(문자열 표현->백틱문자)
+3.arrow function(화살표 함수),4.default parameter(함수의 매개변수 디폴트지정)
+   ->자바스크립트 배열->5가지 함수
+5.spread 연산자(...)=>함수의 매개변수 형태로 6.디스트럭처링->[] 배열표시
+-----------------------------------------------------------------------------
+=>Type적용 유무 ->유니온,튜플
+=>class,생성자(constructor) 차이점,인터페이스(설계)
+------------------------------------------------------------------------------
+//4.arrow.ts(화살표 함수)->자바의 람다함수->
+
+var pow = function(x:number){  //function pow(x){}
+  console.log('x=>',x) //출력문자열,출력할변수명
+  return x * x;
+}
+
+console.log(pow(10));
+//형식) const 변수명 = (매개변수명,매개변수명2,,)=> {처리구문;
+// 본문내용이 한문장 이상->{} 처리할것               처리구문2;}
+//자료형을 쓰지 않으면 any(어떠한 자료형도 수행)=>권장 X 자료형을 반드시쓸것
+const pow2 = x => x * x;
+console.log(pow2(20));
+/*
+c:\webtest\8.web\typescript\dist>node 4.arrow.js
+x=> 10
+100
+400
+*/
+
+5.rest매개변수->spread연산자 연결=>5.rest1.ts
+
+c:\webtest\8.web\typescript\dist>node 5.rest1.js
+plus()-> 0
+plus(1,2)-> 3
+
+c:\webtest\8.web\typescript\dist>node 5.rest2.js
+true
+rest=> [ 1, 2, 3, 4, 5, 6 ]
+
+c:\webtest\8.web\typescript\dist>
+c:\webtest\8.web\typescript\dist>node 5.rest2.js
+true
+rest=> [ 1, 2, 3, 4, 5, 6 ]
+param=> 7
+rest=> [ 8, 9, 10, 11, 12 ]
+param=> 13
+rest=> [ 14, 15 ]
+
+c:\webtest\8.web\typescript\dist>
+
+5.rest3.ts
+
+:\webtest\8.web\typescript\dist>node 5.rest3.js
+[ 1, 2, 3, 4, 5, 6, 7 ]
+arr5-> [ 7, 8, 9, 10, 11, 12 ]
+추가 전의 copy=> [ 13, 14, 15 ]
+추가 후의 copy=> [ 13, 14, 15, 16 ]
+
+c:\webtest\8.web\typescript\dist>
+c:\webtest\8.web\typescript\dist>
+
+6.destructuring(디스트럭처링)
+배열 or 객체의 값을 대입
+
+ 배열명[0]='aaa' or 3 or 3.4=>값을 대입시킬때
+ 형식) [] 배열표시를 이용해서 특정한 배열의 요소를 구분
+   ========>배열에 특정요소만 값을 저장시킬 수 있다(구분해서)
+ 6.des1.ts
+
+var karr = ['a','b','c']
+var one = karr[0]
+console.log(one,karr[1],karr[2])
+//배열 디스트럭처링->배열의 각 요소를 분리->다른 변수에 저장시키는 방법
+
+const karr2 = ['d','e','f']
+/*
+ var one1=karr2[0];
+ var two2=karr2[1];
+ var three3=karr2[2];
+*/
+//형식) const [변수1,변수2,변수3,,,] = 배열명
+const [one1,two2,three3] = karr2;
+console.log(one1,two2,three3);
+
+let a2,b2,c2;
+[a2,b2,c2]=[4,5,6];//1;1 대응관계->각각의 배열의값을 각각 다른 변수에 저장
+console.log('a2->',a2,'b2->',b2,'c2->',c2)
+
+
+c:\webtest\8.web\typescript\dist>node 6.des1.js
+a b c
+d e f
+a2-> 4 b2-> 5 c2-> 6
+
+c:\webtest\8.web\typescript\dist>
+=================================
+6.des2.ts
+
+c:\webtest\8.web\typescript\dist>node 6.des2.js
+a 2
+
+c:\webtest\8.web\typescript\dist>node 6.des2.js
+a 2
+1 null
+1 2 3
+1 2 3
+1 [ 2, 3, 4 ]
+
+c:\webtest\8.web\typescript\dist>
+
+6.des3.ts
+
+c:\webtest\8.web\typescript\dist>node 6.des3.js
+{ prop1: 'a', prop2: 'b' }
+{ prop1: 'ab', prop2: 'bb', prop3: 'ccc' }
+----------------------------------------------------
+TypeScript=>es6,=>클래스 작성 구분
+
+7.classes6.ts
+
+
+~src>tsc 7.classes6.ts --target es6
+
+c:\webtest\8.web\typescript\src>tsc 7.classes6.ts --target es6
+7.classes6.ts(5,12): error TS2339: Property 'name' does not exist on type 'Person'.
+7.classes6.ts(6,12): error TS2339: Property 'age' does not exist on type 'Person'.
+
+c:\webtest\8.web\typescript\src>
+
+es5->constructor->function으로 변경
+es6->constructor->constructor
+-----------------------------------------
+7.contest2.ts
+
+class Person{
+  /*
+   name;
+   age;
+*/ 생성자를 통해서 위의 멤버변수를 선언하지 않아도 된다.=>동일한 효과
+  constructor(public name:string,public age:number){}
+}
+******************************
+ ->생성자의 특징->constructor(){}->
+                          1.예약어 =>constructor 사용
+                          2.한개이상 작성X
+                          3.생성자내부에 접근지정자 public을 이용->멤버변수를 사용
+=============================================
+   getLog():number{  ->=>반환형 표시
+
+    }
+
+public int getLog(){}
+---------------------------  자바
+ protected   getName():string{    =>protected String getName(){
+       return this.name;              return this.name;
+    }                                   }
+
+ 7.classextend3.ts->상속,오버라이딩 가능하다.
+
+c:\webtest\8.web\typescript\dist>node classextend3.js
+70
+Human eat
+koreans speak Korean
+true
+true
+
+c:\webtest\8.web\typescript\dist>
+-----------------------------------------------------------
+
+Angular 을 설치->p26~29 ->수동으로 설치(package.json)을 작성->설치
+                                          자동으로 설치(p35)=>Angular CLI프로젝트 예제
+
+C:\webtest\8.web\angular>npm install -g @angular/cli
+C:\Users\kitcoop\AppData\Roaming\npm\ng -> C:\Users\kitcoop\AppData\Roaming\npm\
+node_modules\@angular\cli\bin\ng
+
+> node-sass@4.5.3 install C:\Users\kitcoop\AppData\Roaming\npm\node_modules\@ang
+ular\cli\node_modules\node-sass
+> node scripts/install.js
+
+Downloading binary from https://github.com/sass/node-sass/releases/download/v4.5
+.3/win32-x64-57_binding.node
+Download complete  ] - :
+Binary saved to C:\Users\kitcoop\AppData\Roaming\npm\node_modules\@angular\cli\n
+ode_modules\node-sass\vendor\win32-x64-57\binding.node
+Caching binary to C:\Users\kitcoop\AppData\Roaming\npm-cache\node-sass\4.5.3\win
+32-x64-57_binding.node
+
+> uglifyjs-webpack-plugin@0.4.6 postinstall C:\Users\kitcoop\AppData\Roaming\npm
+\node_modules\@angular\cli\node_modules\uglifyjs-webpack-plugin
+> node lib/post_install.js
+
+
+> node-sass@4.5.3 postinstall C:\Users\kitcoop\AppData\Roaming\npm\node_modules\
+@angular\cli\node_modules\node-sass
+> node scripts/build.js
+
+Binary found at C:\Users\kitcoop\AppData\Roaming\npm\node_modules\@angular\cli\n
+ode_modules\node-sass\vendor\win32-x64-57\binding.node
+Testing binary
+Binary is fine
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.2 (node_modules\@an
+gular\cli\node_modules\fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
+1.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"}
+)
+
++ @angular/cli@1.4.1
+added 905 packages in 105.019s
+
+C:\webtest\8.web\angular>
+
+설치위치->컴퓨터의 계정=>AppData\npm\node_modules\@angular-cli로 폴더
+                                       생성->설치된다.
+
+1.앵귤러 모듈을 다운로드 받은 다음에
+2.예제를 작성할 폴더로 이동
+
+C:\webtest\8.web\angular>ng new myapp
+
+
+

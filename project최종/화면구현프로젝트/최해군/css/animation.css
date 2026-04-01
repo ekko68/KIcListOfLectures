@@ -1,0 +1,18 @@
+  h1 {text-shadow:15px 15px 20px #333333;
+	           text-align:center;
+	   -webkit-animation-duration:3s;
+	   -webkit-animation-name:slidein;font-size:35pt;}
+	    @-webkit-keyframes slidein{
+	
+from{
+     margin-left:100%;
+	 width:100%;
+	
+	 color:yellow
+	}
+to{
+      margin-left:0%;
+	  width:100%;
+	  color:#00ffff
+	}
+	}

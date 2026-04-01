@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!--
+    <link href="CSS/project1css/main.css" rel="stylesheet" type="text/css" media="screen and (min-width:1600px)">
+    
+    <link href="CSS/project1css/768px.css" rel="stylesheet" type="text/css" media="screen and (min-width:768px)">
+-->
+
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+<!--    Montserrat 웹 폰트 사용-->
+
+    <script>
+        function mouse(number) { /* 자바 스크립트 사용해서 서브메뉴에 마우스오버 시에 이미지가 나타나게 설정*/
+            var m = document.getElementById("moca");
+            var c = document.getElementById("caramel");
+            var v = document.getElementById("vanilla");
+
+            m.style.display = "block";
+            c.style.display = "none";
+            v.style.display = "none";
+
+
+            if (number == 1) {
+                m.style.disply = "block";
+            } else if (number == 2) {
+                c.style.display = "block";
+                m.style.display = "none"
+
+            } else if (number == 3) {
+                v.style.display = "block";
+                m.style.display = "none"
+            }
+
+        }
+
+    </script>
+    <style>
+        @font-face{
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body,
+        html {
+            /* 전체적인 HTML 페이지 설정*/
+            margin: 0;
+            height: 100%;
+            line-height: 1.8;
+            font-family: "Montserrat";
+        }
+        
+        #puppy {
+            /* 메인name 윗줄 puppy글자 설정 */
+            position: absolute;
+            top: 56%;
+            left: 50%;
+            transform: translate(-50%, -120%);
+            font-size: 13vw;
+            text-shadow: 1px 1px 1px;
+        }
+        
+        #puppy2 {
+            /* 메인name 아랫줄 cafe name 글자 설정*/
+            position: absolute;
+            top: 65%;
+            left: 40%;
+            transform: translate(-26.5%, -110%);
+            font-size: 7vw;
+            text-shadow: 1px 1px 1px
+        }
+        /* 큰메뉴 설정 */
+        
+        ul {
+            list-style: none;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        /* 배경이미지(3가지)의 설정 */
+        
+        .caffe,
+        .bar,
+        .bridges {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .caffe {
+            background-image: url("img/cafe.jpg");
+            min-height: 100%;
+        }
+        
+        .bar {
+            background-image: url('img/bar.jpg');
+            min-height: 600px;
+        }
+        
+        .bridges {
+            background-image: url('img/bridges.jpg');
+            min-height: 800px;
+        }
+        /* 스크롤 했을때 배경화면 고정 설정*/
+        
+        @media only screen and (max-device-width:1024px) {
+            .caffe,
+            .bar,
+            .bridges {
+                background-attachment: scroll;
+            }
+        }
+        /* 큰 메뉴 설정 및, 최우선으로 보이도록(z-index) 설정 */
+        
+        .p_home {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #566;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+        }
+        
+        .p_home li {
+            float: right;
+        }
+        
+        .p_home a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 13pt
+        }
+        /* 큰메뉴에 마우스 오버시에 변화 설정*/
+        
+        .m_home a:hover {
+            background-color: white;
+            color: black;
+        }
+        
+        .active {
+            background-color: #4CAF50;
+        }
+        /* 2page 시작 */
+        
+        h3 {
+            font-size: 30pt;
+            text-align: center;
+        }
+        
+        .m_text {
+            margin: 50px;
+            text-align: center;
+        }
+        /* 비디오 설정 */
+        
+        video {
+            width: 70%;
+            position: relative;
+            left: 15%;
+            box-shadow: 1px 5px 10px;
+            border: 2px solid #f1f1f1;
+        }
+        /* 작은메뉴(main menu) 설정 */
+        
+        .dropmenu {
+            height: 1000px;
+        }
+        
+        .dropdownmenu>li {
+            float: left;
+            position: relative;
+            background: #f1f1f1;
+            width: 19%
+        }
+        
+        .dropdownmenu ul {
+            position: absolute;
+            top: -9999px;
+            z-index: 9999;
+            width: 77%;
+            border: 1px solid #cccccc;
+            background-color: #f1f1f1;
+        }
+        
+        .dropdownmenu>li>a {
+            display: block;
+            font-size: 20px;
+            color: black;
+            text-align: center;
+            height: 50px;
+            line-height: 50px;
+        }
+        
+        .dropdownmenu>li:hover {
+            background: #999
+        }
+        
+        .dropdownmenu>li:hover>ul {
+            top: 50px;
+            left: 0;
+        }
+        
+        .dropdownmenu ul li {
+            position: relative;
+        }
+        
+        .dropdownmenu ul a {
+            display: block;
+            color: #aaaaaa;
+            font-size: 12pt;
+            line-height: 50px;
+            background-color: #f1f1f1;
+            padding-left: 5px;
+        }
+        
+        .dropdownmenu ul a:hover {
+            color: black;
+        }
+        
+        #container {
+            width: 96%;
+            height: 100%;
+            margin: 0px auto;
+            padding: 20px;
+            
+        }
+        /* 3번째 페이지 전체 설정*/
+        
+        #content {
+            width: 45%;
+            padding: 20px;
+            margin-bottom: 20px;
+            float: left;
+        }
+        /* send message 페이지 설정 */
+        
+        #sidebar {
+            width: 45%;
+            padding: 20px;
+            margin-bottom: 20px;
+            float: right;
+            text-align: right;
+        }
+        /* input 박스의 이름들 설정 */
+        
+        label {
+            font-size: 1.9vw;
+        }
+        /* input 박스 크기 및 테두리 설정 */
+        
+        input {
+            font-size: 2vw;
+            border: 2px solid #f1f1f1;
+        }
+        /* input 박스 text 박스 설정 */
+        
+        #textarea {
+            width: 70%;
+            height: 150px;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            border: 2px solid #f1f1f1;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 16px;
+            resize: none;
+        }
+        /* input SEND 버튼 설정*/
+        
+        input[type="submit"] {
+            font-size: 3vw;
+            width: 70%;
+            background-color: #333;
+            padding: 10px;
+            color: white;
+            box-shadow: 1px 1px 1px;
+        }
+        /* input select 선택 박스 설정 */
+        
+        #country {
+            width: 70%;
+            font-size: 1.5vw;
+        }
+        /* 작은메뉴(LATTE)의 마우스 오버시 이미지 출력X 설정*/
+        
+        #moca {
+            display: none;
+        }
+        
+        #caramel {
+            display: none;
+        }
+        
+        #vanilla {
+            display: none;
+        }
+        
+        #latte {
+            position: relative;
+            top: 15%;
+            left: 50%;
+            transform: translate(-40%, 12%);
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    <div class="caffe">
+        <!-- 메인 name -->
+        <h1 id="puppy">PUPPY</h1>
+        <h2 id="puppy2">CAFE NAME</h2>
+
+
+        <div>
+            <!-- 큰 메뉴 -->
+            <ul class="p_home">
+                <li class="m_home"><a href="#a_addr">ADDR</a></li>
+                <li class="m_home"><a href="#a_menu">MEUN</a></li>
+                <li class="m_home"><a href="#a_about">ABOUT</a></li>
+                <li class="m_home"><a href="#top">HOME</a></li>
+            </ul>
+        </div>
+    </div>
+    <p></p>
+    <!-- 페이지 2 시작-->
+
+    <h3 id="a_about" style="padding-top:60px">Coffee. </h3>
+    <p class="m_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.ake a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently </p>
+    <video autoplay loop="100">
+     <source src="img/cafe.mp4">
+     
+     
+    </video>
+    <!-- 페이지 2 끝-->
+    <p></p>
+    <!--페이지 3 시작-->
+    <div class="bridges"></div>
+    <div class="dropmenu">
+        <br>
+        <h3 id="a_menu" style="padding-top:60px">MAIN MENU.</h3>
+
+        <div>
+            <!--작은 메뉴(main menu)-->
+            <ul class="dropdownmenu">
+                <li><a id="ESPRESSO">ESPRESSO</a></li>
+                <li><a id="LATTE">LATTE</a>
+
+                    <ul>
+                        <!--서브메뉴 (자바스크립트 사용)-->
+                        <li class="moca"><a name="moca" onmouseover="mouse(1);">MOCA</a></li>
+                        <li><a name="caramel" onmouseover="mouse(2);">Caramel macchiato</a></li>
+                        <li><a name="vanilla" onmouseover="mouse(3);">vanilla</a></li>
+                    </ul>
+                </li>
+                <li><a id="DRINKS">DRINKS</a></li>
+                <li><a id="TEA">TEA</a>
+                    <ul>
+                        <li><a href="#">black tea</a></li>
+                        <li><a href="#">Chamomile</a></li>
+                        <li><a href="#">lavender</a></li>
+                    </ul>
+                </li>
+                <li><a id="food">FOOD</a></li>
+            </ul>
+        </div>
+        <div id="latte" style="width:400px">
+            <img src="img/moca.jpg" id="moca" style="position=absolute; top:100%">
+            <img src="img/caramel.png" id="caramel">
+            <img src="img/vanilla.jpg" id="vanilla">
+        </div>
+    </div>
+    <div>
+        <p style="margin:15px; text-align:center;">
+            er 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, <br>and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of G
+        </p>
+        <!--페이지3 끝-->
+    </div>
+
+    <!--페이지 4 시작-->
+    <div class="bar"></div>
+    <!--    <a name="a_addr"></a>-->
+
+
+    <div id="container">
+        <h3 id="a_addr" style="padding-top:60px"> ADDRESS.</h3>
+        <div id="content">
+
+            <h2>ADDRESS</h2>
+            <p>
+                <img src="img/ad.png" style="width:100%">
+            </p>
+            <p>
+                Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in.
+            </p>
+
+
+        </div>
+        <div id="sidebar">
+            <h2>Send Message</h2>
+            <!-- input 박스들의 삽입-->
+            <form>
+                <label>e-mail.</label> <input type="e-mail" id="e-mail">
+                <p></p>
+                <label>name.</label> <input type="text" id="name">
+                <p></p>
+                <label>password.</label> <input type="password" id="pw">
+                <p></p>
+                <br> <input type="text" id="textarea" placeholder="send message.">
+                <p></p>
+                <label>Country.</label> <select id="country" name="country">
+                    <option value="Ko">Korea</option>
+                    <option value="ch">China</option>
+                    <option value="ja">Japan</option>
+                    <option value="usa">USA</option>
+                    <option value="eng">England</option>
+                    <option value="aus">Australia</option>
+                    <option value="can">Canada</option>
+            </select>
+                <p></p>
+                <input type="submit" id="send" value="SEND">
+
+            </form>
+            <!-- 페이지 4 끝-->
+
+        </div>
+
+
+    </div>
+
+</body>
+
+</html>

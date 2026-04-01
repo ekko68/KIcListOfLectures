@@ -1,0 +1,348 @@
+13일차(파일업로드의 게시판의 글쓰기구현)->글수정 save as
+
+1.리소스 번들 작성법-properties파일을 이용
+2.유효성 검사 구현
+3.화면에 에러메세지 출력시키는 방법
+---------------------------------------------------------------
+ 게시판의 글쓰기
+
+ 제목->write.form.title
+<input type="text" name="title">
+
+ 작성자
+<input type="text" name="writer">
+---------------------------------------------
+1.리소스 번들 작성법-properties파일을 이용
+
+c:\webtest\encode=>test_ko.txt(한글이 저장된 파일)->유니코드로 변환
+                                test.properties(영문파일)
+                                ...
+      jdk버전의 bin->path
+        키명=화면에 출력할 문자열
+  C:\webtest\encode>native2ascii test_ko.txt        test_ko.properties
+                                             변환하고자하는 파일명  변환한 파일명
+  C:\webtest\encode>
+
+ 스프링 4.0 ->JDK 1.8->1.6버전 이상부터->utf-8
+
+                            test_ko.properties(utf-8)로 저장한후 
+<property name="defaultEncoding" value="utf-8" />
+========================================
+2.글쓰기 요청명령어 등록->WriteController를 작성
+
+  dispatcher-servlet.xml에 등록
+  <bean class="com.board.controller.WriterController" />
+
+
+<!-- 파일업로드(52428800->byte단위 50MB->51,200kB->52,428,800byte -->
+    <bean id="multipartResolver"
+               class="org.springframework.web.multipart.commons.CommonMultipartResolver">
+        <property name="maxUploadSize" value="52428800" />
+        <property name="defaultEncoding" value="utf-8" />
+     </bean>
+
+            다운로드
+            <dependency>
+  		<groupId>commons-fileupload</groupId>
+  		<artifactId>commons-fileupload</artifactId>
+  		<version>1.3</version>
+  	</dependency>
+--------------------------------------------------------------------------
+3.업로드 위치->파일명이 노출->파일이름을 임의의 파일명으로 변경(보안)
+
+public class FileUtil {
+    //업로드 및 다운로드 경로
+	public static final String UPLOAD_PATH="C:/webtest/4.jsp/sou/Springfileboard/src/main/webapp/upload";
+	
+	//탐색기의 원본파일명만 받는 역할(test.txt)
+	public static String rename(String filename) throws Exception {
+		if(filename==null) return null; //업로드 X 이름변경X
+		//새이름 규칙->시스템날짜+랜덤숫자(0~49)
+		String newName=Long.toString(System.currentTimeMillis())+
+				                   (int)(Math.random()*50);
+		System.out.println("newName(난수)=>"+newName);
+		return rename(filename,newName);
+	}
+	//실제로 새로운 파일명을 변경하는 역할(확장자 구분->변경된이름만 구해서)
+	//ex) testkiamaaaaaa.txt(뒤에서 검색)->1234aDSDDA.TXT
+	public static String rename(String filename,String newName) throws Exception{
+		if(filename==null) return null; 
+		//확장자 구하기
+		int idx=filename.lastIndexOf("."); //못찾으면 -1을 리턴
+		String extention="";//확장자를 저장
+		String newFileName="";//새파일명을 저장
+		if(idx!=-1) { //찾았다면
+			extention=filename.substring(idx);
+			System.out.println("extention=>"+extention);
+		}
+		//새파일명
+		int newIdx=newName.lastIndexOf(".");//확장자를 포함한 변경된 파일명
+		if(newIdx!=-1) {
+			newName=newName.substring(0,newIdx);//0은 포함->newIdx-1
+			System.out.println("newName(변경된파일명)=>"+newName);
+		}
+		newFileName=newName+extention.toLowerCase();//확장자(대)->소문자로
+		return newFileName;//실질적으로 업로드된 파일명
+	}
+	//글수정->업로드된 파일도 수정->기존업로드된 파일 삭제->새로 업로드됨
+	//파일 삭제->수정목적
+	public static void removeFile(String filename) {
+		File file=new File(UPLOAD_PATH,filename);//경로명,파일명
+		if(file.exists())  file.delete();//파일이 이경로에 존재한다면 삭제시켜라
+	}
+}
+------------------------------------------------------------------------
+//글내용 ->enter가 포함->웹에 출력(enter-><br>로 변경)
+//<pre></pre>로 대용
+4.
+public class StringUtil {
+	public static String parseBr(String msg){
+		
+		if(msg == null) return null;
+		return msg.replace("\r\n", "<br>")
+                          .replace("\n", "<br>");
+	}
+}
+-------------------------------------------------------------------------
+글쓰기->메서드를 선언->BoardDAO->BoardDaoImpl에서 메서드 호출
+                                                             5. BoardMapper.xml
+-------------------------------------------------------------------------
+<!-- 최대값구하기  -->
+ <select id="getNewSeq" resultType="int">
+    select max(seq) from springboard2
+ </select>
+ 
+ <!--글쓰기 (com.board.domain.BoardCommand) -->
+ <insert id="insertBoard" parameterType="BoardCommand">
+    insert into springboard2(seq,writer,title,content,pwd,hit,regdate,filename)
+    values(#{seq},#{writer},#{title},#{content},#{pwd},0,sysdate,
+              #{filename,jdbcType=VARCHAR})
+ </insert>
+--------------------------------------------------------------------------
+6.BoardDao
+
+//3.최대글 번호 얻어오기
+  public int getNewSeq();
+  
+  //4.게시판의 글쓰기
+  public void insert();
+
+
+7.BoardDaoImpl에서 메서드 호출
+-------------------------------------
+public int getNewSeq() {
+			// TODO Auto-generated method stub
+		//Object->Integer->int
+		int newseq=(Integer)getSqlSession().selectOne("getNewSeq");
+		System.out.println("getNewSeq()의 newseq=>"+newseq);
+	    return newseq;
+	    //return (Integer)getSqlSession().selectOne("getNewSeq");
+    }
+	//글쓰기
+	public void insert(BoardCommand board) {
+			// TODO Auto-generated method stub
+			getSqlSession().insert("insertBoard",board);
+    }
+  public void insert(BoardCommand board);
+========================================
+8.tilesdef.xml에 boardWrite.jsp화면에 출력
+
+<!--글쓰기(definition name="이동할파일명")-->
+   	<definition name="boardWrite" extends="boardList">
+   	  <put-attribute name="title" value="글쓰기"/>
+   	  <put-attribute name="js"  value=""/> 
+   	  <put-attribute name="body"  value="/WEB-INF/tiles-view/boardWrite.jsp" />
+   	</definition>
+
+----------------------------------------------------------
+**********
+ 리소스번들=>유효성 검사=>웹에 출력(boardWrite.jsp)
+
+1)label.properties=>write.form.title=제목
+    label(을 리소스 번들로 불러오게 하기위해서 필요)->
+            <spring:message code="키명" />
+               식별자  액션태그명  속성명
+
+   validation.properties(p318)
+
+  에러코드명=값
+invalidPassword=\ube44\ubc00\ubc88\ud638\uac00 \uc77c\uce58\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.
+required=\ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+required.pwd=\ube44\ubc00\ubc88\ud638\ub294 \ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+required.writer=\uc774\ub984\uc740 \ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+required.title=\uc81c\ubaa9\uc740 \ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+required.content=\ub0b4\uc6a9\uc740 \ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+======================================
+1.에러코드=화면에 출력할값
+   required=\ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+   invalidPassword=\ube44\ubc00\ubc88\ud638\uac00 \uc77c\uce58\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.
+
+2.에러코드명.필드명->특정필드를 입력하는데 에러가 발생될때 화면에 출력할
+                                에러메세지를 지정할때 사용
+
+required.pwd=\ube44\ubc00\ubc88\ud638\ub294 \ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+required.writer=\uc774\ub984\uc740 \ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+required.title=\uc81c\ubaa9\uc740 \ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+required.content=\ub0b4\uc6a9\uc740 \ud544\uc218 \ud56d\ubaa9 \uc785\ub2c8\ub2e4.
+--------------------------------------------------------------
+ 우선순위에 따라서 화면에 출력 1->2->3->4순으로
+
+1.required.loginCommand.email=이메일은 필수입력입니다.
+2.required.email=이메일은 필수입력입니다.
+3.required.java.lang.String=이메일은 필수입력입니다.
+4.required=이메일은 필수입력입니다.
+-------------------------------------------------------------------
+2.유효성검사->Validator을 상속을 받아서 작성
+
+//1.유효성 검사를 할 클래스명을 지정해주는다.
+	public boolean supports(Class<?> clazz) {
+		// TODO Auto-generated method stub
+		return BoardCommand.class.isAssignableFrom(clazz);
+	}
+	//WriteController에서 호출한다.
+	//유효성 검사(1.입력받을 대상자(DTO객체(=커맨드객체) 2.에러정보를 담을객체명)
+	//1.required.pwd=암호는 필수입력입니다
+	//1.required.command.pwd->required.pwd->required.java.lang.String
+	//required순으로 찾는다.
+	public void validate(Object target, Errors errors) {//필수 입력체크
+		// TODO Auto-generated method stub
+		//입력하지 않았거나 공백을 체크해주는 메서드->에러정보를 저장(에러객체)
+		//1.에러객체명 2.적용시킬 필드명 3.적용시킬 에러코드명
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pwd", "required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "writer", "required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "content", "required");
+	}
+
+                 errors.rejectValue("적용필드명","에러코드명")
+                 =>필드에 에러코드를 추가한다.
+--------------------------------------------------------------------
+3.WriteController를 작성
+
+public class WriterController {
+    //Logger객체
+	private Logger log=Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private BoardDao boardDao;
+	
+	//하나의 요청명령어->하나의 컨트롤러만 사용X 
+	//하나의 컨트롤러->여러개의 요청명령어를 등록해서 사용이 가능
+	//method=RequestMethod.GET) or method=RequestMethod.POST)
+	//1.글쓰기 폼으로 이동(Get방식)
+	@RequestMapping(value="/board/write.do",method=RequestMethod.GET)
+	public String form() {
+		System.out.println("다시 처음부터 입력받기위함 form()호출됨!");
+		return "boardWrite"; //return "이동할페이지명"; //defintion name과 동일
+	}
+	
+	//에러메세지 출력->다시 초기화가 가능하게 설정->@ModelAttribute("별칭")
+	@ModelAttribute("command")
+	public BoardCommand forBacking() { //반환형(BoardCommand) 메서드명
+		System.out.println("forBacking()호출됨!");
+		return new BoardCommand();//BoardCommand bc=new BoardCommand();
+	}
+	//입력해서 유효성검사->에러발생->DB저장후->boardList.jsp로 이동
+	//BindingResult->유효성 검사때문에 필요(에러정보 객체)
+	@RequestMapping(value="/board/write.do",method=RequestMethod.POST)
+	public String submit(@ModelAttribute("command") BoardCommand command,
+			                           BindingResult result) {
+		if(log.isDebugEnabled()) {
+			log.debug("BoardCommand=>"+command);//입력받은값을 출력
+		}
+		//유효성검사->command조사 문제발생->result에 에러정보를 담는다.
+	    new BoardValidator().validate(command,result);
+	    //에러정보가 있다면
+	    if(result.hasErrors()) {
+	    	return form();//"boardWrite"->boardWrite.jsp
+	    }
+	    //업로드->입출력->예외처리
+	    try {
+	    	String newName="";//업로드한 파일의 변경된 파일명을 저장
+	    	//업로드되어있다면
+	    	if(!command.getUpload().isEmpty()) {
+	    		//탐색기에서 선택한 파일이름->getOriginalFilename()  /aaa.txt->12222.txt
+	    		newName=FileUtil.rename(command.getUpload().getOriginalFilename());
+	    		System.out.println("newName=>"+newName);
+	    		command.setFilename(newName);//12344.txt
+	    	}
+	    	//최대값을 구해서+1
+	    	int newSeq=boardDao.getNewSeq()+1;
+	    	System.out.println("newSeq=>"+newSeq);
+	    	//글쓰기 호출
+	    	boardDao.insert(command);//DB상에 aaa.txt 업로드
+	    	//실제로 upload폴더로 전송
+	    	if(!command.getUpload().isEmpty()) {
+	    		File file=new File(FileUtil.UPLOAD_PATH+"/"+newName);
+	    		//물리적으로 데이터 전송(파일 전송)
+	    		command.getUpload().transferTo(file);//실제 upload에 등록
+	    	}
+	    }catch(IOException e) {
+	    	e.printStackTrace();
+	    }catch(Exception e) {
+	    	e.printStackTrace();
+	    }
+	    //return "redirect:요청명령어"
+		return "redirect:/board/list.do"; //return "이동할페이지명"; //defintion name과 동일
+	}
+}
+========================================
+
+4.boardWrite.jsp작성
+
+<%-- 
+ enctype->파일 첨부를 하기위해서 필요 
+       form:액션태그명~(에러메세지를 출력)
+       spring:message 액션태그->code="불러올 키값"
+       form:errors 액션태그=>path="적용필드명(DTO중 입력받은 필드명)"
+       업로드 하기위해서 form태그에 
+       enctype="multipart/form-data" method="post" 적용
+       <spring:hasBindErros name="커맨드객체명"/> ->에러발생시 처리
+       <form:errors path="커맨드객체명" />->폼안에서의 입력받을시 처리
+--%>
+
+<spring:hasBindErros name="command"/>
+<form:errors path="command" />
+
+<form action="write.do" enctype="multipart/form-data" method="post">
+	<spring:message code="write.form.title"/>
+	<input type="text" name="title" value="${command.title}">
+	<form:errors path="command.title"/><br>
+
+    <spring:message code="write.form.writer"/>
+	<input type="text" name="writer" value="${command.writer }">
+	<form:errors path="command.writer"/><br>
+	
+	<spring:message code="write.form.pwd"/>
+	<input type="password" name="pwd">
+	<form:errors path="command.pwd"/><br>
+	
+	<spring:message code="write.form.content"/>
+	<textarea rows="10" cols="50" name="content">${command.content}</textarea>
+	<form:errors path="command.content"/><br>
+	
+	<spring:message code="write.form.upload"/>
+	<input type="file" name="upload">
+    <p>
+	<input type="submit" value="<spring:message code="write.form.submit" />">
+	<input type="button" value="<spring:message code="list.content.title" />" 
+	          onclick="location.href='list.do'">
+</form>
+
+----------------------------
+<form:form commandName="loginCommand">
+                                               커맨드객체명=>BoardCommand의
+                                                                      별칭이름
+  입력할값(input ~)
+
+</form:form>
+------------------------------------------------------------------------
+@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "BoardCommand[seq="+seq+",writer="+writer+",title="
+				   +title+",content="+content+",pwd="+pwd+",hit="
+				   +hit+",regdate="+regdate+",upload="+upload
+				   +",filename="+filename+"]";
+	}
+--------------------------------------------------------------------------------

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Require-Bundle: com.quantum.Quantum,org.eclipse.ui,org.eclipse.core.ru
+ ntime,org.eclipse.core.resources
+Bundle-Vendor: quantum.sourceforge.net
+Bundle-Version: 3.3.10
+Bundle-Name: Derby Plug-in
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.quantum.derby;singleton:=true
+

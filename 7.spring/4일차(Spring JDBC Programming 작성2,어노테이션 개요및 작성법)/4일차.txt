@@ -1,0 +1,156 @@
+4일차(Spring JDBC Programming 작성2,어노테이션 개요 및 작성법)
+
+maven->라이브러리를 다운
+-----------------------------
+스프링의 JDBC Programming=>JSP의 JDBC Programming차이점
+
+패키지,클래스도 좀 틀린부분이 존재
+
+
+ResultSet rs->select=> if(rs.next()) or while(rs.next())
+->Mapper인터페이스가 존재->mapRow()을 이용->검색
+
+JdbcTemplate클래스(p482~492)
+----------------------
+insert,update,delete->update()로 통합
+
+select->1개->queryForObject()
+                                  =====
+           여러개->queryForList()
+                                    ===
+
+                      query()를 좀더 다양한 검색
+
+
+bean.xml
+-----------
+<bean id="dataSource" 
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+  <property name="driverClassName"  value="com.mysql.jdbc.Driver" />
+  <property name="url"  value="jdbc:mysql://localhost:3307/mydb" />
+  <property name="username"  value="root" />
+  <property name="password"  value="1234" />
+</bean>
+
+<!--2.DB연결시켜서 가져올 수 있는 빈즈객체  -->
+<bean id="studentJDBCTemplate"  class="studentdb.StudentJDBCTemplate">
+    <property name="dataSource" ref="dataSource" />
+</bean>
+--------------------------------------------------------------
+  public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
+	// TODO Auto-generated method stub
+	  //if(rs.next()) or while(rs.next()) X
+	  System.out.println("mapRow() 호출됨(rownum)=>"+rowNum);
+	  //while(rs.next()){
+	  Student st=new Student();//DTO객체생성
+	  st.setId(rs.getInt("id"));
+	  st.setName(rs.getString("name"));
+	  st.setAge(rs.getInt("age"));
+	return st; //query()의 반환값으로 받는다.
+   }
+}
+
+==>반환받음
+Student st=jdbcTemplateObject.queryForObject
+   (sql,new Object[] {id},new StudentMapper());
+return st;
+
+어노테이션=>데코레이션(장식자) ->import { } from '@angular/core'
+@키워드        @Component->기능
+-------------------------------------------------------------------------
+->클래스와 연관->import를 어노테이션과 연관이 있는 클래스 불러온다.
+--------------------------------------------------------------------------
+****
+->목적 1) 환경설정에 관한 어노테이션=>xml에서 사용
+           2) 자바코딩의 간결화
+****
+
+*장점
+
+1)시스템 복잡성이 아니라면 어노테이션 사용은 적합하게 쓰이면 코드가 간결해지고 유지보수가 용이해짐
+2) 대형 시스템엔 계층 구조가 잘 파악되기 위해서는 xml 사용이 필수
+
+단점
+
+ 어노테이션과 관련된 클래스와 같이 연동->이해하기가 쉽지않다.
+
+1. 어노테이션 은 메타정보가 소스코드에 들어가므로 파악하기 어려움
+ (재 컴파일이 필요하다.)
+2. 소스코드가 같이 제공되지 않으면 사용에 제약이 따름
+ (어노테이션 과 클래스 같이 사용할것)
+-------------------------------------------------------------------
+어노테이션 정리->SpringMVC(환경설정 xml)->게시판
+
+SpringTest4(anno)
+
+1.@Required->메서드명 위에 기술
+
+=>이 메서드를 반드시 호출해야되는데 만약에 호출하지 않으면 에러를 유발시킨다.
+=>멤버변수를 이용해서 에러유발
+
+ 어노테이션 ->1.클래스 명위에 @Controller
+                     2.멤버변수명 위에 
+                     3.Setter Method외에 일반메서드도 가능 
+                       ->메서드명위에 어노테이션을 붙일 수가 있다.
+-----------------------------------------------------------------
+**
+xml에서 @Required를 사용하기위해서는 아래와 같은 빈즈클래스를 
+미리 등록시켜줘야 한다.
+
+<bean class="org.springframework.beans.factory.
+                     annotation.RequiredAnnotationBeanPostProcessor">
+
+</bean>
+
+<!-- @Required,@Autowired,@Resource 때문에 필요(xml에 등록) -->
+<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+
+->다음과 같은 멤버변수와 관련된 에러메세지를 출력시켜준다.
+
+nested exception is org.springframework.beans.factory.BeanInitializationException:
+ Property 'number' is required for bean 'camera1'
+
+
+어노테이션은 한개이상 겹쳐서 나올 수가 있다.(특징)
+  ***********************************************                                         
+               @Autowired=>특징
+
+                       1.생성자,멤버변수(=속성),메서드에 지정이 가능
+                       2.
+                        메서드명위에 @Autowired를 부여
+                                    이메서드를 호출하면서 매개변수가 의존성객체를 
+                                    얻어넣어준다.(멤버변수에)
+
+                           xml에 <property>태그 또는 <p:멤버변수-ref="~">
+                                    생략해도 호출한다.
+                         3.Setter Method외에 다른 메서드에서 동일하게 적용이 된다.
+                         4.해당하는 빈즈객체가 없거나 두개이상 존재시 에러가 유발
+                         NoSuchBeanDefinitionException: No qualifying bean of type [com.spring.anno2.SmsSender] found for dependency: expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+                            ->xml에 빈즈가 등록X
+                            =>디폴트 설정=>Autowired(required=true)
+                                                    무조건 가져와라는 옵션
+                             =>@Autowired(required=false)
+                                                      추가옵션
+
+               =>@Inject -------->@Injectable(앵글러)
+                   pom.xml에 기술
+
+                   <!--  @Inject때문에 -->
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+                    -------------------------------------------------------
+                    @Autowired(구)->대신에 @Inject (최신) 사용하면 된다.
+                    ----------------------------------------------------------
+
+
+	@Required =>반드시 호출했는지 안했는지를 체크해주는 기능
+	public void setSender(SmsSender sender) {
+		this.sender = sender;
+		System.out.println("setSender()호출됨=>"+sender);
+	}
+-----------------------------------------------------------------------

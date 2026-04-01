@@ -1,0 +1,276 @@
+package test;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Scrollbar;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.xml.transform.Source;
+
+import bag.db.data.Product;
+import bag.design.page.ProductPage;
+import bag.get.connection.MakeConnection;
+import bag.handle.sql.HandleProductDB;
+
+
+public class Search extends JFrame implements ActionListener,ListSelectionListener {
+	
+	private JTextField txtB_Num;// 제품번호
+	private JLabel P_List_Label, P_Num, lblProductList,bgImg;// P_List_Label 제품번호,
+	private JButton C_Insert,btn_srch,confirm,cancelbtn;
+	private JFrame fSearch; 
+	private Dimension screen;
+	private Color trans;
+	private JPanel infoPn,bPn1,bPn5,delPn;
+	private ImageIcon imageIcon;
+	private Scrollbar scrollbar;
+	private JList<String> list; 
+	private ProductPage proPage;
+	
+	//DB관련
+	private ArrayList<Product> products;
+	private HandleProductDB productDB;
+	private String[] titles; //검색결과와 같은 상품들의 이름이 저장되는 변수
+	private String str; // 검색창에서 찾은상품을 저장
+	
+	public Search() {
+		init();
+
+	}
+	public Search(ProductPage proPage) {
+		this.proPage = proPage;
+		init();
+	}
+	
+	public void init() {
+		str = null;
+		productDB = new HandleProductDB();
+		fSearch = new JFrame();
+		products = productDB.selectAllData(MakeConnection.getInstance());
+		design();
+		fSearch.setVisible(true);
+	}
+
+	public void design() {
+
+		
+		screen = Toolkit.getDefaultToolkit().getScreenSize();
+		trans = new Color(0, 0, 0, 0);
+
+		// winIsert = new JWindow(this);
+		fSearch.setTitle("검색");
+		fSearch.setBounds(screen.width / 2, screen.height / 9, 670, 720);
+
+		// 제품정보 패널
+		infoPn = new JPanel();
+		infoPn.setBounds(7, 16, 640, 550);
+		infoPn.setBorder(new LineBorder(new Color(255, 255, 255), 2, true));
+		infoPn.setLayout(null);
+		infoPn.setBackground(new Color(255, 255, 255, 90));
+
+		bPn1 = new JPanel();
+		bPn1.setBounds(12, 25, 616, 60);
+		bPn1.setBackground(trans);
+		bPn5 = new JPanel();
+		bPn5.setBounds(20, 95, 600, 445);
+		bPn5.setBackground(trans);
+
+		P_Num = new JLabel("Product Name :");
+		P_Num.setBounds(12, 5, 108, 20);
+		P_Num.setFont(new Font("Noto Sans", Font.BOLD, 14));
+		P_List_Label = new JLabel("Product Lisn :");
+		P_List_Label.setFont(new Font("Noto Sans", Font.BOLD, 14));
+		fSearch.getContentPane().setLayout(null);
+
+		txtB_Num = new JTextField("", 53);
+		txtB_Num.setBounds(12, 30, 481, 21);
+		txtB_Num.setEditable(true);
+		bPn1.setLayout(null);
+
+		// 라벨-패널-패널 부착
+		bPn1.add(P_Num);
+		bPn1.add(txtB_Num);
+
+		infoPn.add(bPn1);
+		
+		//btn_srch는 검색버튼
+		btn_srch = new JButton("");
+		btn_srch.setBackground(new Color(255, 255, 255, 0));
+		btn_srch.setBounds(502, 25, 100, 30);
+
+	
+
+		btn_srch.setIcon(new ImageIcon("C:/image/btn_srch.jpg"));
+		bPn1.add(btn_srch);
+
+		infoPn.add(bPn5);
+		bPn5.setLayout(null);
+
+		lblProductList = new JLabel("Product List :");
+		lblProductList.setFont(new Font("Noto Sans UI", Font.BOLD, 14));
+		lblProductList.setBounds(12, 10, 144, 15);
+		bPn5.add(lblProductList);
+
+		list = new JList<String>();
+		list.setBounds(12, 35, 555, 400);
+		bPn5.add(list);
+
+		scrollbar = new Scrollbar();
+		scrollbar.setBounds(573, 35, 17, 400);
+		bPn5.add(scrollbar);
+		fSearch.getContentPane().add(infoPn);
+
+		fSearch.getContentPane().add(infoPn);
+
+		// 닫기 버튼
+		delPn = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		delPn.setBounds(7, 576, 640, 100);
+		delPn.setBackground(new Color(255, 255, 255, 90));
+		delPn.setBackground(trans);
+
+		confirm = new JButton();
+		confirm.setIcon(new ImageIcon("C:/image/btn_confirm.jpg"));
+		confirm.setBackground(Color.white);
+		confirm.setPreferredSize(new Dimension(100, 30));
+
+		cancelbtn = new JButton();
+		cancelbtn.setIcon(new ImageIcon("C:/image/btn_cancel.jpg"));
+		cancelbtn.setBackground(Color.white);
+		cancelbtn.setPreferredSize(new Dimension(100, 30));
+
+		delPn.add(confirm);
+		delPn.add(cancelbtn);
+		fSearch.getContentPane().add(delPn);
+
+
+		// 배경 이미지라벨
+		bgImg = new JLabel();
+		bgImg.setBounds(1, 1, 655, 685);
+		imageIcon = new ImageIcon(new ImageIcon("C:/image/bg01.jpg").getImage()
+				.getScaledInstance(screen.width, screen.height, Image.SCALE_DEFAULT));
+		bgImg.setIcon(imageIcon);
+		fSearch.setBackground(Color.BLACK);
+		fSearch.getContentPane().add(bgImg);
+		
+		//검색버튼 이벤트
+		btn_srch.addActionListener(this);
+		confirm .addActionListener(this);
+		list.addListSelectionListener(this);
+			
+		
+		// 닫기 버튼 이벤트
+		cancelbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				fSearch.setVisible(false);
+				C_Insert.setEnabled(true);
+			}
+		});
+	}
+
+/*	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Search Search = new Search();
+
+	}*/
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource() == btn_srch)  // 검색버튼 클릭시 이쪽으로 진입
+			searchData(); 		
+		else if(e.getSource() == confirm ) { //확인 클릭시
+			
+			System.out.println(str);
+			ArrayList<Product> prod = proPage.getProduct();
+			int start = 0;
+			int end = prod.size();
+			
+			for(int i=0 ; i < prod.size() ; i++) {
+				System.out.println("????");
+				if(str.equals( prod.get(i).getTitle())) {
+					System.out.println("안돼?");
+					start = i;
+					System.out.println(prod.get(i).getTitle());
+				}
+				
+			}
+			
+			ImageIcon pdImg=new ImageIcon(prod.get(start).getImage());
+			Image pd_Img = pdImg.getImage();
+			Image imgResize = pd_Img.getScaledInstance(565, 520, Image.SCALE_DEFAULT);
+			ImageIcon imgIcon = new ImageIcon(imgResize);
+			
+			proPage.getTxtB_Num().setText(prod.get(start).getNum()+"");
+			proPage.getTxtB_Check().setText(prod.get(start).getTitle());
+			proPage.getTxtB_Title().setText(prod.get(start).getState());
+			proPage.getTxtB_Title().setForeground(new Color(255, 0, 0));
+			proPage.getTxtB_Infor().setText(prod.get(start).getInfo());
+			proPage.getProduct_Image().setIcon(imgIcon);
+			
+			proPage.setStart(start);
+			
+			
+			
+			fSearch.dispose();
+			
+		}
+		
+	}
+	
+	public void searchData() {
+		String txt = txtB_Num.getText().trim().replaceAll(" ", ""); //입력했을때 공백문자있으면 모두 제거        
+		
+		//아무것도 입력안했을때
+		if(txt.equals("")) {
+			JOptionPane.showMessageDialog(null,"값을 입력해야합니다");
+		}
+		
+		//어떠한 값을 입력했을때
+		else {
+			ArrayList<String> product_name = new ArrayList<String>();
+			
+			for(Product pr : products) 
+				if(pr.getTitle().contains(txt)) 
+					product_name.add(pr.getTitle());
+		
+			titles = new String[product_name.size()];
+
+			for(int i=0;i<titles.length;i++) 	
+				titles[i]=product_name.get(i);
+			
+			list.setListData(titles);
+		}
+
+	}
+	public void getSelectedList() {
+		for(int i = 0 ; i < titles.length ; i++) {
+			if(list.getSelectedIndex() == i) {
+				str=titles[i];
+			}
+		}		
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		getSelectedList();
+	}
+}

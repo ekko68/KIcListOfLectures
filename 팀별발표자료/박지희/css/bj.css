@@ -1,0 +1,307 @@
+*{
+	margin:0;
+    padding: 0;
+}
+#bd{width: 1600px;}
+ul{list-style: none;}
+a{text-decoration: none;}
+
+.nv1{/*첫번째 상단 메뉴*/
+    width: 100%;
+    height: 30px;
+    margin: 10px auto;
+    border: 1px solid back;
+    
+    background-color: gainsboro;
+}
+.nv1 li{
+    position: relative;
+    float: right;
+    right: 200px;
+    width: 80px;
+    margin-right: 5px;
+    margin-top: 7px;
+}
+.nv1 li a{
+    display: block;
+    font-size: 13px;
+    text-align: center;
+    font-style: ;
+    color: darkslategray;
+}
+.log a{
+    color:white;
+}
+.nv1 li a:hover{
+        color: white;
+        font-size: 15px;
+        text-align: center;
+}
+.nv1 #srch{/*검색창 메뉴*/
+        width: 150px;
+	    height: 20px;
+        position: relative;
+        top: -4px;
+        border-radius:11px;
+    }
+div .log{/*로고*/
+        width: 70px;
+        height: 17px;
+        position: relative;
+        float: right;
+        right: -290px;
+        top: 6.5px;
+        font-size: 12px;
+        text-align: center;
+        background-color: dimgray;
+        border-radius:10px;
+        color: azure;
+    }
+#nva{/*두번째 메뉴*/
+    width: 100%;
+    height: 80px;
+    /*border: 1px solid black;*/
+    float: left;
+    position: relative;
+    top: 10px;
+    z-index: 5;
+    
+}
+
+.nv2 div a{
+    color: dimgray;
+}
+.nv2 .a1:hover{
+    color: dodgerblue;
+}
+.nv2 .a2:hover{
+    color: dodgerblue;
+}
+.nv2 .a3:hover{
+    color: dodgerblue;
+}
+.nv2 .a4:hover{
+    color: dodgerblue;
+}
+.nv2 .a5:hover{
+    color: white;
+    background-color: aqua;
+    border-radius: 3px; 
+}
+.ima{
+    width: 230px;
+    height: 60px;
+    position: absolute;
+    left: 30px;
+    top: 7px;
+}
+.nv2 .a1{
+    position: absolute;
+    left: 340px;
+    top: 10px;
+    font-size: 40px;
+}
+.nv2 .a2{
+    position: absolute;
+    left: 640px;
+    top: 10px;
+    font-size: 40px;
+}
+.nv2 .a3{
+    position: absolute;
+    left: 870px;
+    top: 10px;
+    font-size: 40px;
+}
+.nv2 .a4{
+    position: absolute;
+    left: 1100px;
+    top: 10px;
+    font-size: 40px;
+}
+.nv2 .a5{
+    position: absolute;
+    left: 1350px;
+    top: 10px;
+    font-size: 40px;
+}
+.sub{
+    display:none; 
+    position:absolute;
+    top:80px;
+    left:675px;
+    font-size: 40px;
+    z-index: 5;
+}
+
+
+.sub1 a:hover{
+    color: darkblue;
+}
+.cycle-slideshow{/*중앙 이미지 슬라이드*/
+    position: relative;
+    left: 80px;
+    top: 100px;
+    z-index: 1;
+}
+.cycle-slideshow img{
+    height: 600px;
+    width: 90%;
+}
+hr{/*화면 줄*/
+    position: relative;
+    top: 50px;
+}
+#art1{/*왼쪽 이미지 3개*/
+    width: 500px;
+    height: 300px;
+    float: left;
+    position: relative;
+    left: 3.5%;
+    top: 80px;
+    z-index: 3;
+}
+.d1 >figure >img{
+    width: 230px;
+    height: 230px;
+    display: inline-block;
+    position: absolute;
+}
+.d2 >figure >img{
+    width: 230px;
+    height: 230px;
+    display: inline-block;
+    position: relative;
+    left: 50px;
+   
+}
+.d3 >figure >img{
+    width: 230px;
+    height: 230px;
+    display: inline-block;
+    position: relative;
+    left: 340px;
+    top: -235px;
+}
+.fi1{
+    font-size: 13px;
+    float: left;
+    position: relative;
+    top: 250px;
+    color:darkgray;
+}
+.co a{
+    color: darkslategrey;
+}
+.fi1 li:first-child{
+    font-size: 17px;
+    color: darkcyan;
+    margin-bottom: 5px;
+}
+.fi2{
+    font-size: 13px;
+    float: left;
+    position: relative;
+    left: 270px;
+    top: 15px;
+    color: darkgray;
+}
+.fi2 li:first-child{
+    font-size: 17px;
+    color: darkcyan;
+    margin-bottom: 5px;
+}
+.fi3{
+    font-size: 13px;
+    float: left;
+    position: relative;
+    left: 550px;
+    top: -220px;
+    color: darkgray;
+}
+.fi3 li:first-child{
+    font-size: 17px;
+    color: darkcyan;
+    margin-bottom: 5px;
+}
+#art2 {/*오른쪽 이미지*/
+     width: 450px;
+    height: 300px;
+    float: right;
+    position: relative;
+    right: 1%;
+    top: 80px;
+    z-index: 3;
+}
+ #art2 img{
+    width: 400px;
+     height: 330px;
+}
+
+#art2 img a:hover{
+    -moz-box-shadow: 2px 2px 5px #666;
+    -webkit-box-shadow: 2px 2px 5px #666;
+    box-shadow: 2px 2px 5px #666;
+    position: relative;
+    top: 2px;
+}
+.shadow {/*오른쪽 이미지 효과*/
+    -webkit-filter: drop-shadow(8px 8px 10px darkgrey);filter: drop-shadow(8px 8px 10px darkgrey);
+}
+
+#ft1{/*footer*/
+    clear: both;
+    position: relative;  
+    top:200px;
+   
+}
+#div_nv3 {
+    width: 1400px;
+    height: 200px;
+    float: left;
+}
+
+
+.nv3 { text-align:center;}
+.nv3 span{
+    position: relative;
+    float: left;
+    margin: 53px;
+    left: 50px;
+    font-size: 15px;
+    color: black;
+}
+.nv3 span a{
+    color: darkslategrey;
+}
+.nv3 span a:hover{
+    color: darkblue;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

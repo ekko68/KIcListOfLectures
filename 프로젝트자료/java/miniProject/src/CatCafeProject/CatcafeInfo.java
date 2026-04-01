@@ -1,0 +1,580 @@
+package CatCafeProject;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
+
+import java.sql.*;
+import java.io.File;
+
+public class CatcafeInfo extends JPanel implements ActionListener {
+
+	// 고양이번호, 이름, 나이, 품종, 분양, 성별, 생일
+	JTextField txtCno, txtCname, txtCage, txtCkind, txtCreleased, txtCgender, txtCbirth;
+	JTextArea taCmemo;// 메모(예방접종, 중성화 유무)
+	JButton btnInsert, btnUpdate, btnDel, btnCancle, btnClose;
+	JButton btnF, btnP, btnN, btnL; //<<,<,>,>>
+	JButton btnPicIn, btnGF, btnGM; //이미지추가, 성별
+	JLabel lblRec, lblPic; //현재레코드번호, 이미지
+
+	String sql, imgPath;//sql구문, 이미지파일경로
+	int iTotal = 0;	//총 고양이 수
+	int iLast = 0; 	//마지막 레코드 번호
+	JPanel picPn, btnPicPn; //이미지 패널, 이미지추가버튼 가운데정렬용
+	File file; //이미지 로딩
+	
+	boolean isInsert = false;
+	boolean isUpdate = false;
+
+	// DB연동
+	private Connection conn; //연결객체
+	private Statement stmt; //SQL구문을 사용하기위해서 필요
+	private ResultSet rs; //select구문을 사용->결과(표형태)
+	// ------------------------------------------------------
+
+	public CatcafeInfo() {
+		design();
+		addListener(); //각 버튼의 이벤트 연결
+		accDb(); //접속
+		init(); //정렬
+		display(); //보여주기
+	}
+
+	public void design() {
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		//catPn ========================
+		JPanel catPn = new JPanel(new GridLayout(0, 2));
+		this.add(catPn);
+		
+		picPn = new JPanel();
+		picPn.setBorder(BorderFactory.createTitledBorder("고양이 사진"));
+		picPn.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		btnPicPn = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) btnPicPn.getLayout();
+		flowLayout.setVgap(75);
+		btnPicPn.setVisible(false);
+		
+		btnPicIn = new JButton("이미지 넣기");
+		lblPic = new JLabel();
+		
+		picPn.add(lblPic);
+		picPn.add(btnPicPn);
+		btnPicPn.add(btnPicIn);
+		
+		catPn.add(picPn);
+		
+		//infoPn =======
+		JPanel infoPn = new JPanel(new GridLayout(6, 1));
+		infoPn.setBorder(BorderFactory.createTitledBorder("고양이 정보"));
+
+		JPanel cPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel cPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel cPn3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel cPn4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel cPn5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel cPn6 = new JPanel(new FlowLayout(FlowLayout.LEFT));		
+		
+		txtCno = new JTextField("", 10);
+		txtCname = new JTextField("", 10);
+		txtCkind = new JTextField("", 10);
+		txtCreleased = new JTextField("", 10);
+		txtCgender = new JTextField("", 3);
+		txtCbirth = new JTextField("", 7);
+		
+		btnGF = new JButton("암컷");
+		btnGM = new JButton("수컷");
+		btnGF.setFont(new Font("돋움", Font.PLAIN, 11));
+		btnGM.setFont(new Font("돋움", Font.PLAIN, 11));
+		btnGF.setMargin(new Insets(1,4,1,4));
+		btnGM.setMargin(new Insets(1,4,1,4));
+		btnGF.setVisible(false);
+		btnGM.setVisible(false);
+		
+		txtCno.setEditable(false);
+		txtCname.setEditable(false);
+		txtCkind.setEditable(false);
+		txtCreleased.setEditable(false);
+		txtCgender.setEditable(false);
+		txtCbirth.setEditable(false);
+
+		cPn1.add(new JLabel("번호:"));
+		cPn1.add(txtCno);
+		cPn2.add(new JLabel("이름:"));
+		cPn2.add(txtCname);
+		cPn3.add(new JLabel("생일:"));
+		cPn3.add(txtCbirth);
+		cPn4.add(new JLabel("성별:"));
+		cPn4.add(txtCgender);
+		cPn4.add(btnGF);
+		cPn4.add(btnGM);
+		cPn5.add(new JLabel("품종:"));
+		cPn5.add(txtCkind);
+		cPn6.add(new JLabel("분양여부:"));
+		cPn6.add(txtCreleased);
+		
+		infoPn.add(cPn1);
+		infoPn.add(cPn2);
+		infoPn.add(cPn3);
+		infoPn.add(cPn4);
+		infoPn.add(cPn5);
+		infoPn.add(cPn6);
+		
+		catPn.add(infoPn);
+		
+		//memoPn =======================================
+		BorderLayout bl_memoPn = new BorderLayout();
+		JPanel memoPn = new JPanel(bl_memoPn);
+		memoPn.setBorder(new CompoundBorder(new EmptyBorder(5, 0, 5, 0),
+				BorderFactory.createTitledBorder("MEMO (예방접종, 중성화 여부 등)")));
+		
+		taCmemo = new JTextArea(2, 30);
+		taCmemo.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		JScrollPane scroll = new JScrollPane(taCmemo, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setBorder(BorderFactory.createEmptyBorder(1, 1, 5, 5));
+		taCmemo.setLineWrap(true);
+		taCmemo.setEditable(false);
+		taCmemo.setBackground(Color.lightGray);
+
+		memoPn.add(scroll);
+		
+		this.add(memoPn);
+		
+		//movePn =======================================
+		JPanel movePn = new JPanel();
+		movePn.setBorder(BorderFactory.createTitledBorder("레코드 이동"));
+		
+		btnF = new JButton(" <<= ");
+		btnP = new JButton("  <= ");
+		btnN = new JButton(" =>  ");
+		btnL = new JButton(" =>> ");
+		lblRec = new JLabel(" 0 / 0 ", JLabel.CENTER); //현재행/총레코드수
+		
+		movePn.add(btnF);
+		movePn.add(btnP);
+		movePn.add(lblRec);
+		movePn.add(btnN);
+		movePn.add(btnL);
+		
+		this.add(movePn);
+		
+		//btnPn =======================================
+		JPanel btnPn = new JPanel();
+		JLabel lbl = new JLabel("                     "); // 버튼 사이에 공백 부여
+		btnPn.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+		
+		btnInsert = new JButton("신규");
+		btnUpdate = new JButton("수정");
+		btnDel = new JButton("삭제");
+		btnCancle = new JButton("취소");
+		btnClose = new JButton("닫기");
+		
+		btnPn.add(btnInsert);
+		btnPn.add(btnUpdate);
+		btnPn.add(btnDel);
+		btnPn.add(lbl);
+		btnPn.add(btnCancle);
+		btnPn.add(btnClose);
+		
+		this.add(btnPn);
+	}
+
+	private void addListener() {
+		btnInsert.addActionListener(this);
+		btnUpdate.addActionListener(this);
+		btnDel.addActionListener(this);
+		btnCancle.addActionListener(this);
+		btnClose.addActionListener(this);
+		
+		btnPicIn.addActionListener(this);
+		btnGF.addActionListener(this);
+		btnGM.addActionListener(this);
+
+		btnF.addActionListener(this);
+		btnP.addActionListener(this);
+		btnN.addActionListener(this);
+		btnL.addActionListener(this);
+	}
+
+	private void accDb() {
+		try {
+			// 1.접속할 드라이버를 메모리에 올리기
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			String url = "jdbc:oracle:thin:@localhost:1521:orcl";// url주소값
+			// 2.접속하기위한 메서드(1.접속url 2.계정명 3.접속암호)
+			conn = DriverManager.getConnection(url, "test1", "t1234");
+			// 추가 (신규,수정->레코드이동->자동으로 스크롤 이동시 수정이 반영)
+			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			/*
+			 * ResultSet.TYPE_SCROLL_SENSITIVE->양방향으로 스크롤이동시 업데이트반영
+			 * ResultSet.CONCUR_UPDATABLE->현재 커서의 위치에서 정보업데이트 가능
+			 */
+			System.out.println("접속 conn=>" + conn);
+		} catch (Exception e) {
+			System.out.println("accDb() 오류=>" + e);
+		}
+	}
+	
+	private void init() {
+		try {
+			sql = "select * from cat order by no";
+			rs = stmt.executeQuery(sql); //stmt.executeUpdate(); insert, update, delete
+			rs.last();
+			iTotal = rs.getRow(); //현재 레코드 번호
+			iLast = rs.getInt("no"); //마지막 레코드 번호
+			rs.first(); //첫번째 레코드로 이동
+		} catch (Exception e) {
+			System.out.println("init() 오류->" + e);
+		}
+	}
+
+    private void display() {
+    	try {
+    		txtCno.setText(rs.getString("no"));
+    		txtCname.setText(rs.getString("name"));
+    		txtCkind.setText(rs.getString("kind"));
+    		txtCgender.setText(rs.getString("gender"));
+    		if(rs.getString("birthday") != null) { //생일을 입력했다면
+    			txtCbirth.setText(rs.getString("birthday").substring(0,10));
+    		} else {
+    			txtCbirth.setText(null);
+    		}
+
+    		//분양유무
+			if (rs.getString("isreleased").equals("Y")) {
+				txtCreleased.setText("분양완료");
+				txtCreleased.setForeground(Color.RED);// 빨간색으로 표시
+			} else {
+				txtCreleased.setText("분양가능");
+				txtCreleased.setForeground(Color.BLACK);// 검정색으로 표시
+			}
+    		
+			taCmemo.setText(rs.getString("note"));
+    		lblRec.setText(rs.getRow()+"/"+iTotal);//현재행/총레코드수(총책수)
+
+    		//고양이사진 불러오기
+			imgPath = rs.getString("picpath");
+    		displayImage();//DB상의 이미지불러오기
+    		
+    		btnCancle.setEnabled(false);
+    		
+    	}catch(Exception e) {
+    		System.out.println("display() 오류=>"+e);
+    	}
+    }
+    
+    //이미지 불러오기
+	private void displayImage() {
+		if (imgPath == null)
+			imgPath = "C:/catCafe/picCats/noCat.jpg";
+		ImageIcon imgIcon = new ImageIcon(imgPath);
+		Image originImg = imgIcon.getImage();
+		//사진 사이즈 줄이기
+		double ratio = (double) originImg.getWidth(null) / originImg.getHeight(null);
+		int height = 170; //height 값을 기준으로 width값 자동으로 설정
+		int width = (int)(height * ratio);
+		if (width > (height * 4 / 3))
+			width = height * 4 / 3;
+		Image changedImg = originImg.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		ImageIcon icon = new ImageIcon(changedImg);
+		
+		lblPic.setIcon(icon);
+		lblPic.setToolTipText("경로는 " + imgPath.toLowerCase());
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// 레코드 이동
+		try {
+			if (e.getSource() == btnF) {
+				rs.first();
+				display();
+			} else if (e.getSource() == btnP) {
+				if (rs.isFirst())
+					return; // 첫번째 레코드이라면 return
+				rs.previous();
+				display();
+			} else if (e.getSource() == btnN) {
+				if (rs.isLast())
+					return; // 마지막 레코드라면 return
+				rs.next();
+				display();
+			} else if (e.getSource() == btnL) {
+				rs.last();
+				display();
+			}
+ 		} catch (Exception e2) {
+			System.out.println("레코드 이동 오류 =>" + e2);
+		}
+
+		if (e.getSource() == btnInsert) {
+			if (isInsert == false) {
+				imgPath = null;
+				txtCno.setText(String.valueOf(iLast + 1));
+				txtCname.setText(null);
+				txtCkind.setText(null);
+				txtCreleased.setText("N");
+				txtCgender.setText(null);
+				txtCbirth.setText(null);
+				taCmemo.setText(null);
+
+				txtCname.setEditable(true);
+				txtCkind.setEditable(true);
+				txtCbirth.setEditable(true);
+				taCmemo.setEditable(true);
+				moveisEnabled();
+
+				lblPic.setVisible(false);
+				btnPicPn.setVisible(true);
+				btnGF.setVisible(true);
+				btnGM.setVisible(true);
+
+				txtCname.requestFocus();
+				taCmemo.setBackground(Color.WHITE);
+				
+				btnInsert.setText("확인");
+				btnUpdate.setEnabled(false);
+				btnDel.setEnabled(false);
+				btnCancle.setEnabled(true);
+				
+				isInsert = true;
+
+			} else { // 확인버튼 클릭시
+				if (txtCname.getText().equals("")) { // 입력하지않고 버튼을 누른 경우
+					JOptionPane.showMessageDialog(this, "이름을 입력하세요.");
+					txtCname.requestFocus();
+					return;
+				} else if (txtCgender.getText().equals("")) {
+					JOptionPane.showMessageDialog(this, "성별을 선택하세요.");
+					txtCgender.requestFocus();
+					return;					
+				}
+				txtCname.setEditable(false);
+				txtCkind.setEditable(false);
+				txtCgender.setEditable(false);
+				txtCbirth.setEditable(false);
+				moveisEnabled();
+				
+				lblPic.setVisible(true);
+				btnPicPn.setVisible(false);
+				btnGF.setVisible(false);
+				btnGM.setVisible(false);
+				
+				insertCat();
+				taCmemo.setBackground(Color.LIGHT_GRAY);
+				
+				btnInsert.setText("신규");
+				btnUpdate.setEnabled(true);
+				btnDel.setEnabled(true);
+				btnCancle.setEnabled(false);
+				
+				isInsert = false;
+			}			
+			
+		} else if (e.getSource() == btnPicIn) {
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int result = fileChooser.showOpenDialog(this);
+			if (result == JFileChooser.CANCEL_OPTION) {
+				file = null;
+			} else {
+				file = fileChooser.getSelectedFile();
+				imgPath = file.getPath().replace("\\", "/");
+				System.out.println("선택한 이미지 파일경로 확인(imgPath)=>"+imgPath);
+				displayImage(); //이미지 JLabel -> 화면에 출력
+				lblPic.setVisible(true);
+				btnPicPn.setVisible(false);
+				picPn.add("Center", lblPic);
+			}
+			
+		} else if (e.getSource() == btnGF) {
+			txtCgender.setText("F");
+			
+		} else if (e.getSource() == btnGM) {
+			txtCgender.setText("M");
+
+		} else if (e.getSource() == btnUpdate) {
+			if (isUpdate == false) {
+				txtCname.setEditable(true);
+				txtCkind.setEditable(true);
+				txtCbirth.setEditable(true);
+				taCmemo.setEditable(true);
+				moveisEnabled();
+				
+				taCmemo.setBackground(Color.WHITE);
+				lblPic.setVisible(false);
+				btnPicPn.setVisible(true);
+				btnGF.setVisible(true);
+				btnGM.setVisible(true);				
+
+				btnPicIn.setEnabled(true);
+				btnUpdate.setText("확인");
+				btnInsert.setEnabled(false);
+				btnDel.setEnabled(false);
+				btnCancle.setEnabled(true);				
+				
+				isUpdate = true;
+			} else {
+				txtCname.setEditable(false);
+				txtCkind.setEditable(false);
+				txtCgender.setEditable(false);
+				txtCbirth.setEditable(false); 
+				taCmemo.setEditable(false);
+				moveisEnabled();
+				
+				updateCat();
+				taCmemo.setBackground(Color.LIGHT_GRAY);
+				lblPic.setVisible(true);
+				btnPicPn.setVisible(false);
+				btnGF.setVisible(false);
+				btnGM.setVisible(false);
+				
+				btnUpdate.setText("수정");
+				btnInsert.setEnabled(true);
+				btnDel.setEnabled(true);
+				btnCancle.setEnabled(false);	
+				
+				isUpdate = false;
+			}
+			
+		} else if (e.getSource() == btnDel) {
+			int re = JOptionPane.showConfirmDialog(this, txtCname.getText() + " 정보를 정말로 삭제할까요?", "삭제", JOptionPane.YES_NO_OPTION);
+			if (re == JOptionPane.YES_OPTION)
+				deleteCat();
+			
+		} else if (e.getSource() == btnCancle) {
+			txtCname.setEditable(false);
+			txtCkind.setEditable(false);
+			txtCgender.setEditable(false);
+			txtCbirth.setEditable(false);
+			taCmemo.setEditable(false);
+			
+			taCmemo.setBackground(Color.LIGHT_GRAY);			
+			btnInsert.setEnabled(true);
+			btnUpdate.setEnabled(true);
+			btnDel.setEnabled(true);
+			btnCancle.setEnabled(false);
+			moveisEnabled();
+			
+			btnGF.setVisible(false);
+			btnGM.setVisible(false);
+			
+			btnInsert.setText("신규");
+			btnUpdate.setText("수정");
+			isInsert = false;
+			isUpdate = false;
+					
+			try {
+				imgPath = rs.getString("picpath");
+				lblPic.setVisible(true);
+				btnPicPn.setVisible(false);
+				displayImage();
+			} catch (Exception e2) {
+				System.out.println("btnCancle > displayImage 오류=>" + e2);
+			}
+			display();
+			
+		} else if (e.getSource() == btnClose) {
+			int re = JOptionPane.showConfirmDialog(this, "정말 종료할까요?", "선택", JOptionPane.YES_NO_OPTION);
+			try {
+				if (re == JOptionPane.YES_OPTION) {
+					if (rs != null) rs.close();
+					if (stmt != null) stmt.close();
+					if (conn != null) conn.close();
+				} else {
+					return;
+				}
+			} catch (Exception e2) {
+				System.out.println("메모리 해제 실패 =>" + e2);
+			} finally { //예외 발생유무와 상관없이
+				if (re == JOptionPane.YES_OPTION) {
+					CatcafeMain.cat_info.setEnabled(true);
+					CatcafeMain.childWinInfo.dispose(); // 자식창종료(메모리해제)
+				}
+			}
+		}
+	}
+
+	// 신입고양이 추가
+	private void insertCat() {
+		try {
+			sql = "insert into cat values(" + txtCno.getText()
+					+ ", null, '"
+					+ txtCkind.getText() + "', '"
+					+ txtCname.getText() + "', '"
+					+ txtCgender.getText() + "', '"
+					+ txtCbirth.getText() + "', "
+					+ imgPath + ", '"
+					+ txtCreleased.getText() + "', '"
+					+ taCmemo.getText() + "')"; //이미지경로명+파일명
+			System.out.println("insert sql=>" + sql);
+			int insert = stmt.executeUpdate(sql);
+			System.out.println("insert 성공 유무 =>" + insert);
+			init(); // 행번호 변경 -> 다시 읽음
+			rs.last();
+			display();
+		} catch (Exception e) {
+			System.out.println("insertCat() 오류=>" + e);
+		}
+	}
+	
+	// 고양이정보 수정
+	private void updateCat() {
+		try {
+			sql = "update cat set KIND='" + txtCkind.getText()
+					+ "', NAME='" + txtCname.getText()
+					+ "', GENDER='" + txtCgender.getText()
+					+ "', BIRTHDAY='" + txtCbirth.getText()
+					+ "', PICPATH='" + imgPath
+					+ "', NOTE='" + taCmemo.getText()
+					+ "' where no=" + txtCno.getText();
+			System.out.println("update sql=>" + sql);
+			int update = stmt.executeUpdate(sql);
+			System.out.println("update 성공 유무 =>" + update);
+			//수정한 행으로 이동
+			int currentRow = rs.getRow();
+			init();		
+			rs.absolute(currentRow);
+			display();
+		}catch(Exception e) {
+			System.out.println("updateCat() 오류=>" + e);
+		}
+	}
+	// 고양이 삭제
+	private void deleteCat() {
+		try {
+			sql = "delete from cat where no=" + txtCno.getText();
+			System.out.println("update sql=>" + sql);
+			int delete = stmt.executeUpdate(sql);
+			System.out.println("delete 성공 유무 =>" + delete);
+			init();
+			display();
+		} catch (Exception e) {
+			System.out.println("deleteCat() 오류=>" + e);
+		}
+	}
+
+	//move btn toggle
+	private void moveisEnabled() {
+		boolean set = !btnF.isEnabled(); 
+		btnF.setEnabled(set);
+		btnP.setEnabled(set);
+		btnN.setEnabled(set);
+		btnL.setEnabled(set);		
+	}
+    
+	public static void main(String[] args) {
+		CatcafeInfo cci = new CatcafeInfo();
+		JFrame frame = new JFrame("고양이 상세화면");
+		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+		frame.getContentPane().add(cci);
+		frame.setResizable(false);
+		frame.setBounds(200, 200, 500, 550);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+}

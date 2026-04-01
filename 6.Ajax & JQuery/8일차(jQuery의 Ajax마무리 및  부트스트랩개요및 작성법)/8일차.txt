@@ -1,0 +1,120 @@
+Ajax 마무리 및 부트스트랩의 개요 및 작성법
+--------------------------------------------
+13serialize().html
+
+//(1)var form_data=$('form').serializeArray();//json형식의 문자열로 변환
+		 $.each(form_data,function(index,value){
+			$('#result').append(value.name+"="+value.value+"<br>")
+		}) 
+
+//(2)
+ var form_data=$('form').serialize();//쿼리문자열 형태로 전달
+ $('#result').text(form_data)
+//seq=1&username=%ED%85%8C%EC%8A%A4%ED%8A%B8&password=1234&hobby=yoga&hobby=reading
+
+04largeimage.html
+
+http://bootstrapk.com (한글사이트)
+===============
+**부트스트랩의 장점**
+
+1.다양한 스타일이 정의되어있어 디자인이 간편
+2.CSS클래스명만 바꾸면 쉽게 디자인 적용 및
+  수정 가능
+3.반응형을 고려한 프레임워크->모바일
+4.무료 오픈 소스(다운로드 간편)
+5.다양한 예시 제공 (초보자도 쉬움)
+
+**부트스트랩 단점**
+
+1.디자인이 정형화 됨
+2.심플한 디자인 형태로 국내 정서랑 안맞음
+->Single Page
+3.구조변경을 위한 프레임워크 수정시 구조를 잘 알아야 된다.
+===================================
+www.w3schools.com
+
+bootstrap/
+├── css/
+│   ├── bootstrap.css
+│   ├── bootstrap.css.map
+│   ├── bootstrap.min.css
+│   ├── bootstrap-theme.css
+│   ├── bootstrap-theme.css.map
+│   └── bootstrap-theme.min.css
+├── js/
+│   ├── bootstrap.js
+│   └── bootstrap.min.js
+└── fonts/
+    ├── glyphicons-halflings-regular.eot
+    ├── glyphicons-halflings-regular.svg
+    ├── glyphicons-halflings-regular.ttf
+    ├── glyphicons-halflings-regular.woff
+    └── glyphicons-halflings-regular.woff2
+
+====template=================
+
+<!DOCTYPE html>
+<html lang="ko">->웹페이지에 한글사용표시(<->en)
+  <head>
+    <meta charset="utf-8">->브라우저에서 다양한 언어를 사용해도
+                                            해당언어가 제대로 보이게 설정
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    =>현재 사용되는 IE버전을 최신으로 사용하라는 표시
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    =>반응형 웹페이지를 적용해주는 부분(모바일,데스크탑(해상도가 다르기때문에
+                                                         각자 맞는 웹페이지 설정)
+    =>content="width=device-width(장비에 맞게 넓이는 자동적으로 설정)
+
+    <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+    <title>부트스트랩 101 템플릿</title>
+
+    <!-- 부트스트랩 -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
+    <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+->IE9 버전이하의 브라우저를 사용하는 경우에 html5을 지원을 해주는 옵션
+
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+
+    <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
+
+=====================================
+ 장비마다 클래스선택자가 구분이 되어있다.
+
+모바일폰(<768px) .col-xs-1~12
+태블릿(>=768px)=>.col-sm-1~12
+데스크탑(>=992px)=>.col-md-1~12
+데스크탑(>=1200px)=>.col-lg-1~12
+==========================
+
+<!-- <div class="container"> --><!--  전체 레이아웃 감싸주기(확대시 공백발생) -->
+    <div class="container-fluid"><!--전체확대시 양쪽여백을 꽉차게 사용이 가능  -->
+
+grid2.html(save as)
+
+grid1.html->save as ->grid3.html(열도 공간설정)
+변형 레이아웃(그리드를 이용)
+
+grid3.html save as grid4.html
+<header>
+<article>
+<footer>
+==============================
+
+
+

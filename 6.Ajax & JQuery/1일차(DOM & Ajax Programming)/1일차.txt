@@ -1,0 +1,111 @@
+1일차(DOM & Ajax Programming)
+
+AjaxTest->프로젝트
+===========
+domob1.html->태그(=앨리먼트=node)->객체(dom개요)
+domob2.html
+domobj3.html
+domArray.html
+
+Ajax
+
+Asynchronous Javascript and XML
+
+기존 방식(모델1,모델2)
+
+웹 브라우저가 서버에 Request 전송
+서버는 Request를 처리하여 Response를 사용자에게 전송
+웹 브라우저가 Response 내용을 표시
+
+ www.jquery.com
+
+*****Ajax의 구성*****
+
+1.XMLHttpRequest =>브라우저에서 생성
+웹 서버와의 통신 담당
+
+2.DOM(Document Object Model)=>요청결과를 화면출력
+ 문서 구조 담당
+
+3.CSS
+글자색, 배경색 등의 UI 담당
+
+4.자바스크립트=>이벤트를 연결
+사용자의 동작 감지, XMLHttpRequest와 DOM,
+ CSS 사이의 중개
+
+------------------------------------------------------------
+
+*****기존 방식과 차이점*****
+
+1.웹 브라우저가 아닌 ===>웹서버에 직접적으로 요청X
+XMLHttpRequest 객체가 웹서버와 통신
+----------------------------------------
+
+2.웹 서버의 응답 결과가 HTML(text/html)이 아닌
+단순 텍스트(text) 또는 XML  형태로 보내준다==>json
+
+3.페이지 이동 없이 결과 표시
+===============================
+
+***Ajax 프로그래밍 순서***
+
+Step 1 : XMLHttpRequest(XHR) 객체 구하기
+Step 2 : 웹 서버에 요청 전송하기
+Step 3 : 웹 서버의 응답을 화면에 반영하기(XHR)->DOM
+=================================
+
+Step 1 : XMLHttpRequest(XHR) 객체 구하기
+  ->domAjax.html
+
+
+simple.txt의 응답 텍스트
+파일형식->utf-8
+==================
+simple2.txt의 응답 텍스트
+파일형식->ansi
+===================
+
+<%@ page contentType="text/plain; charset=utf-8" %>
+simple.jsp의 응답 텍스트
+text/plain=>문자열 위주
+===================================
+파일형식->utf-8
+==================================
+<%@ page contentType="text/plain; charset=euc-kr" %>
+simple2.jsp의 응답 텍스트
+파일형식->ansi
+==================================
+
+              //alert(httpRequest)
+    	 //2.xhr객체->준비작업(콜백함수)->서버요청
+    	 **콜백함수->특별한 조건이 만족하면 자동적으로 실행이 되는 함수
+    	 //2.xhr객체명.onreadystatechange=콜백함수; //() X ->함수이름만 쓸것
+    	 httpRequest.onreadystatechange=viewMessage;
+    	 //3.xhr객체명.open
+    	 //(1.요청방식(get or post),2.요청문서(url) 3.처리방식(비동기(true) or 동기))
+    	  **비동기 방식->채팅,메일보내기(상대방이 결과를 보내주는것와 상관없이
+    			 //                                   다른일을 할 수 있는 방식
+    	 httpRequest.open("GET",url,true);
+    	 //4.xhr객체.send(null or 매개변수)
+    	 httpRequest.send(null);//요청
+----------------------------------------------------------
+html문서->xhtml문서(html문서에 xml성격이 가미된 문서)
+  text     xml
+==================================
+Register.jsp(html+jsp의 선언문이 추가)->Register2.jsp(save as) 백업
+
+                 xhtml+jsp
+
+  jQuery or Ajax->태그(앨리먼트)->id위주로 추가사용 name
+
+IdCheck.jsp->save as IdChcek2.jsp(백업)
+======================================
+1.prototype.js=>document.getElementById('~')->$('')
+
+->Ajax전용 자바스크립트파일 하나 작성->searchWord.js
+
+
+
+
+

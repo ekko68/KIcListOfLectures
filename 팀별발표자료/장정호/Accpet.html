@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <link  href="css/Accpet.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript">
+	function mainpage() {
+		window.history.back();
+	}
+  </script>
+ </head>
+ <body>
+ <form class="all">
+  <table>
+	<tr>
+		<td>이름</td>
+		<td><input type="text" name="name" autofocus/></td>
+	</tr>
+	<tr>
+		<td>아이디</td>
+		<td><input type="text" name="id" /></td>
+	</tr>
+	<tr>
+		<td>비밀번호</td>
+		<td><input type="password" name="pw" /></td>
+	</tr>
+	<tr>
+		<td>비밀번호 확인</td>
+		<td><input type="text" name="pw2" /></td>
+	</tr>
+	<tr>
+		<td>주소</td>
+		<td><input type="text" name="address" /></td>
+	</tr>
+	<tr>
+		<td>생년월일</td>
+		<td>
+			<select name="year">
+				<option value="2010" selected>2010</option>
+				<option value="2011" selected>2011</option>
+				<option value="2012" selected>2012</option>
+				<option value="2013" selected>2013</option>
+				<option value="2014" selected>2014</option>
+				<option value="2015" selected>2015</option>
+				<option value="2016" selected>2016</option>
+				<option value="2017" selected>2017</option>
+			</select>년
+			<select name="month">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+			</select>월
+			<select name="day">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+				<option value="19">19</option>
+				<option value="20">20</option>
+				<option value="21">21</option>
+				<option value="22">22</option>
+				<option value="23">23</option>
+				<option value="24">24</option>
+				<option value="25">25</option>
+				<option value="26">26</option>
+				<option value="27">27</option>
+				<option value="28">28</option>
+				<option value="29">29</option>
+				<option value="30">30</option>
+				<option value="31">31</option>
+			</select>일
+			</td>
+		</tr>
+		<tr>
+			<td>직업</td>
+			<td>
+				<select name="job">
+					<option value="nojob">무직</option>
+					<option value="student">학생</option>
+					<option value="teacher">교사</option>
+					<option value="programer">프로그래머</option>
+					<option value="driver">운전사</option>
+					<option value="actor">배우</option>
+					<option value="singer">가수</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" name="submit" value="회원가입" />
+			<input type="button" id="cancle" value="취소" onclick="mainpage()"/></td>
+		</tr>
+	</table>
+ </body>
+</html>

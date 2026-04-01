@@ -1,0 +1,272 @@
+﻿6일차(SpringMVC 프로그래밍 작성법2(게시판))
+스프링 작업->에러유발->경로 X ,파일명 오타
+=>HTTP Status 404 – Not Found
+
+경고: No mapping found for HTTP request with URI 
+[/Springmvc/good/index.do] in DispatcherServlet with name 'test'
+
+/good/index.do에 관련된 정보가 없다.->처리해주는 구문X (컨트롤러에 정보X)
+============================================
+모델2->commandPro.properties에서 등록한 요청명령어
+->xml환경설정파일에서 작업
+
+<bean name="/good/index.do(요청명령어)" 
+           class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+          <property name="viewName" value="list2"></property> 
+</bean>
+
+스프링 웹프로그래밍
+
+1.요청명령어 등록(test-servlet.xml에 등록)
+
+<!-- 요청명령어에 따른 액션클래스(=>컨트럴러액션클래스) 등록 -->
+  <bean name="/index2.do"  class="lee.TestActionController" />
+
+<bean name="/~/요청명령어.do"  class="패키지명....컨트롤러클래스명" />
+
+
+2.ControllerAction클래스를 작성(모델2와 비교)
+
+// /list.do=action.ListAction
+//-><bean name="/list.do" class="action.ListAction" />
+
+모델2 액션클래스->서블릿역할
+
+->CommandAction 상속->요청을 받으면 기능을 실행하고 나서 페이지 이동
+                                                          -----------글쓰기,글수정,,,
+->일관성 유지->메서드를 통일(추상메서드로 만들어서 상속)
+->Controller 인터페이스
+
+public class ListAction implements CommandAction {
+
+	@Override
+	public String requestPro(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		// TODO Auto-generated method stub
+-------------------------------------------------------------------------------
+
+******모델2와 비교해서 정리******
+//public class ListAction implements CommandAction 모델2
+public class TestActionController implements Controller {
+//경로포함해서 파일명=>ModelAndView
+	
+//public String requestPro(HttpServletRequest request, HttpServletResponse response) throws Throwable 
+	@Override
+	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println("TestAction컨트롤러의 handleRequest()호출됨!");
+		//어떤기능(글쓰기,글수정,,,,)=>결과 존재
+		
+		ModelAndView mav=new ModelAndView();
+		//<property name="viewName" value="list2"></property>
+		mav.setViewName("list3");//경로X, 파일의 확장자X->파일이름만
+		//request.setAttribute("greeting", "스프링세상!"); 서버의 메모리에 다 저장
+		mav.addObject("greeting", "스프링세상!");
+		return mav;  //return "/list.jsp";
+	}
+}
+-------------------------------------------------------------------------
+index.html파일
+
+<a href="index2.do">컨트롤러호출</a><br>
+------------------------------------------------------------------------>연결
+SpringMVC에서 환경설정파일이 꼭 하나만 존재X=>복수개의 환경설정파일을 작업
+----------------------------------------------------------------------------------
+=>hello-servlet.xml->/hello.do=>lee.HelloActionController->hello.jsp
+     world-servlet.xml->/world.do=>lee.WorldActionController->world.jsp
+
+=>공동 대표 이사->DispatcherServlet->*.do=>처리
+
+  누구 제일 먼저 실행(world)->누가 *.do->처리(hello)=>main
+  p270
+----------------------------------------------------------
+자유게시판(DB연동 방법?=>요청처리)->Annotation(p264 이해)->Mybatis
+============================================
+
+web.xml에서 복수개를 처리하는 경우
+
+<servlet>
+     <servlet-name>hello</servlet-name>
+     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+     <init-param> =>contextConfigLocation매개변수로 지정
+                            value->불러올 xml파일의 종류(경로포함)->여러줄로 표시
+         <param-name>contextConfigLocation</param-name>
+         <param-value>
+              /WEB-INF/hello-servlet.xml
+              /WEB-INF/world-servlet.xml
+         </param-value>
+     </init-param>
+    =><load-on-startup>2</load-on-startup>=>메모리에 불러올리는 순서
+                                                                       1,2,3,,,,
+     <load-on-startup>2</load-on-startup>
+  </servlet>
+  
+  <servlet>
+     <servlet-name>world</servlet-name>
+     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+     <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <!--(1)어떻게 요청이 들어왔을때 처리할 것인가?  -->
+  <servlet-mapping>
+     <servlet-name>hello</servlet-name>
+     <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  -------------------------------------------------------------------------------
+ hello만 필기->hello-servlet.xml
+
+<!-- 요청명령어에 따른 액션클래스(=>컨트럴러액션클래스) 등록 -->
+  <bean name="/hello.do"  class="lee.HelloActionController" />
+</beans>
+
+HelloActionController
+----------------------------
+package lee;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
+
+public class HelloActionController implements Controller {
+
+	@Override
+	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println("HelloAction컨트롤러의 handleRequest()호출됨!");
+	
+		ModelAndView mav=new ModelAndView();
+		mav.setViewName("hello");//경로X, 파일의 확장자X->파일이름만
+		mav.addObject("message", "클릭 하나!");
+		return mav;  //return "/hello.jsp";
+	}
+}
+============================
+hello.jsp
+
+<title>hello.jsp</title>
+</head>
+<body> 
+  <h1>${message} 실행완료!</h1>
+</body>
+</html>
+------------------------------------------------------
+ 참조
+<bean id="viewResolover"
+class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+  <property name="viewClass" 
+                  value="org.springframework.web.servlet.view.JstlView" />
+  <property name="prefix" value="/" />
+  <property name="suffix" value=".jsp" />
+</bean>
+===========================================
+초간단 게시판->SpringBoard->
+
+SpringBoard
+       |
+        -src
+       |
+         -WebContent->화면에 출력할 page(~)
+                 |
+                  -META-INF->Context.xml(DB정보->태그형태로 설정)->명함철
+                 |
+                  -WEB-INF->1.web.xml(컨트롤러 등록)
+                                     2.board-servlet.xml(요청명령어 등록)
+                         |
+                          -lib->spring 라이브러리 복사(0순위)
+---------------------------------------------------------------------
+1.오라클 테이블 생성
+
+사용자명 입력: test1/t1234
+비밀번호 입력:
+
+다음에 접속됨:
+Personal Oracle Database 11g Release 11.2.0.1.0 - Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> create table springboard(
+  2  num number(3) primary key,
+  3  author varchar2(15),
+  4  title varchar2(50),
+  5  content varchar2(4000),
+  6  writeday date default sysdate,
+  7  readcnt number(4) default 0);
+
+테이블이 생성되었습니다.
+
+======================
+create table springboard(
+num number(3) primary key,
+author varchar2(15),
+title varchar2(50),
+content varchar2(4000),
+writeday date default sysdate,
+readcnt number(4) default 0);
+================================
+
+insert into springboard(num,author,title,content) 
+                values(1,'홍길동','스프링 연습1','스프링 테스트 내용중');
+
+commit;
+
+select * from springboard;
+
+WRITEDAY    READCNT
+-------- ----------
+         1 홍길동          스프링 연습1
+스프링 테스트 내용중
+17/08/28          0
+==================================
+
+2.DTO(Board),3.DAO=>ConnectionMgr.java(X)
+----------------------------------------
+package lee;
+
+//DTO(입력폼의 name와 같아야 된다.)
+public class Board {
+
+	private int num;
+	private String author, title, content, date;
+	private int readcnt;// 조회수
+               ,,,,
+}
+
+****JNDI 방법->DB연결****
+=============
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+   <Resource name="jdbc/orcl(JNDI이름)" --->외부클래스(BoardDAO)
+                    auth="container" ->리소스(자원(DB)를 누가 관리할 것인가?(스프링)
+                    type="javax.sql.DataSource" ->커넥션풀에 대한 DataSource의 fullName
+                    username="test1"  ->접속할 계정명
+                    password="t1234" ->접속할 암호
+                    driverClassName="oracle.jdbc.driver.OracleDriver" ->접속할 Driver명
+                    factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+                                     ->커넥션풀을 생성해주는 클래스 fullName
+                    url="jdbc:oracle:thin:@localhost:1521:orcl" ->접속 url
+                    maxActive="20" ->최대로 빌려줄 수있는 커넥션풀 갯수 지정하는 속성
+                    maxIdle="10" /> ->최대로 여분이 있는 커넥션풀 갯수 지정하는 속성
+</Context>
+-----------------------------------------------------------------------------------------
+ 적용예)
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+   <Resource name="jdbc/orcl"
+                    auth="container"
+                    type="javax.sql.DataSource"
+                    username="test1"
+                    password="t1234"
+                    driverClassName="oracle.jdbc.driver.OracleDriver"
+                    factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+                    url="jdbc:oracle:thin:@localhost:1521:orcl"
+                    maxActive="20"
+                    maxIdle="10" />
+</Context>
+
+
+
+
+
+
+
+		

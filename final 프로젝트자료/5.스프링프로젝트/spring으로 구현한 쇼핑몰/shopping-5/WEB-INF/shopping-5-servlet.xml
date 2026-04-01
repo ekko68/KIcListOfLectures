@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- HandlerMapping -->
+	<bean id="urlMapping" 
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/index.html">indexController</prop>
+				<prop key="/detail.html">detailController</prop>
+				<prop key="/cartAdd.html">cartController</prop>
+				<prop key="/cartClear.html">cartController</prop>
+				<prop key="/cartConfirm.html">cartController</prop>
+				<prop key="/login.html">loginFormController</prop>
+				<prop key="/userEntry.html">userEntryFormController</prop>
+				<prop key="/checkout.html">checkoutController</prop>
+				<prop key="/end.html">endController</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- Controller -->
+	<bean id="indexController" class="controller.IndexController">
+		<property name="shopService"><ref bean="shopService" /></property>
+	</bean>
+
+	<bean id="detailController" class="controller.DetailController">
+		<property name="shopService"><ref bean="shopService" /></property>
+		<property name="cacheSeconds"><value>30</value></property>
+	</bean>
+	
+	<bean id="loginFormController" class="controller.LoginFormController">
+		<property name="sessionForm"><value>false</value></property>
+		<property name="commandName"><value>user</value></property>
+		<property name="commandClass"><value>logic.User</value></property>
+		<property name="validator"><ref bean="loginValidator"/></property>
+		<property name="formView"><value>login</value></property>
+		<property name="successView"><value>loginSuccess</value></property>
+		<property name="shopService"><ref bean="shopService" /></property>
+	</bean>
+
+	<bean id="userEntryFormController" class="controller.UserEntryFormController">
+		<property name="sessionForm"><value>false</value></property>
+		<property name="commandName"><value>user</value></property>
+		<property name="commandClass"><value>logic.User</value></property>
+		<property name="validator"><ref bean="userEntryValidator"/></property>
+		<property name="formView"><value>userEntry</value></property>
+		<property name="successView"><value>userEntrySuccess</value></property>
+		<property name="shopService"><ref bean="shopService" /></property>
+	</bean>
+
+	<bean id="cartController" class="controller.CartController">
+		<property name="methodNameResolver"><ref bean="methodNameResolver" /></property>
+		<property name="shopService"><ref bean="shopService" /></property>
+	</bean>
+	
+	<bean id="checkoutController" class="controller.CheckoutController">
+		<property name="shopService"><ref bean="shopService" /></property>
+	</bean>
+
+	<bean id="endController" class="controller.EndController">
+		<property name="shopService"><ref bean="shopService" /></property>
+	</bean>
+	
+	<!-- MethodNameResolver -->
+	<bean id="methodNameResolver" class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+		<property name="mappings">
+			<props>
+				<prop key="/cartAdd.html">add</prop>
+				<prop key="/cartClear.html">clear</prop>
+				<prop key="/cartConfirm.html">confirm</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- ViewResolver -->
+	<bean id="internalResourceViewResolver" 
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+		<property name="prefix">
+			<value>WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+	
+	<!-- ExceptionHandler -->
+	<bean id="exceptionHandler" 
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="exception.LoginRequiredException">dummyLogin</prop>
+				<prop key="exception.CartEmptyException">cartEmpty</prop>
+				<prop key="org.springframework.dao.DataRetrievalFailureException">dataNotFound</prop>
+				<prop key="java.lang.Exception">exception</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

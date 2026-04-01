@@ -1,0 +1,358 @@
+8일차(Spring게시판-글삭제,글검색하기,MyBatis DB환경설정하기)
+
+글삭제하기
+
+1.요청명령어 등록->/delete.do--->DeleteActionController처리
+
+<bean name="/delete.do"  class="lee.DeleteActionController">
+    <property name="dao">
+         <ref bean="boardDAO" />
+    </property>
+   </bean>
+
+2.BoardDAO->delete() 메서드 작성->num
+
+public void delete( String num){ //글 삭제하기
+			try{
+		  String sql="delete from springboard where num="+num;
+		  Connection con=ds.getConnection();
+		  PreparedStatement pstmt=con.prepareStatement(sql);
+		  int delete=pstmt.executeUpdate(sql);
+		  System.out.println("delete 삭제유무="+delete); //1(성공),0(실패)
+		  pstmt.close(); con.close();
+			}catch(Exception e) { System.out.println("delete()에러발생="+e);}
+	 }//end delete
+
+3.DeleteActionController->delete()호출->list.jsp
+
+public ModelAndView handleRequest(HttpServletRequest request, 
+			                                 HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println("DeleteActionController 실행됨!");
+		String num=request.getParameter("num");//삭제시킬 게시물번호
+		System.out.println("num=>"+num);
+		
+		dao.delete(num);
+		//----------------------------------
+		ModelAndView mav=new ModelAndView();//이동할 페이지명
+		mav.setViewName("redirect:/list.do");//->list.jsp
+		return mav;
+	}
+----------------------------------------------------------------------------
+검색하기
+
+<form action="search.do">
+    <select name="searchName" size="1">
+	          <option value="author">작성자</option>
+    	          <option value="title">제목</option>
+     </select>
+		   <input type="text" name="searchValue">
+		   <input type="submit" value="검색">
+</form>
+
+1.요청명령어 등록 /search.do=>lee.SearchActionController
+
+<!-- 7.글검색하기 -->
+  <bean name="/search.do"  class="lee.SearchActionController">
+    <property name="dao">
+         <ref bean="boardDAO" />
+    </property>
+   </bean>
+
+2.BoardDAO->search(searchName,searchValue)
+
+//name->검색분야, value->검색어
+	  public ArrayList search( String name , String value ){ //검색하기
+		    ArrayList list = new ArrayList();
+		    //List list = new ArrayList();
+		    try{
+		  	  String sql = "SELECT * FROM springboard";
+			  sql += " WHERE  " + name + " LIKE  '%" + value + "%' "; 
+			  System.out.println( sql );
+		  
+			      Connection con = ds.getConnection();
+		    	  PreparedStatement stmt = con.prepareStatement(sql);
+		    	  ResultSet rs = stmt.executeQuery( sql );
+		    	  while( rs.next()){
+		    		Board data = new Board();
+		    		data.setNum(rs.getInt( "num" ));
+		    		data.setAuthor(rs.getString( "author" ));
+		    		data.setTitle(rs.getString( "title"));
+		    		data.setContent(rs.getString( "content" ));
+		    		data.setDate(rs.getString( "writeday" ));
+		    		data.setReadcnt(rs.getInt( "readcnt" ));
+		    		list.add( data );
+		    	  }
+		    	  rs.close();	stmt.close(); con.close();
+		    	}catch( Exception e){ e.printStackTrace();}
+		    	return list;
+    }
+-----------------------------------------------------------------------
+public ModelAndView handleRequest(HttpServletRequest request, 
+			                                 HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println("SearchActionController 실행됨!");
+		String searchName=request.getParameter("searchName");
+		String searchValue=request.getParameter("searchValue");
+		
+		ArrayList list=dao.search(searchName,searchValue);
+		ModelAndView mav=new ModelAndView();
+		mav.setViewName("list");//list.jsp
+		//request.setAttribute("list",list);
+        mav.addObject("list",list); //${list}
+		return mav;
+	}
+-------------------------------------------------------------------
+ListActionController 실행됨!
+SearchActionController 실행됨!
+SELECT * FROM springboard WHERE  author LIKE  '%테%' 
+SearchActionController 실행됨!
+SELECT * FROM springboard WHERE  author LIKE  '%%' 
+SearchActionController 실행됨!
+SELECT * FROM springboard WHERE  title LIKE  '%프%' 
+SearchActionController 실행됨!
+SELECT * FROM springboard WHERE  author LIKE  '%%' 
+----------------------------------------------------------------
+SpringBoard(뼈대)+Mybatis(환경설정)+어노테이션+Maven설정 2가지
+------------------------------------------------------
+회원리스트(페이징처리+Mybatis 2(+어노테이션)+페이징처리
+===================================
+메인페이지+자료실(파일업로드,다운로드까지)+로그(log4j)+AOP,Secure(10월)
+--------------------------------------------------------------------------------
+9/11~9/29
+
+SpringMybatis(뼈대)+Mybatis(환경설정)
+
+Mybatis-->xml파일을 이용해서 SQL관리(DB관리를) 해주는 
+                프레임워크
+----------------------------------------------------------------
+장점
+Mybatis=>JDBC Programming(20~30%정도 코딩양이 줄어듬)
+                개발시간이 단축
+-------------------------------------------------------------------
+1.Mybatis으로 변경->lib->Spring 3.x이상으로 설정->jar파일을 복사
+2.DB연동->WEB-INF/jdbc.properties파일 생성
+
+jdbc.driverClassName=oracle.jdbc.driver.OracleDriver
+jdbc.url=jdbc:oracle:thin:@localhost:1521:orcl
+jdbc.username=test1
+jdbc.password=t1234
+
+data-Access~.xml
+
+<!--1./WEB-INF/jdbc.properties  -->
+<bean id="propertyConfigurer" 
+class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  <property name="locations">
+     <list>
+         <value>WEB-INF/jdbc.properties</value>
+     </list>
+  </property>
+</bean>
+
+<!-- 2.jdbc.properties파일에서 각각의 키를 분리-->
+<bean id="dataSource"  class="org.apache.commons.dbcp.BasicDataSource">
+  <property name="driverClassName" value="${jdbc.driverClassName}" />
+  <property name="url" value="${jdbc.url}" />
+  <property name="username" value="${jdbc.username}" />
+  <property name="password" value="${jdbc.password}" />
+</bean>
+
+<!-- 3.(Mybatis) bean등록(SqlSessionFactoryBean)
+        1)configLcation->테이블에 대한 xml 파일을 불러올때 
+        2)dataSource->DB연결정보 멤버변수
+-->
+<bean id="sqlSessionFactory" 
+           class="org.mybatis.spring.SqlSessionFactoryBean">
+     <property name="configLocation" value="WEB-INF/SqlMapConfig.xml" />
+     <property name="dataSource" ref="dataSource" />     
+</bean>
+
+<!-- 4 SqlSessionTemplate(sqlSession객체를 더 쉽게 얻어오기 위해서 설정 -->
+<bean id="sqlSessionTemplate" 
+           class="org.mybatis.spring.SqlSessionTemplate">
+         <constructor-arg index="0" ref="sqlSessionFactory" />
+</bean>
+
+3.DB환경설정 파일을 읽어들일 수 있도록 설정
+
+<!-- 1.외부의 DB에 관련된 환경설정을 불러오는 경우(관련클래스,매개변수)-->
+  <context-param>
+     <param-name>contextConfigLocation(매개변수명)</param-name>
+     <param-value>/WEB-INF/dataAccessContext-local.xml
+                          (경로포함해서 불러올 파일명(상대경로)
+          </param-value>
+  </context-param>
+  
+  <listener><!--관련클래스  -->
+      <listener-class>
+         org.springframework.web.context.ContextLoaderListener
+      </listener-class>
+  </listener>
+
+->DB연결준비끝===>과연 어떤테이블을 가지고 작업을 할 것인가?
+                                여러개 존재->xml파일로 관리(SqlMapConfig.xml)
+-------------------------------------------------------------------------
+SqlMapConfig.xml 편집
+
+4.<configuration>
+   <!--typeAliases 생략가능(패키지가 긴 DTO클래스이름의 별칭을 부여할때사용) 
+      typeAliases 태그등록->별칭을 등록(패키지명이 긴 자바빈즈파일(DTO)
+      type->"패키지명...클래스명(DTO)  alias="별칭명"
+    -->
+    <typeAliases>
+        <typeAlias type="lee.BoardCommand" 
+                         alias="board"/>
+    </typeAliases>
+ 
+   <!--mappers 필수(불러올 테이블의 정보를 가진 xml파일갯수만큼 을 지정할때 사용  -->
+    <mappers>
+       <mapper resource="lee/Board.xml" />
+       <!-- <mapper resource="lee/Sangpum.xml" />
+       <mapper resource="lee/Member.xml" /> -->
+    </mappers>
+
+5.lee.BoardCommand =>Board 대신에 사용하기위해서 백업용,검색때문에
+
+package lee;
+//사용자로부터 순수 입력받는값만 처리해주는 클래스
+public class BoardCommand {
+	//추가
+	int num;
+     String author,title,content;
+     //추가
+     String writeday;
+     int readcnt;//조회수;
+     //검색분야,검색어-->hashMap을 설정
+     String searchName;
+     String searchValue;
+
+---------------------------------------------
+6.lee/Board.xml
+
+**기본적인 속성**
+
+1.id(필수)->sql문장에 종류와 상관없이 필수로 작성(구분인자값)
+              ->관례(메서드명)->list()
+
+2.parameterType(선택)->SQL구문중에서 매개변수를 입력을 받아서
+                                     처리해주는 경우의 SQL구문에 필요
+                                  ->where조건식
+                                  ->입력을 받는 자료형을 쓰게 되어있다.
+                      parameterType="java.lang.String" or"String"
+                                               "java.lang.Integer" or "int"             
+
+ select * from springboard where num=#{매개변수명}  ?대신에
+ insert into springboard values(#{매개변수},,,,)
+
+3.resultType(선택)->sql구문을 사용해서 반환값이 있는 경우
+ 대부분->select num from springboard (insert,update,delete  X)
+
+  resultType="java.lang.Integer" or "int"
+
+<!-- springboard테이블에서 SQL작업(1.글목록보기) -->
+ 
+<select id="list" resultType="board">
+    select * from springboard order by num desc
+</select>
+----------------------------------------------------------------
+BoardDAO 클래스 대신에 설계목적으로
+
+package lee;
+
+import java.util.*;//List
+import org.springframework.dao.DataAccessException;//스프링 예외처리 클래스
+
+//7.게시판에서 공통으로 사용할 기능->추상메서드 선언
+public interface  BoardDAO{
+	
+	//1.글목록보기
+	public List list() throws DataAccessException;
+	
+	//2.글쓰기
+	//3.글상세보기
+	//4.글수정하기
+	//5.글삭제하기
+	//6.글검색하기
+}
+---------------------------------------------------------------
+8.BoardDAO인터페이스를 상속
+->SqlMapBoardDao클래스를 작성 <-SqlSessionDaoSupport
+                                                     클래스를 상속받아서 작성
+                        ->sqlSession->getSqlSession() 메서드를 사용
+
+public class SqlMapBoardDao extends SqlSessionDaoSupport
+                                                            implements BoardDAO {
+	//sqlSession sqlSession 멤버변수선언X
+    //글목록보기->ListActionController->list()
+	@Override
+	public List list() throws DataAccessException {
+		// TODO Auto-generated method stub
+		//형식) sqlSession객체명.selectOne(실행시킬 sql구문의 id값,매개변수명~)->레코드한개
+		//형식) sqlSession객체명.selectList(실행시킬 sql구문의 id값,매개변수명~)->레코드 여러개
+		return getSqlSession().selectList("list");
+	}
+}
+----------------------------------------------------------------
+9. Board-servlet.xml에서 전에 설정된 dataAccessContext-local.xml에서 설정
+했던 sqlSessionFactory빈즈객체를 불러온다.
+
+<bean id="boardDAO"   class="lee.SqlMapBoardDao">
+  <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+</bean>                                             ================
+                                              객체얻어온다.
+<bean id="sqlSessionFactory" 
+           ================
+           class="org.mybatis.spring.SqlSessionFactoryBean">
+     <property name="configLocation" value="WEB-INF/SqlMapConfig.xml" />
+     <property name="dataSource" ref="dataSource" />     
+</bean>
+
+<!-- 4 SqlSessionTemplate(sqlSession객체를 더 쉽게 얻어오기 위해서 설정 -->
+<bean id="sqlSessionTemplate" 
+           class="org.mybatis.spring.SqlSessionTemplate">
+         <constructor-arg index="0" ref="sqlSessionFactory" />
+</bean>
+
+10.ListActionController 설정
+
+//ArrayList list=dao.list();
+List list=dao.list();
+
+11.list.jsp설정
+
+while(iter.hasNext()){//꺼낼 데이터가 존재하는한
+    	   //Board data=(Board)iter.next();
+    	   BoardCommand data=(BoardCommand)iter.next();
+                 //------------------------------------------------------
+           int num=data.getNum();
+           String title=data.getTitle();
+           String author=data.getAuthor();
+           String content=data.getContent();
+           //String writeday=data.getDate();//날짜출력시
+           String writeday=data.getWriteday();
+           //------------------------------------------------------
+           int readcnt=data.getReadcnt();
+
+12.index.jsp설정
+
+response.sendRedirect("http://localhost:8090/SpringMybatis/list.do");
+--------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

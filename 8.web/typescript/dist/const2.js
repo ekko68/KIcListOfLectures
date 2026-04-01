@@ -1,0 +1,26 @@
+//const는 객체에도 사용이 가능하다.->물론 재할당은 금지된다.
+//key,value로 객체를 저장
+var obj = { id: 7890 };
+//obj = {bar: 456}; key값이 변경되는것이 아니라 value이 변경이 가능
+var obj2 = { bar: 456 };
+//개인정보 user객체 생성 가능하다. var user={~}
+var user = {
+    name: 'Lee',
+    address: {
+        city: 'Seoul'
+    }
+};
+//객체명.키명=>값을 불러올때, 객체명.키명=변경할값
+//주소값은 그대로 유지가 되면서(변경X)->키에 해당되는 데이터를 변경허용
+console.log(user);
+user.name = 'kim';
+console.log(user);
+/*
+c:\webtest\8.web\typescript\dist>node const2.js
+{ name: 'Lee', address: { city: 'Seoul' } }
+{ name: 'kim', address: { city: 'Seoul' } }
+
+c:\webtest\8.web\typescript\dist>
+*/
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbnN0Mi50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxzQ0FBc0M7QUFDdEMsbUJBQW1CO0FBQ25CLElBQU0sR0FBRyxHQUFHLEVBQUMsRUFBRSxFQUFDLElBQUksRUFBQyxDQUFDO0FBQ3RCLGtEQUFrRDtBQUNsRCxJQUFNLElBQUksR0FBRyxFQUFDLEdBQUcsRUFBQyxHQUFHLEVBQUMsQ0FBQztBQUN2QixtQ0FBbUM7QUFFbkMsSUFBTSxJQUFJLEdBQUM7SUFDUCxJQUFJLEVBQUMsS0FBSztJQUNWLE9BQU8sRUFBQztRQUNKLElBQUksRUFBQyxPQUFPO0tBQ2Y7Q0FDSixDQUFDO0FBQ0YsOEJBQThCO0FBQzlCLDBDQUEwQztBQUMxQyxPQUFPLENBQUMsR0FBRyxDQUFDLElBQUksQ0FBQyxDQUFBO0FBQ2pCLElBQUksQ0FBQyxJQUFJLEdBQUcsS0FBSyxDQUFDO0FBQ2xCLE9BQU8sQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLENBQUE7QUFDakI7Ozs7OztFQU1FIiwiZmlsZSI6ImNvbnN0Mi5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8vY29uc3TripQg6rCd7LK07JeQ64+EIOyCrOyaqeydtCDqsIDriqXtlZjri6QuLT7rrLzroaAg7J6s7ZWg64u57J2AIOq4iOyngOuQnOuLpC5cclxuLy9rZXksdmFsdWXroZwg6rCd7LK066W8IOyggOyepVxyXG5jb25zdCBvYmogPSB7aWQ6Nzg5MH07XHJcbi8vb2JqID0ge2JhcjogNDU2fTsga2V56rCS7J20IOuzgOqyveuQmOuKlOqyg+ydtCDslYTri4jrnbwgdmFsdWXsnbQg67OA6rK97J20IOqwgOuKpVxyXG5jb25zdCBvYmoyID0ge2Jhcjo0NTZ9O1xyXG4vL+qwnOyduOygleuztCB1c2Vy6rCd7LK0IOyDneyEsSDqsIDriqXtlZjri6QuIHZhciB1c2VyPXt+fVxyXG5cclxuY29uc3QgdXNlcj17XHJcbiAgICBuYW1lOidMZWUnLFxyXG4gICAgYWRkcmVzczp7XHJcbiAgICAgICAgY2l0eTonU2VvdWwnXHJcbiAgICB9XHJcbn07XHJcbi8v6rCd7LK066qFLu2CpOuqhT0+6rCS7J2EIOu2iOufrOyYrOuVjCwg6rCd7LK066qFLu2CpOuqhT3rs4Dqsr3tlaDqsJJcclxuLy/so7zshozqsJLsnYAg6re464yA66GcIOycoOyngOqwgCDrkJjrqbTshJwo67OA6rK9WCktPu2CpOyXkCDtlbTri7nrkJjripQg642w7J207YSw66W8IOuzgOqyve2XiOyaqVxyXG5jb25zb2xlLmxvZyh1c2VyKVxyXG51c2VyLm5hbWUgPSAna2ltJztcclxuY29uc29sZS5sb2codXNlcilcclxuLypcclxuYzpcXHdlYnRlc3RcXDgud2ViXFx0eXBlc2NyaXB0XFxkaXN0Pm5vZGUgY29uc3QyLmpzXHJcbnsgbmFtZTogJ0xlZScsIGFkZHJlc3M6IHsgY2l0eTogJ1Nlb3VsJyB9IH1cclxueyBuYW1lOiAna2ltJywgYWRkcmVzczogeyBjaXR5OiAnU2VvdWwnIH0gfVxyXG5cclxuYzpcXHdlYnRlc3RcXDgud2ViXFx0eXBlc2NyaXB0XFxkaXN0PlxyXG4qL1xyXG5cclxuIl19

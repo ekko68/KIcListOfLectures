@@ -1,0 +1,5 @@
+package bag.lend.dbdata;
+
+public class Coupon {
+
+}

@@ -1,0 +1,21 @@
+
+#cosInfo{
+    height: 100%;
+    width: 25vw;
+    position: fixed;
+    z-index: 100;
+    top:0; left: -26vw;
+    background-color: #fff;
+    overflow-x: hidden;
+    padding-top: 10px;    
+    transition: 0.5s;
+    border-right: 5px solid black;
+}
+
+#cosInfo .closebtn {
+    font-size: 3rem;
+    position: absolute;
+    right: 20px;
+}
+
+

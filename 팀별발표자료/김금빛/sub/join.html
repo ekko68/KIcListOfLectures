@@ -1,0 +1,164 @@
+<!doctype>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <title>join.htmll</title>
+  <link rel="stylesheet" type="text/css" href="../style/style.css">
+  <script>
+	function form_submit() { //전송버튼 클릭
+
+        var chk1=document.myform2.checkbox1.checked;
+
+		 if (!chk1) {
+			alert ("위 이용약관에 동의해주세요 ");
+			return false;
+		} else if (document.myform2.id.value=="") {
+			alert ("ID를 입력해주세요");
+			document.myform2.id.focus();
+			return false;
+
+		}	else if (document.myform2.pwd.value == "") {
+			alert ("PASSWORD를 입력해주세요");
+			document.myform2.pwd.focus();
+			return false;
+
+		} else if (document.myform2.pwd.value != document.myform2.pwd2.value) {
+			alert("PASSWORD 와 PASSWORD_CHECK 다릅니다.");
+			
+			document.myform2.pwd.value = "";  /* 비밀번호 값 지우기 */
+			document.myform2.pwd2.value = ""; /* 비밀번호 확인 값 지우기*/
+			document.myform2.pwd.focus(); /*비밀번호 text로 커서 맞추기*/
+
+		}	else if (document.myform2.pwd.value.length <=10 ) {
+			alert("PASSWORD를 10자리 이상 입력해주세요 ");
+			document.myform2.pwd.focus();
+			return false;
+
+		}	else if (document.myform2.tel.value ==""){
+			alert ("TEL을 입력해주세요");
+			document.myform2.tel.focus();
+			return false;
+
+		}	else if (document.myform2.id.value ==""){
+			alert ("ID를 입력해주세요");
+			document.myform2.id.focus();
+			return false;
+
+		}  else if(document.myform2.name.value==""){ /*이름 필수입력*/
+			alert ("NAME 은 필수입력입니다."); /*경고창 띄우기*/
+			document.myform2.name.focus();  /*name에 포커스 맞추기*/
+			return false;
+
+		} else {
+			document.myform2.submit();
+		}
+	}
+
+  </script>
+ </head>
+
+<!--
+	focus()->커서를 입력하도록 설명해주는 함수
+	document.폼이름.reset()->입력한 내용을 전부 지워라->다시 입력하기 위해
+	전송버튼을 클릭한 경우 onsubmit="호출할 함수명(); return false();"
+-->
+ <body onload="document.myform2.id.focus()"><!--웹페이지 로드 시 myform2이라는 form안에 name이 'id' 초점으로 맞추기-->
+  <form id='join_form' name="myform2" method="post" action="a.jsp" onsubmit="return false;"><!--form 안에 값들을 url에 보이지 않게 전송하고 또한 조건에 맞족하지 않으면 리턴해주겠다.-->
+	<div id="left_padding"> <img src="../images/join_1.jpg"><br>
+	<br>
+	<img id="left_padding" src="../images/tit_agreement1.jpg">
+	<br><br>
+	<textarea name="textarea" rows="10">1. 개인정보의 수집목적 및 이용목적 
+	  
+"KGB Chicken"가 회원님 개인의 정보를 수집하는 목적은 "KGB Chicken" 사이트를 통하여 회원님께 최적의 맞춤화된 서비스를 제공해드리기 위한 것입니다. "KGB Chicken"는 각종의 컨텐츠 및 정보를 무료로 서비스해 드리고 있습니다. 이 때 회원님께서 제공해주신 개인정보를 바탕으로 회원님께 보다 더 유용한 정보를 선택적으로 제공하는 것이 가능하게 됩니다. 
+	  
+(1) "KGB Chicken"는 다음과 같은 목적을 위하여 개인정보를 수집하고 있습니다. 
+1) 서비스제공을 위한 계약의 성립(본인식별 및 본인의사 확인등) 
+2) 기타 새로운 서비스, 신상품이나 이벤트 정보 안내 
+	  
+(2) 단, 이용자의 기본적 인권 침해의 우려가 있는 민감한 개인정보(인종 및 민족, 사상 및 신조, 본적지, 정치적 성향 및 범죄기록, 건강상태 및 성생활등)는 수집하지 않습니다. 
+	  
+	  
+2. 수집하는 개인정보 항목 및 수집방법 
+	  
+"KGB Chicken"는 최초 회원가입을 하실 때 서비스 제공을 위해 가장 필수적인 개인정보를 받고 있습니다. 회원가입시에 받는 정보는 회원님의 이름, 생년월일, 이메일, 주소, 전화번호, 핸드폰번호 입니다. 
+	  
+이 이외에 특정 서비스를 제공하기 위하여 추가적인 정보제공을 요청하고 있습니다. "KGB Chicken" 메르랩, 지사관련서비스, 포럼, 클럽, 이벤트, 사이버몰 서비스등이 그것이며, 실명확인을 위한 주민등록번호, 휴대폰번호, 기타 서비스 제공에 필요한 추가 정보의 기재를 요청하게 됩니다. 또한 설문조사나 이벤트 시에 집단적인 통계분석을 위해서나 경품발송을 위한 목적으로도 개인정보 기재를 요청할 수 있습니다. 
+이 때에도 기입하신 해당서비스 제공이나 회원님께 사전에 밝힌 목적 이외의 다른 어떠한 목적으로도 사용되지 않음을 알려드립니다. 
+	  
+	  
+3. 개인정보보호기간 및 이용기간 
+	  
+(1) 귀하의 개인정보는 다음과 같이 개인정보의 수집목적 또는 제공받은 목적이 달성되면 파기됩니다. 
+1) 회원가입정보의 경우, 회원가입을 탈퇴하거나 회원에서 제명된 때 
+2) 대금지급정보의 경우, 대금의 완료일 또는 채권소멸시효기간의 만료된 때 
+3) 배송정보의 경우, 물품 또는 서비스가 인도되거나 제공된 때 
+(2) 위 보유기간에도 불구하고 계속 보유하여야 할 필요가 있을 경우에도 귀하의 동의를 받겠습니다. 
+	  
+4. 동의를 거부할 수 있으며, 거부시 서비스가 제공되지 않습니다.
+
+개인정보 관리 및 책임자 문의 
+	  
+담당자 : 김금빛 (TEL:010-7522-9306) 
+	  
+E-MAIL: slr2@daum.net
+	  
+상기 개인정보보호정책은 2017년 5월 23일부터 시행합니다.  
+	</textarea><br><input id="left_padding" name="checkbox1" type="checkbox" value="checkbox">위 사항에 동의합니다.<br>
+
+	<br>
+		<img id="left_padding" src="../images/join_2.jpg"><br><!--회원가입 이미지-->
+	<table id="join_table">
+		<tr>
+			<th>ID : </th>
+			<td><input type="text" name="id" size="20" required ></td>
+		</tr>
+		<tr>
+			<th>PASSWORD : </th>
+			<td><input type="password" name="pwd" size="20"> <span id="fred"><br>PASSWORD를 10자리 이상 입력해주세요</span> </td><!--비밀번호 입력 시 비밀번호 글자는 보여주지않게 타입을 password로 하겠다.-->
+		</tr>
+		<tr>
+			<th>PASSWORD_CHECK : </th><!--비밀번호 확인창-->
+			<td><input type="password" name="pwd2" size="20"></td>
+		</tr>
+		<tr>
+			<th>NAME : </th><!--name의 예시 글자를 "ex)홍길동"으로 하고 필수값으로 하겠다.-->
+			<td><input type="text" name="name" size="20" placeholder="ex)홍길동" required ></td>
+		</tr>
+		<tr>
+			<th> TEL : </th>
+			<td><input type="text" name="tel" size="20"placeholder="ex)010-7522-9306" required></td><!--tel의 예시 글자를 "ex)010-7522-9306" 보여주겠다.-->
+		</tr>
+		<tr>
+			<th>BIRTHDAY : </th><!-- 날짜를 입력받겠다 -->
+			<td><input type="date" name="birthday" required></td>
+		</tr>
+		<tr>
+			<th> WEB ADDRESS : </th>
+			<td><input type="url" placeholder="http://www.abc.com" required></td><!--url주소를 입력받고 예시를 'http://www.abc.com'로 보여주고 필수값으로 하겠다.-->
+		</tr>
+		<tr>
+			<th>EMAIL : </th>
+			<td><input type="email" placeholder="slr2@daum.net" required></td><!--이메일을 입력받는다.-->
+		</tr>
+		<tr>
+			<th>EMAIL 수신여부 : </th>
+			<td><input type="radio" name="email_chk" value="r1" required checked>수신받겠습니다.<input type="radio" name="email_chk" value="r2" required>수신거부합니다.</td><!--radio는 단일선택이다 . 기본값을 수신받겠습니다 radio를 통하여 이메일 수신여부 체크한다.-->
+		</tr>
+	</table>
+	 <br>
+	 <a href="#" onclick="함수();">
+
+	
+		
+	 <div id="join_btn">
+	 <a href="#" onclick="form_submit();"><img src="../images/join_btn_next.jpg"></a>
+	 <a href="#" onclick="self.close();"><img src="../images/join_btn_next2.jpg"></div>
+  </form>
+ </body>
+</html>
+
+
+
+
+

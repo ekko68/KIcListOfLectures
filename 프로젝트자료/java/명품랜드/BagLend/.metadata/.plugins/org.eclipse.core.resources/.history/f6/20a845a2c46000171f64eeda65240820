@@ -1,0 +1,265 @@
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class ProductInfo extends JFrame {
+	
+	Image image;
+	
+	private JTextField txtB_Num, txtB_Title, txtB_Check;// 제품번호, 제품제목, 제품정보, 상태여부
+	private JTextArea txtB_Infor;
+	private JLabel P_Num, P_Title, P_Infor, P_Check, pdPic, pdRec;// 제품번호, 제품제목, 제품정보, 상태여부
+	private Canvas Product_image;
+	private JButton C_Insert, C_delete, C_Update, C_Select, btnClose, C_Back, C_Next;
+	Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	
+	JFrame frame = new JFrame();
+
+	// 생성자
+	public ProductInfo() {
+
+		Design();
+		 
+		frame = new JFrame();
+
+		// setExtendedState(Frame.MAXIMIZED_BOTH);
+		// setBounds(1280,720,0,0);
+		setVisible(true);
+
+		JPanel panel = new JPanel();
+
+	}
+
+	// 디자인(전체 창 크기설정)
+	public void Design() {
+		setBounds(screen.width / 9, screen.height / 9, 1280, 720);
+
+		// 테두리 설정
+		// this.setBorder(BorderFactory.createEmptyBorder(1280, 107, 10, 10)); //
+		// x,y,w,h
+
+		// btnsu=new JButton("그림 수정");
+
+		/*
+		 * this.getContentPane().add(C_Insert); this.getContentPane().add(C_delete);
+		 * this.getContentPane().add(C_Update); this.getContentPane().add(C_Select);
+		 */
+
+		// 전체 박스 부착
+		// getContentPane().setLayout(new BoxLayout(getContentPane(),
+		// BoxLayout.X_AXIS));
+		getContentPane().setLayout(null);
+
+		// 이미지 패널----------------------------------------------------
+		JPanel picPn = new JPanel(); // new JPanel(new BorderLayout())
+		picPn.setBackground(new Color(255, 255, 255,50));
+		
+		picPn.setBorder(
+				new TitledBorder(new TitledBorder(""), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		picPn.setBounds(12, 35, 570, 581);
+		
+		// picPn.setLayout(null);
+		JPanel aPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		aPn1.setBackground(new Color(255, 255, 255,50));
+
+		// 제품 이미지
+		pdPic = new JLabel();
+		Product_image = new Canvas();
+		Product_image.setFont(new Font("Rockwell", Font.ITALIC, 12));
+		Product_image.setEnabled(false);
+		Product_image.setBounds(27, 33, 520, 550);
+		aPn1.add(Product_image);
+		Product_image.setBackground(Color.LIGHT_GRAY);
+
+		// 부착
+		aPn1.add(pdPic);
+		picPn.add(aPn1);
+		this.getContentPane().add(picPn);
+		
+		JLabel prImg = new JLabel("Product Image");
+		prImg.setForeground(new Color(255, 255, 255));
+		prImg.setFont(new Font("SansSerif", Font.BOLD, 14));
+		prImg.setBounds(12, 10, 124, 28);
+		getContentPane().add(prImg);
+		
+		JLabel prInfo = new JLabel("Product Information");
+		 prInfo.setForeground(Color.WHITE);
+		 prInfo.setFont(new Font("SansSerif", Font.BOLD, 14));
+		 prInfo.setBounds(612, 10, 175, 28);
+		getContentPane().add( prInfo);
+		
+		C_Back = new JButton("Back");
+		C_Back.setFont(new Font("SansSerif", Font.BOLD, 14));
+		
+		C_Next = new JButton("Next");
+		C_Next.setFont(new Font("SansSerif", Font.BOLD, 14));
+		pdRec = new JLabel("0 / 0");
+		
+		JPanel aPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		aPn2.setBounds(187, 635, 178, 37);
+		getContentPane().add(aPn2);
+		aPn2.setBackground(new Color(255, 255, 255,50));
+		
+				// 레코드이동 패널
+			    //aPn2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+			    aPn2.add(C_Back);
+			    aPn2.add(pdRec);
+			    aPn2.add(C_Next);
+
+		// 테두리 설정
+		// this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // x,y,w,h
+
+		// 제품정보 패널
+		JPanel infoPn = new JPanel();
+
+		infoPn.setBackground(new Color(255, 255, 255, 50));
+		infoPn.setBorder(
+				new TitledBorder(new TitledBorder(""), "", 
+					
+						TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		
+		infoPn.setBounds(612, 35, 640, 581);
+		infoPn.setLayout(null);
+
+		JPanel bPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn1.setBackground(new Color(255, 255, 255, 50));
+		bPn1.setBounds(20, 10, 600, 60);
+		
+		JPanel bPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn2.setBackground(new Color(255, 255, 255, 50));
+		bPn2.setBounds(20, 80, 600, 60);
+		
+		JPanel bPn3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn3.setBackground(new Color(255, 255, 255, 50));
+		bPn3.setBounds(20, 150, 600, 60);
+		
+		JPanel bPn4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn4.setBackground(new Color(255, 255, 255, 50));
+		bPn4.setBounds(20, 220, 600, 30);
+		
+		JPanel bPn5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn5.setBackground(new Color(255, 255, 255, 50));
+		bPn5.setBounds(20, 250, 600, 271);
+
+		txtB_Num = new JTextField("", 53);
+		txtB_Check = new JTextField("", 53);
+		txtB_Title = new JTextField("", 53);
+		txtB_Infor = new JTextArea(14, 53);
+		txtB_Infor.setEnabled(true);
+
+		txtB_Num.setEditable(false);
+		txtB_Check.setEditable(false);
+		txtB_Title.setEditable(false);
+		txtB_Infor.setEditable(false);
+		// JScrollBar scroll=new JScrollBar();
+
+		// 라벨-패널-패널 부착
+		JLabel label = new JLabel("Product Number :");
+		label.setForeground(new Color(255, 255, 255));
+		label.setFont(new Font("SansSerif", Font.BOLD, 14));
+		bPn1.add(label);
+		bPn1.add(txtB_Num);
+		JLabel label_1 = new JLabel("Product Name :");
+		label_1.setForeground(new Color(255, 255, 255));
+		label_1.setFont(new Font("SansSerif", Font.BOLD, 14));
+		bPn2.add(label_1);
+		bPn2.add(txtB_Check);
+		JLabel label_2 = new JLabel("Product Condition(Y/N) :");
+		label_2.setForeground(new Color(255, 255, 255));
+		label_2.setFont(new Font("SansSerif", Font.BOLD, 14));
+		bPn3.add(label_2);
+		bPn3.add(txtB_Title);
+		JLabel label_3 = new JLabel("Product Information :");
+		label_3.setForeground(new Color(255, 255, 255));
+		label_3.setFont(new Font("SansSerif", Font.BOLD, 14));
+		bPn4.add(label_3);
+		bPn5.add(txtB_Infor);
+		
+		// bPn5.add(scroll);
+		infoPn.add(bPn1);
+		infoPn.add(bPn2);
+		infoPn.add(bPn3);
+		infoPn.add(bPn4);
+		infoPn.add(bPn5);
+		this.getContentPane().add(infoPn);
+
+		// 버튼 생성
+		C_Insert = new JButton("New");
+		C_Insert.setFont(new Font("SansSerif", Font.BOLD, 13));
+		C_Insert.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		C_Insert.setPreferredSize(new Dimension(80, 30));
+		
+		C_delete = new JButton("Delete");
+		C_delete.setFont(new Font("SansSerif", Font.BOLD, 13));
+		C_delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		C_delete.setPreferredSize(new Dimension(80, 30));
+		C_Update = new JButton("Update");
+		C_Update.setFont(new Font("SansSerif", Font.BOLD, 13));
+		C_Update.setPreferredSize(new Dimension(80, 30));
+		
+		C_Select = new JButton("Select");
+		C_Select.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		C_Select.setFont(new Font("SansSerif", Font.BOLD, 13));
+		C_Select.setPreferredSize(new Dimension(80, 30));
+
+		// 신규, 수정, 버튼
+		JPanel btnPn = new JPanel();
+		btnPn.setBackground(new Color(255, 255, 255,50));
+		btnPn.setBounds(20, 531, 600, 40);
+		infoPn.add(btnPn);
+		btnPn.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+		btnPn.add(C_Insert);
+		btnPn.add(C_delete);
+		btnPn.add(C_Update);
+		btnPn.add(C_Select);
+		
+		btnClose = new JButton(new ImageIcon("C:/3.java/sou/BagLend/img/close.png"));
+		btnClose.setFont(new Font("SansSerif", Font.BOLD, 14));
+		btnClose.setBackground(new Color(255, 255, 255,0));
+
+		btnClose.setPreferredSize(new Dimension(36, 36));
+
+		JPanel delPn = new JPanel();
+		delPn.setBackground(new Color(255, 255, 255, 50));
+		delPn.setBounds(1190, 626, 62, 46);
+		getContentPane().add(delPn);
+		delPn.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		delPn.add(btnClose);ImageIcon imageIcon =
+				 new ImageIcon(new ImageIcon("C:/img/bg01.jpg")
+						 .getImage().getScaledInstance(screen.width,screen.height, Image.SCALE_DEFAULT) );
+		 
+		 		
+		 		 JLabel bgImg = new JLabel("Product Image");
+		 		 bgImg.setFont(new Font("Gulim", Font.PLAIN, 12));
+		 		 bgImg.setToolTipText("배경이미지"); 
+		 		 bgImg.setBounds(0, 0, screen.width,screen.height); 
+		 		 bgImg.setIcon(imageIcon); 
+		 		 getContentPane().add(bgImg);
+		 
+
+	}
+
+	private void setBorder(Border createEmptyBorder) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new ProductInfo();
+
+	}
+}

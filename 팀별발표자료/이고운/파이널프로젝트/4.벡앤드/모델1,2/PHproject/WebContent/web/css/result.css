@@ -1,0 +1,165 @@
+@CHARSET "UTF-8";
+html,body{
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #wrap{ /*background-color: darksalmon;*/
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: margin-left .5s;
+            }
+
+        #container{
+            margin: auto;
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+
+        #map{
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+            }
+
+        
+        #filter{ background-color: #eee;
+        position: absolute;
+        top: 10px; left: 100px;
+        z-index: 3;
+        width: 300px; height: 30px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            
+}
+
+select{
+    width: 120px; height: 28px;
+    background: rgba(0,0,0,0);
+    border: 1px solid #ccc;
+    vertical-align: middle;
+}
+
+        #cosListContainer{ /*background-color: aquamarine;*/
+          position: absolute;
+          bottom: 0;
+          z-index: 2;
+          width: 100vw;
+          height: 70px;
+        }
+
+
+        #cosList{
+            width: 100vw;
+            height: 70px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+
+        #cosList > div a{
+            width: 100%; height: 100%;
+            color: black;
+            font-weight: 600;
+        }
+
+        #cosList > div a:hover{
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        
+
+        /*
+
+        #cosList > ul{ background-color: aquamarine;
+          width: 3000px;
+          height: 70px;
+        }
+
+        #cosList > ul > li{
+          display: inline-block;
+          margin-top: 5px;
+          margin-right: 5px;
+          width: 18.4vw;
+          height: 70px;
+          border: 2px solid #ccc;
+          border-radius: 10px;
+          background-color: #fff;
+        }
+
+
+        #cosList > ul > li:first-child{
+            background-color: antiquewhite;
+        }
+
+        #cosList > ul > li:nth-child(2){ background-color: brown}
+        #cosList > ul > li:nth-child(3){ background-color:antiquewhite}
+        #cosList > ul > li:nth-child(4){ background-color: brown}
+        #cosList > ul > li:nth-child(5){ background-color: antiquewhite}
+        #cosList > ul > li:nth-child(6){ background-color: brown}
+        #cosList > ul > li:nth-child(7){ background-color:forestgreen}
+        #cosList > ul > li:nth-child(8){ background-color: brown}
+        #cosList > ul > li:nth-child(9){ background-color:antiquewhite}
+        #cosList > ul > li:nth-child(10){ background-color: brown}
+        #cosList > ul > li:nth-child(11){ background-color: antiquewhite}
+        #cosList > ul > li:nth-child(12){ background-color: brown}
+        #cosList > ul > li:nth-child(13){ background-color:forestgreen}
+        #cosList > ul > li:nth-child(14){ background-color: brown}
+        */
+
+/*
+       
+
+#list-backward{ background-color: rgba(0,0,0,0.7);
+  position: absolute;
+  bottom: 5px; left: 0px;
+  width: 30px;
+  height: 50px;
+
+}
+
+#list-forward{ background-color: rgba(0,0,0,0.7);
+  position: absolute;
+  bottom: 5px; right:0;
+  width: 30px;
+  height: 50px;
+}
+*/
+
+
+        .btn{
+            margin: 8.2vh auto 0;
+            width: 10vw;
+            height: 5vh;
+            border: 1px solid black;
+            border-radius: 5px;
+            background-color: black;
+            color: aliceblue;
+        }
+
+        .mg01{margin: 5vh 0;}
+
+        .flexCol{
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            text-align: center;
+            -ms-flex-flow: column nowrap;
+            flex-flow: column nowrap;
+            justify-content: center;
+        }
+
+        #wrapBg{
+            position: absolute;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: none;
+            transition: background-color .5s;
+            text-indent: -9999px;
+        }

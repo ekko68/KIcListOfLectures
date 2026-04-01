@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- 패키지명이 긴 클래스파일(DTO)->별칭을 부여하고
+      관련된 테이블의 정보(xml)을 불러오기위한 환경설정 -->
+<configuration>
+	<typeAliases>
+	    <typeAlias alias="BoardCommand" 
+	                    type="com.board.domain.BoardCommand"/>
+	</typeAliases>
+	
+	<mappers>
+	    <mapper resource="com/board/dao/BoardMapper.xml"/>
+	</mappers>
+</configuration>

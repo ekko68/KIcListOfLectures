@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link href="common.css" type="text/css" rel="stylesheet">
+    <script src="ex.js"></script>
+    <script src="nav.js"></script>   
+ 
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+     <script>
+      
+  
+    </script>     
+    
+    <title>쉴래? 놀래?</title>
+    <script>
+
+    </script>
+    <style type="text/css">
+        html,body{       
+            height: 100%;
+            width: 100%;
+        }
+
+        #wrap{ background-color: darksalmon;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            }
+
+        #container{ 
+            margin: auto;
+            height: 50%;
+            width: 60vw;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            text-align: center;
+            -ms-flex-flow: column nowrap;
+            flex-flow: column nowrap;
+            justify-content: center;
+        }
+
+
+        
+        
+        button{  
+            margin: 10vh auto 0;
+            width: 10vw;
+            height: 5vh;
+            border: 1px solid black;
+            border-radius: 5px;
+            background-color: black;
+            color: aliceblue;
+        }
+        
+        .mg01{margin: 5vh 0;}
+        
+        
+
+    </style>
+ </head>
+ <body>
+
+    <nav id="navUl" class="sideNav">
+        <div class="gnb">
+            <span class="login"><a href="#">로그인</a></span> 
+            <span class="closebtn"> <a href="javascript:void(0)" onclick="closeNav()">&times;</a>
+            </span>                 
+        </div>         
+         
+        <ul class="menu">
+            <li> <a href="#">홈으로가기</a></li>
+            <li> <a href="#">나의 위시 리스트</a> </li>
+            <li> <a href="#">회원수정</a> </li>
+            <li> <a href="#">회원탈퇴</a> </li>        
+        </ul>   
+    </nav>
+     
+     
+    <div id="wrap">
+     
+        <span id="navIcn" onclick="openNav()"> &#9776; </span>
+                 
+        <div id="container">           
+            <p>
+                () 3
+            </p>
+            <p class="mg01">
+               ()개의 검색 결과가 있습니다.
+            </p>
+            
+            <button onclick="location.href='result.html'"> 결과 보기 </button>
+            
+        </div> <!-- container -->
+         
+    </div> <!-- wrap-->
+     
+     
+ </body>
+</html>

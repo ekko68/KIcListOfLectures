@@ -1,0 +1,136 @@
+2일차(화면전환 및 다양한 컴포넌트활용)
+
+ ch3-theme->theme.html
+ ch4-pageMove->01.html
+
+1.현재 페이지에서 다른 페이지로 이동할 페이지까지 같이 작성
+   =>페이지는 각각 id로 구분해서 링크시켜서 이동(전환)
+
+<!-- 첫번째 page지정(페이지가 여러개 존재하면 반드시 id값으로 구분 -->
+<div data-role="page" id="first_page">
+    <!-- 1.header지정 -->
+    <div data-role="header">
+         <h1>first Page</h1>
+    </div>
+    <!-- 2.content 지정-->
+    <div data-role="content">
+       <a href="#second_page" data-role="button">두번째 화면으로 이동</a>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer">
+         <h1>화면하단</h1>
+    </div>
+</div>
+<!-- 두번째 페이지 -->
+<div data-role="page" id="second_page">
+    <!-- 1.header지정 -->
+    <div data-role="header">
+         <h1>두번째 페이지</h1>
+    </div>
+    <!-- 2.content 지정-->
+    <div data-role="content">
+          <a href="#first_page" data-role="button">첫번째 화면으로 이동</a>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer">
+         <h1>화면하단</h1>
+    </div>
+</div>
+----------------------------------------------------------
+2.따로 파일을 만들어서 불러오는 경우
+ 
+
+  02.html<-----02-2.html (js,css 불러올 수 가 없다.)->단독으로는 실행X
+   js,css불러오게 설정            
+
+   02.html----->02-2.html 전환( 02-2html도 스타일이 적용이 된다.)
+                        js,css불러오게 설정(공유) 시켜주기 때문에
+                       링크된(연결된) 페이지에서는 js,css파일을 불러오는 구문을
+                       사용하지 않아도 된다.(소스코드를 절약 장점,화면이 복잡X)
+
+  02.html파일을 save as
+  03.html<-----03-2.html
+
+               js,css파일의 내용을 공유X->매 페이지별로 js,css파일을 불러오는 
+               구문을 작성하고 싶다.
+============================================
+ 차이점(결론)?
+
+ data-ajax="false"을 주는 경우-->스타일을 공유해서 사용하는 의미
+                   X------------------->스타일을 공유해서 사용X 
+                                          -->매페이지 이동시킬때마다 스타일을 따로 설정
+                                          -->반드시 스타일을 적용시키는 구문이 필요
+---------------------------------------------------------------------
+
+04.html  자체페이지 이동->화면전환(애니매이션 효과)
+
+<!-- page지정 -->
+<div data-role="page" id="first_page">
+    <!-- 1.header지정 -->
+    <div data-role="header">
+         <h1>transition(화면전환)</h1>
+         <!-- 
+            data-transition=>slide(오른쪽->왼쪽으로 페이지이동)
+                                      slideup(아래->위쪽으로 페이지이동)
+                                      slidedown(위->아래쪽으로 페이지이동)
+                                      pop->팝업창 효과
+                                      flip->회전효과
+                                      fade->fade효과
+          -->
+    </div>
+    <!-- 2.content 지정(전화번호 목록(listview))
+           data-rel="dialog" (다이알로그 박스)형태로 전환되어서 보여주는 효과-->
+    <div data-role="content">
+         <ul data-role="listview">
+           <li><a href="#second_page" data-rel="dialog" data-transition="slide">List Item1</a></li>
+           <li><a href="#second_page" data-rel="dialog" data-transition="slideup">List Item2</a></li>
+           <li><a href="#second_page" data-rel="dialog" data-transition="slidedown">List Item3</a></li>
+           <li><a href="#second_page" data-rel="dialog" data-transition="pop">List Item4</a></li>
+           <li><a href="#second_page" data-rel="dialog" data-transition="flip">List Item5</a></li>
+           <li><a href="#second_page" data-rel="dialog" data-transition="fade">List Item6</a></li>
+         </ul>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer">
+         <h1>화면하단</h1>
+    </div>
+</div>
+<!--두번째 페이지  -->
+<div data-role="page" id="second_page">
+    <!-- 1.header지정 -->
+    <div data-role="header">
+         <h1>두번째 페이지</h1>
+         <a data-icon="arrow-l" data-rel="back">이전</a>
+    </div>
+    <!-- 2.content 지정-->
+    <div data-role="content">
+          <a href="#first_page" data-role="button">첫번째 화면으로 이동</a>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer">
+         <h1>화면하단</h1>
+    </div>
+</div>
+--------------------------------------------------------------
+상단메뉴(네비게이션바,하단)=>탭메뉴=>하나의 화면에 많은 양의 컴포넌트를
+                                                          디자인
+-----------------------------------------------------------
+->모바일->~.apk파일(안드로이드)->네이티브앱,하이브리드앱(코르도바(폰갭))
+                -------------------------
+ch5-navbar->01.html
+                     a.html->회원가입
+                     b.html(검색)->검색
+                     c.html(listview)->회원목록
+--------------------------------
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+package bag.get.connection;
+import java.sql.*;
+
+public class MakeConnection {
+	private static Connection conn=null;
+	
+	public static Connection getInstance() {
+		if(conn==null) {
+			try {
+	      	  Class.forName("oracle.jdbc.driver.OracleDriver");
+	      	  String url="jdbc:oracle:thin:@localhost:1521::xe";
+	      	  conn=DriverManager.getConnection(url, "scott", "tiger");
+	      	  
+			}catch(Exception e) {
+				System.out.println("DB접속 오류=>"+e);
+				System.out.println("????");
+			}
+		}	
+		return conn;
+	}
+}

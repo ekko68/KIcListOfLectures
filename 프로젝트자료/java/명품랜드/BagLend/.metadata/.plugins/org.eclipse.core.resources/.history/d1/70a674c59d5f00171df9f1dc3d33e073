@@ -1,0 +1,12 @@
+package bag.event.handler;
+
+import bag.design.page.MainPage;
+
+public class Handler {
+	
+	
+	public Handler(){
+		new MainPage();
+	}
+
+}

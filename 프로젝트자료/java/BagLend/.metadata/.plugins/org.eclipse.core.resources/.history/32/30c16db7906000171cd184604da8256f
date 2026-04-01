@@ -1,0 +1,80 @@
+package bag.handle.sql;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import bag.db.data.Product;
+import bag.memory.close.CloseJdbc;
+
+public class HandleProductDB {
+
+	
+	// DB 검색
+	public Product selectedProduct(Connection conn,String name) {
+		Product product = null;
+		String sql = "select * from product where num = (select product_num from custom where name=?)";
+		PreparedStatement pstm = null;  	//ResultSet은 커서 개념의 연결 포인터 기본적으로 next() 메서드를 통해 다음 로우 이동
+		ResultSet rs = null;				/* 쿼리속도가 Statement보다 빠르고 동일한 질의문 특정 값만 바꾸어서 여러번 실행할때, 많은 데이터를 다루기 때문에 질의문을 정리해야할
+											  필요가 있을때, 인수가 많아서 질의문을 정리해야 될 필요가 있을때 사용함 ? 로 압축해서 slq문을 작성가능*/
+											 
+		try {
+			pstm = conn.prepareStatement(sql);
+			pstm.setString(1, name);
+			rs=pstm.executeQuery();
+			
+			if (rs.next()) 
+				if(rs.getInt("num")!=0) 
+					product = new Product(rs.getInt("num"),rs.getString("title"),rs.getString("info"),rs.getString("state"),rs.getString("image"));
+					System.out.println(rs.getInt("num"));
+					System.out.println(rs.getString("title"));
+				
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			CloseJdbc.close(rs);
+			CloseJdbc.close(pstm);
+		}
+		return product;
+	}
+	
+	public ArrayList<Product> selectAllData(Connection conn) {
+		
+		ArrayList<Product> products = new ArrayList<Product>();
+		String sql = "select * from product";
+		Statement stmt = null;  	//ResultSet은 커서 개념의 연결 포인터 기본적으로 next() 메서드를 통해 다음 로우 이동
+		ResultSet rs = null;				/* 쿼리속도가 Statement보다 빠르고 동일한 질의문 특정 값만 바꾸어서 여러번 실행할때, 많은 데이터를 다루기 때문에 질의문을 정리해야할
+											  필요가 있을때, 인수가 많아서 질의문을 정리해야 될 필요가 있을때 사용함 ? 로 압축해서 slq문을 작성가능*/
+											 
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			while(rs.next())
+				if(rs.getInt("num")!=0) 
+					products.add(getDataFromResultSet(rs));
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			CloseJdbc.close(rs);
+			CloseJdbc.close(stmt);
+		}
+		return products;
+	}
+
+	// DB 삽입
+	public Product getDataFromResultSet(ResultSet rs) throws SQLException {
+		return new Product(rs.getInt("num"),rs.getString("title"),rs.getString("info"),
+				    	   rs.getString("state"),rs.getString("image"));
+			
+	}
+
+	// DB 삭제
+
+
+	// DB 수정
+
+}

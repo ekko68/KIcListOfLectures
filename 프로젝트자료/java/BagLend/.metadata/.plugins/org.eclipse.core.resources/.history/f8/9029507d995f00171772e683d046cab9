@@ -1,0 +1,14 @@
+package bag.lend.handlesql;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+public class HandleCouponDB {
+
+	private String sql;
+	private Statement stmt;
+	private ResultSet rs;
+	private PreparedStatement pstm;
+	
+	
+}

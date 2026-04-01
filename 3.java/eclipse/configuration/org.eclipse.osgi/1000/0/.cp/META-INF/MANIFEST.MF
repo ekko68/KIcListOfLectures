@@ -1,0 +1,43 @@
+Manifest-Version: 1.0
+Export-Package: antlr,antlr.ASdebug,antlr.actions.cpp,antlr.actions.cs
+ harp,antlr.actions.java,antlr.actions.python,antlr.build,antlr.collec
+ tions,antlr.collections.impl,antlr.debug,antlr.debug.misc,antlr.prepr
+ ocessor,bsh,bsh.classpath,bsh.collection,bsh.commands,bsh.org.objectw
+ eb.asm,bsh.reflect,bsh.servlet,bsh.util,bsh.util.lib,com.quantum,com.
+ quantum.actions,com.quantum.adapters,com.quantum.core.metadata,com.qu
+ antum.core.metadata.impl,com.quantum.core.metadata.model,com.quantum.
+ core.sql.grammar,com.quantum.core.sql.model,com.quantum.core.temp.met
+ adata,com.quantum.editors,com.quantum.editors.quickfix,com.quantum.ex
+ tensions,com.quantum.formatter,com.quantum.log,com.quantum.model,com.
+ quantum.model.xml,com.quantum.perspective,com.quantum.preferences,com
+ .quantum.properties,com.quantum.search,com.quantum.sql,com.quantum.sq
+ l.parser,com.quantum.ui.dialog,com.quantum.ui.workingsets,com.quantum
+ .util,com.quantum.util.connection,com.quantum.util.filters,com.quantu
+ m.util.io,com.quantum.util.proxy,com.quantum.util.sql,com.quantum.uti
+ l.versioning,com.quantum.util.xml,com.quantum.view,com.quantum.view.b
+ ookmark,com.quantum.view.bookmark.properties,com.quantum.view.driver,
+ com.quantum.view.tableview,com.quantum.view.widget,com.quantum.wizard
+ s,com.quantum.wizards.sql,org.jgrapht,org.jgrapht.alg,org.jgrapht.alg
+ .util,org.jgrapht.demo,org.jgrapht.event,org.jgrapht.experimental,org
+ .jgrapht.experimental.equivalence,org.jgrapht.experimental.isomorphis
+ m,org.jgrapht.experimental.permutation,org.jgrapht.experimental.touch
+ graph,org.jgrapht.ext,org.jgrapht.generate,org.jgrapht.graph,org.jgra
+ pht.traverse,org.jgrapht.util
+Bundle-ClassPath: quantum.jar,lib/antlr_2.7.6.1.jar,lib/jgrapht-jdk1.5
+ .jar,lib/concurrent-1.3.4.jar,lib/bsh-2.0b4.jar
+Bundle-Name: %quantum.name
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.resources,org.eclipse.ui.ide,org.ecli
+ pse.ui.workbench.texteditor,org.eclipse.ui.editors,org.eclipse.search
+ ,org.eclipse.core.runtime,org.eclipse.core.expressions,org.eclipse.ge
+ f,org.eclipse.ui.views.properties.tabbed,org.eclipse.jface.text,org.e
+ clipse.jface,com.quantum.log
+Bundle-Vendor: The QuantumDB Development Team
+Plugin-Class: com.quantum.QuantumPlugin
+Eclipse-LazyStart: true
+Bundle-Version: 3.3.10
+Bundle-ManifestVersion: 2
+Bundle-Activator: com.quantum.QuantumPlugin
+Bundle-SymbolicName: com.quantum.Quantum; singleton:=true
+Eclipse-ExtensibleAPI: true
+

@@ -1,0 +1,431 @@
+10일차(회원관리-회원등록,회원검색,수정,삭제)
+
+eclipse에서 회원등록->addPerson.jsp?name="ddd"&age=22
+                 전체 목록->getPersonList.jsp
+                -------------------------------------------------------------
+                 id값을 조회(수정 또는 삭제목적)->getPerson.jsp?id=1
+<%
+     //CORS(Cross-Origin Resource Sharing)
+     response.setHeader("Access-Control-Allow-Origin","*");
+ %>
+<%
+   //회원목록=>[{"id":1,"name":"홍길동","age":23}]
+   PersonCollection collection=PersonCollection.getInstance();
+   //id을 매개변수로 받아서 데이터를 조회
+   String id=request.getParameter("id");//id값
+  
+   ArrayList<Person> list =collection.getList(); //id,name,age
+   //추가한 후 데이터를 다시 출력
+   StringBuffer buffer = new StringBuffer();//String str="";
+   buffer.append("[");//str="["
+     //[{"id":"1","name":"홍길동","age":"23"},{"id":"2","name":"테스트","age":"23"}]
+     for(int i=0;i<list.size();i++){
+    	 Person p=list.get(i);
+    	 //추가 넘겨받은 id값과 일치하는 데이터를 찾았다면
+    	 if(p.getId().equals(id)){
+	    	 String mesg="{";
+	    	 mesg+="\"id\":\""+p.getId()+"\",";
+	    	 mesg+="\"name\":\" "+p.getName()+"\",";
+	    	 mesg+="\"age\":\""+p.getAge()+"\"";
+	    	 mesg+="}";
+	    	 buffer.append(mesg);//추가하고나서 
+	    	 if(i!=list.size()-1) buffer.append(",");//맨마지막 인덱스번호가 아니라면,
+    	 }
+    	 //--------------------------------------------
+     }
+   buffer.append("]");//str+="]";
+   System.out.println(buffer.toString());//StringBuffer->String으로 변환
+   //Angular가 데이터를 전송받을 수 있도록 전송해주는 구문
+   out.println(buffer.toString().trim());//혹 공백이 존재한다면 공백을 제거->전송
+
+
+%>
+
+
+[]
+[{"id":"2","name":" 이순신","age":"30"},]
+[{"id":"3","name":" 유관순","age":"40"},]
+
+                --------------------------------------
+               <item-edit></item-edit>
+                 회원수정->updatePerson.jsp?id=1&name="테스트"&age=21
+              
+PersonCollection collection=PersonCollection.getInstance();
+   //id을 매개변수로 받아서 데이터를 조회
+   String id=request.getParameter("id");//수정 또는 삭제하는 데이터를 찾기위해서
+   String name=request.getParameter("name");
+   String age=request.getParameter("age");
+   System.out.println("id:"+id+",name:"+name+",age:"+age);
+   
+   ArrayList<Person> list =collection.getList(); //id,name,age
+   for(int i=0;i<list.size();i++){
+  	 Person p=list.get(i);
+  	 //추가 넘겨받은 id값과 일치하는 데이터를 찾았다면
+  	 if(id.equals(p.getId())){
+  		 list.set(i,new Person(id,name,Integer.parseInt(age)));
+  	 }
+   }//
+-----------------------------------------------------------------------------------
+http://localhost:8090/AngularWeb/updatePerson.jsp?id=2&name='이칠성'&age=23
+
+                 회원삭제->deletePerson.jsp?id=2만 삭제되고 나머지는 그대로 다시
+                                화면에 보여준다.
+
+//회원목록=>[{"id":1,"name":"홍길동","age":23}]
+   PersonCollection collection=PersonCollection.getInstance();
+   //id을 매개변수로 받아서 데이터를 조회
+   String id=request.getParameter("id");//삭제시킬 id값
+   ArrayList<Person> list =collection.getList(); //id,name,age
+   //삭제시킬 항목을 저장
+   Person pp=null;
+   for(Person x:list){//for(int i=0;i<list.size();i++){
+      if(x.getId().equals(id)){ //DB상의 데이터 id과 넘겨받은 id값이 일치한다면
+    	  pp=x;
+      }
+   }
+   list.remove(pp);//찾은데이터는 삭제
+==============================================
+[{"id":"1","name":" 홍길동","age":"20"},{"id":"2","name":" 이순신","age":"30"},{"id":"3","name":" 유관순","age":"40"},{"id":"4","name":" 강감찬","age":"50"}]
+[{"id":"1","name":" 홍길동","age":"20"},{"id":"2","name":" 이순신","age":"30"},{"id":"3","name":" 유관순","age":"40"}]
+[{"id":"1","name":" 홍길동","age":"20"},{"id":"3","name":" 유관순","age":"40"}]
+[{"id":"1","name":" 홍길동","age":"20"}]
+[]
+[]
+                --------------------------------------------------------------------
+Angular에서 작업
+
+1.person.service.ts (공통의 메서드를 먼저 선언)
+
+//2.회원등록
+ addPerson(name){ //addPerson(name,age)
+{
+  var url="http://localhost:8090/AngularWeb/addPerson.jsp?name="+name;
+
+  return this.http.get(url).map(res=>res.json());
+
+ }
+
+ 
+//3.회원id에 해당되는 데이터 찾기
+  getPerson(id){
+    var url="http://localhost:8090/AngularWeb/getPerson.jsp?id="+id;
+    return this.http.get(url).map(res=>res.json());
+  }
+ //4.회원수정
+ updatePerson(p){
+  console.log("updatePerson()호출됨>>>"+p);
+  var url="http://localhost:8090/AngularWeb/updatePerson.jsp?id="+p.id+"&name="+p.name+"&age="+p.age;
+  return this.http.get(url).map(res=>res.json());
+ }
+
+ //5.회원삭제
+ deletePerson(p){ //p.id에서 구분
+  console.log("deletePerson()호출됨>>>"+p);
+  var url="http://localhost:8090/AngularWeb/deletePerson.jsp?id="+p.id;
+  return this.http.get(url).map(res=>res.json());
+ }
+
+
+2.person.component.ts
+
+//회원등록->등록버튼을 눌렀을때의 이벤트처리함수
+ 
+ addPerson(name){
+    
+if(!name){
+     
+ alert('이름은 필수입력입니다.')
+     
+ return;
+   
+ }
+   
+ this.service.addPerson(name).toPromise().then(res=>this.personList=res);
+ 
+ }
+
+============================
+각 항목을 수정할 수있도록 설계
+
+person.component.html 추가(수정버튼을 하나 추가)
+
+item-edit.component.html 화면 디자인
+
+<span *ngIf="isEdit">
+ 
+<input type="text" #input placeholder="수정할 내용"
+                     
+        [(ngModel)]="editName">
+ 
+<button (click)="updatePerson(input.value)">저장</button>
+
+ <button (click)="deletePerson()">삭제</button>
+ 
+<button (click)="isEdit=false">취소</button>
+
+</span>
+
+<span *ngIf=!isEdit>
+ 
+<button (click)="isEdit=true">수정</button>
+
+</span>
+=======================================
+
+<li *ngFor="let person of personList">
+   
+{{person.id}}  {{person.name}}  {{person.age}}
+ 
+  <item-edit [persons]="person"></item-edit>
+ =>자식 item-edit에 전달
+      @Input() persons에게 전달==>person객체를 전달
+</li>
+
+item-edit.component.ts
+
+//추가
+import {Person} from '../person/person'; 
+//person객체때문에
+//부모->자식(Input),부모<-자식(Output)
+import {EventEmitter,Input,Output} from '@angular/core';
+
+@Component({
+  selector: 'item-edit',
+  templateUrl: './item-edit.component.html',
+  styleUrls: ['./item-edit.component.css']
+})
+export class ItemEditComponent implements OnInit {
+
+  @Input() persons:Person;//@Input() 매개변수명:클래스 자료형
+  @Output() public doUpdate:EventEmitter<any>=new EventEmitter();
+  @Output() public doDelete:EventEmitter<any>=new EventEmitter();
+  //화면설계->보이는 부분과 보이지않는 부분
+  private isEdit:boolean=false;//수정,삭제,취소부분은 처음에는 안나오게 설정
+  editName:string;//수정할 데이터의 이름
+  constructor() { }
+
+  ngOnInit() {//수정할 이름(항목)을 출력
+    this.editName=this.persons.name;
+    //this.editAge=this.persons.age;
+    //this.editAddress=this.person.address;
+  }
+  //수정,삭제
+  updatePerson(value){
+    this.persons.name=this.editName;//양방향때문에
+    //doUpdate매개변수에 변경시킬데이터 name값이 변경된데이터 전송
+    this.doUpdate.emit(this.persons);//emit(전송할 데이터값)
+    this.isEdit=false;//true된상태를 -false되게 설정
+  }
+  deletePerson(){
+    this.doDelete.emit(this.persons);//삭제시킬 id값
+    this.isEdit=false;//삭제시킨후 수정화면이 안보이게 다시 삭제
+  }
+
+}
+
+
+
+<li *ngFor="let person of personList">
+  
+ {{person.id}}  {{person.name}}  {{person.age}}
+   
+<item-edit (doUpdate)="updatePersonX($event)"
+  =>자식->부모에게 수정할내용   
+        (doDelete)="deletePersonX($even)" 
+  =>자식->부모에게 전달 삭제할 데이터
+    ex)(전달받은 매개변수@Output)="부모에서 처리할 이벤트함수명() or ($event))        
+    [persons]="person"></item-edit>
+ </li>
+   ex)[부모에서 자식에게 전달하는 매개변수@Input)="전달할값(객체,문자,숫자")
+                                                                           멤버변수
+
+person.component.ts에서 수정,삭제를 구현
+=========================
+//회원수정
+  updatePersonX(p){
+   
+ console.log("updatePersonX-->"+p);
+  
+  this.service.updatePerson(p).toPromise().then(res=>this.personList=res);
+  }
+
+ 
+
+ //회원삭제
+  deletePersonX(p){
+   
+ console.log("deletePersonX-->"+p);
+   
+ this.service.deletePerson(p).toPromise().then(res=>this.personList=res);
+ 
+ }
+
+============================================
+메인페이지를 작성법
+=======================>ng --help->옵션확인
+1.상품관리 애플리케이션 구성
+ anguar>ng new simple-commerce-manager --prefix scm
+ =>프로젝트명->단어와 단어사이-(_X)   --prefix
+
+<app-book>
+  ===>접두어를 처음부터 설정하고 싶다. 프로젝트명 => --prefix 접두어 단어
+<app-book-image>
+ ===
+<scm-~>
+                   --->--save->환경설정파일에 설치모듈의 정보를 저장하라는 옵션
+                        package.json파일에 기록
+angular>cd simple-commerce-manager
+angular\simple-commerce-manager>npm i --save bootstrap@4.0.0-alpha.6 font-awesome
+
+C:\webtest\8.web\angular\simple-commerce-manager>npm i --save bootstrap@4.0.0-al
+pha.6 font-awesome
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.1.2 (node_modules\fse
+vents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@
+1.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"}
+)
+
++ bootstrap@4.0.0-alpha.6
++ font-awesome@4.7.0
+added 114 packages and updated 2 packages in 17.302s
+
+C:\webtest\8.web\angular\simple-commerce-manager>
+
+angular\simple-commerce-manager>type package.json
+
+{
+  "name": "simple-commerce-manager",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^4.2.4",
+    "@angular/common": "^4.2.4",
+    "@angular/compiler": "^4.2.4",
+    "@angular/core": "^4.2.4",
+    "@angular/forms": "^4.2.4",
+    "@angular/http": "^4.2.4",
+    "@angular/platform-browser": "^4.2.4",
+    "@angular/platform-browser-dynamic": "^4.2.4",
+    "@angular/router": "^4.2.4",
+    "bootstrap": "^4.0.0-alpha.6",
+    "core-js": "^2.4.1",
+    "font-awesome": "^4.7.0",
+    "rxjs": "^5.4.2",
+    "zone.js": "^0.8.14"
+  },
+  "devDependencies": {
+    "@angular/cli": "1.4.1",
+    "@angular/compiler-cli": "^4.2.4",
+    "@angular/language-service": "^4.2.4",
+    "@types/jasmine": "~2.5.53",
+    "@types/jasminewd2": "~2.0.2",
+    "@types/node": "~6.0.60",
+    "codelyzer": "~3.1.1",
+    "jasmine-core": "~2.6.2",
+    "jasmine-spec-reporter": "~4.1.0",
+    "karma": "~1.7.0",
+    "karma-chrome-launcher": "~2.1.1",
+    "karma-cli": "~1.0.1",
+    "karma-coverage-istanbul-reporter": "^1.2.1",
+    "karma-jasmine": "~1.1.0",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "protractor": "~5.1.2",
+    "ts-node": "~3.2.0",
+    "tslint": "~5.3.2",
+    "typescript": "~2.3.3"
+  }
+}
+
+C:\webtest\8.web\angular\simple-commerce-manager>ng g component navbar
+====================================
+                                                                                   ng g component sidebar
+                                                                                   ng g component footer
+     상단메뉴
+
+좌측메뉴
+
+      footer부분
+=============================================
+C:\webtest\8.web\angular\simple-commerce-manager>ng g component navbar
+  create src/app/navbar/navbar.component.html (25 bytes)
+  create src/app/navbar/navbar.component.spec.ts (628 bytes)
+  create src/app/navbar/navbar.component.ts (269 bytes)
+  create src/app/navbar/navbar.component.css (0 bytes)
+  update src/app/app.module.ts (396 bytes)
+
+C:\webtest\8.web\angular\simple-commerce-manager>ng g component sidebar
+  create src/app/sidebar/sidebar.component.html (26 bytes)
+  create src/app/sidebar/sidebar.component.spec.ts (635 bytes)
+  create src/app/sidebar/sidebar.component.ts (273 bytes)
+  create src/app/sidebar/sidebar.component.css (0 bytes)
+  update src/app/app.module.ts (482 bytes)
+
+C:\webtest\8.web\angular\simple-commerce-manager>ng g component footer
+  create src/app/footer/footer.component.html (25 bytes)
+  create src/app/footer/footer.component.spec.ts (628 bytes)
+  create src/app/footer/footer.component.ts (269 bytes)
+  create src/app/footer/footer.component.css (0 bytes)
+  update src/app/app.module.ts (564 bytes)
+
+ 상단메뉴->sidebar=>css,html,ts를 설정
+=========================
+  app.component.html =>각 컴포넌트를 부착
+
+<scm-navbar></scm-navbar>
+ =>상단메뉴
+<div class="container-fluid">
+
+<div class="row">
+
+   =>좌측메뉴 컴포넌트
+<scm-sidebar (changeMenu)="currentMenu=$event"></scm-sidebar>
+
+<main class="col-10 offset-2 pt-3" [ngSwitch]="currentMenu">
+
+<div *ngSwitchCase="'product'">상품관리 뷰</div>
+
+<div *ngSwitchCase="'category'">카테고리 뷰</div>
+
+<div *ngSwitchDefault>기본 뷰</div>
+
+</main>
+
+</div>
+
+</div>
+
+<scm-footer></scm-footer> =>꼬리말 컴포넌트
+============================================
+1.navbar.component.ts
+
+export class NavbarComponent implements OnInit {
+   //추가
+   appTitle='상품관리 시스템';
+  constructor() { }
+  ngOnInit() {}
+  //상품번호를 입력
+  searchProduct(no:number){
+    console.log(`search ${no}`);
+  }
+}
+
+2.navbar.component.html->화면디자인
+3.navbar.component.css->설정
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,59 @@
+
+
+.gnb{
+    padding-bottom: 50px;
+}
+
+.gnb > span{ 
+    display: inline-block;
+    width: auto; height: auto;
+}
+
+.gnb .closebtn {
+    font-size: 3rem;
+    position: absolute;
+    right: 20px;
+}
+
+.gnb .login{
+    position: absolute;
+    top:30px; left:30px;   
+    font-size: 1rem;    
+}
+
+.gnb a{
+   color: #fff;
+}
+
+
+.menu{
+}
+
+.menu a{
+    margin: 15px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sideNav a:hover, .offcanvas a:focus{
+    color: #f1f1f1;
+}
+
+
+#admin > a{
+	height:30px;
+	position:absolute;
+	bottom:10px; right:10px;
+}
+
+
+
+
+
+
+
+
+

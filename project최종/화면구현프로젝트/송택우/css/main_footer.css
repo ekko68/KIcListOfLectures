@@ -1,0 +1,49 @@
+			#footer{
+				opacity:0;
+			}
+
+			.foot{
+				list-style-type:none;
+				position:relative;
+				top:1100px;
+				border-top:3px solid rgba(150,150,150,0.6);
+				
+			}
+			.foot > li{
+				float:left;
+				margin-top:40px;
+				border-right:3px solid rgba(150,150,150,0.6);
+			}
+
+			.foot > li > a{
+				text-decoration:none;
+				padding:50px;
+				color:rgba(50,50,50,0.9);
+
+			}
+
+			
+			.infor{
+				list-style:none;
+				position:relative;
+				top:1200px;
+				left:0;
+				border-top:2px solid rgba(150,150,150,0.6);
+
+			}
+
+			.infor > li{
+				float:left;
+				
+				border-right:3px solid rgba(150,150,150,0.6);
+			
+
+			}
+
+			.infor > li > a{
+				text-decoration:none;
+				padding:0 90px;
+				font-size:0.8em;
+				font-family: 'Francois One', sans-serif;
+				color:rgba(50,50,50,0.9);
+			}

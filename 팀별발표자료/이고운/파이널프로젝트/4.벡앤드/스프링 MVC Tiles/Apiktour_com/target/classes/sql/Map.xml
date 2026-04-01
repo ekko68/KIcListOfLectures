@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="map">
+	<!-- 
+		locnum     Integer(3)          지도 id값 (1~999)
+ 		locname   VARCHAR(40)     장소명(한글 20글자)
+ 		locationx  double(9,6)        경도값(###.######)
+ 		locationy  double(9,6)        위도값(###.######)
+ 		loctype (f) VARCHAR(10)    장소 type값   
+	 -->
+
+	<!-- 지도검색 -->
+	<select id="listmap" resultType="mapDto">
+		select locnum,locname,locationx,locationy,loctype from MAP order by id desc
+	</select>
+	
+	<select id="countmap" resultType="Integer">
+		select count(*) from MAP
+    </select> 
+	<!-- 지도 등록 -->
+	<insert id="insertmap" parameterType="mapDto">
+		insert into MAP values(#{locnum},#{locname},#{locationx},#{locationy},#{loctype})
+	</insert>
+	<!-- 지도 수정 -->
+	<update id="updatemap" parameterType="mapDto">
+		update MAP set locnum=#{locnum},locname=#{locname},locationx=#{locationx},locationy=#{locationy},loctype=#{loctype} where locnum=#{locnum}
+	</update>
+	<!-- 지도삭제 -->
+	<delete id="deletemap" parameterType="String">
+		delete from MAP where locnum=#{locnum};
+	</delete>
+</mapper>

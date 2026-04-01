@@ -1,0 +1,63 @@
+body {
+  font-family: ±¼¸²Ã¼
+}
+
+div.body{
+  overflow-y: auto;
+  scrollbar-face-color: #C9BFED;
+  scrollbar-shadow-color: #EDEDED;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+tr.header{
+  background: #C9BFED;
+}
+
+tr.record{
+  background: #EDEDED;
+}
+
+input.itemName{
+  height: 20px;
+  width: 230px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+input.price{
+  height: 20px;
+  width: 60px;
+  border-width: 1px;
+  border-style: solid;
+  text-align:right;
+}
+
+input.pictureUrl{
+  height: 20px;
+  width: 230px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+input.userId{
+  height: 20px;
+  width: 100px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+input.password{
+  height: 20px;
+  width: 100px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+textArea.description{
+  height: 80px;
+  width: 300px;
+  border-width: 1px;
+  border-style: solid;
+}
+

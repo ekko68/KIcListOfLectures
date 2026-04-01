@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="com.quantum.Quantum">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="com.quantum.Quantum" id="embedded" name="Embedded Database"/>
+      </appInfo>
+      <documentation>
+         This extension points allows other plugins to define a database connection (bookmark) for Quantum. The aim is for external plugins to be able to define a database, and have it automatically recognized by Quantum. The database can be included in the same plugin or not.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <choice>
+            <element ref="BookmarkGenerator"/>
+         </choice>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="BookmarkGenerator">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  This class should extend BookmarkGenerator and so return a complete bookmark with the needed connection data to our embedded database.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="com.quantum.extensions.BookmarkGenerator:"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  Name of the bookmark to be created in Quantum.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         3.3.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         The standard distribution com.quantum.derby plugin extends this extension point to define an internal Derby database that holds some Quantum data and a toy database to play with.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

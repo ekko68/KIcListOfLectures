@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="authenticationManager"
+		class="net.sf.acegisecurity.providers.ProviderManager">
+		<property name="providers">
+		<list>
+			<ref local="daoAuthenticationProvider"/>
+		</list>
+		</property>
+	</bean> 
+
+	<bean id="daoAuthenticationProvider"
+		class="net.sf.acegisecurity.providers.dao.DaoAuthenticationProvider">
+		<property name="authenticationDao">
+			<ref local="inMemoryDaoImpl"/>
+		</property>
+	</bean>
+
+	<bean id="inMemoryDaoImpl"
+		class="net.sf.acegisecurity.providers.dao.memory.InMemoryDaoImpl">
+		<property name="userMap">
+			<value>
+				admin=spring,ROLE_ADMIN,ROLE_USER
+				user=acegi,ROLE_USER
+			</value>
+		</property>
+	</bean>
+
+	<bean id="affirmativeBased"
+		class="net.sf.acegisecurity.vote.AffirmativeBased">
+		<property name="decisionVoters">
+			<list>
+				<ref local="roleVoter"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="roleVoter" class="net.sf.acegisecurity.vote.RoleVoter"/>
+
+	<bean id="filterSecurityInterceptor"
+		class="net.sf.acegisecurity.intercept.web.FilterSecurityInterceptor">
+		<property name="authenticationManager">
+			<ref local="authenticationManager"/>
+		</property>
+		<property name="accessDecisionManager">
+			<ref local="affirmativeBased"/>
+		</property>
+		<property name="objectDefinitionSource">
+			<value>
+				CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+				PATTERN_TYPE_APACHE_ANT
+				/create**=ROLE_ADMIN
+				/update**=ROLE_ADMIN
+				/delete**=ROLE_ADMIN
+				/find**=ROLE_USER
+			</value>
+		</property>
+	</bean>
+
+	<bean id="httpSessionContextIntegrationFilter" class="net.sf.acegisecurity.context.HttpSessionContextIntegrationFilter">
+		<property name="context">
+			<value>net.sf.acegisecurity.context.SecurityContextImpl</value>
+		</property>
+	</bean>
+
+	<bean id="authenticationProcessingFilter"
+		class="net.sf.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+		<property name="authenticationManager">
+			<ref local="authenticationManager"/>
+		</property>
+		<property name="authenticationFailureUrl">
+			<value>/mstLogin.do?login_error=1</value>
+		</property>
+		<property name="defaultTargetUrl">
+			<value>/findAll.do</value>
+		</property>
+		<property name="filterProcessesUrl">
+			<value>/acegiSecurity</value>
+		</property>
+	</bean>
+
+	<bean id="securityEnforcementFilter"
+		class="net.sf.acegisecurity.intercept.web.SecurityEnforcementFilter">
+		<property name="filterSecurityInterceptor">
+			<ref local="filterSecurityInterceptor"/>
+		</property>
+		<property name="authenticationEntryPoint">
+			<ref local="authenticationProcessingFilterEntryPoint"/>
+		</property>
+	</bean>
+
+	<bean id="authenticationProcessingFilterEntryPoint"
+		class="net.sf.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+		<property name="loginFormUrl"><value>/mstLogin.do</value></property>
+	</bean>
+
+	<bean id="filterChainProxy" class="net.sf.acegisecurity.util.FilterChainProxy">
+        <property name="filterInvocationDefinitionSource">
+            <value>
+		        CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+		        PATTERN_TYPE_APACHE_ANT
+                /**=httpSessionContextIntegrationFilter,authenticationProcessingFilter,securityEnforcementFilter
+            </value>
+        </property>
+    </bean>
+</beans>

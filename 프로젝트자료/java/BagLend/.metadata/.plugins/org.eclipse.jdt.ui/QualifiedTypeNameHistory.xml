@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="bag.lend.design.ProductPage"/>
+<fullyQualifiedTypeName name="bag.lend.dbdata.Customer"/>
+<fullyQualifiedTypeName name="bag.handle.sql.HandleCustomDB"/>
+<fullyQualifiedTypeName name="bag.db.data.Customer"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="bag.db.data.CustomerInfo"/>
+<fullyQualifiedTypeName name="bag.handle.sql.HandleCouponDB"/>
+<fullyQualifiedTypeName name="java.sql.Connection"/>
+<fullyQualifiedTypeName name="bag.db.data.CustomPageInfo"/>
+<fullyQualifiedTypeName name="bag.db.data.Coupon"/>
+<fullyQualifiedTypeName name="bag.lend.controller.Controller"/>
+<fullyQualifiedTypeName name="java.awt.event.WindowAdapter"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="java.awt.event.WindowEvent"/>
+<fullyQualifiedTypeName name="javax.swing.JFrame"/>
+<fullyQualifiedTypeName name="javax.swing.JPanel"/>
+<fullyQualifiedTypeName name="java.awt.Color"/>
+<fullyQualifiedTypeName name="javax.swing.JLabel"/>
+<fullyQualifiedTypeName name="javax.swing.JButton"/>
+<fullyQualifiedTypeName name="javax.swing.border.LineBorder"/>
+<fullyQualifiedTypeName name="test.ProductInfo"/>
+<fullyQualifiedTypeName name="test.Search"/>
+<fullyQualifiedTypeName name="javax.swing.event.ListSelectionListener"/>
+<fullyQualifiedTypeName name="test.InsertProduct"/>
+<fullyQualifiedTypeName name="bag.design.page.ProductPage"/>
+<fullyQualifiedTypeName name="oracle.net.aso.e"/>
+<fullyQualifiedTypeName name="javax.xml.transform.Source"/>
+<fullyQualifiedTypeName name="java.awt.event.ActionListener"/>
+<fullyQualifiedTypeName name="javax.xml.bind.ParseConversionEvent"/>
+<fullyQualifiedTypeName name="bag.design.page.MainPage"/>
+<fullyQualifiedTypeName name="bag.design.page.SearchPage"/>
+<fullyQualifiedTypeName name="bag.design.page.UpdateImage"/>
+<fullyQualifiedTypeName name="bag.design.page.ProductInfoPage"/>
+<fullyQualifiedTypeName name="java.lang.Boolean"/>
+<fullyQualifiedTypeName name="javax.swing.ImageIcon"/>
+<fullyQualifiedTypeName name="bag.handle.sql.HandleProductDB"/>
+<fullyQualifiedTypeName name="bag.get.connection.MakeConnection"/>
+<fullyQualifiedTypeName name="bag.db.data.Product"/>
+<fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+<fullyQualifiedTypeName name="bag.memory.close.CloseJdbc"/>
+<fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+</qualifiedTypeNameHistroy>

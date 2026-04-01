@@ -1,0 +1,209 @@
+package bag.design.page;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.Statement;
+import java.io.File;
+import java.sql.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
+import bag.db.data.Product;
+import bag.get.connection.MakeConnection;
+import bag.handle.sql.HandleProductDB;
+
+
+public class UpdateImage extends JFrame implements ActionListener {
+
+	//private JTextField txtB_Num, txtB_Title, txtB_Check; // 상품번호,이름,상태
+	//private JTextArea txtB_Infor; //상품 정보 //P_Num, P_Title, P_Infor, P_Check, 
+	private JLabel pdPic,Product_Image;
+	private JLabel bgImg;
+	private ImageIcon imageIcon;
+	private JButton confirmbtn, cancelbtn, imgEdit;
+	private JPanel aPn2, aPn1, picPn; //delPn,infoPn,bPn1,bPn2,bPn3,bPn4,bPn5;
+
+	private JFrame fUpdate;
+	private Dimension screen;
+	private Color trans;
+	
+	private String imgPath;
+	private File file;
+	
+	private ProductInfoPage page;
+	
+	//DB 연동
+	private HandleProductDB productDB;
+
+	
+	public UpdateImage() {
+		init();
+	}
+	
+	public UpdateImage(ProductInfoPage page) {
+		this.page = page;
+		init();
+	}
+	public void init() {
+		productDB = new HandleProductDB();
+		fUpdate = new JFrame();
+		
+		trans = new Color(0, 0, 0, 0);
+		screen = Toolkit.getDefaultToolkit().getScreenSize();
+		Design();
+		
+		fUpdate.setVisible(true);
+		fUpdate.setResizable(false);
+		addListener();
+	}
+	
+	public void Design() {
+		fUpdate.setTitle("이미지 수정하기");
+		fUpdate.setBounds(screen.width / 9, screen.height / 9, 620, 720);
+		//fInsert.setVisible(true);
+		
+		// 전체 박스 부착
+		fUpdate.getContentPane().setLayout(null);
+
+		// 이미지 패널----------------------------------------------------
+		picPn = new JPanel(); // new JPanel(new BorderLayout())
+		picPn.setBorder(new LineBorder(new Color(255, 255, 255), 2));
+		picPn.setBounds(10, 20, 585, 640);
+		picPn.setBackground(new Color(255, 255, 255, 90));
+
+		aPn1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		// aPn1.setBackground(trans);
+		aPn1.setPreferredSize(new Dimension(565, 520));
+
+		// 제품 이미지
+		pdPic = new JLabel();
+		pdPic.setBackground(Color.DARK_GRAY);
+		Product_Image = new JLabel();
+		Product_Image.setBounds(0, 0, 565, 520);
+		Product_Image.setBackground(Color.DARK_GRAY);
+		aPn1.add(Product_Image);
+
+		// 부착
+		aPn1.add(pdPic);
+		picPn.add(aPn1);
+		fUpdate.add(picPn);
+
+		// 이미지 추가 버튼
+		aPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 20));
+		aPn2.setBackground(trans);
+		imgEdit = new JButton();
+		imgEdit.setIcon(new ImageIcon("C:/image/btn_edit.jpg"));
+		imgEdit.setPreferredSize(new Dimension(100, 30));
+		
+		confirmbtn = new JButton();
+		confirmbtn.setIcon(new ImageIcon("C:/image/btn_confirm.jpg"));
+		confirmbtn.setPreferredSize(new Dimension(100, 30));
+		
+		cancelbtn = new JButton();
+		cancelbtn.setIcon(new ImageIcon("C:/image/btn_cancel.jpg"));
+		cancelbtn.setPreferredSize(new Dimension(100, 30));
+		
+		aPn2.add(imgEdit); aPn2.add(confirmbtn); aPn2.add(cancelbtn);
+		picPn.add(aPn2);
+
+
+		// 배경 이미지라벨
+		bgImg = new JLabel();
+		imageIcon = new ImageIcon(new ImageIcon("C:/image/bg01.jpg").getImage()
+				.getScaledInstance(screen.width, screen.height, Image.SCALE_DEFAULT));
+		// bgImg.setToolTipText("배경이미지");
+		bgImg.setBounds(0, 0, screen.width, screen.height);
+		bgImg.setIcon(imageIcon);
+		fUpdate.setBackground(Color.BLACK);
+		fUpdate.getContentPane().add(bgImg);
+
+	}
+	
+	
+	
+	public void displayImage() {
+		ImageIcon icon = createImageIcon(imgPath);
+		// 이미지 리사이징
+		Image pd_Img = icon.getImage();
+		Image imgResize = pd_Img.getScaledInstance(565, 520, Image.SCALE_DEFAULT);
+		ImageIcon imgIcon = new ImageIcon(imgResize);
+		Product_Image.setIcon(imgIcon);
+
+		// 이미지를 불러오지 못한 경우
+		if (icon != null) {
+			Product_Image.setText(null);
+		} else {
+			Product_Image.setText("이미지가 없습니다.");
+		}
+	}
+
+	// 경로를 지정하면 이미지를 만들어서 불러오는 메소드
+	private ImageIcon createImageIcon(String path) {
+		if (path != null) { // 불러올 이미지의 경로가 있다면 이미지 객체 생성
+			// swing에서 이미지를 생성하면 이미지를 만들어주는 ImageIcon이 있다
+			// ImageIcon 객채명 = new ImageIcon(경로포함 파일명)
+			return new ImageIcon(path);
+
+		} else {
+			System.out.println("이미지를 불러오기 실패(경로 불분명)");
+			return null; // 이미지 객체 정보를 만들 수 없다
+		}
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new UpdateImage();
+	}
+
+	
+	// 이벤트 처리 메소드
+	private void addListener() {	
+		confirmbtn.addActionListener(this); // 확인
+		cancelbtn.addActionListener(this); // 취소
+		imgEdit.addActionListener(this); // 이미지 등록 버튼
+
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource() == imgEdit) {
+			file = null; // 불러올 이미지의 파일 정보를 담을 객체
+			JFileChooser fileChooser = new JFileChooser();
+			// fileChooser.setFileFilter(new FileNameExtensionFilter("jpg", "png", "gif"));
+			// // 파일 필터
+			fileChooser.setMultiSelectionEnabled(false);// 다중 선택 불가
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int result = fileChooser.showOpenDialog(fUpdate);
+
+			if (result == JFileChooser.CANCEL_OPTION) {
+				file = null;
+			} else {
+				file = fileChooser.getSelectedFile(); // 선택한 이미지 파일명
+				imgPath = file.getPath().replace("\\", "/"); // getPath(); 현재 불러올 경로,
+				System.out.println("선택한 이미지 파일 경로 확인(imgPath) : " + imgPath);
+				displayImage(); // 이미지+JLabel 화면에 출력
+			} 
+		} // imgAdd
+		
+		else if(e.getSource() == cancelbtn) {
+			fUpdate.setVisible(false);
+			//C_Insert.setEnabled(true);
+		} // cancelbtn
+		
+		
+		else if(e.getSource() == confirmbtn) {
+			System.out.println(imgPath);
+			page.setImgPath(imgPath);
+		/*	page.setStart(page.getStart()+1);
+			page.setEnd(page.);
+			page.getPdRec().setText(page.getStart()+"/"+page.getEnd());*/
+			fUpdate.dispose();
+			System.out.println("TST123");
+		}
+
+	}
+
+
+}

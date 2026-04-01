@@ -1,0 +1,320 @@
+15일차(파일업로드 게시판의 글수정,글삭제하기,Mybatis의 활용)
+
+글수정
+http://localhost:8090/Springfileboard/board/update.do?seq=7
+
+ UpateController=>seq=>select * from springboard2 where seq=7;
+
+
+=>/board/update.do?seq=7->수정할 게시물번호 전달
+
+1.요청명령어 등록->dispatcher-servlet.xml
+------------------------------------------------------------->소스분석 능력
+ <bean class="com.board.controller.UpdateController" />
+
+2.UpdateController->BoardDao->update()선언->BoardDaoImpl
+                                                             1)BoardDaoImpl X
+                                                             2)BoardMapper.xml X
+                               -------------------------------------------------
+//7.글 수정하기
+  public void update(BoardCommand board);
+  
+  //8.글 삭제하기
+  public void delete(Integer seq);
+
+<!-- 글수정하기  -->
+ <update id="updateBoard" parameterType="Integer">
+   update springboard2 set writer=#{writer}, title=#{title},
+        content=#{content},filename=#{filename:VARCHAR}
+   where seq=#{seq}
+ </update>
+ 
+ <!-- 글삭제하기-->
+ <delete id="deleteBoard" parameterType="Integer">
+     delete from springboard2 where seq=#{seq}
+ </delete>
+
+//글수정하기
+	public void update(BoardCommand board) {
+			// TODO Auto-generated method stub
+		  getSqlSession().update("updateBoard",board);
+		}
+	//글삭제하기
+    public void delete(Integer seq) {
+    		// TODO Auto-generated method stub
+    	//select(selectOne(id,매개변수),selectList(id)),insert,update,delete(id,매개변수)
+    	   getSqlSession().delete("deleteBoard",seq);
+    }
+--------------------------------------------------------------------
+3.tilesdef.xml=>boardModify.jsp를 화면에 출력->파일업로드도 수정에 포함
+
+ <!-- 글 수정 페이지 -->
+   	<definition name="boardModify" extends="boardList">
+   	  <put-attribute name="title" value="글수정하기"/>
+   	  <put-attribute name="js"  value=""/> 
+   	  <put-attribute name="body"  value="/WEB-INF/tiles-view/boardModify.jsp" />
+   	</definition>
+   	
+   	<!-- 글 삭제 페이지 -->
+   	<definition name="boardDelete" extends="boardList">
+   	  <put-attribute name="title" value="글삭제하기"/>
+   	  <put-attribute name="js"  value=""/> 
+   	  <put-attribute name="body"  value="/WEB-INF/tiles-view/boardDelete.jsp" />
+   	</definition>
+--------------------------------------------------------------------------------
+4.UpdateController 작성
+
+@Controller
+public class UpdateController {
+	// Logger객체
+	private Logger log = Logger.getLogger(this.getClass());
+
+	@Autowired
+	private BoardDao boardDao;
+
+	// 1.글수정폼으로 이동(Get방식)
+	@RequestMapping(value = "/board/update.do", method = RequestMethod.GET)
+	public ModelAndView form(@RequestParam("seq") int seq) {
+		// int seq=Integer.parseInt(request.getParameter("seq"))
+		BoardCommand boardCommand = boardDao.selectBoard(seq);
+		return new ModelAndView("boardModify", "command", boardCommand);
+		// boardModify.jsp
+	}
+
+	@RequestMapping(value = "/board/update.do", method = RequestMethod.POST)
+	public String submit(@ModelAttribute("command") BoardCommand command, BindingResult result) {
+		if (log.isDebugEnabled()) {
+			log.debug("BoardCommand=>" + command);// 수정한값을 출력
+		}
+		// 유효성검사->command조사 문제발생->result에 에러정보를 담는다.
+		new BoardValidator().validate(command, result);
+		// 에러정보가 있다면
+		if (result.hasErrors()) {
+			return "boardModify"; // boardModify.jsp로 이동
+		}
+		// 변경전의 데이터를 불러오기->board(비밀번호)=웹상에서의 입력비밀번호
+		BoardCommand board = null;
+		String oldFileName = "";//
+		board = boardDao.selectBoard(command.getSeq());
+		// 비밀번호 체크(DB상의 암호!=웹상에서 입력한 암호)
+		if (!board.getPwd().equals(command.getPwd())) {
+			result.rejectValue("pwd", "invalidPassword");// 적용필드명,에러코드명
+			return "boardModify";// boardModify.jsp로 이동
+		} else { // 비밀번호가 일치한다면
+			// 기본파일명->업로드 된 파일이 존재->기존파일 삭제->새로운파일 세팅
+			// 업로드 된 파일이 없으면 기존파일은 덮어쓰기
+			// 업로드되어있다면
+			oldFileName = board.getFilename();// DB상의 원래 기존파일명
+			if (!command.getUpload().isEmpty()) {
+				try {
+				command.setFilename(FileUtil.rename(command.getUpload().getOriginalFilename()));// 12344.txt
+				}catch(Exception e) {e.printStackTrace();}
+			} else { // 기존파일은 덮어쓰기
+				command.setFilename(oldFileName);
+			}
+
+			// 글수정메서드 호출
+			boardDao.update(command);
+			// 실제로새로 바뀐 파일을 upload폴더로 전송
+			if (!command.getUpload().isEmpty()) {
+				try {
+					File file = new File(FileUtil.UPLOAD_PATH + "/" + command.getFilename());
+					// 물리적으로 데이터 전송(파일 전송)
+					command.getUpload().transferTo(file);// 실제 upload에 등록
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				// aaa.txt 새로 업로드한 파일 bbb.jpg ->전의 데이터가 존재하면 삭제
+				if (oldFileName != null) {
+					// 이전파일 삭제
+					FileUtil.removeFile(oldFileName);
+				}
+			} // if(!command.getUpload().isEmpty()) {
+		}//else
+		// return "redirect:요청명령어"
+		return "redirect:/board/list.do"; // return "이동할페이지명"; //defintion name과 동일
+	}
+}
+
+===========================================
+5.boardModify.jsp작성->배포
+
+              <c:if test="${!empty command.filename }">
+	(${command.filename }) 파일이 등록되어있습니다.<br>
+	</c:if>
+------------------------------------------------------------------------
+삭제
+
+1. dispatcher-servlet.xml
+<bean class="com.board.controller.DeleteController" />
+
+2.BoardDao 
+//8.글 삭제하기
+  public void delete(Integer seq);
+
+3.BoardDaoImpl
+  <!-- 글삭제하기-->
+ <delete id="deleteBoard" parameterType="Integer">
+     delete from springboard2 where seq=#{seq}
+ </delete>
+
+4.DeleteController작성->delete()->암호를 물어본다.->/board/list.do
+                                                                              /bordList.jsp로 이동
+
+ onclick="location.href='delete.do?seq=${board.seq}'">
+
+@Controller
+public class DeleteController {
+    //Logger객체
+	private Logger log=Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private BoardDao boardDao;
+	
+	//1.글삭제 폼으로 이동(Get방식)
+	@RequestMapping(value="/board/delete.do",method=RequestMethod.GET)
+	public String form() {
+		return "boardDelete"; //return "이동할페이지명"; //defintion name과 동일
+	}
+	
+	//에러메세지 출력->다시 초기화가 가능하게 설정->@ModelAttribute("별칭")
+	@ModelAttribute("command")
+	public BoardCommand forBacking() { //반환형(BoardCommand) 메서드명
+		return new BoardCommand();//BoardCommand bc=new BoardCommand();
+	}
+	//입력해서 유효성검사->에러발생->DB저장후->boardList.jsp로 이동
+	//BindingResult->유효성 검사때문에 필요(에러정보 객체)
+	@RequestMapping(value="/board/delete.do",method=RequestMethod.POST)
+	public String submit(@ModelAttribute("command") BoardCommand command,
+			                           BindingResult result) {
+		
+		//유효성검사->command조사 문제발생->result에 에러정보를 담는다.
+	    new BoardDeleteValidator().validate(command,result);
+	    //에러정보가 있다면
+	    if(result.hasErrors()) {
+	    	return form();//"boardDelete"->boardDelete.jsp
+	    }
+	    
+	    BoardCommand board=boardDao.selectBoard(command.getSeq());
+	    //DB상의 암호!=웹상의 암호를 확인 절차
+	    if (!board.getPwd().equals(command.getPwd())) {
+			result.rejectValue("pwd", "invalidPassword");// 적용필드명,에러코드명
+			return form();// boardDelete.jsp로 이동
+		}else { //암호가 맞는경우
+			boardDao.delete(command.getSeq());//DB상의 데이터가 삭제
+			//업로드한 파일까지 삭제
+			if(board.getFilename()!=null) {//업로드한 파일이 존재한다며 삭제
+				FileUtil.removeFile(board.getFilename());
+			}
+		}
+	   
+		return "redirect:/board/list.do"; //return "이동할페이지명"; //defintion name과 동일
+	}
+}
+===========================================
+
+
+5.boardDelete.jsp(암호를 입력을 받을 수있도록)->암호를 물어보는 입력창
+<form:form commandName="command">
+	<form:errors element="div"/>
+	<spring:message code="write.form.pwd"/>
+	<form:password path="pwd"/>
+	<form:errors path="pwd"/><br>
+	
+	<input type="submit" value="<spring:message code="write.form.submit"/>">
+	<input type="button" value="<spring:message code="list.content.title"/>" 
+	                               onclick="location.href='list.do'">
+</form:form>
+-----------------------------------------------------------------------
+회원관리
+
+create table member1(
+id varchar2(20) primary key,
+passwd varchar2(20) not null,
+name varchar2(20) not null,
+reg_date date);
+
+insert into member1 values('test1','1234','테스트',sysdate);
+commit;
+
+----------------------------------------------------------------
+=>페이징 처리까지만 
+
+ Mybatis 에서 DB연동하는 방법2)
+
+1
+<bean id="sqlSessionFactory"
+           class="org.mybatis.spring.SqlSessionFactoryBean">
+       --->1) SqlMapConfig.xml을 불러오는 구문이 없다.
+<property name="configLocation" value="classpath:config/SqlMapConfig.xml" />
+     <property name="dataSource" ref="dataSource" />      
+</bean> 
+
+<!-- SQL구문을 어떻게 실행->결과를 받아서 처리(MemberDAO) 인터페이스
+    sqlSessionFactory멤버변수->Mybatis객체를 연결
+    mapperInterface멤버변수->우리가 개발할 패키지명...인터페이스이름
+ -->
+
+2.MapperFactoryBean의 빈즈를 등록
+ mapperInterface 멤버변수때문에 사용
+
+<bean id="memberDao"
+       class="org.mybatis.spring.mapper.MapperFactoryBean">
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+       <property name="mapperInterface" 
+                     value="dr.mini.dao.MemberDao" />
+                   ===>호출할 메서드가 선언된 인터페이스이름을 등록
+ </bean>
+
+장점
+
+1.SqlMapConfig.xml이 필요X
+2.MemberDaoMapper.xml이 필요X
+3.MemberDaoImpl클래스가 필요X
+
+4.메서드명 @select("실행시킬 sql구문~ #{매개변수명}~")
+                @insert("실행시킬 sql구문~ #{매개변수명}~")
+                @update("실행시킬 sql구문~ #{매개변수명}~")
+                @delete("실행시킬 sql구문~ #{매개변수명}~")
+------------------------------------------------------------------
+
+단점 ->세밀한 설정은 한계
+
+//웹상에서 호출할 메서드를 1.선언->2.구현상속(SQL구문을 작성->메서드작성)->3.xml적용
+//SqlMapMemberDAO클래스 상속->MemberMapper.xml와 연결
+public interface MemberDao {
+	//1.회원 목록보기(페이징 처리)
+    @Select(" select * from (select a.*, rownum rnum "
+                +" from (select  * from member1 order by reg_date desc) a )"
+                +" where rnum>=#{start} and rnum<=#{end}")
+	public List<MemberCommand> getMemberList(Map<String,Object> map);
+	
+	//2.총레코드수 구하기->형식@Select("실행할 SQL구문")
+	@Select("select count(*) from member1")
+	public int getMemberCount();
+	
+	//3.글쓰기
+	@Insert("insert into member1(id,name,passwd,reg_date)"
+                +" values(#{id},#{name},#{passwd},sysdate)")
+	public void insertMember
+	            (MemberCommand memberCommand);
+	
+	//4.회원정보보기
+	@Select("select * from member1 where id=#{id}")
+	public MemberCommand getMember(String id);
+	
+	
+	//5.글수정하기
+	@Update("update member1 "
+			     +" set passwd=#{passwd},name=#{name}"
+			     +" where id=#{id}")
+	public void updateMember(MemberCommand member);
+	
+	//6.글삭제하기
+	@Delete("delete from member1 where id=#{id}")
+	public void deleteMember(String id);
+	
+}
+===========================================

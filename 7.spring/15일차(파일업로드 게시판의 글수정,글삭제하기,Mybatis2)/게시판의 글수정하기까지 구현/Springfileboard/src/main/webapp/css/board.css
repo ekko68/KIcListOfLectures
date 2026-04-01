@@ -1,0 +1,41 @@
+textarea {
+	color:#000000;
+	font-family:"±¼¸²";
+	font-size:9pt;
+	line-height:120%;
+	background-color: #FFFFFF;
+	border: 1 solid #999999;
+}
+th {
+	color:#3f3f3f;
+	font-family:"±¼¸²";
+	font-size:9pt;
+	line-height:170%;
+}
+td {
+	color:#3f3f3f;
+	font-family:"±¼¸²";
+	font-size:9pt;
+	line-height:170%;
+}
+td a{
+	color:#333377;
+	font-family:"±¼¸²";
+	font-size:9pt;
+	line-height:170%;
+	text-decoration: none;
+}
+th a:hover {color:#333377;
+	  font-family:"±¼¸²";
+	  font-size:9pt;
+	  line-height:170%;
+	  text-decoration: unbderline;
+}
+input {
+	color:#000000;
+	font-family:"±¼¸²";
+	font-size:9pt;
+	line-height:120%;
+	background-color: #FFFFFF;
+	border: 1 solid #999999;
+}

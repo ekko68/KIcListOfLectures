@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+ 
+<!--테이블에 대한 insert,update,delete,select에 대한 설정  -->
+<!--1.게시판의 글목록보기(select)  -->
+
+<select id="list" resultType="board">
+   select * from springboard order by num desc
+</select>
+
+</mapper>

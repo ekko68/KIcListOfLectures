@@ -1,0 +1,43 @@
+package bag.event.handler;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JInternalFrame;
+
+import bag.design.page.CustomerPage;
+import bag.design.page.MainPage;
+import bag.design.page.ProductPage;
+
+public class Handler implements ActionListener {
+	
+	private MainPage mainPage;
+	private JInternalFrame childWinCustomer, childWinBag;
+	
+	public Handler(){
+		mainPage=new MainPage();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		//btnCustomer
+		if(e.getSource().equals(mainPage.getBtnCustomer())) {
+			CustomerPage cp = new CustomerPage();
+				childWinCustomer.getContentPane().add(cp);
+				childWinCustomer.setLocation(10, 10);
+				frame.getContentPane().add(childWinCustomer, JLayeredPane.PALETTE_LAYER);
+				childWinCustomer.show();
+				btnCustomer.setEnabled(false);
+				
+		} else if(e.getSource().equals(btnBag)) {
+			ProductPage pg = new ProductPage();
+			childWinCustomer.getContentPane().add(pg);
+			childWinCustomer.setLocation(10, 10);
+			frame.getContentPane().add(childWinBag, JLayeredPane.PALETTE_LAYER);
+			childWinBag.show();
+			btnBag.setEnabled(false);
+		}
+	}
+
+}

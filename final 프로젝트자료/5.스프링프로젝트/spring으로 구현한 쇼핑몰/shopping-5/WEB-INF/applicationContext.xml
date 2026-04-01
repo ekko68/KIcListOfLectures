@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+  <!-- Data Source -->
+  <bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+ 	  <property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+    <property name="url">
+      <value>jdbc:mysql://localhost:3306/spring</value>
+    </property>
+    <property name="username">
+      <value>root</value>
+    </property>
+    <property name="password">
+      <value>1234</value>
+    </property>
+  </bean>
+
+	<!-- Transaction -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref local="dataSource"/>
+		</property>
+	</bean>
+
+	<bean id="transactionAttribute"
+		class="org.springframework.transaction.interceptor.MethodMapTransactionAttributeSource">
+		<property name="methodMap">
+			<map>
+				<entry key="logic.Shop.get*">
+					<value>PROPAGATION_SUPPORTS, readOnly</value>
+				</entry>
+				<entry key="logic.Shop.entryUser">
+					<value>PROPAGATION_REQUIRED, -Exception</value>
+				</entry>
+				<entry key="logic.Shop.checkout">
+					<value>PROPAGATION_REQUIRED, -Exception</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttribute" />
+		</property>
+	</bean>
+
+	<bean id="transactionProxyCreator"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<value>shopService</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Shop -->
+	<bean id="shopService" class="logic.ShopImpl">
+		<property name="itemCatalog">
+			<ref bean="itemCatalog" />
+		</property>
+		<property name="userCatalog">
+			<ref bean="userCatalog" />
+		</property>
+		<property name="saleCatalog">
+			<ref bean="saleCatalog" />
+		</property>
+	</bean>
+
+	<!-- ItemCatalog -->
+	<bean id="itemCatalog" class="logic.ItemCatalogImpl">
+		<property name="itemDao">
+			<ref bean="itemDao" />
+		</property>
+	</bean>
+
+	<!-- UserCatalog -->
+	<bean id="userCatalog" class="logic.UserCatalogImpl">
+		<property name="userDao">
+			<ref bean="userDao" />
+		</property>
+	</bean>
+
+	<!-- SaleCatalog -->
+	<bean id="saleCatalog" class="logic.SaleCatalogImpl">
+		<property name="saleDao">
+			<ref bean="saleDao" />
+		</property>
+		<property name="saleLineDao">
+			<ref bean="saleLineDao" />
+		</property>
+	</bean>
+
+	<!-- ItemrDao -->
+	<bean id="itemDao" class="dao.ItemDaoImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	
+	<!-- UserDao -->
+	<bean id="userDao" class="dao.UserDaoImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+	<!-- SaleDao -->
+	<bean id="saleDao" class="dao.SaleDaoImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+	<!-- SaleLineDao -->
+	<bean id="saleLineDao" class="dao.SaleLineDaoImpl">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+	
+	<!-- MessageSource -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Validator -->
+	<bean id="loginValidator" class="utils.LoginValidator" />
+	<bean id="userEntryValidator" class="utils.UserEntryValidator" />
+</beans>

@@ -1,0 +1,132 @@
+			*{		
+				margin:0 auto;
+				padding:0;
+				outline:0;
+			}
+			img{
+				display:block;
+			}/* 요소들 초기화 */
+
+			#wrap{
+				height:auto;
+				width:1200px;
+
+			}
+
+			.menu{
+				list-style-type:none;
+				text-align:center;			
+				background:#000;
+				width:100%;
+				height:50px;
+			}
+
+			.menu > li{
+				float:left;
+				position:relative;
+				background:#000;
+				min-width:12%;  /* 기본적으로 최소폭을 12%로 설정. 넓이가 12%미만으로 줄어드는것 방지*/
+				text-align:center;
+			}
+
+			.img > a > img{
+				height:40px;
+			}
+
+			.menu > li > a{
+				display:block;
+				color:#fff;
+				padding:10px 7px;
+				line-height:35px;
+				height:30px;
+				font-size:1em;
+				font-family: 'Francois One', sans-serif;  /*구글 폰트 사용*/
+				text-decoration:none;
+
+				text-shadow:0 1px  rgba(200,200,200,0.4),
+						   -1px -2px 1px rgba(230,230,230,0.6);
+
+				-webkit-transition:all 0.2s;
+				transition:all 0.2s; 
+			}
+
+			.menu > li:first-child{
+				 display:block;
+				 min-width:0;
+				 width:100px;
+				 padding-left:12%; 
+			}
+
+			.menu > li > a:hover{
+				text-decoration:underline;
+			}
+
+			.menu > li:hover{
+				background:#555;
+			}
+			.menu > li:first-child:hover{
+				background:#000;
+			}
+			.menu > li:nth-of-type(6) > ul{
+				width:300px;
+			}
+			.sub{
+				position:absolute;
+				z-index:200;
+				margin:0;
+				padding:0;
+				line-height:0;
+				left:0;
+				opacity:0;
+				height:0;
+				width:220px; 
+				list-style-type:none;
+			}
+			.sub > li{
+				opacity:0; 
+				text-align:center;
+				z-index:200;
+
+				-webkit-transition:all 0.3s;
+				transition:all 0.3s;
+
+				font-size:0.8em;
+				background:#000;
+			}
+
+ 			.menu > li:hover .sub{
+				opacity:1;
+			}			
+
+			.menu > li:hover .sub > li{
+				opacity:1;
+				line-height:25px;		
+				height:15px;
+				width:auto;
+				padding:15px;
+				border-bottom:1px dotted rgba(200,200,200,.5);
+			}
+
+			.sub > li:hover{
+				background:#555;
+			}
+
+			.sub > li > a{
+				display:block;
+				text-decoration:none;
+				color:#fff;
+				font-size:0.9em;
+				-webkit-transition:all 0.1s;
+				transition:all 0.1s;
+			}
+			
+			.sub > li > a:hover{
+				font-size:1.1em;
+			}/*드랍메뉴*/
+
+
+	
+
+			
+
+

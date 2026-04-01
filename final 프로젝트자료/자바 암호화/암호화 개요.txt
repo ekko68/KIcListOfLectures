@@ -1,0 +1,1136 @@
+1.개요
+ 전자상거래 트렌잭션을 수행하기위해 은행에 보안상태로 연결했다고 가정하자.
+은행에서 당신과의 상호통신이 속임수가 아니라는 것을 어떻게 확인할 수 있을까?
+당신은 지금 사이에 끼어들어 은행인척 행사하는 사기꾼 에이젠트가 아닌
+ 정말 은행과 이야기 하고 있다는 것을 어떻게 확신할 수 있을까?
+은행에서 문서를 다운로드 받는다면,은행이 그 문서의 작성자인지 어떻게 확신
+ 할 수 있을까?
+이 모든 질문에 대한 답은 암호화(cryptography)를 사용과 이해에서 얻을 수 있다.
+여기서 공부할 사항은 다음과 같습니다.
+
+
+가.암호화란 무엇인가?
+
+나.암호화의 필요성
+ 다.메세지 축약,메세지 인증코드등과 같은 암호화 기본 개념들
+ 라.메세지 암호 작성과 암호해독
+ 마.상호통신을 보안처리하기 위해 암호화를 사용하는 방법
+ 사.메세지에 서명하고 확인하는 기능을 갖춘 서블릿을 만드는 방법
+
+ 용어정리:
+plain text 또는 cleartext(평문):전달해야 할 내용
+ciphertext(암호문):암호화한 내용
+encryption(암호화):평문을 암호문으로 바꾸는 것.
+decryption(복호화):암호문을 평문으로 복구하는 것.
+symmetric key(대칭키):평문을 암호문으로, 암호문을 평문으로 생성하는 키 값이 같다.
+cryptographic algorithm 또는 cipher:암호화와 복호화를 위해 사용하는 수학 함수.
+일반적으로 암호화를 위한  함수와 복호화를 위한 함수 두 개로 이루어진다.
+
+2.암호화 개요
+ 기본적으로,암호화(cryptography)는 보안 작성 기술이다.
+ 암호해독기법(cryptanalysis)은 암호화 메커니즘과 타협하는(암호를 부수는)방법에 대한
+ 연구이고,암호 작성/해독 기술을 뜻하는 cryptology(kryptos logos 라는
+ 그리스어에서 온말로,"숨겨진" 이라는 뜻이다.)는 암호화와 암호 해독기법을
+ 연결시킨 분야이다.대부분의 사람들에게는 암호화는 사적인 상호통신을 보호하는 것과
+ 관련되어 있다. 사실,민감한 상호통신은 암호화의 역사를 통해 항상 강조되어 왔다.
+2.1 
+
+부호화와 부호해독
+
+ 부호화(Encryption,암호화)는 데이터를 적절한 지식(키) 없이는 가능한 한 읽을 수 없는 형태로
+ 변형시키는 것이다.이것의 목적은 정보를 원치않는 사람에게 숨겨서 사생활을 보호하는
+ 것이다.
+여기에는 부호화된 데이타에 접근한 사람에게도 해당된다.
+부호해독(decryption,복호화)은 부호화의 반대이다.
+이것은 부호화된 데이타를 읽을 수 있는 형태로 다시 변형시킨다.
+부호화와 부호해독은 일반적으로 어떤 보안 정보를 사용해야 한다.
+이것을 키(key) 라고 부른다.
+어떤 부호화메카니즘들은 부호화와 부호해독에 동일한 키를 사용한다.
+또 어떤 메카니즘은 부호화와 부호해독에 사용되는 키가 다르다.
+부호화와 부호해독에 사용하는 수학적 공식(함수)을  암호문(cipher)이라고 한다.
+키(private이거나 public)는 암호문이라는 공식에 사용되는 특별한 숫자들로 만든
+ 특별한 숫자이다.
+키를 이해하는 가장 쉬운방법은 개념적으로 생각하는 것이다.
+먼저 암호문을 컴퓨터에 대응시켜 보자,컴퓨터를 켜서 시작하려면 열쇠가 필요하다.
+일단 컴퓨터가 시작되면 컴퓨터에 입력되는 것은 보통 텍스트지만,출력은 부호화된
+ 텍스트가 될 수 있다.
+
+2.2
+대칭형/보안키 암호문
+ 과거에는 두 사람이 서로 보안이 필요한 상호통신을 원할 대에는 보안 코드를 공유하였다.
+보내는 사람은 공유된 키로 메세지를 부호화하고 받는 사람도 같은 키로 메세지의 부호를
+ 해독하였다.
+이런 종류의 시스템을 보안키(secret-key)암호화 시스템이라고 한다.
+보안키 암호화 시스템에 사용되는 암호문을 대칭형(symmetric) 암호문이라고 한다.
+부호화와 부호해독에 모두 같은 키를 사용한다는 뜻이다.
+이 시스템의 주요 문제점은 보안키를 전송자와 접수자가 공유할 때 다른사람에게
+ 들키지 말아야 한다는 것이다.이들의 지리적 위치가 떨어져 있다면,보안키가 발각되는 것을
+ 막기위해 믿음직한 심부름꾼,전화,혹은 다른 전송미디어를 사용해야 한다.
+전송도중 키를 엿듣거나 가로챈 사람은 누구나 이키를 사용해서 부호화하거나 인증한 메세지들을
+ 읽고 수정하고 망칠 수 있게 된다.키의 생성,전송,저장과정을 키 관리(mamagement)라고 부른다.
+모든 암호화 시스템은 키 관리 문제를 다루어야 한다.
+보안키 암호화 시스템에 있는 모든 키는 보안이 유지 되어야 하기 때문에 보안키 암호화 기법은
+ 종종 보안이 유지되는 키 관리을 제공하기 어렵게 된다.
+특히,많은 사람이 사용하는 개방형 시스템에서는 더욱 그러하다.
+국가간의 경계가 근본적으로 희미해 지고 있다.모든 사람이 자신이 대화할 다른 모든 사람들과
+ 보안키를 공유한다는 것이 점점 어려워지고 있다.
+2.3
+스트림및 블록 암호화
+ 대칭형 키 암호문은 두가지 종류가 있다.
+블록 암호문들은 고정된 크기(보통 64비트)의 데이터 블록들을 부호화/부호 해독한다.
+스트림 암호문들은 비트나 바이트의 스트림을 조작한다.
+하지만,이 두가지 구별은 뚜렷하지 않다.
+블록 암호문은 스트림 암호문과 비슷한 방법으로 만들 수 있다.
+언제 블록이나 스트림 암호문을 선택할 까?
+이것은 애플리케이션에 달려있다.
+보안 전자우편 클라이언트에서는 블록암호문을 사용할 것이다. 블록암호문 알고리즘이
+ 스트림 암호문보다,더 널리 사용되고 있다.아래는 일반적으로 사용되는 대칭형
+ 암호문들을 보여주고 있다.
+
+
+DES(Data Encryption Standard):64비트 키 크기를 가진 블록 암호문
+RC2:블록 암호문
+RC4:스트림 암호문
+RC5:블록 암호문
+IDEA:128비트 키 크기를가진 블록암호문
+Skipjack:80비트 크기를 가진 스트림 암호문
+
+2.4
+비대칭형/공용키 암호문
+ 공용키(public-key) 암호화는 보안키 공유와 키 분산문제를 해결한다.
+키 관리문제를 해결하기 위해 공용키 암호화 시스템은 주로 두가지 용도로 쓰인다.
+하나는 부호화이고,또 하나는 전자서명이다.
+이 시스템에서는 각 사용자들은 공용키(public key)와 사적인 키(private key)쌍을 가지고 있다.
+공용키은 공표되어 있는 반면,사적인 키은 보안이 유지된다.
+전송자와 접수자가 보안 정보를 공유할 필요는 사라졌다.
+모든 상호 통신은 공용키로만 이루어지고,사적인 키는 전송되거나 공유되지 않는다.
+이 시스템에서는 상호통신의 보안을 유지할 어떤 방법이 더 이상 필요하지 않다.
+필요한 것은 믿을 수 있는(인증된) 방법(예를들면,믿을 수 있는 디렉토리와 같은)으로
+ 사용자들을 서로 연결시켜 주는 공용키 뿐이다.
+누구나 공용정보를 사용해서 은밀한 메세지를 전송할 수 있지만,메세지는 사적인
+ 키를 사용해서만 부호를 해독할 수 있다.사적인 키는 관련접수자가 단독으로 소유하고 있다.
+공용키 암호화는 사적인(부호화된) 것뿐 아니라,인증(전자서명)이나 다른 다양한 기술에도
+ 사용될 수 있다.
+공용키 암호화 시스템에 사용되는 암호문은 비대칭형 암호문이라고 한다.
+부호화와 부호 해독에 서로 다른 키를 사용하기 때문이다.
+아래는 일반적으로 사용되는 비 대칭형 암호문들을 보여주고 있다.
+
+
+RSA:공용키부호화와 전자서명
+ELGamal:공용키부호화와 전자서명
+DSA:전자서명만 사용
+Diffie-Hellman:공용키 알고리즘을 토대로 한 키 상호교환 프로토콜
+
+
+2,5 하이브리드 시스템
+ 비대칭형 암호문은 대칭형암호문보다 훨씬 느리기 때문에 일반적으로 긴 메세지의
+ 부호화에는 사용되지 않는다.이때문에 하이브리드(hybrid)암호화 시스템이 나오게 되었다.
+하이브리드 시스템은 대칭형과 비 대칭형 암호문을 서로 연결한다.
+이 시스템에선는 상호 통신하려는 두 그룹이 있으면 이들은 보안키를 사용할 것인지,
+세션키를 사용할 것인지 협의한다.
+세션키(session key) 자체는 비 대칭형 암호문을 사용해서 유통된다.
+세션키는 대칭형 암호문을 사용해서 대화의 나머지 부분을 부호화 한다.
+세션키의 일생은 두 협력자가 대화가 끝냈을 때 종료된다.
+오늘날 사용되는 거의 모든 공용키 암호화는 하이브리드 시스템이다.
+2.6 용어
+ 암호화 시스템에서 사용하는 용어들은 좀 혼동될 수 있다.
+비 대칭형 암호문은 공용/사적키 쌍을 사용한다.
+대칭형 암호문은 사적인 키나 보안키,세션키를 사용한다.
+대칭형 암호문들은 보안키 암호문이라고도 한다.
+
+2.7 메세지 다이제스트와 전자서명
+ 인터넷을 통해 파일을 다운로드받을 때에는 다운로드 받은 파일이 원하는 것인지
+ 혹은 변경되지는 않았는지 확인할 것이다.
+많은 사람들은 다운로드 받은 파일이 악의에 찬 프로그램이 아닐 것이라고,또 전송
+ 과정에서 변질되지 않았을 것이라고 생각한다.
+하지만,항상 그런것은 아니다.
+예를 들면,당신과 서버사이에 또 다른 컴퓨터가 있어서 나쁜 프로그램을 당신에게
+ 전송할 수 도 있다.이것을 "man-in-the-middle" 공격이라고 부른다.
+메세지다이제스트(digest:암호화 checksum이나 암호화 해시코드라고도 한다)는
+ 데이타 보전을 확인할 때 사용한다.
+메세지 다이제스트은 역추적하기 매우 어려운 함수를 사용해서 효과적으로
+ 해시 코드를 만들어 내는 특별한 숫자이다.
+ (해시코드에 대한 예제는 게시판에 있음다.)
+
+보통텍스트--->메세지 다이제스트 알고리즘--->메세지 다이제스트 
+
+인터넷 상의 서버에 파일과 메세지다이제스트를 온라인으로 넣은 경우,파일과 파일의
+ 메세지다이제스트를 둘 다 다운로드하고 나면 파일의 메세지 다이제스트를 계산해서
+ 문서가 변형되지 않았는지 확인한다.
+순수한 메세지 다이제스트들로 "man-in-the-middle"공격을 완전히 없앨수 없다.
+사용자와  서버사이에 있는 나쁜 컴퓨터가 파일과 유효한 메세지 다이제스트를 모두
+ 바꾸어 버릴수 있기 때문이다.
+하지만,다른 암호화 기법들과 함께 사용하면 매우 유용할 수 있다.
+아래는 일반적으로 사용되는 메세지 다이제스트 알고리즘들을 보여주고 있다.
+
+
+MD2,MD4,MD5:모두 128비트 숫자를 만든다
+SHA(Secure Hash Algorithm):160비트 숫자를 만든다
+Haval:MD5를 수정한 것으로,92에서 256비트 사이의 길이로 다이제스트를 만든다.
+SUEFRU:128이나 256 비트 해시코드들을 만든다.
+
+예를 들어, MAC(Message Authentication Code)는 관련된 키를 가지고 있는 메세지다이제스트이다.
+이것은 입력과 키 둘 다를 토대로 값을 만든다.
+이론상,동일한 키를 가진 사람만이 동일한 입력데이타에서 동일한 MAC를 만들어낼 수 있다.
+
+보통텍스트--->메세지다이제스트알고리즘--->메세지다이제스트--->대칭형암호문(보안키)--->MAC
+
+메세지 보전에 대한 다른 접근 방법으로 전자서명을 사용하는 방법이 있다.
+전자 서명은 내용을 증명하기 위해 사용자의 사적인(private)키로
+ 부호화한 메세지다이제스트이다. 메세지다이제스트를 부호화하는 과정을 '서명한다'라고 표현한다.
+
+부호화된 메세지다이제스트를 서명(signature)이라고 부른다.
+
+보통텍스트--->메세지다이제스트알고리즘--->메세지다이제스트--->대칭형암호문(보안키)--->서명
+
+ 전자서명은 세가지 중요한 기능을 가지고 있다.
+이것들은 모두 시스템 보안에 매우 중요한 것들이다.
+가.보전(integrity):전자서명은 파일이나 메세지가 변경되었는지 여부를 표시한다.
+나.인증(authentication):전자서명은 메세지를 서명한 사람의 이름을 수학적으로
+ 확인할 수 있도록 만든다.
+다.거절 불가능(non-repudiation):일단 서명한 다음 전송하고 나면 메세지 전송을
+ 거부할 수 없다.메세지는 사용자의 사적인 키로 서명되어 있기 때문에
+ 사용자는 자신의 서명을 거절할 수 없다.
+
+문서의 전자서명을 확인하려면 문서를 서명한 사람의 공용키를 가지고 있어야 한다.
+이것이 있어야 서명한 때의 다이제스트를 찾아내기 위해 서명을 해독할 수 있기 때문이다.
+별도로,해독한 다이제스트를 가지고 메세지의 다이제스트를 계산하고 비교할 수 있다.
+이 둘이 맞으면 문서는 다이제스트 해독에 사용한 공용키에 대한 사적인 키를
+ 가진 사람이 서명했다고 보증할 수 있다.
+
+2.8
+전자 보증서
+ 전자 서명을 확인하기 위해서는 서명한 사람의 공용키를 가지고 있어야 한다.
+서명한 사람의 공용키는 어떻게 구할까?
+서명한 사람이 인터넷에 자신의 키를 공지할 수 도 있다.하지만,이렇게 한다면
+ 다른 사람이 이 서명을 이용하는 것을 어떻게 확인하겠는가?
+기본적으로,사람들은 자신과 관계된 사람들이 정말 신원이 확실한지 확인하기를 원한다.
+이런 확인을 제공하는 과정을  전자서명(authentication)이라고 한다.
+
+전자 보증서(certificate)는 서명한 사람의 공용키로 이런 종류의 인증을 제공한다.
+보증서는 공용키와 개인,혹은 다른 엔티티와의 관계를 증명하는 전자 문서이다.
+이것은 특정 공용키가 실제로 특정개인에게 속해 있는지 확인을 해 준다.
+보증서는 다른 사람의 흉내를 내기위해 가짜 키를 사용하지 못하도록 막는다.
+이런경우에는 보증서 체인을 만들어야 할 수도 있다.
+각각은 관련된 그룹들이 대상을 확인할 때 까지 그 이전 것을 보증한다.
+
+가장 간단한 형태로 보증서는 공용키와 이름을 가지고 있다.
+일반적으로 사용되는 보증서는 만기날짜,보증서가 제공하는 보증하는 권한이름,일련번호 등의
+ 다른 정보들도 포함한다.
+중요한 것은 여기에는 보증서를 제출한 사람의 전자서명이 포함된다는 것이다.
+보증서에 대해 가장 널리 사용되는 형태는 ITU-T X.509 국제표준으로 정의되어 있다.
+따라서,보증서는 X.509  표준을 따르는 애플리케이션이면 어느 것이나 읽고 쓸 수 있다.
+
+2.9
+전자보증 기관들
+ 보증서는 CA(certifying authority,보증기관)가 발생한다.
+CA는 보증서를 발행해 준 사람의 신원과  이들이 제공한 키를 보증할 용의가 있는
+ 믿을만한 중앙관리자라면 무엇이든 될 수 있다.
+예를 들면 ILJIMAE는 한쌍의 키를 만들어서 자신의 신원증명서와 함께 마음에 드는
+CA에 공용키를 보낸다.
+그러면 CA는 ILJIMAE 에게 ILJIMAE와 그의 공용키 연결을 보증하는 보증서와 CA의
+ 공용키를 확인하는 체계적인 보증서들 목록을 함께 보낸다.
+ILJIMAE는 자신의 공용키가 합법적이라는 것을 보여줄 필요가 있을 때 마다
+ 이 보증서 체인을 제출할 수 있다.
+CA 들은 사용자의 공용키에 서명한다. 그러면 CA 들 자신의 키는 누가 서명하는가?
+대부분의 CA들은 자체적으로 서명된다(self-signed). 이것은 신뢰의 최상위 수준을
+ 나타낸다.
+오늘날 대부분의 브라우즈들은 자체적으로 서명된 루트에 대한 체인을 가진 CA 보증서들을
+ 가지고 있기도 한다.
+예를 들어,인터넷 익스플로러 5.0 에서는  도구|인터넷옵션|내용|인증서|신뢰된 루트 보증 기관
+ 메뉴에서 인터넷 익스플로러가 신뢰하는 모든 신뢰된 CA 들의 자체 서명된 루트들을 보여주고 있다. 
+
+자체 서명된 루트들 중 하나를 더블클릭하면 상세한 보증서 탭이 나타난다.
+여기에서는 루트 보증서와 동일한 제공자와 제목을 볼 수 있다.
+자체 서명되지 않은 다른 보증서를 보면 IE는 루트가지의 완전한 경로를 모두 보여준다.
+이것을 보증체인(certificate chaining)이라고 한다.
+보증서 화면에서 볼 수 있듯이 마이크로소프트의 Authenticode Root 가 Code Signing Authority #1의
+ 공용키를 서명하고 있다.
+
+2.10
+ CRL(보증철회 목록)
+
+CA 가 발행한 보증서를 무효로 만드는 방법은 두 가지가 있다.
+보증서는 유효기간이 끝나면 만기가 되어 사용할 수 없게 된다.
+보증서와 관련된 사적인 키도 손상될 수 있다.
+이렇게 되면 보증서는 더 이상 유효하지 않다.보증서는 소유한 사람이나 발행했던 상위 기관이
+ 취소하거나 철회할 수 있다.
+보증서가 철회되고 나면,이것은 CRL(Certification Revocation List)이라는 목록에 넣어진다.
+보내는 사람의 보증기간에 대하여 의심스러우면 보내는 사람의 보증서를 발행한 CA에서 CRL
+을 다운로드 받아서 보내는 사람의 보증서가 목록에 없다는 것을 확인할 수 있다.
+현재,이것만이 트랜잭션의 유효성을 확인하는 유일한 방법이다.
+CRL에 대해서 자세히 알고 싶으면  http://www.valicert.com/  
+
+
+3.자바 암호화 개요
+ 자바의 암호화 소프트는 두가지 부분으로 되어있다.
+한 부분은 JCA(Java Cryptography Architecture)이고, 이것은 JDK 의 일부분이다.
+두번째 부분은 JCE(Java Cryptography Extension)이다.
+JCE는 강력한 암호화에 사용된다.
+
+암호화 클래스들의 전체 설계는 JCA 에 들어있다.
+
+개념들은 JCA의 java.security와 JCE의 javax.crypto 패키지들 안의 클라스들에 들어있다.
+ "암호화 프로바이더"들이 이 개념의 구현을 지원한다.
+JDK(Java Development Kit) 1.2 는 SUN 이라는 기본 프로바이더를 제공한다.
+이것은 DSA 전자서명과 메세지 다이제스트와 같은 몇가지 암호화 알고리즘을 구현하고 있다.
+JCE 1.2는 부호화,키 생성과 키 동의,MAC(Message Authentication Code) 알고리즘을 위한
+ 프레임워크와 코드들을 제공한다.
+부호화지원에는 대칭형,비대칭형,블록및 스트림 암호문들이 포함된다.
+스트림보안과 객체의 봉인도 지원한다.
+JCE 1.2는 다른 암호화 라이브러리들을 서비스 프로바이더로 끼울 수 있고,새 알고리즘을
+ 자연스럽게 추가할 수 있도록 설계되었다.
+JCE 1.2에은 SunJCE 라는 기본 프로바이더가 포함되어 있다.
+수출제한 때문에 SunJCE 를 미국 밖으로 내 보내서 사용할 수 없다.SunJCE 는
+ 특허때문에 RSA 알고리즘을 토대로 한 공용키 부호화에 대한 구현을 가지고 있지 않다.
+그래서 아래의 예제들을 실행하면 javax.crypto 패키지를 찾을 수 없다고 나옵니다.
+그러나 http://www.cryptix.org/   에서 무료로 제공하는 javax.crypto 패키지를 설치할 수 있읍니다.
+CRYPTIC에서 제공하는 패키지는 SunJCE에서 제공하는 암호 라이브러리 중에서 몇가지 가 생략된 것입니다.
+또  http://jcewww.iaik.tu-graz.ac.at/ 에서 iaik-jce패키지를 구할 수 있읍니다.
+ *javax.crypto 패키지 설치와 프로바이더 등록을 하지 않으면 설치한 패키지를 샐행하지 못합니다.
+다운로드 받아 압축을 해제하면 ~/bin/ 디렉토리에 4개의 jar 파일이 생성된다.이것을 CLASSPATH에 잡고나서
+ 설치한 패키지를 Provider에 등록해야 한다.실제로 자바 암호 프로그램을 구현하고자 하는 사람들이 가장 많이
+ 겪는 어려움은 CLASSPATH를 지정하더라도 이 Provider를 등록하지 않으면 설치한 패키지를 실행하지 못하는
+ 데 있다. Provider 의 등록과정은 다음과 같다.
+
+1.C:/JDK1.2.2/JRE/LIB/SECURITY 디렉토리로 이동한다.
+2.이동한 C:/JDK1.2.2/JRE/LIB/SECURITY 디렉토리 안에 java.security라는 파일이 있다. 
+이것을 메모장으로 연다.
+3. 이 파일의 47번째 줄을 보면 다음과 같이 쓰여 있다.
+security.provider.1=sun.security.provider.Sun
+ 4.그 아래 다음과 같이 적어 놓는다.
+security.provider.2=cryptix.security.Cryptix
+ 5.파일을 저장하고 끝 마친다.
+이것으로 Cryptix 패키지의 Provider 등록을 마쳤다.
+
+이렇게 Provider를 등록하는 이유는, 자바 암호 프로그램을 가상머신이 실행하는 경우 지정한 암호 클라스를
+ 어떤 프로바이더로 부터 제공받을 것인지 알려주기 위해서이다.
+참고로 SunJCE,IAIK 에서 제공하는 패키지의 Provider등록은 다음과 같다.
+security.provider.3=com.sun.crypto.provider.SunJCE
+ secutity.provider.4=iaik.security.provider.IAIK  비로소 암호 패키지의 등록이 끝났다.
+
+3.1
+
+자바 암호화 아키텍쳐
+JCA는 암호화 개념을 실제 구현에서 분리할 수 있도록 설계되었다.
+JCA는 다음과 같이 설계되었다.
+가.독립성과 상호 운용성 있는 구현
+ 나.독립성과 확장성 있는 알고리즘
+
+ 구현과 알고리즘의 독립성은 상호보완적이다.
+이들의 목적은 API 사용자들이 전자 서명이나 메세지 다이제스트와 같은 암호화 개념의
+ 구현에 사용된 코드나 알고리즘을 전혀 모르고도 사용할 수 있도록 하는 것이다.
+완전한 알고리즘 독립성이 불가능한 경우,JCA는 개발자에게 알고리즘 종속적인 표준화된
+API를 제공한다.
+구현 독립성이 필요하지 않는경우,JCA는 개발자에게 필요한 특정 구현을 보여준다.
+구현독립성은 "프로바이더" 기반의 아키텍처를 사용해서 얻는다.
+암호화 서비스 프로바이더라는 단어는 전자서명알고리즘,메세지다이제스트 알고리즘,
+키 변환 서비스들과 같은 하나나 그 이상의 암호화 사비스들을 구현하는 패키지나 패키지
+ 집합을 의미한다.
+프로그램은 특정서비스를 구현하는(DSA 서명 알고리즘과 같은)
+특정객체타입(Signature 와 같은)을 요청하고,설치된 프로바이더들 중 하나에서 이것을 구한다.
+원한다면,프로그램은 특정 프로바이더의 구현을 대신 요청할 수 있다.(각 프로바이더는
+ 그것을 가리키는 특별한 이름을 사용한다.)
+더 빠르거나 보안이 강화된 버전을 사용할 수 있게 되면,프로바이더들은 애플리케이션에
+ 사용자가 알아차리지 못하도록 업데이트된다.
+
+구현의 상호 운용성(interoperability)이란,
+여러 구현들이 함께 작업하고,서로의 키를 사용하고,서로의 서명을 확인할 수 있는 것을
+ 의미한다.
+예를들어,동일한 알고리즘으로 되어 있어서 한 프로바이더가 만든 키가 다른 프로바이더가
+ 사용하거나,한 프로바이더가 만든 서명을 다른 프로바이더가 확인할 수 있는 것을 의미한다.
+
+알고리즘 독립성은 암호화 "엔진"(서비스)의 유형을 정의하고,이 암호화 엔진의 기능을
+ 제공하는 클래스들을 정의해서 얻는다.이러한 클래스들을 엔진클래스라고 하고,
+MessageDigest(java.security.MessageDigest),Signature(java.security.Signature),
+ KeyFactory(java.security.KeyFactory) 클라스 들이 그 예이다.
+
+알고리즘 확장성은 지원되는 엔진 클래스중 하나에 맞는 새 알고리즘을 쉽게
+ 추가할 수 있음을 의미한다.
+예를들어,JDK 1.1 에서 프로바이더는 하나나 그 이상의
+1)전자서명 알고리즘,
+2)메세지다이제스트 알고리즘
+3)키 생성 알고리즘 구현을 가질수 있다.
+JDK1.2는 다섯개의 서비스 타입들을 추가하였다.
+4)키 팩토리
+5)단축키 생성및 관리
+6)알고리즘 매개변수 관리
+7)알고리즘 매개변수 생성
+8)보증서 팩토리 등이 그것이다.
+프로바이더가 RNG(random number generation,무작위 숫자 생성) 알고리즘을 제공하도록
+ 할 수도 있다.
+이전에는 RNG 가 프로바이더 기반이 아니었다.
+이런 특별한 알고리즘은 JDK에 직접들어 있었다.
+
+SUN사의 자바 런타임 환경은 기본 프로바이더로 JCA 에 SUN 이라는 이름의 기본
+ 프로바이더를 표준으로 제공한다.
+SUN 프로바이더 패키지는 다음과 같은 것을 포함하고 있다.
+1)DSA(Digital Signature Algorithm)의 구현
+2)MD5(RFC 1321)와 SHA-1 메세지 다이제스트 알고리즘 구현
+3)DSA 알고리즘에 적합한 공용/사적키 생성을 위한 DSA 키 생성기
+4)DSA 알고리즘 매개 변수 생성기
+5)DSA 알고리즘 매개변수 관리자
+6)DSA 사적,공용키 객체들과 이들의 아래에 있는 키 재료들 간의 쌍방향 변환을 제공하는
+   DSA "키 팩토리"
+7)독점적인"SHA1PRNG" 슈도(유사)-랜덤 숫자 생성 알고리즘의 구현,IEEE PI363 표준의 권장
+ 사항을 따른 것이다.
+8)X.509 의 "보증서 팩토리"와 CRL(Certificate Revocation Lists)
+ 9)"JKS"라는 이름의 특정 단축키 형식의 단축키 구현
+
+MessageDigests 가 자바에서 어떻게 동작하는지를 보여주는 예제로,
+다음코드는 주어진 입력에서 메세지 다이제스트를 만든다.
+
+import java.io.*;
+ import java.security.*;
+
+ //sun.misc.*; 패키지는 BASE64 Encoder/Decoder 클라스들을 정의한다.
+ /*BASE64는 6개의 비트를 한자리 수로 표현하는 64진법입니다 A는'000000' Q는'010000'인
+ 바이트의 배열입니다. BASE64Encoder는 encoder() 메소드를 사용하여 바이트의 배열을 ASCII(스트링)
+형태로 바꾸어 놓는다면,
+BASE64Decorder는 주어진 ASCII(스트링) 형태의 BASE64 코드를 원래의 바이트 배열로 바꾸어 놓는다.
+ //다시한번 message digest 를 정의하면 암호화 체크섬이나 암호화 해시코드이다.
+
+import sun.misc.*;
+ public class Md5Input//128비트 해시코드를 만든다.
+ {
+       public static void main(String[] args) throws Exception
+      {
+           //아규먼트의 갯수로 프로그램이 올바르게 실행되었는지를 확인한다.
+          if(args.length<1)
+         {
+                System.out.println("Usage:javac Md5Input iljimae");
+                return;
+          }
+          //모든 입력을 하나의 문자열에 연결해서 붙이고 하나의 문자열로 모은다.
+          String iljimae=args[0];
+          for(int i=1;i<args.length;i++)
+         {
+              //아규먼트 사이의 공백은 하나의 공백문자로 대치한다.
+              iljimae +=""+args[i];
+          }
+          //모든 문자열을 md5 입력의 UTF8 바이트로 변환한다.
+          byte[] inputBytes=iljimae.getBytes("UTF8");
+
+          //팩토리 메소드(getInstance())를 통해 md5 메세지 다이제스트 객체를 구한다.
+          //이 팩토리메소드는 입력으로 알고리즘 이름을 받아 들인다.
+          //여기서는 MD5 라는 알고리즘을 사용하였다.
+          //여기에 대한 추가설명:이 아래에 있음
+         //SHA 알고리즘을 사용하는 경우에는 getInstance("SHA");
+          MessageDigest md5=MessageDigest.getInstance("MD5");  
+
+//*<대체해도 좋은 부분>
+또는 주어진 파일에서 적정 크기로 읽어들여서 암호화 한다.
+FileInputStream in=new FileInputStream(args[0]);
+ byte[] buffer=new byte[8192];
+ int length;
+ while(length=in.read(buffer)) !=-1)
+ */             
+
+          //입력으로 메세지 다이제스트를 업데이트 한다.
+          md5.update(inputBytes);
+
+          //다이제스트를 만든다.
+          //메세지다이제스트를 계산한다.메세지 다이제스트의 값은 항상 바이트 배열
+         //폼이어서 사람이 읽을 수 없기 때문에 sun.mise.* 패키지의 BASE64Encoder
+          //클라스를 사용해서 다이제스트를 String base64 부호화 형식으로 변환하였다.
+          byte[] digest=md5.digest();
+
+          //digest를 base64로 출력한다.
+          BASE64Encoder encoder=new BASE64Encoder();
+          String base64=encoder.encode(digest); //encode()메소드는 BASE64Encoder클라스의 수퍼 클라스인 
+                                                                     //CharacterEncoder클라스에 선언되어 있다.열어보라.
+          System.out.println(base64);
+     }
+ }//end of Md5Input.class
+
+ JDK1.2 에서 javac Md5Input.java 를 컴파일하고 다음과 같이 실행하면
+c:\iljima_dir\crypto>java Md5Input  hello world
+결과는 XrY7u+Ae7tCTyyK7j1rNww==
+
+또 느낌표를 붙여보면
+c:\iljimae_dir\crypto>java Md5Input  hello world!
+결과는 /D/5joxqDTCH1RXARz+Gdw==
+
+위의 출력에서 볼 수 있듯이,입력의 글자 하나를 바꾸면 메세지 다이제스트는
+ 완전히 다른 모양으로 변한다.주어진 메세지 다이제스트로는 입력이 어떻게
+ 이 다이제스트를 만드는지 이해하기 매우 어렵다.
+두개의 서로 다른 입력이 같은 다이제스트를 만들 확률은 매우 희박하다.
+SHA-1 과 같은 메세지 다이제스트 알고리즘은 실제로 두개의 서로 다른 입력이
+ 같은 다이제스트 값을 만들지 못하도록 보장한다.
+
+추가설명:
+JRE(Java Runtime Environment) 에서 메세지 다이제스트 팩토리를 요청하였다.
+기본적으로,JRE는 이것을 MD5 알고리즘을 토대로하는 메시지 다이제스트 프로바이더
+ 목록에서 찾고,첫번째 프로바이더에서 객체의 인스턴스를 제공한다.
+JRE 에 있는 보안 프로바이더 목록은 파일 JAVA1.2.2/jre/lib/security/java.security
+에 정적으로 지정되어 있다.
+이 파일을 열어보아라.
+열어본 파일에서 팩토리메소드를 구해서 MD5 메세지 다이제스트의 명백한
+ 프로바이더(MD5Provider)를 요청할 수 있다. 
+
+MessageDigest md5=MessageDigest.getInstance("MD5","MD5Provider");
+ MD5Provider는 Security 클라스에 등록해서(java.security 파일을 사용해서
+ 정적으로 혹은 addProvider 메소드들을 사용해서 동적으로)제공할 수 있다.
+
+그렇다면 각 프로바이더들의 기능을 어떻게 알 수 있을까?
+이것을 알아내는데는 두가지 방법이 있다.
+하나는 설명서를 모두 뒤지는 것이고,또 하나는 아래와 같이 프로그램으로
+ 처리하는 것이다.
+프로그램으로 처리하면 프로바이더가 지원하는 알고리즘들의 목록만 찾아낼 수
+ 있다.
+
+import java.io.*;
+ import java.util.*:
+ import java.security.*;
+
+ import sun.misc.*;
+
+ public class Providers
+ {
+ public static void main(String[] args) throws Exception
+ {
+ //로드된 모든 프로바이더들의 목록을 구한다.
+Provider[] providers=Security.getProviders();
+ //각 프로바이더가 제공하는 서비스들(알고리즘들)을 퀴리한다.
+for(i=0;i<providers.length;i++)
+ {
+ System.out.println(providers[i]);
+ for(Emueration e=providers[i].keys();e.hasMoreElements();)
+ System.out.println("\t"+e.nextElement());
+ }
+ }
+ }
+
+내 컴퓨터에서 위의 프로그램을 컴파일하고,실행하여 나오는 결과를 보라
+c:\iljimae_dir\crypto>java Providers
+나오는 출력을 보면 각 프로바이더들의 기능을 명확하게 알 수 있다.
+
+키들(보안키와 공용키 모두)은 기본적으로 대부분 암호화 알고리즘들의
+ 재료가 되기 때문에 이 키들의 생성방법을 알아야 한다.
+DSA 서명 알고리즘의 키 쌍을 만드는 간단한 예제를 살펴보도록 하자.
+
+import java.io.*;
+ import java.security.*;
+
+ import sun.misc.*;
+
+ public class GenKeys
+ {
+ public static void main(String[] args) throws Exception
+ {
+ SecureRandom sr=new SecureRandom();
+ byte[] pseudoRandom=new byte[100];
+ sr.nextBytes(pseudoRandom);
+
+ KeyPairGenerator kpg=KeyPairGenerator.getInstance("DSA");
+ System.out.println("Initializing the DSA key pair generator...");
+ kpg.initialize(512,sr);
+
+ System.out.prinltn("Generating DSA key pair...");
+ System.out.println("잠시 기다려 주세요...");
+
+KeyPair kp=kpg.genKeyPair();
+ System.out.println("DSA Public Key:");
+ Key pubKey=kp.getPublic();
+
+ //나중에 해독하기 위해서 DSApublic.key 파일에 공용키를 저장한다.
+try
+ {
+ ObjectOutputStream out=new ObjectOutputStream(new FileOutputStream("DSApublic.key"));
+ out.writeObject(pubKey);
+ out.close();
+ }
+ catch(Exception e)
+ {
+ System.out.println("공용키를 저장할 수 없읍니다.");
+System.out.println(e);
+ }
+
+ byte[] pubkeyBytes=pubkeyEncoded();
+ System.out.println("Public key format is:"+pubKey.getFormat());
+ BASE64Encoder encoder=new BASE64Encoder();
+ String base64=encoder.encode(pubkeyBytes);
+ System.out.println(base64);
+
+ System.out.println("DSA Private Key:");
+ Key priKey=kp.getPrivate();
+
+ //나중에 해독하기 위하여 DSAprivate.key 파일에 사적키를 저장한다.
+try
+ {
+ ObjectOutputStream out=new OutputStream(new FileOutputStream("DSAprivate.key"));
+ out.writeObject(priKey);
+ out.close();
+ }
+ catch(Exception e)
+ {
+ System.out.println("사적키를 저장할 수 없읍니다.");
+System.out.println(e);
+ }
+
+ byte[] privksyBytes=privKey.getEncoded();
+ System.out.println("Private key format is:"+privKey.getFormat());
+ BASE64Encoder encoder2=new BASE64Encoder();
+ base64=encoder2.encode(privkeyBytes);
+ System.out.println(base64);
+ }
+ }
+
+프로그램을 GenKeys.java 라는 이름으로 저장한다.프로그램을 JDK1.2 로 컴파일하고
+ 실행시키고 출력을 보라 실행될 때 마다 새로운 복잡한 키들이 만들어 진다.
+C:\iljimae_dir\crypto>java GenKeys
+
+다음은 위의 프로그램이 작업하는 방법이다.
+가)새로운 의사 랜덤 생성기 객체를 만들고,100바이트짜리 의사 랜덤 숫자를
+ 생성한다.이 숫자는 DSA 키 쌍을 만들기 위한 시드(씨앗)로 사용된다.
+나)Java.Security.KeyPairGenerator 의 팩토리 메소드들 중 하나를 사용해서
+KeyPairGenerator 객체를 구한다.
+다)KeyPairGenerator 객체를 512비트의 키 크기와 시드 랜덤 숫자로 초기화 한다.
+라)KeyPairGenerator 객체에서 KeyPair 객체를 만든다.
+마)KeyPair 객체의 사적키와 공용키를 구하고,이들을 각각 DSApublic.key와
+DSAprivate.key 파일에 저장한다.
+사)공용키와 사적키를 저장한 다음,이들의 서시과 BASE64 부호화값들을 표준
+ 출력한다.
+지금까지 DSA KeyPair 를 만들었다.이제,이 키들을 사용해서 메세지에 서명하고
+ 서명을 확인할 수 있다.다음 프로그램은 이런 개념을 보여주고 있다.
+
+import java.io.*;
+ import java.security.*;
+ import sun.misc.*;
+ public class Signer
+ {
+ public static void main(String] args)throws Exception
+ {
+ //프로그램의 용도을 확인한다.
+if(args.length<1)
+ {
+ System.out.println("사용법:java  Signer input");
+ return;
+ }
+
+ //모든 입력을 하나의 큰 문자열에 모은다
+String msg=args[0];
+ for(int i=1;i<args.length;i++)
+ {
+ msg+=""+args[i];
+ }
+
+ Signature dsaSig=Signature.getInstance("SHA1withDSA");
+
+ PublicKey pubKey;
+ PrivateKey privKey;
+
+ System.out.println("DSAprivate.key 파일로 부터 사적키를 읽읍니다.");
+try
+ {
+ ObjectInputStream in=new ObjectInputStream(new FileInputStream("DSAprivate.key"));
+ privKey=(PrivateKey)in.readObject();
+ in.close();
+ }
+ catch(Exception e)
+ {
+ System.out.println("DSAprivate.key 파일에서 사적키를 읽을 수 없읍니다.");
+return;
+ }
+ System.out.println("DSApublic.key 파일로 부터 공용키를 읽읍니다.");
+try
+ {
+ ObjectInputStream in=new ObjectInputStream(new FileInputStream("DSApublic.key"));
+ pubKey=(PublicKey)in.readObject();
+ in.close();
+ )
+ catch(Exception e)
+ {
+ System.out.println("DSApublic.key 파일로 부터 공용키를 읽을 수 없읍니다");
+return;
+ }
+
+ System.out.println("Signing the message with the private key...");
+
+ dsaSig.initString(privkey);
+ byte[] msgBytes=msg.getBytes("UTF8");
+ dsaSig.update(msgBytes);
+ byte[] signBytes=dsaSig.sign();
+
+ System.out.println("Verifying the singed message with the public key...");
+
+ dsaSig.initVerify(pubKey);
+ dsaSig.update(msgBytes);
+ boolean verifies=dsaSig.verify(sigBytes);
+ System.out.pritln("signature verifies:"+verifies);
+ }
+ }
+
+ Signer.java라는 파일로 JDK 1.2 에서 컴파일하고 실행하고 출력을 본다.
+
+DSA 알고리즘는 서명 동작에만 사용되기 때문에 이 키들은 일반적인 비대칭형
+ 키 부호화와 부호 해독 목적으로 사용할 수 없다.
+위의 프로그램은 다음과 같은 작업을 수행하고 있다.
+가)명령어 라인의 용도 부분을 확인한다.
+나)서명할 입력을 하나의 큰 문자열에 모은다.
+다)서명 객체를 만든다.
+라)각각 DSApublic.key와 DSAprivate.key 파일에서 사적인 키와 공용키 객체를 읽는다.
+마)서명할 문자열에서 바이트들을 구해 데이타 버퍼에 넣는다.
+바)사적키로 데이타 버퍼에 서명한다.
+사)공용키로 서명된 메세지를 확인한다.
+
+JDK1.2도 보증서와 CRL 을 다루기 위한 클라스들을 가지고 있다.
+
+보증서 중 하나인 X509 버전 3 보증서가 실제로 어떤 모양인지 분석하고 알아볼 예제를 개발해 보자.
+다음은 보증서 정보를 읽어서 보여주는 코드이다.
+
+import java.io.*;
+ import java.util.*;
+ import java.security.*;
+ import java.security.cert.*;
+
+ import  sun.misc.*;
+
+public class ParseCert
+ {
+       public static void main(String[] args) throws Excetpion
+       {
+             if(args.length<1)
+             {
+                    System.out.println("Usage java ParseCert \"certfille\"");
+                    return;
+              }
+              FileInputStream fis=new FileInputStream(args[0]);
+              DataInputStream dis=new DataInputStream(fis);
+
+              CertificateFactory cf=CertificateFactory.getInstance("x.509");
+              
+              Collection c=cf.generateCertificates(fis);
+              Iterator i=c.iterator();
+              while(i.hasNext())
+              {
+                     java.security.cert.Certificate cert=(java.security.cert.Certificate)i.next();
+                     System.out.println(cert);
+               }
+       }
+  }
+
+위의 프로그램은 다음과 같은 방법으로 작업한다.
+가) 입력 아규먼트를 확인한다.
+나)DataInputStream 을 만들어 입력파일에서 보증서 객체를 읽는다.
+다)java.security.CertificateFactory 클래스의 Factory 메소드에서 CertificateFactory 인스턴스를 구한다.
+CertificateFactory 클래스는 보증서 팩토리의 기능을 정의 한다.
+이것을 사용해서 부호화된 값에서 보증서와 CRL(certificate revocation list)을 만든다.
+라)입력 파일의 데이터로 CertificateFactory 클래스를 초기화 한다.
+마)CertificateFactory 클래스 보증서를 만든다.
+바)모든 보증서에 대해 반복해서 이들을 인쇄한다.
+
+위의 프로그램을 아래 명령어로 실행해 보자
+c:\iljimae_dir\crypto>java PaseCert labrador-x509.cer
+
+출력을 보면 x509 버전 3 보증서는 기본적으로 다음과 같은 요소들을 포함하고 있다는 것을 알 수 있다.
+1.보증서버전 2.제목설명 3.객체의 공용키 4.주제의 공용키 서명에 사용되는 서명 알고리즘5.제목의 공용키
+6.유효기간 7.발행자의 신원 8.보증서 일련번호,보증서 확장판들 9.서명
+
+JCA 는 CRL 을 분석하는 기능도 가지고 있다. 다음 프로그램은 주어진 CRL(보증철회 목록)의 내용을 분석하고 인쇄한다.
+
+
+import java.io.*;
+ import java.util.*;
+ import java.security.*;
+ import java.security.cert.*;
+
+ import java.sun.misc.*;
+
+ public class ParseCrl
+ {
+        public static void  main(String[] args) throws Exception
+        {
+               if(args.length<1)
+               {
+                      System.out.println("Usage java ParseCrl \"crlfile\"");
+                      return;
+                }
+                FileInputStream fis=new FileInputStream(args[0]);
+                DataInputStream dis=new DataInputStream(fis);
+
+                CertificateFactory cf=CertificateFactory.getInstance("x.509");
+
+                X509CRL crl=(X509CRL) cf.generateCRL(fis);
+
+               System.out.println(crl);
+
+               //CRL 에서 각각의 엔트리를 얻고 프린트 한다.
+                Set s=crl.getRevokedCertificates();
+                Iterator i=s.iterator();
+                while(i.hasNext())
+                {
+                       java.security.cert.X509CRLEntry entry=(java.security.cert.X509CRLEntry) i.next();
+                       System.out.pritln(entry);
+                 }
+          }
+ }
+
+위의 프로그램은 ParseCert 프로그램과 비슷하게 동작한다.
+이것은 CertificateFactory 객체를 만들고,이것을 통해 CRL을 읽어 CRL 내용을 인쇄한다.
+입력으로 .crl 파일을 넣어 실행시키면 출력을 보면
+
+CRL 버전,발행자,CRL 서명에 사용되는 서명 알고리즘,유효기간,기관이 발행한 철회된 보증서와 서명목록을 
+ 가지고 있다. CRL에 있는 각 철회된 항목들은 보증서 일련번호와 철회된 날자를 가지고 있다.
+
+3.2
+
+JCE(Java Cryptography Extension)
+지금까지 JDK 1.2의 기본 프레임워크가 메시지 다이제스트,서명,보증서를 다루는 클래스들 CRL 등과 같은 
+ 암호화 관련 작업을 어떻게 수행하는지 알아 보았다.
+부호화,부호해독 동작들은 살펴보지 않았다.
+
+JCE 는 이런 경직된 암호화 동작들을 위한 프레임 워크를 제공한다.
+
+US 정부가 암호화 기법의 외부 유출을 제한하고 있기 때문에 SUN 사는
+ 자신의 암호화 클래스들을 2개의 그룹으로 나누었다.
+첫번째 것은 java.security.* 패키지로 이것은 JDK1.2에 포함되어 있다.
+이 클래스들은 제한없이 외부로 내 보낼수 있다.두번째 그룹인 JCE 는 U.S와
+ 캐나다에만 배포할 수 있다.
+JCE는 JCA 의 확장판이며,SunJCE 라고 하는 암호화 프로바이더를 포함하고 있다.
+JCE1.2는 JDK1.2를 보완하고 있다.
+이것은 미리 메세지 다이제스트와 전자 서명과 관련된 구현및 인터페이스를 포함하고
+ 있다.
+JCE 1.2는 자바 플랫폼에 확장판으로 제공된다.
+JCE 아키텍처는 JCA 의 다른 부분에서 발견되는 설계원칙들과 동일한 원칙을
+ 따르고 있다.
+구현의 독립성,언제든 사용가능해야 한다는 것,알고리즘의 독립성 등이 그것이다.
+이것은 동일한 "프로바이더" 아키텍처를 사용한다.
+
+JCE 1.2는 SunJCE 라는 이름의 프로바이더를 포함하고 있다.
+이것은 다음과 같은 서비스들을 제공한다.
+가)DES(FIPS PUB 46-1),Triple DES,ECB(Electronic CodeBook)에 있는 Blowfish부호
+ 화 알고리즘들,CBC(Cipher Block Chaining),CFB(Cipher Feedback),
+ OFB(Output Feedback),PCBC(Propagating Chpher Block Chaining)모드들에 대한 구현
+ 나)DES,Triple DES,Blowfish 알고리즘에 적합한 키들을 만들어 주는 키 생성기들
+ 다)PKCS #5 에 정의되어 있는 DES-CBC PBE(password-based encyption)알고리즘을
+ 사용한 MD5 구현
+ 라)분명하지 않은 DES,Triple DES,PBE 키 객체들과 아래에 깔린 이들 키 재료의
+ 분명한 표현사이에 쌍방향대화를 제공하는 "보안키 팩토리들"
+마)두개나 그 이상 그룹들간의 Diffie-Hellman 키 동의 알고리즘 구현
+ 바)Diffie-Hellman 알고리즘에 접합한 공용키와 사적키 쌍을 만들어 주는
+Diffie-Hellman 키쌍 생성기
+ 사)Diffie-Hellman 알고리즘 매개변수 생성기
+ 아)분명하지 않은 Diffie-Hellman 키 객체와 아래에 깔린 이들 키 재료의
+ 분명한 표현사이의 쌍방향 대화를 제공하는 Diffie-Hellman "키 팩토리들"
+자)Diffie-Hellman,DES,Triple DES,Blowfish,PBE매개변수들의 알고리즘 매개변수
+ 관리자들
+ 차)RFC 2104에 정의된 JMAC-MD5와 JMAC-SHA1 키 해시 알고리즘 구현
+ 타)PKCS#5 로 표현한 채워넣기(padding) 스키마 구현
+ 파)"JCEKS"라는 독점적인 단축키 타입의 단축키 구현
+
+ 대칭형 키 알고리즘을 사용하는 대부분의 부호화및 부호 해독 동작에 있어
+ 기본적인 요구사항은 보안키 이다.
+다음 예제는 64비트 DES(Data Encryption Standard:64비트 크기를 가진 블록 암호문)
+키를 만든다.
+
+import java.io.*;
+ import java.security.*;
+ import java.crypto.*;
+
+ import sun.misc.*;
+
+ public class GenPrivKey
+ {
+ public static void main(String[] args) throws Exception
+ {
+ if(args.length<1)
+ {
+ System.out.println("Usage: java GenPrivKey filename");
+ return;
+ }
+ //DES 키를 만들어 파일 args[0]에 저장한다.
+System.out.println("Generating as DES key...");
+ KeyGenerator generator=KeyGenerator.getInstance("DES");
+
+ //DES 키는 56 비트나 64비트중 하나가 될 수 있다.
+generator.init(64,new SecureRandom());
+ Key key=generator.generateKey();
+ System.out.println("Generating DES key... done");
+ try
+ {
+ ObjectOutputStream out=new ObjectOutputStream(
+ new FileOutputStream(args[0]));
+ out.writeObject(key);
+ out.close();
+ System.out.println("DES key is saved to file"+grgs[0]);
+ }
+ catch(Exception e)
+ {
+ System.out.println("파일"+args[0]+"에 DES 키를저장할 수 없읍니다");
+System.out.println(e);
+ }
+ }
+ }
+
+이 프로그램을 실행시키면 주어지 파일에 64비트 DES 키를 만들어 넣는다.
+c:\iljimae_dir\crypto>java GenPrivKey des.key
+
+위의 키 생성 프로그램이 작업을 수행하는 방법은
+ 가)입력 아규먼트를 검사한다.
+나)DES KeyGenerator 객체를 만든다.
+다)키 길이(64)와 원본의 랜덤 숫자 객체나 보안키의 랜덤 데이터를 사용해서
+KeyGenerator 객체를 초기화 한다.
+라)KeyGenerator 객체에서 키를 생성한다.
+바)지정한 파일에 키를 저장한다.
+
+지금까지 보안키 생성을 배웠다.
+이 키를 사용한 메세지나 파일의 부호화및 부호 해독 방법에 대해서 알아보자.
+다음 예제는 지정된 키를 사용해서 명령어 라인에 주어진 문자열을 부호화
+ 하는 방법을 보여주고 있다.
+
+import java.io.*;
+ import java.security.*;
+ import javaz.crypto.*;
+
+ import sun.misc.*;
+
+ public class Encrypt
+ {
+ public static void main(String[] args) throws Exception
+ {
+ //아규먼트를 검사한다
+if(args.length<2)
+ {
+ System.out.println("Usage:java Encrypt keyfile text");
+ return;
+ }
+ //이 문장은 javax.crypto.* 패키지을 정적으로 로드한다.
+ //필요하다면 클래스들을 동적으로 추가하려면
+//Security.addProvider(new com.sun.crypto.provider.SunJCE());
+ //의 주석문 표시를 삭제한다.
+ //키 파일에서 키를 읽는다.
+Key key;
+ try
+ {
+ ObjectInputStream in=new ObjectInputStream(new FileInputStream(args[0]));
+ key=(Key) in.readObject();
+ in.close();
+ }
+ catch(Exception e)
+ {
+ System.out.println("Could not read private key from file"+args[0]);
+ return;
+ }
+
+ //암호문을 만든다.
+
+Cipher cipher=Cipher.getInstance("DES/ECB/PKCS5Padding");
+
+ //암호문을 부호화 모드로 초기화 한다.
+cipher.init(Cipher.ENCRYPT_MODE,key);
+ //입력 문자열을 모은다.
+String input=args[1];
+ for(int i=2;i<args.length;i++)
+ {
+ input +=""+args[i];
+ }
+
+ //입력을 UTF8 형식으로 변환한다.
+byte[] inputBytes=input.getBytes("UTF8");
+ //부호화 한다.
+byte[] outputBytes=cipher.doFinal(inputBytes);
+
+ //다이제스트를 base64로 인쇄한다.
+BASE64Encoder encoder=new BASE64Encoder();
+ String base64=encoder.encode(outputBytes);
+ System.out.print(base64);
+ }
+ }
+
+프로그램을 컴파일한 다음,아규먼트로 약간의 입력 텍스트를 사용해서
+ 실행하면 부호화된 텍스트의 BASE64 부호화 버전을 만들어 낼 것이다.
+다음은 이것의 예제이다.
+c:\iljimae_dir\crypto>java Encrypt des.key  "일지매 암호문!"
+결과는
+Zp5tacxvk6uB3FS4qEjZlw==
+
+위의 프로그램은 다음과 같은 일을 수행한다.
+가)입력 아규먼트를 검사한다
+ 나)키 파일에서 보안키를 읽어 키 객체를 만든다.
+다)대칭형 암호문 객체를 만든다.
+라)암호문 객체를 부호화 모드로 설정한다.
+마)부호화에 필요한 입력텍스트를 바이트 배열로 변환한다.
+바)입력데이타로 암호문 객체를 업데이트 한다.
+사)암호문 객체의 doFinal() 메소드를 호출해서 데이타를 부호한 한다.
+아)부호화된 데이타를 읽기 쉽도록 BASE64 서식으로 바꾼다.
+
+3.3
+ Cipher 객체들
+ 위의 예제에서 가장 중요한 객체들 중 하나는 Cipher 객체이다.
+API 에 있는 다른 엔진 클래스들과 마찬가지로,Cipher 객체도 Cipher 클라스의
+getInstance() 팩토리메소드들을 사용해서 만든다.
+이 경우 팩토리메소드는 Cipher의 인스턴스인 클래스 인스턴스를 리턴하는
+ 정적인 메소드이고,이것이 필요한 트랜스포메이션을 제공한다.
+트랜스포메이션(transformation)이란,어떤 출력을 만들어 내기 위해서
+ 주어진 입력에 대해 수행하는 어떤 동작(혹은 동작들)을 나타내는 말이다.
+transformation 은 항상 암호화 알고리즘의 이름(DES 와 같은)을 포함하고,
+그 다음에 피드백 모드와 패딩 스키마가 나온다.
+transformation 은 다음과 같은 형식으로 되어 있다.
+가)"algorithm/mode/padding" 혹은
+ 나)"algorithm"(이 경우는 mode 와 padding 스키마로 프로바이더가 지정하는
+ 기본값들을 사용한다)예를 들어,다음은 유효한 트랜스포메이션이다.
+Cipher c=Cipher.getInstance("DES/CBC/PKS5Padding");
+
+스트림 암호문 모드인 블록 암호문(예를 들어,CFB나 OFB 모드로 된 DES)을
+ 요청하는 경우,한 번에 처리할 비트 개수를 지정할 수 있다.
+이 숫자를 모드이름 다음에 추가하면 된다.
+ "DES/CFB8/NoPadding"이나"DES/OFB32/PKCS5Padding" 트랜스포메이션과 같은
+ 모양이 될 것이다.
+이런 숫자가 지정되어 있지 않으면 프로바이더가 지정하는 기본값을 사용한다.
+ (예를들어,SunJCE 프로바이더는 기본값으로 64비트를 사용한다)
+팩토리 메소드가 리턴하는 객체는 초기화 되어 있지 않기 때문에
+ 사용하기전에 반드시 초기화 해야 한다.
+
+3.4 Cipher 객체 초기화 하기
+getInstance()에서 구한 Cipher 객체는 다음 두 가지 모드중 하나로 초기화 해야
+ 한다.(부호화나 부호해독).
+이 모드들은 Cipher 클라스에 들어있는 마지막 정수 상수로 정의된다.
+두 모드는 이들의 기호이름으로 참조할 수 있다
+ 가)ENCRYPT_MODE
+나)DECRYPT_MODE
+
+각 Cipher 초기화 방법들은 모드매개변수(opmode)를 취해서 이 모드로 Cipher
+객체를 초기화 한다.
+Cipher 객체를 초기화하려면,init() 메소드들 중 하나를 호출한다.
+public void init(int opmode,Key key);
+
+ 3.5
+데이터 부호화및 부호 해독하기
+ 데이터는 한 단계의 처리로(단일 동작으로)부호화/부호해독할 수도 있고,
+여러단계의 처리로(여러부분의 동작으로)할 수도 있다.
+여러 부분으로 나뉘는 동작은 데이터가 얼마의 기간동안 살아 있을지 미리
+ 알지 못하거나,데이터가 한 번에 메모리에 저장하기에 너무 길 경우에 유용하다.
+
+한 단계만으로 데이터를 부호화및 부호해독하려면,doFinal() 메소드들 중
+ 하나를 호출한다.
+public bytes[] doFinal(byte[] input);
+
+여러 단계로 데이터를 부호화및 부호해독하려면,update() 메소들중 하나를
+ 호출한다.
+public byte] update(byte[] input);
+
+여러부분의 동작은 Cipher 의 doFinal() 메소드들 중 하나로 종료되어야 한다.
+다음 예제는 Cipher 객체를 사용해서 부호화된 텍스트를 해독하는 방법을
+ 보여주고 있다.
+
+import java.io.*;
+ import java.security.*;
+ import javax.crypto.*;
+ import sun.misc.*;
+
+ public class Decryt
+ {
+ public static void main(String[] args) throws Exception
+ {
+ //아규먼트를 검사한다
+if(args.length<2)
+ {
+ System.out.println("Usage: java Decrypt keyfile text");
+ return;
+ }
+
+ //필요하다면 동적으로 확장자를 추가할 수 있다.
+ //Security.addProvider(new com.sun.crypto.provider.SunJCE());
+
+ //사적키 파일 privkey.der 에서 키를 읽는다.
+Key key;
+ try
+ {
+ ObjectInputStream in=new ObjectInputStream(new FileInputStream(args[0]));
+ key=(Key)in.readObject();
+ in.close();
+ }
+ catch(Exception e)
+ {
+ System.out.println("Could not read the key from file"+args[0]);
+ System.out.println(e);
+ return;
+ }
+
+ //키를 이용해서 암호문을 만든다.
+Cipher cipher=Cipher.getInstance("DES/ECB/PKCS5Padding");
+ cipher.init(Cipher.DECRYPT_MODE,key);
+
+ //입력버퍼를 BASE64로 해독한다.
+BASE64Decoder decoder=new BASE64Decoder();
+ System.out.println(args[0]);
+
+ //실제 부호화된 문자열을 해독한다
+byte[] inputBytes=decoder.decodeBuffer(args[1]);
+ byte[] outputBytes=cipher.doFinal(inputBytes);
+
+ //출력 바이트들을 문자열로 변환한다.
+String result=new String(outputBytes,"UTF8");
+ System.out.println(result);
+ }
+ }
+
+이 프로그램은 부호화 예제와 매우 유사하다.
+한 가지 다른 점은 Cipher 객체의 모드를 DECRYPT로 설정한다는 것이다.
+또 ,BASE64 부호화 방법으로 부호화된 텍스트를 Cipher 객체에 넣기전에
+ 먼저 해독한다.
+부호화 프로그램으로 만든 출력에 대해 위의 프로그램을 실행시키면,
+다음과 같은 실제 문자열이 만들어 질 것이다.
+c:\iljimae_dir\crypto> java Decrypt des.key Zp5tacxvk6uB3FS4qEjZlw==
+ des.key
+일지매 암호문!
+
+이제까지 JDK1.2 ,JCA,JCE 의 암호화 API 들을 사용하는 방법을 공부하였읍니다.
+지금부터는 이들 API 를 이용해서 암호화 동작을 수행하는 서블릿을
+ 개발할 것입니다.
+이런 서블릿 개발에 깊이 들어가지 전에,몇가지 주의해야 할 점이 있다.
+표준JSDK 2.1(Java Servlet Development Kit)과 자바 웹 서버 2.0 은
+JDK1.2 에서 제공하는 암호화 API 와 완전히 들어맞지 않는다.
+이 때문에 모든 서블릿예제들은 JDK 1.2 의 자바 런타임 환경의 자바 웹서버 2.0 을
+ 사용한다.
+이 기능을 사용하려면,JDK1.2 자바 설치 디렉토리를 가리키는 JAVA_HOME
+환경변수를 설정하고,자바 웹 서버 2.0을 -nojre 명령어 라인 플래그를 사용해서
+ 실행시켜야 한다. 예를 들면,다음과 같다.
+윈도우 NT 플랫폼에서는 다음과 같은 명령어를 사용한다.
+d:\local\jws2.0\bin>set JAVA_HOME=c:\local\jdk1.2.2
+ d:\local\jws2.0\bin>httpdnojre -verbose
+
+이와함께 몇가지 예제들은 보안 웹 서버를 필요로 한다.
+자바 웹 서버 2.0응 기본값으로 사이트에서 자체 서명된 보증서를 만들지 않은 한
+ 보안 웹 서버를 실행시키지 않는다.
+자바 웹 서버 2.0에서 제공하는 Authstore 실행파일은 보안사이트에 대해 자체
+ 서명된 보증서를 만들 때 사용할 수 있다.
+Authstore 명령어 라인 도구는 다른 CA 보증서들을 들어올 때에도 사용할 수 있기
+ 때문에 웹서버는 CA 가 발행한 보증서를 신뢰할 수 있다.더 자세한 정보를 원한다면
+Authstore 도구 설명서를 참조하기 바란다.
+
+일단 JDK 1.2 JRE로 자바 웹서버 2.0을 설정하면,우리가 개발한 서블릿에 자바
+Crypto API 를 사용할 수 있다.
+먼저,간단한 서블릿인 ParseCert 를 개발해 보자.
+이것은 사용자가 전달한 보증서를 분석하고,보증서의 내용을 사람이 읽을 수 있는
+ 형태로 보여준다.
+서블릿에 대한 UI 가 다음에 나와 있다.
+작성될 서블릿의 url은 http://localhost:8080/parsecert.html 이다.
+
+보증서 파일을 붙여넣은 다음,[Submit Query]단추를 누르면 서블릿이 보증서 파일을
+ 분석한 다음 그 결과를 보여준다.
+
+아래의 html 파일은 ParseCert 서블릿의 UI를 만든다.
+ <!DOCTTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+ <HTML><a name="top">
+ <HEAD>
+ <TITLE>
+ Java Server 2.0 X.509 Certificate Parser
+ </TITLE>
+ </HEAD>
+ <BODY BGCOLOR="#eeeeff">
+아래의 텍스트란에 당신의 BASE 64 encoded X.509 certificate file 를 붙여 넣으세요...
+ <FORM METHOD=POST ACTION="/servlet/ParseCert">
+ Certificate:
+ <textarea name=cert rows15 cols=70>
+ </textarea>
+ <p>
+ <input type=submit name=parse>
+ </BODY>
+ </HTML>
+
+다음은 ParseCert 서블릿을 구현한 코드이다.
+continue... 
+
+

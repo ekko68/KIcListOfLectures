@@ -1,0 +1,12 @@
+
+
+public class BagLend {
+
+	public static void main(String[] args) {
+		
+		new MainPage();
+
+		
+
+	}
+}

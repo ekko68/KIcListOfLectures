@@ -1,0 +1,229 @@
+@CHARSET "UTF-8";
+/*header{ background:pink;
+height: 7vh;}*/
+
+/*body{overflow:visible !important;}*/
+
+html, body{ overflow:visible;}
+#wrap{overflow:visible;}
+
+header{
+    height: auto;
+     transition: all 0.8s;
+    position: relative;
+}
+
+
+
+span.back{ background-color: #111;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin-top: 1.7vh;
+    margin-left: 1vw;
+    border-radius: 50%;
+    z-index: 10;
+    position: fixed;
+    color:#fff;
+}
+
+span.back > a{
+    display: block;
+    width: 100%; height: 100%;
+    text-indent: -9999px;
+}
+
+
+.hd_default{ 
+width: 100%;
+height: 50vh;
+margin-bottom: 6vh;
+position: relative;
+top: 0;
+     transition: all .5s;
+}
+
+
+
+.hd_default > .img_wrap{ background-color: #111;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    position: absolute; top:0;
+    z-index: -1;
+}
+
+.hd_default > .img_wrap > img{
+    display: block;
+    position: absolute;
+    top:-160px;
+    min-height: 100%;
+    max-width: 120%;
+    opacity: 0.5;
+    
+}
+
+
+
+
+
+.hd_default > div.title{
+    /*background-color: aliceblue;*/
+    padding-top: 15vh;
+    
+}
+
+.hd_default > .title > span{
+    display: block;
+    margin-bottom: 4vh;
+    font-weight: 600;
+    color: dodgerblue;
+}
+
+.hd_default > .title > h1{/* background-color: aquamarine;*/
+    /*margin: 0 auto;*/
+    text-align: center;
+    height: 20%;
+    font-size: 2rem;
+    font-weight: 800;  
+    color: #fff;
+}
+
+
+
+.hd_scroll{ background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    /*height: 12vh;*/
+    height: 50vh;
+    margin-bottom: 6vh;
+    position: fixed;
+    top: -40vh;    
+}
+
+
+.hd_scroll > .img_wrap{ background-color: #111;
+display: none;
+}
+
+.hd_scroll > .title{
+    position: absolute;
+    top: 42.2vh;
+    width: 100%;
+    display: inline-block;
+    /*margin-left: 30%;*/
+}
+
+.hd_scroll > .title > span{
+ display: inline-block;
+    font-weight: 600;
+    color: dodgerblue;
+    margin-right: 50px;
+}
+
+.hd_scroll > .title > h1{
+ display: inline-block;
+    font-size: 2rem;
+    font-weight: 800;  
+    color: #fff;
+}
+
+
+
+div.content_wrap{
+    margin:0 auto;
+    text-align: center;
+}
+
+div.sumery{
+    /*background-color: dodgerblue;*/
+    height: 5vh; 
+    width: 100%;
+    margin: 0 auto;
+}
+
+.sumery > span{ /*background: #fff;*/
+    display: inline-block;
+   /* height: 100%;*/
+    /*height: auto;*/
+}
+
+
+
+.line{  background-color: dodgerblue;
+    display: inline-block;
+    width: 30px; height: 2px;
+    margin-bottom: 4px;
+    /*border-bottom: 2px solid #ccc*/;}
+
+
+
+
+
+/* article */
+
+article{ 
+margin-top: 5vh;
+padding: 0 20vw;
+}
+
+h3{ font-size: 1.5rem;
+font-weight: 600;}
+
+.sumery_memo{ 
+    width: auto; min-height: 10vh;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 4vh auto;
+    padding: 3vh;
+    
+}
+
+.atc_img{ background-color: #ccc;
+    max-height: 500px; min-height: 500px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+
+.atc_img > img{
+	display:block;
+    width: 100%; height: 100%;
+    background-size: contain;
+}
+
+.atc_api{
+    min-height: 100px;
+    margin-top: 5vh;
+}
+
+hr{ margin: 5vh auto;}
+
+
+
+table.api_summery{
+	border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+    font-size: 10pt;
+}
+
+.api_th{
+    text-align: left;
+    width: 70px;
+    color:dodgerblue;
+}
+
+
+.api_td{
+    text-align: left;
+    width: 150px;
+}
+
+
+
+
+
+
+
+
+
+

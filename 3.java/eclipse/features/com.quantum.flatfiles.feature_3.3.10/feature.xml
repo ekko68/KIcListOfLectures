@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.quantum.flatfiles.feature"
+      label="com.quantum.flatfiles.feature"
+      version="3.3.10"
+      provider-name="quantum.sourceforge.net">
+
+   <description>
+      This feature allows you to export the database data and structure
+to different text format.
+   </description>
+
+   <copyright>
+      Copyright (c) 2000-2005 Quantum DB developers.
+All rights reserved.   This program and the accompanying materials
+are made available under the terms of the Common Public License
+v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/cpl-v10.html
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/cpl-v10.html">
+      Common Public License - v 1.0
+See http://www.eclipse.org/legal/cpl-v10.html for more details.
+   </license>
+
+   <requires>
+      <import plugin="com.quantum.Quantum"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+   </requires>
+
+   <plugin
+         id="com.quantum.flatfiles"
+         download-size="900"
+         install-size="900"
+         version="3.3.10"
+         unpack="false"/>
+
+</feature>

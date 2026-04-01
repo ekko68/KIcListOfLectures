@@ -1,0 +1,761 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="css/main-1.css" rel="stylesheet" type="text/css" media="screen and (max-width:799px)">
+    <link href="css/main.css" rel="stylesheet" type="text/css" media="screen and (max-width:1300px)">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="http://malsup.github.com/jquery.cycle2.js"></script>
+    <script type=text/javascript>
+        jQuery(document).ready(function($) {
+            // 페이지 로드시 드랍메뉴감추기
+            $("#navigation-list").hide();
+            // 클릭시 이벤트발생
+            $(".menuBtn").click(function() {
+                // 슬라이드 이벤트
+                $("#navigation-list").slideToggle(300);
+            });
+        });
+    </script>
+    
+    <style>
+        .m_menulogo {
+            float: right;
+            clear: both;
+            position: absolute;
+            width: 10%;
+            top: 25px;
+            left: 80%;
+        }
+        /*모바일메뉴 틀*/
+        
+        #m_menu {
+            top: 88px;
+            position: absolute;
+            width: 100%;
+            background-color: orange;
+            opacity: 0.7;
+        }
+        /*모바일메뉴 리스트*/
+        
+        #navigation-list>ul a {
+            display:block;
+            color: black;
+            font-size: 13px;
+            line-height: 40px;
+            background-color: orange;
+            z-index: 999;
+            padding-left: 20px;
+        }
+        /*모바일 메뉴 바*/
+        
+        #navigation-list>ul hr {
+            display: block;
+            width: 90%;
+            color: black;
+            z-index: 999;
+            background: #000;
+        }
+    </style>
+
+
+    <style type="text/css">
+        /*배경*/
+        html,
+        body {
+            margin: 0;
+            padding: 0pt;
+            width: 100%;
+            background: url(../images/bg3.PNG) repeat-x fixed left bottom;
+            z-index: 7;
+            height: 100%;
+        }
+        
+        li {
+            list-style: none;
+        }
+        /*순서를 감춤*/
+        
+        a {
+            text-decoration: none;
+        }
+        /*하이퍼링크 클릭시 나오는 흔적을 감춤*/
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        /*hover : 마우스 오버시 언더라인을 생성 */
+        /*메뉴 배경*/
+        
+        #main_menu {
+            position: fixed;
+            width: 100%;
+            height: 70px;
+            background-color: orangered;
+            line-height: 38px;
+            z-index: 999;
+            top: 0;
+            left: 0;
+        }
+        /*메뉴*/
+        
+        .menu {
+            width: 147px;
+            float: left;
+            text-align: center;
+        }
+        /* 메뉴의 크기 */
+        
+        .menu:hover a {
+            color: white;
+        }
+        /*메뉴에 마우스 오버시 메뉴의 글씨색변경 */
+        
+        .menu a {
+            color: black;
+            font-weight: bold;
+        }
+        /*서브메뉴 글씨색 , 두께*/
+        
+        .sub_menu {
+            padding: 0 0px;
+            /*메뉴바테두리색상*/
+            background: orange;
+            position: relative;
+            display: none;
+        }
+        
+        .sub_menu2 {
+            /*메뉴바테두리색상*/
+            background: orange;
+            display: none;
+            float: left;
+            position: relative;
+        }
+        /*display:none; 서브메뉴 가리기 */
+        
+        .sub_menu2>li:hover {
+            background: #FFE400;
+        }
+        
+        .sub_menu:hover .sub_menu2 {
+            display: inline-block;
+            width: 150px;
+            float: left;
+            position: absolute;
+            margin-left: 40px;
+            margin-top: -1px;
+        }
+        
+        .sub_menu>li:hover {
+            background: #FFE400;
+        }
+        
+        .menu:hover .sub_menu a {
+            color: black;
+        }
+        /*서브메뉴 글씨 색상*/
+        /*서브메뉴 보이게*/
+        
+        .menu:hover .sub_menu {
+            display: block;
+        }
+        /*서브메뉴 보이게*/
+        /*전체*/
+        
+        .cycle-slideshow {
+            width: 130px;
+            height: 130px;
+            position: relative;
+            top: 100px;
+        }
+        
+        .cycle-slideshow img {
+            width: 130px;
+            height: 130px;
+        }
+        
+        #jb-container {
+            width: 70%;
+            margin: 0pt auto;
+            /* 위쪽(상단),아래쪽(하단)의 여백을 0  */
+            margin-top: 67px;
+            /*상단 메뉴만큼 띄어주고 시작*/
+            padding: 20px;
+            /* 안쪽여백 ->테두리 안에서 컨텐츠사이까지의 여백*/
+            z-index: 1;
+        }
+        /*머릿말*/
+        
+        #jb-header {
+            width: 90%;
+            padding: 40px;
+            /* 테두리안에서 2-Column Layout 사이 여백 */
+            margin-bottom: 10px;
+            /* 테두리 밖에서 다른 항목과의 여백 */
+            z-index: 1;
+        }
+        /*본문*/
+        
+        #jb-content {
+            /* content(580px) ,  sidebar(260px)
+		                         여러개의 컨텐츠를 왼쪽을 기준 하나씩 배치
+								 float:left-->float:right를 부여
+		                       */
+            width: 60%;
+            padding: 20px;
+            /* 본문내용과 여백사이의 거리 */
+            margin-bottom: 20px;
+            /*다음의 footer와의 거리 */
+            float: left;
+            /* div태그로 설정된 영역들 사이의 배치->float */
+            z-index: 5;
+        }
+        
+        #table {
+            width: 100%;
+            border:1px solid black;
+        }
+        /*우측 메뉴창*/
+        
+        #jb-sidebar {
+            width: 260px;
+            border: 1px solid black;
+            padding: 20px;
+            margin-bottom: 30px;
+            float: right;
+            z-index: 1;
+        }
+        /*로그인, 회원가입바 색깔*/
+        
+        #jb-sidevar2 {
+            width: 260px;
+            padding: 20px;
+            height: 280px;
+            margin-bottom: 20px;
+            float: right;
+            z-index: 1;
+            border: 1px solid black;
+        }
+        
+        #jb-sidevar3 {
+            float: right;
+            width: 300px;
+            border: 1px solid black;
+        }
+        
+        #jb-sidevar4 {
+            float: right;
+            width: 300px;
+            height: 579px;
+            margin-top: 20px;
+            background: orange;
+            border: 1px solid black;
+        }
+        
+        #dom {
+            margin-left: 0px;
+            margin-top: 5px;
+            height: 200px;
+        }
+        
+        #jb-sidebar li:hover {
+            background: orange;
+            padding: 5px;
+        }
+        
+        #jb-sidebar a {
+            font-size: 14px;
+            color: black;
+        }
+        /*하단*/
+        
+        #jb-footer {
+            /*
+             footer영역을 설정하기위해서는 위의 float의 설정값을 모두 해제
+			 다시 재영역설정-> clear:both
+		   */
+            clear: both;
+            /* 양쪽다 flaot속성 해제 */
+            padding: 10px;
+            height: 30px;
+            border: 1px solid black;
+        }
+        /*	하단글씨체*/
+        
+        #jb-footer p {
+            font-size: 14px;
+            position: relative;
+            font-family: monospace;
+            float: left;
+            left: 60%;
+            color: black;
+            margin-left: 10px;
+        }
+        
+        #jb-content img:hover {
+            opacity: 0.7;
+        }
+        
+        .cycle-slideshow {
+            z-index: 1;
+            margin-left: 65px;
+            margin-top: -75px;
+        }
+        
+        #jb-sidevar2>.b_m img {
+            width: 250px;
+            height: 80px;
+        }
+        
+        #ta1 {
+            width: 150px;
+            height: 150px;
+        }
+        
+        #a0 {
+            /*이미지*/
+            opacity: 1;
+            display: block;
+            transition: .5s ease;
+            backface-visibility: hidden;
+        }
+        
+        .middle {
+            /*div*/
+            transition: .5s ease;
+            opacity: 0;
+            width: 100px;
+            position: relative;
+            top: -30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+        }
+        
+        #ta1:hover #a0 {
+            /*td , 이미지*/
+            opacity: 0.3;
+        }
+        
+        #ta1:hover .middle {
+            /*div*/
+            opacity: 1;
+        }
+        
+        .text {
+            /*텍스트*/
+            background-color: black;
+            opacity: 0.5;
+            color: white;
+            font-size: 13px;
+            text-align: center;
+        }
+        
+        .text-red {
+            color: red;
+        }
+        
+        .text-yello {
+            color: yellow;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="http://malsup.github.com/jquery.cycle2.js"></script>
+
+</head>
+
+
+
+
+
+
+
+<body>
+
+
+    <!--메뉴시작-->
+    <div id="main_menu">
+        <ul>
+            <!--좌측 메뉴 시작-->
+            <li class="menu">
+                <a href="#">HOME</a>
+                <ul class="sub_menu">
+                </ul>
+            </li>
+
+
+            <li class="menu">
+                <a href="#">음료목록</a>
+                <ul class="sub_menu">
+                    <li><a href="#">음료목록</a>
+                        <ul class="sub_menu2">
+                            <li><a href="#">베스트 메뉴</a></li>
+                            <li><a href="#">신메뉴</a></li>
+                            <li><a href="#">생과일 쥬스</a></li>
+                            <li><a href="#">리프레쉬 쥬스</a></li>
+                            <li><a href="#">음료</a></li>
+                            <li><a href="#">커피</a></li>
+                            <li><a href="#">겨울음료</a></li>
+                            <li><a href="#">디저트</a></li>
+                        </ul>
+                        <li>커피목록</li>
+                </ul>
+                </li>
+
+
+                <li class="menu">
+                    <a href="#">회사정보</a>
+                    <ul class="sub_menu">
+                    </ul>
+                </li>
+                <!--좌측 메뉴 끝-->
+
+
+
+
+        </ul>
+    </div>
+    
+    
+    
+     <div id="wrap">
+        <div class="m_menulogo">
+            <header>
+                <span class="menuBtn">
+                                
+                                <img src="../images/b_menu.png" alt="Menu icon" width="40px"
+                            heigh="40px" id="mobliemenu">
+                                </span>
+            </header>
+        </div>
+
+
+        <div id="m_menu">
+            <nav id="navigation-list">
+                <ul>
+                    <li><a href="#item1">Home</a></li>
+                    <hr>
+                    <li><a href="#item2">음료목록</a>
+                        <hr>
+                    </li>
+                    <li><a href="#item3">회사정보</a></li>
+                    <hr>
+                    <li><a href="#item4">로그인</a></li>
+                    <hr>
+                    <li><a href="#item5">회원가입</a></li>
+                    <hr>
+
+
+                </ul>
+            </nav>
+        </div>
+    </div>
+    
+
+
+    <!-- 1.머리말 -->
+    <div id="jb-container">
+        <div id="jb-header">
+            <h1>
+                <center>JUICY</center>
+            </h1>
+            <center><img src="../images/%EC%86%8C%EA%B0%9C.PNG" width="80%" height="30%"></center>
+
+
+        </div>
+
+        <!-- 2.본문 -->
+        <div id="jb-content">
+            <h2>
+                <center>생과일쥬스 목록</center>
+            </h2>
+            <!-- <header>Content</header> -->
+
+
+
+
+
+
+            <table id=table>
+                <tr>
+
+                    <td id="ta1"><img id="a0" style="z" src="../images/z1.png" width="130" height="130" alt="고구마">
+                        <div class="middle">
+                            <div class="text">고구마</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="a1" style="z" src="../images/z2.png" width="130" height="130" alt="오렌지">
+                        <div class="middle">
+                            <div class="text">오렌지</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="a2" style="z" src="../images/z3.png" width="130" height="130" alt="딸기">
+                        <div class="middle">
+                            <div class="text">딸기</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="a3" style="z" src="../images/z4.png" width="130" height="130" alt="딸바">
+                        <div class="middle">
+                            <div class="text">딸바</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ta1"><img id="a4" style="z" src="../images/z6.png" width="130" height="130" alt="망고">
+                        <div class="middle">
+                            <div class="text">망고</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="a5" style="z" src="../images/z5.png" width="130" height="130" alt="땅콩바나나">
+                        <div class="middle">
+                            <div class="text">땅콩바나나</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="a6" style="z" src="../images/z7.png" width="130" height="130" alt="멜론">
+                        <div class="middle">
+                            <div class="text">멜론</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="a7" style="z" src="../images/z8.png" width="130" height="130" alt="ㅇㅇ">
+                        <div class="middle">
+                            <div class="text">믹스베리</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ta1"><img id="a8" style="z" src="../images/z9.png" width="130" height="130" alt="바나나">
+                        <div class="middle">
+                            <div class="text">바나나</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="a9" style="z" src="../images/zz1.png" width="130" height="130" alt="바나나요거트">
+                        <div class="middle">
+                            <div class="text">바나나요거트</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="b1" style="z" src="../images/zz2.png" width="130" height="130" alt="복분자">
+                        <div class="middle">
+                            <div class="text">복분자</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="b2" style="z" src="../images/zz3.png" width="130" height="130" alt="복숭아">
+                        <div class="middle">
+                            <div class="text">복숭아</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ta1"><img id="b3" style="z" src="../images/zz4.png" width="130" height="130" alt="블루베리">
+                        <div class="middle">
+                            <div class="text">블루베리</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="b4" style="z" src="../images/zz5.png" width="130" height="130" alt="블루베리요거트">
+                        <div class="middle">
+                            <div class="text">블루베리요거트</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="b5" style="z" src="../images/zz6.png" width="130" height="130" alt="사과">
+                        <div class="middle">
+                            <div class="text">사과</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="b6" style="z" src="../images/zz7.png" width="130" height="130" alt="수박">
+                        <div class="middle">
+                            <div class="text">수박</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ta1"><img id="b7" style="z" src="../images/zz8.png" width="130" height="130" alt="아보카도">
+                        <div class="middle">
+                            <div class="text">아보카도</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="b8" style="z" src="../images/zz9.png" width="130" height="130" alt="아사이베리">
+                        <div class="middle">
+                            <div class="text">아사이베리</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="b9" style="z" src="../images/zzz1.png" width="130" height="130" alt="오렌지">
+                        <div class="middle">
+                            <div class="text">오렌지</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="c1" style="z" src="../images/zzz2.png" width="130" height="130" alt="오파">
+                        <div class="middle">
+                            <div class="text">오파</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ta1"><img id="c2" style="z" src="../images/zzz3.png" width="130" height="130" alt="자몽">
+                        <div class="middle">
+                            <div class="text">자몽</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="c3" style="z" src="../images/zzz4.png" width="130" height="130" alt="적포도">
+                        <div class="middle">
+                            <div class="text">적포도</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="c4" style="z" src="../images/zzz5.png" width="130" height="130" alt="참외우유">
+                        <div class="middle">
+                            <div class="text">참외우유</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="c5" style="z" src="../images/zzz6.png" width="130" height="130" alt="천도복숭아">
+                        <div class="middle">
+                            <div class="text">천도복숭아</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ta1"><img id="c6" style="z" src="../images/zzz7.png" width="130" height="130" alt="청포도">
+                        <div class="middle">
+                            <div class="text">청포도</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="c7" style="z" src="../images/zzz8.png" width="130" height="130" alt="체리">
+                        <div class="middle">
+                            <div class="text">체리</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="c8" style="z" src="../images/zzz9.png" width="130" height="130" alt="초코바나나">
+                        <div class="middle">
+                            <div class="text">초코바나나</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="c9" style="z" src="../images/zzzz1.png" width="130" height="130" alt="키바">
+                        <div class="middle">
+                            <div class="text">키바</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="ta1"><img id="d1" style="z" src="../images/zzzz2.png" width="130" height="130" alt="키위">
+                        <div class="middle">
+                            <div class="text">키위</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="d2" style="z" src="../images/zzzz3.png" width="130" height="130" alt="토마토">
+                        <div class="middle">
+                            <div class="text">토마토</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="d3" style="z" src="../images/zzzz4.png" width="130" height="130" alt="파인애플">
+                        <div class="middle">
+                            <div class="text">파인애플</div>
+                        </div>
+                    </td>
+
+                    <td id="ta1"><img id="d4" style="z" src="../images/zzzz5.png" width="130" height="130" alt="홍시">
+                        <div class="middle">
+                            <div class="text">홍시</div>
+                        </div>
+                    </td>
+            </table>
+
+
+
+
+
+
+
+
+        </div>
+        <!-- 본문끝 -->
+
+        <!-- jb-sidebar -->
+        <div id="jb-sidebar">
+            <h2>
+                <center>회원 정보창</center>
+            </h2>
+            <ol>
+                <li><a href="#">로그인</a></li>
+                <p>
+                    <li><a href="#">회원가입</a></li>
+            </ol>
+
+        </div>
+
+        <div id="jb-sidevar2">
+
+            <h2 class="b_m">
+                <center><img src="../images/%EB%A9%94%EB%89%B4.PNG"></center>
+            </h2>
+            <div class="cycle-slideshow">
+                <!-- pc용의 화장품이미지를 들어가는 부분 -->
+                <img src="../images/b_%EB%94%B8%EB%B0%94.jpg" alt="sc-3" width="130" height="80">
+                <img src="../images/b_%EC%B4%88%EC%BD%94%EB%B0%94%EB%82%98%EB%82%98.jpg" alt="sc-2" width="130" height="80">
+                <img src="../images/b_%ED%82%A4%EC%9C%84.jpg" alt="sc-1" width="130" height="80">
+
+            </div>
+        </div>
+
+
+        <div id="jb-sidevar3">
+            <article class="at3">
+                <embed id="dom" src="vd/main2.mp4" [width: "450px" height: "300px"]>
+            </article>
+        </div>
+
+        <div id="jb-sidevar4">
+            <center>
+                <H1>
+                    <p class="text-red">JUICY</p>
+                    <p class="text-yello">브랜드</p>
+                </H1>
+                <h3>
+                    <p class="text-red">쥬씨는 매일 신선하고 맛있는<br> 쥬시를 전국어디서나 즐길수 있는
+                        <p class="text-red">최고 생과일 쥬스 브랜드입니다.</p>
+                </h3>
+                <h4>쥬씨는 고객님들과 만나면서,점점 다양해지고 고급스러워지는 고객님들의 입맛에 맛는 메뉴를 합리적인 가격에 대접하기 위해 오늘도 끊임없이 메뉴를 개발하고 있습니다</h4>
+                <h4>
+                    <p class="text-red">고품질 과일을 합리적인 가격</p>에 선보이면서,
+                    <p class="text-red">대한민국을 대표하는 과일 전문 회사</p>성장해 나가겠습니다</h4>
+            </center>
+
+        </div>
+         </div>
+
+        <!-- jb-footer -->
+        <div id="jb-footer">
+            <!-- 하단 -->
+            <p>찾아오시는길</p>
+            <p>엄대현</p>
+            <p><a>tel.01072381025</a></p>
+            <p><a>e.mail.123@222</a></p>
+    </div>
+
+
+
+</body>
+
+</html>

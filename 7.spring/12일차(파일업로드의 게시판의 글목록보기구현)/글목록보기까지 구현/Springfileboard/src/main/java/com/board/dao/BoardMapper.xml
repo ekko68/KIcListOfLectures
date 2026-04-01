@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+    
+<mapper namespace="Board">  
+ 
+ <select id="selectList" parameterType="map" resultType="BoardCommand">
+     select seq,writer,title,content,pwd,hit,regdate,filename
+        from (select  
+                a.*,rownum rnum
+           from (
+               select * from springboard2
+               <where>
+                 <if test="keyWord!=null and keyField=='title'">
+                      title  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='writer'">
+                      writer  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='content'">
+                       content  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='all'">
+                      title  like  '%' || #{keyWord} || '%' or
+                      writer  like  '%' || #{keyWord} || '%' or
+                      content  like  '%' || #{keyWord} || '%' 
+                 </if>
+               </where>
+               order by seq desc) a)
+           <![CDATA[
+                  where rnum >=#{start} and rnum<=#{end}
+            ]]>
+ </select>
+ 
+ <select id="selectCount" parameterType="map" resultType="Integer">
+     select count(*) from springboard2 
+     <where>
+                 <if test="keyWord!=null and keyField=='title'">
+                      title  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='writer'">
+                      writer  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='content'">
+                       content  like  '%' || #{keyWord} || '%'
+                 </if>
+                 <if test="keyWord!=null and keyField=='all'">
+                      title  like  '%' || #{keyWord} || '%' or
+                      writer  like  '%' || #{keyWord} || '%' or
+                      content  like  '%' || #{keyWord} || '%' 
+                 </if>
+           </where>
+ </select>
+ 
+</mapper>
+
+
+
+
+
+
+

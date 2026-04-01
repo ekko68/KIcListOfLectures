@@ -1,0 +1,101 @@
+package bag.handle.sql;
+
+import java.sql.*;
+import java.util.ArrayList;
+import bag.db.data.Customer;
+import bag.jdbc.utill.JdbcUtill;
+
+public class HandleCustomDB {
+	
+	private String sql;
+	
+	private Statement stmt;
+	private ResultSet rs;
+	private PreparedStatement pstm;
+	
+	public ArrayList<Customer> selectAllData(Connection conn) {
+		ArrayList<Customer> customer = new ArrayList<Customer>();
+		String gen;
+		sql = "select * from custom";
+		stmt=null;
+		rs = null;
+		
+		try {
+			stmt = conn.createStatement();
+			rs=stmt.executeQuery(sql);
+
+			while(rs.next()) {
+				if(rs.getString("c_gender").equals("M"))
+					gen="남";
+				else
+					gen="여";
+				
+				 customer.add(new Customer(rs.getInt("c_num"), rs.getString("c_name")
+						,rs.getString("c_tel"), gen ,rs.getInt("c_age"),
+						rs.getString("c_address"),rs.getString("c_coupon")));	
+			}	
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtill.close(rs);
+			JdbcUtill.close(stmt);
+			
+		}
+		return customer;
+	}
+	
+	public void insertData(Connection conn,String custom[]) {
+		sql = "insert into custom values(?,?,?,?,?,?,?)";
+		try {
+			pstm = conn.prepareStatement(sql);
+		
+			pstm.setInt(1, 5);
+			pstm.setString(2, "전지현");
+			pstm.setString(3,"010-2454-2674" );
+			pstm.setString(4, "여");
+			pstm.setInt(5, 32);
+			pstm.setString(6, "서울시 관악구 9동");
+			pstm.setString(7, "3개월 사용권");
+		
+			pstm.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtill.close(pstm);
+		}
+	}
+	
+	public void deleteData(Connection conn ,int num) {
+		sql = "delete from custom where t_num =?";
+		try {		
+			pstm = conn.prepareStatement(sql);	
+			pstm.setInt(1, num);
+			pstm.executeUpdate();
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JdbcUtill.close(pstm);
+		}
+	}
+/*	
+	public void updateData(Connection conn) {
+	      sql = "update custom set t_num=?,t_title=?,t_info=?,t_image=? "
+	            + "where t_num=1";
+	      try {
+	         pstm = conn.prepareStatement(sql);
+	         pstm.setInt(1, 4);
+	         pstm.setString(2, "루이비통 핸드백");
+	         pstm.setString(3, "홍콩 / 22.0 x 18.0 x 10.0 cm " + "(가로x세로x 폭) / 가격: 4,000,000원");
+	         pstm.setString(4, "C:/image/4.jpg");
+
+	         pstm.executeUpdate();
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	         JdbcUtill.close(pstm);
+	         JdbcUtill.close(conn);
+	      }
+	   }*/
+}

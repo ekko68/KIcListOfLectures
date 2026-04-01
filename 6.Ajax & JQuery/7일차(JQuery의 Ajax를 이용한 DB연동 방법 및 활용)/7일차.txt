@@ -1,0 +1,72 @@
+7일차(JQuery의 Ajax를 이용한 DB연동 방법 및 활용)
+
+$(this), this의 차이점
+------------------------
+$(this) =>현재 이벤트가 발생된 객체를 가리키는 용어
+           ex)현재 클릭한 링크문자열 <a><a>~(태그)->엘리먼트(=노드)
+
+this->자바스크립트에서의 객체를 표현->this(자바)
+      "media": {"m":"http:\/\/farm5.staticflickr.com\/4378\/35598584894_f8086ac351_m.jpg
+
+10$.get().html
+
+<people>
+   <person>
+        <name>홍길동</name>
+        <job>학생</job>
+        <age>23</age>
+   </person>
+   <person>
+        <name>테스트</name>
+        <job>웹프로그래머</job>
+        <age>21</age>
+   </person>
+
+<items>
+   <item id="1" name="레몬"> ==>xml파일을 파싱(속성값을 불러오기)
+    <price>3000</price>
+     <description>피로회복에 좋고 비타민C 풍부
+     </description>
+   </item>
+----------------------------------------------------------------------------- 
+  <item id="2" name="키위">
+    <price>2000</price>
+     <description>비타민C 풍부 다이어트와 미용에 좋다
+     </description>
+   </item>
+  
+=>11$.getScript().html 
+
+//id값에 해당하는 데이터를 검색->담을 수 있는 메서드작성
+	public List<String> getArticleId(String name){
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<String> nameList=new ArrayList();//찾고자하는 id값만 담을 객체
+		String sql="";
+		
+		try {
+			con = pool.getConnection();
+			sql = "select writer from board where writer like '%"+name+"%'";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {//찾은 작성자id가 있다면
+				String writer=rs.getString("writer");
+				nameList.add(writer);
+			}
+		} catch (Exception e) {
+			System.out.println("getArticleId()에러유발" + e);
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return nameList;
+	}
+========================================
+
+
+
+
+
+
+

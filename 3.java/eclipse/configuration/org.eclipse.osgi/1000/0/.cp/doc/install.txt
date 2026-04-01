@@ -1,0 +1,36 @@
+Quick and Dirty Install Instructions:
+
+1. First, ensure that you have installed Eclipse.
+   
+2. Download Quantum.  Currently, there are two versions of the Quantum binary.
+   One works with Eclipse 2.x, and the other works with Eclipse 3.0.  Select
+   the version that suits your environment.
+
+3. Unzip quantum into the parent directory of eclipse [e.g. C:\eclipse]. The 
+   zip file has the relative path eclipse/plugins/com.quantum.Quantum_2.4.4 
+   So if you have called the eclipse directory by any other name you should 
+   unzip into a temporary directory, take the com.quantum.Quantum_2.4.4 directory,
+   and copy it into your plugins directory.
+   
+4. Launch eclipse. 
+   
+5. Open the Quantum DB Perspective 
+   [Go to Windows -> Open Perspective -> Other and select Quantum DB Perspective]
+   
+        If you don't see the QuantumDB Perspective in the list, you may
+        have a FAT file system.  Follow instructions in the Eclipse readme
+        file found in (for example): $ECLIPSE_HOME/readme/readme_eclipse.html
+   
+   
+6. Right click any where on the Bookmark view and select "New Bookmark..."
+
+7. If you need more instructions, check the documentation online documentation 
+   in the sourceforge page (http://sourceforge.net/docman/?group_id=7746).
+
+
+
+Other Notes:
+   
+-  If you update to Quantum 2.4.4 from significantly earlier versions, you may get 
+   warnings about not being able to restore some views.  Close your Quantum perspective 
+   and re-open it.

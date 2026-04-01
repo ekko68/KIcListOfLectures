@@ -1,0 +1,21 @@
+package bag.lend.controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import bag.design.page.MainPage;
+
+
+public class Controller implements ActionListener{
+	
+	private MainPage mainPage;
+	
+	public Controller() {
+		mainPage = new MainPage();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+}

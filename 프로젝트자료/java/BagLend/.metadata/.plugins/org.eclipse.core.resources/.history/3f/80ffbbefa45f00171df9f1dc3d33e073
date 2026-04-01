@@ -1,0 +1,30 @@
+package bag.handle.sql;
+
+import java.sql.*;
+import bag.db.data.Coupon;
+
+public class HandleCouponDB {
+
+	private String sql;
+	private Statement stmt;
+	private ResultSet rs;
+	
+	public String selectAllData(Connection conn){
+	
+		sql="select coupon_num from custom c, coupon p where c.coupon_num =p.coupon_num";
+		stmt=null;
+		rs=null;
+		try {
+			stmt=conn.createStatement();
+			rs=stmt.executeQuery(sql);
+			
+	
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+		
+	}
+}

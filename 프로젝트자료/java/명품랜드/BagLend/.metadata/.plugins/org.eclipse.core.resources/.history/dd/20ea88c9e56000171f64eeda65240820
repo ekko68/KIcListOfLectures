@@ -1,0 +1,24 @@
+import bag.db.data.Product;
+import bag.get.connection.MakeConnection;
+import bag.handle.sql.HandleProductDB;
+
+public class BagLend {
+
+	public static void main(String[] args) {
+		
+	//	new MainPage();
+		HandleProductDB db = new HandleProductDB();
+		
+		Product product = new Product();
+		
+		product.setNum(1);
+		product.setImage("2");
+		product.setInfo("3");
+		product.setState("�̴뿩");
+		product.setTitle("5");
+		
+		db.insertProduct(MakeConnection.getInstance(),product);
+		
+
+	}
+}

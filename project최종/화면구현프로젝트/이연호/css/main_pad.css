@@ -1,0 +1,124 @@
+@CHARSET "UTF-8";
+/* tab/pad 용 CSS */
+	
+/* 기본 폭 */
+#wrapper{width:760px}
+
+#mfmHeadWrap{
+	height:70px;
+	position:fixed;
+	padding-top:10px; 
+	background-color:#fff;
+	z-index:100;
+	width:900px;
+   
+   /* chrome 영상 & css - fixed & 스크롤에서 fixed위치(상하떨림) 및 잔상 버그처리 */
+	-webkit-backface-visibility:hidden;
+	-webkit-transform:translateZ(0)
+   /* //chrome 영상 & css - fixed & 스크롤에서 fixed위치(상하떨림) 및 잔상 버그처리 */
+}
+#mfmHead>h1{width:350px;float:left}
+
+#mfmServiceLogo{
+	font-family:HanSans;
+	font-weight:bold;
+	font-size:36px;
+	color:#333
+}
+/* #mfmGnb>ul{float:right;padding-top:5px;} */
+#mfmGnb>ul{padding-top:5px}
+#mfmGnb>ul>li{float:left;margin-left:20px}
+
+#mfmContent{padding-top:44px}
+#mfmContent .main{height:480px}
+.main p{
+	margin-top:380px;
+	margin-left:20px;
+	z-index:9;	    
+	position:absolute;	    
+	font-size:20pt
+}
+#main_morning{display:block}
+#main_morning_poster{display:none}
+
+/* 게시판 */
+.board{
+	width:640px;
+	height:246px;
+	margin:0 auto;
+	margin-top:22px
+}
+   
+   
+.board>div{
+	width:260px;
+	height:230px;
+	float:left
+}
+.board>div>p{
+	color:#333;
+	font-size:18px;
+	text-align:center;
+	margin-top:15px;
+	font-weight:bold
+}
+.board ul{
+	/*말줄임표 추가*/
+	width:270px;text-overflow:ellipsis;white-space:nowrap; /*overflow:hidden;*/
+	font-size:15px;
+	line-height:1.7em;
+	margin-top:5px;
+	margin-left:40px;
+	-moz-binding:url(../lib/moz_ellipsis/ellipsis.xml);
+	-o-text-overflow:ellipsis; -ms-text-overflow:ellipsis;
+	margin-bottom:8px
+}
+   /* 게시판 > 고객문의 */
+   .board>div:nth-last-child(1){float:right}
+      
+/* .board div:first-child, .board>div:nth-last-child(1){width:30%; height:228px; margin:0 auto;} */
+
+  /* 게시판 자세히*/
+  .more_board_news{
+  	width:150px;
+	font-size:16px;
+	line-height:2em;
+	border-top-left-radius:4px;
+	border-top-right-radius:4px;
+	border-bottom-right-radius:4px;
+	border-bottom-left-radius:4px
+}
+ 
+  /* 주문 - 제품목록*/
+.wrap_product{margin-left:24px}
+.products, .products > div{width:760px;height:880px}
+.products ul{width:780px;height:50px}
+
+/* footer */
+footer{
+	width:760px;
+	height:60px;
+	margin-top:40px;
+	font-size:10pt;
+	padding-top:17px;
+	margin-bottom:22px
+}
+footer p:first-child{
+	width:125px;
+	font-size:12pt;
+	float:left
+}
+footer *{
+	float:left;
+	margin-left:15px;
+	line-height:18pt
+}
+footer p:last-child{
+	margin-left:20px;
+	font-weight:bold
+}
+   
+hr{
+	margin:20px 0; /* 기본 마진, 가운데 정렬 */
+	margin-bottom:35px /* 추가 마진 */
+}

@@ -1,0 +1,18 @@
+<h1>폼데이터를 검증(내장검증기를 이용)</h1>
+아이디:<input type="text" name="userid" 
+            required pattern="[a-z][a-zA-Z0-9]{1,5}" 
+            [(ngModel)]="user.userid" #xxx="ngModel">
+<span *ngIf="xxx.invalid">아이디는 필수 입력입니다.</span><br>
+<p>1.xxx.value:{{xxx.value}}</p> 
+<p>2.xxx.valid:{{xxx.valid}}</p>
+<p>3.xxx.invalid:{{xxx.invalid}}</p>
+<p>4.xxx.untouched:{{xxx.untouched}}</p>
+<p>5.xxx.touched:{{xxx.touched}}</p>
+<p>6.xxx.pristine:{{xxx.pristine}}</p>
+<p>7.xxx.dirty:{{xxx.dirty}}</p>
+<p>8.xxx.errors:{{xxx.errors}}</p>
+
+비밀번호:<input type="text" name="passwd" 
+              required minlength="3" maxlength="5" 
+[(ngModel)]="user.passwd" #passwd="ngModel">
+<span *ngIf="passwd.invalid">비번은 3~5 글자를 입력해야 됩니다.</span><br>

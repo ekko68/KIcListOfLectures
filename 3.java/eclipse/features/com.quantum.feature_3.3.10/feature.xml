@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.quantum.feature"
+      label="com.quantum.feature"
+      version="3.3.10"
+      provider-name="quantum.sourceforge.net">
+   <install-handler library=""/>
+
+   <description url="http://quantum.sourceforge.net">
+      QuantumDB is a simple but powerful database access plug-in for
+the Eclipse Development Platform. QuantumDB allows you to:
+&lt;li&gt; Connect to databases using standard JDBC drivers&lt;/li&gt;
+&lt;li&gt; Review schemas, tables, views and sequences&lt;/li&gt;
+&lt;li&gt; Look up column, index and foreign key information&lt;/li&gt;
+&lt;li&gt; Issue ad-hoc queries or other SQL statements against the
+database&lt;/li&gt;
+&lt;li&gt; Manage, edit, and work with SQL files (*.sql)&lt;/li&gt;
+&lt;li&gt; Issue updates, deletes, and inserts using simple, easy-to-use
+wizards&lt;/li&gt;
+   </description>
+
+   <copyright>
+      Copyright (c) 2000-2005 Quantum DB developers.
+All rights reserved.   This program and the accompanying materials
+are made available under the terms of the Common Public License
+v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/cpl-v10.html
+
+Copyright of the beanshell library belongs to its developers.
+See http://www.beanshell.org for more details.
+   </copyright>
+
+   <license url="http://www.eclipse.org/legal/cpl-v10.html">
+      Common Public License - v 1.0
+See http://www.eclipse.org/legal/cpl-v10.html for more details.
+   </license>
+
+   <url>
+      <update label="Quantum DB Update Site" url="http://quantum.sourceforge.net/update-site/"/>
+      <discovery label="Quantum DB Update Site" url="http://quantum.sourceforge.net/update-site/"/>
+   </url>
+
+   <includes
+         id="com.quantum.beanshell.feature"
+         version="3.3.10"
+         name="Beanshell view"
+         optional="true"/>
+
+   <includes
+         id="com.quantum.dbunit.feature"
+         version="3.3.10"
+         name="Export to dbunit"
+         optional="true"/>
+
+   <includes
+         id="com.quantum.derby.feature"
+         version="3.3.10"
+         name="Derby database to play with"
+         optional="true"/>
+
+   <includes
+         id="com.quantum.erd.feature"
+         version="3.3.10"
+         name="Graphical Entity-Relationship editor"
+         optional="true"/>
+
+   <includes
+         id="com.quantum.flatfiles.feature"
+         version="3.3.10"
+         name="Exports to several flat-file formats"
+         optional="true"/>
+
+   <includes
+         id="com.quantum.help.feature"
+         version="3.3.10"
+         name="Help System"
+         optional="true"/>
+
+   <requires>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.ui.views.properties.tabbed"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.jface"/>
+   </requires>
+
+   <plugin
+         id="com.quantum.Quantum"
+         download-size="2700"
+         install-size="2700"
+         version="3.3.10"
+         unpack="false"/>
+
+   <plugin
+         id="com.quantum.log"
+         download-size="500"
+         install-size="500"
+         version="3.3.10"
+         unpack="false"/>
+
+</feature>

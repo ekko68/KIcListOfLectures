@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Created-By: 1.8.0_102 (Oracle Corporation)
+
+Name: epl-v10.html
+SHA-256-Digest: B8vbcJzDtm5Rzo8EPTeNKgeLMCWtxfXVoS9g3sHnIxk=
+
+Name: feature.xml
+SHA-256-Digest: +NO4QW2I5K7wJzqEMHEaum370blTtb6iKPw9jCt0rug=
+
+Name: eclipse_update_120.jpg
+SHA-256-Digest: Hz0atd2kr+i4cvgLVlm8vrN9olKs5NgxwdDxTuA9N2k=
+
+Name: feature.properties
+SHA-256-Digest: MgfXoB/ismEh8NKqMO5ZUlZSY+LWu+iUt0yn8BbijM0=
+
+Name: license.html
+SHA-256-Digest: X315zLynvdLZ4DaYSopgxruQUUEadA3FOPNviC+YO24=
+

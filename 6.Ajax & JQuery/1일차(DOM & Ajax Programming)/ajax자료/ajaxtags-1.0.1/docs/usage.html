@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><title>AjaxTags - Usage</title><style type="text/css" media="all">
+          @import url("./style/maven-base.css");
+          
+			    @import url("./style/maven-theme.css");</style><link rel="stylesheet" href="./style/print.css" type="text/css" media="print"></link><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta><meta name="author" content="Darren L. Spurgeon"></meta><meta name="email" content="kalitai@yahoo.com"></meta></head><body class="composite"><div id="banner"><a href="http://ajaxtags.sourceforge.net" id="projectLogo"><span>AjaxTags</span></a><div class="clear"><hr></hr></div></div><div id="breadcrumbs"><div class="xleft">
+                	Last published: 11 August 2005 22:37 EDT
+                  | Doc for 1.0.1</div><div class="xright">
+        
+        <a href="http://ajaxtags.no-ip.info/" class="externalLink" title="External Link">AjaxTags Live Demo</a>
+      </div><div class="clear"><hr></hr></div></div><div id="leftColumn"><div id="navcolumn"><div id="menuOverview"><h5>Overview</h5><ul><li class="none"><a href="index.html">Home</a></li><li class="none"><a href="quickstart.html">Quick Start</a></li><li class="none"><a href="install.html">Installation</a></li><li class="expanded"><a href="usage.html">Tag Reference</a><ul><li class="none"><a href="usage.html#ajax:autocomplete">ajax:autocomplete</a></li><li class="none"><a href="usage.html#ajax:callout">ajax:callout</a></li><li class="none"><a href="usage.html#ajax:select">ajax:select</a></li><li class="none"><a href="usage.html#ajax:toggle">ajax:toggle</a></li><li class="none"><a href="usage.html#ajax:updateField">ajax:updateField</a></li></ul></li><li class="none"><a href="advanced.html">Advanced Usage</a></li><li class="none"><a href="ajaxlinks.html">Ajax Links &amp; Resources</a></li></ul></div><div id="menuDownloads"><h5>Downloads</h5><ul><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=140499" class="externalLink" title="External Link">Binaries</a></li><li class="none"><a href="http://sourceforge.net/project/showfiles.php?group_id=140499" class="externalLink" title="External Link">Source</a></li><li class="none"><a href="release-notes.txt">Release Notes</a></li></ul></div><div id="menuProject_Documentation"><h5>Project Documentation</h5><ul><li class="none"><a href="index.html">About AjaxTags</a></li><li class="collapsed"><a href="project-info.html">Project Info</a></li><li class="collapsed"><a href="maven-reports.html">Project Reports</a></li><li class="none"><a href="http://maven.apache.org/development-process.html" class="externalLink" title="External Link">Development Process</a></li></ul></div><div><ul><li class="none"><a href="http://www.sourceforge.net/projects/ajaxtags" class="externalLink" title="External Link"><img title="SourceForge.net" style="border: 1px" src="http://sourceforge.net/sflogo.php?group_id=120046&amp;type=1" alt="SourceForge.net"></img></a></li></ul></div><a href="http://maven.apache.org/" title="Built by Maven" id="poweredBy"><img alt="Built by Maven" src="./images/logos/maven-button-1.png"></img></a></div></div><div id="bodyColumn"><div class="contentBox"><div class="section"><a name="Usage"></a><h2>Usage</h2><div class="subsection"><a name="ajax:select"></a><h3>ajax:select</h3><p>
+          The select tag allows one to retrieve a list of values from a
+          backend servlet (or other server-side control) and display
+          them in another HTML select box.
+        </p>
+    <div class="source"><pre>
+&lt;form&gt;
+  Make:
+  &lt;select id="make" name="make"&gt;
+    &lt;option value=""&gt;Select make&lt;/option&gt;
+    &lt;c:forEach items="${makes}" var="make"&gt;
+      &lt;option value="${make}"&gt;${make}&lt;/option&gt;
+    &lt;/c:forEach&gt;
+  &lt;/select&gt;
+
+  Model:
+  &lt;select id="model" name="model"&gt;
+    &lt;option value=""&gt;Select model&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/form&gt;
+
+&lt;ajax:select
+  fieldId="make"
+  targetId="model"
+  baseUrl="${pageContext.request.contextPath}/GetCarModel.view"
+  paramName="make"
+  postFunc="doOtherThings"/&gt;
+        </pre></div>
+  <p>
+          <strong>Note: Tag must appear AFTER the web form.</strong>
+        </p><table class="bodyTable"><thead>
+            <tr class="a"><th>Parameter</th><th>Description</th><th>Required</th></tr>
+          </thead><tbody>
+            <tr class="b"><td>fieldId</td><td>
+                The initial select field that will form the basis for
+                the search via AJAX
+              </td><td>yes</td></tr>
+            <tr class="a"><td>targetId</td><td>
+                Select field where value of AJAX search will be
+                populated
+              </td><td>yes</td></tr>
+            <tr class="b"><td>baseUrl</td><td>
+                URL of server-side action or servlet that processes
+                search and returns list of values used in target select
+                field; expression language (EL) is supported for this field
+              </td><td>yes</td></tr>
+            <tr class="a"><td>paramName</td><td>
+                Name of parameter used to pass search string to
+                server-side action or servlet
+              </td><td>yes</td></tr>
+            <tr class="b"><td>emptyLabel</td><td>Message displayed when no results are returned</td><td>no</td></tr>
+            <tr class="a"><td>emptyValue</td><td>
+                Value to hold in target select field when no results are
+                returned
+              </td><td>no</td></tr>
+            <tr class="b"><td>postFunc</td><td>
+                Function to execute after Ajax is finished, allowing for
+                a chain of additional functions to execute
+              </td><td>no</td></tr>
+          </tbody></table></div><div class="subsection"><a name="ajax:toggle"></a><h3>ajax:toggle</h3><p>
+          The toggle tag will change the value of a hidden form field between true and false, toggle
+          an image between two source files, and replace the inner HTML content of another tag
+          (div, span, etc).
+        </p>
+    <div class="source"><pre>
+&lt;img id="watched" src="images/off.gif" /&gt;
+
+&lt;div id="watchedResponseContainer"&gt;Status is currently:
+  &lt;span id="watchedResponse"&gt;off&lt;/span&gt;
+&lt;/div&gt;
+
+&lt;form&gt;
+  &lt;input type="hidden" id="watchedStatus" /&gt;
+&lt;/form&gt;
+
+&lt;ajax:toggle
+  imageId="watched"
+  targetId="watchedResponse"
+  stateId="watchedStatus"
+  baseUrl="${contextPath}/ToggleSwitch.view"
+  paramName="state"
+  imageOn="${pageContext.request.contextPath}/images/on.gif"
+  imageOff="${pageContext.request.contextPath}/images/off.gif" /&gt;
+        </pre></div>
+  <p>
+          <strong>Note: Tag must appear AFTER the web form.</strong>
+        </p><table class="bodyTable"><thead>
+            <tr class="a"><th>Parameter</th><th>Description</th><th>Required</th></tr>
+          </thead><tbody>
+            <tr class="b"><td>imageId</td><td>Image tag ID that will be toggled on/off</td><td>yes</td></tr>
+            <tr class="a"><td>targetId</td><td>ID of div tag used to show HTML/text response, if any</td><td>yes</td></tr>
+            <tr class="b"><td>stateId</td><td>ID of hidden form field used to hold the current state</td><td>yes</td></tr>
+            <tr class="a"><td>baseUrl</td><td>
+                URL of server-side action or servlet that processes a simple command from a toggle
+                action; responds with a single option value and label
+              </td><td>yes</td></tr>
+            <tr class="b"><td>paramName</td><td>
+                Name of parameter used to pass search string to server-side action or servlet
+              </td><td>yes</td></tr>
+            <tr class="a"><td>imageOn</td><td>URL of image used to indicate ON status</td><td>yes</td></tr>
+            <tr class="b"><td>imageOff</td><td>URL of image used to indicate OFF status</td><td>yes</td></tr>
+            <tr class="a"><td>postFunc</td><td>
+                Function to execute after Ajax is finished, allowing for
+                a chain of additional functions to execute
+              </td><td>no</td></tr>
+            <tr class="b"><td>emptyFunc</td><td>Function to execute if there is an empty response</td><td>no</td></tr>
+            <tr class="a"><td>errorFunc</td><td>Function to execute if there is a server exception (non-200 HTTP response)</td><td>no</td></tr>
+          </tbody></table></div><div class="subsection"><a name="ajax:updateField"></a><h3>ajax:updateField</h3><p>
+          Builds the JavaScript required to update one or more form fields based on the value of
+          another single field.
+        </p>
+    <div class="source"><pre>
+&lt;form&gt;
+  &lt;fieldset&gt;
+  &lt;legend&gt;Velocity Conversion&lt;/legend&gt;
+  &lt;label for="mph"&gt;Miles/Hour (mph)&lt;/label&gt;
+  &lt;input type="text" id="mph" /&gt;
+  &lt;input id="action" type="button" value="Go"/&gt;
+
+  &lt;label for="kph"&gt;Kilometers/Hour (kph)&lt;/label&gt;
+  &lt;input type="text" id="kph" /&gt;
+
+  &lt;label for="mps"&gt;Meters/Second (m/s)&lt;/label&gt;
+  &lt;input type="text" id="mps" /&gt;
+  &lt;/fieldset&gt;
+&lt;/form&gt;
+
+&lt;ajax:updateField
+  sourceId="mph"
+  targetId="kph,mps"
+  actionId="action"
+  baseUrl="${pageContext.request.contextPath}/ConvertMPH.view"
+  paramName="mph" /&gt;
+        </pre></div>
+  <p>
+          <strong>Note: Tag must appear AFTER the web form.</strong>
+        </p><table class="bodyTable"><thead>
+            <tr class="b"><th>Parameter</th><th>Description</th><th>Required</th></tr>
+          </thead><tbody>
+            <tr class="a"><td>sourceId</td><td>The form field that will hold the parameter passed to the servlet</td><td>yes</td></tr>
+            <tr class="b"><td>targetId</td><td>A comma-delimited list of form field IDs that will be populated with results</td><td>yes</td></tr>
+            <tr class="a"><td>actionId</td><td>ID of form button or image tag that will fire the onclick event</td><td>yes</td></tr>
+            <tr class="b"><td>baseUrl</td><td>
+                URL of server-side action or servlet that processes a simple command
+              </td><td>yes</td></tr>
+            <tr class="a"><td>paramName</td><td>
+                Name of parameter used to pass search string to server-side action or servlet
+              </td><td>yes</td></tr>
+            <tr class="b"><td>postFunc</td><td>
+                Function to execute after Ajax is finished, allowing for
+                a chain of additional functions to execute
+              </td><td>no</td></tr>
+            <tr class="a"><td>emptyFunc</td><td>Function to execute if there is an empty response</td><td>no</td></tr>
+            <tr class="b"><td>errorFunc</td><td>Function to execute if there is a server exception (non-200 HTTP response)</td><td>no</td></tr>
+          </tbody></table></div><div class="subsection"><a name="ajax:autocomplete"></a><h3>ajax:autocomplete</h3><p>
+          The autocomplete tag allows one to retrieve a list of probable
+          values from a backend servlet (or other server-side control)
+          and display them in a dropdown beneath an HTML text input
+          field. The user may then use the cursor and ENTER keys or the
+          mouse to make a selection from that list of labels, which is
+          then populated into the text field. This JSP tag also allows
+          for a second field to be populated with the value or ID of the
+          item in the dropdown.
+        </p>
+    <div class="source"><pre>
+&lt;form&gt;
+  Name: &lt;input id="email" name="email" type="text" autocomplete="off" size="20" /&gt;
+  Email: &lt;input id="email-id" name="email-id" type="text" size="30" /&gt;
+&lt;/form&gt;
+
+&lt;ajax:autocomplete
+  fieldId="email"
+  popupId="email-popup"
+  targetId="email-id"
+  baseUrl="${pageContext.request.contextPath}/GetEmail.view"
+  paramName="s"
+  className="autocomplete"
+  postFunc="doOtherThings" /&gt;
+        </pre></div>
+  <p>
+          <strong>Note: Tag must appear AFTER the web form.</strong>
+        </p><table class="bodyTable"><thead>
+            <tr class="a"><th>Parameter</th><th>Description</th><th>Required</th></tr>
+          </thead><tbody>
+            <tr class="b"><td>fieldId</td><td>
+                Text field where label of autocomplete selection will be
+                populated; also the field in which the user types out
+                the search string
+              </td><td>yes</td></tr>
+            <tr class="a"><td>popupId</td><td>
+                ID of div tag used to show available choices in
+                autocomplete
+              </td><td>yes</td></tr>
+            <tr class="b"><td>targetId</td><td>
+                Text field where value of autocomplete selection will be
+                populated
+              </td><td>yes</td></tr>
+            <tr class="a"><td>baseUrl</td><td>
+                URL of server-side action or servlet that processes
+                search and returns list of values used in autocomplete
+                dropdown; expression language (EL) is supported for this field
+              </td><td>yes</td></tr>
+            <tr class="b"><td>paramName</td><td>
+                Name of parameter used to pass search string to
+                server-side action or servlet
+              </td><td>yes</td></tr>
+            <tr class="a"><td>className</td><td>
+                CSS class name to apply to the popup autocomplete
+                dropdown
+              </td><td>yes</td></tr>
+            <tr class="b"><td>postFunc</td><td>
+                Function to execute after Ajax is finished, allowing for
+                a chain of additional functions to execute
+              </td><td>no</td></tr>
+            <tr class="a"><td>progressStyle</td><td>
+                Used to define a CSS style that places an icon in the
+                input field
+              </td><td>no</td></tr>
+          </tbody></table></div><div class="subsection"><a name="ajax:callout"></a><h3>ajax:callout</h3><p>
+          The callout tag is an easy way to attach a callout or popup balloon to any HTML element
+          supporting an onclick event.  The style of this callout is fairly flexible, but generally
+          has a header/title, a close link ('X'), and the content itself, of course.
+        </p>
+    <div class="source"><pre>
+&lt;!-- Callout placeholder; only need one --&gt;
+&lt;div id="calloutContainer"/&gt;
+
+&lt;div&gt;
+  &lt;p&gt;
+    Anytime you want to see a word's &lt;a href="javascript://nop/" id="definition"&gt;definition&lt;/a&gt;,
+    just click on the unknown word.
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;ajax:callout
+  anchorId="definition"
+  classNamePrefix="callout"
+  baseUrl="${contextPath}/GetInfo.view"
+  paramName="q"
+  paramValue="definition"
+  boxPosition="bottom right"
+  title="Definition" /&gt;
+        </pre></div>
+  <p>
+          <strong>
+          Two very important points to keep in mind:<br></br>
+          <ul>
+            <li>Tag must appear AFTER the web form.</li>
+            <li>
+              You must include a generic DIV tag to act as the container for all popups.  This is
+              primarily to get around an IE bug/feature that (in some cases) prevents inserting DOM
+              elements after the webpage loads.
+            </li>
+          </ul>
+          </strong>
+        </p><table class="bodyTable"><thead>
+            <tr class="b"><th>Parameter</th><th>Description</th><th>Required</th></tr>
+          </thead><tbody>
+            <tr class="a"><td>anchorId</td><td>The HTML element to hook the callout to via it's onclick event</td><td>yes</td></tr>
+            <tr class="b"><td>classNamePrefix</td><td>
+                CSS class name prefix to use for the callout's 'Box', 'Close', and 'Content'
+                elements
+              </td><td>yes</td></tr>
+            <tr class="a"><td>baseUrl</td><td>
+                URL of server-side action or servlet that processes
+                search and returns list of values used in autocomplete
+                dropdown; expression language (EL) is supported for this field
+              </td><td>yes</td></tr>
+            <tr class="b"><td>paramName</td><td>
+                Name of parameter used to pass search string to
+                server-side action or servlet
+              </td><td>no</td></tr>
+            <tr class="a"><td>paramValue</td><td>Value of query parameter to pass to server-side action or servlet</td><td>yes (only if paramName specified)</td></tr>
+            <tr class="b"><td>boxPosition</td><td>
+                Position of callout relative to anchor (e.g., 'top-left', 'top-right' [default],
+                'bottom-left', or 'bottom-right')
+              </td><td>no</td></tr>
+            <tr class="a"><td>useTitleBar</td><td>Indicated whether the title bar should be rendered. Defaults to false.</td><td>no</td></tr>
+            <tr class="b"><td>title</td><td>
+                Title for callout's box header. If <code>useTitleBar==false</code> and no title is
+                specified, then the <code>value</code> attribute of the returned XML will be used as
+                the title.
+              </td><td>no</td></tr>
+            <tr class="a"><td>timeout</td><td>
+                Timeout setting for callout in milliseconds. No timeout will be used by default.
+              </td><td>no</td></tr>
+            <tr class="b"><td>postFunc</td><td>
+                Function to execute after Ajax is finished, allowing for
+                a chain of additional functions to execute
+              </td><td>no</td></tr>
+            <tr class="a"><td>emptyFunc</td><td>Function to execute if there is an empty response</td><td>no</td></tr>
+            <tr class="b"><td>errorFunc</td><td>Function to execute if there is a server exception (non-200 HTTP response)</td><td>no</td></tr>
+          </tbody></table></div></div></div></div><div class="clear"><hr></hr></div><div id="footer"><div class="xright">© 2005, Darren L. Spurgeon</div><div class="clear"><hr></hr></div></div></body></html>

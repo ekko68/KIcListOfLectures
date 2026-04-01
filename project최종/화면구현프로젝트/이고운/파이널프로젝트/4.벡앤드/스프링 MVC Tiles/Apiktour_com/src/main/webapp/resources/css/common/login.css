@@ -1,0 +1,68 @@
+@charset "utf-8";
+/* @import url('base.css');
+@import url('reset.css'); */
+
+
+.close_btn{display:block; width:60px; height:20px; float:right; text-align: center; margin-top: 10px;}
+
+.register{ margin-top: 25px;}
+
+/* buttonStyle */
+.btn1 {
+    display: inline-block;
+    min-width: 150px;
+    padding: 15px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #fff;
+    background-color: #65b0ec;
+    font-size: 16px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Login */
+.titbox{padding:10px}
+.titbox.case1{max-width:300px;padding:30px;margin:0 auto;line-height:1.2}
+.titbox h2{font-size:26px}	
+.logincheck{margin-bottom:15px}
+.logincheck label{display: inline-block;position:relative;padding-left:30px;line-height:23px;color:#888;cursor:pointer}
+.logincheck input[type="checkbox"] {display:none}
+.logincheck label:before {
+	content:"";
+	display:inline-block;
+	width:23px;
+	height:23px;
+	position:absolute;
+	left:0; bottom:0;
+	background:url(../images/icon/icon_logincheck.png) 0 0 no-repeat;
+}
+.logincheck input[type="checkbox"]:checked + label:before {background-position:0 bottom}
+.contents.member{padding-top:0;padding-bottom:0}
+.memberbox {border-top:2px solid #3c3c3c;/*border-bottom:1px solid #3c3c3c;*/padding:30px 0;margin-bottom:10px;width: 90%; margin: 0 auto;}
+.loginbox {width:100%;max-width:420px;margin:0 auto}
+.loginbox p:first-child + p{margin-bottom:20px}
+.loginbox input {
+	position:relative;
+	width:100%;
+	height:50px;
+	margin-top:-1px;
+	background-position:20px center;
+	background-repeat:no-repeat;
+	text-indent:50px;
+	box-sizing:border-box;
+}
+.loginbox input.icon_id {background-image:url(../images/icon/icon_id.png)}
+.loginbox input.icon_pw {background-image:url(../images/icon/icon_pw.png)}
+.loginbox input:focus {	z-index:1;	border-color:#333;	outline:0}
+.loginbox input:focus::-webkit-input-placeholder {color:#333}
+.loginbox input:focus:-moz-placeholder {color:#333}
+.loginbox input:focus::-moz-placeholder {color: #333}
+.loginbox input:focus:-ms-input-placeholder {color:#333}
+.loginbox .btn1 {	width:100%;margin-bottom:10px;box-sizing:border-box}
+.login_txt p{ font-size: 14px;padding-bottom: 5px;}
+.login_txt a{font-size:12px; font-size:0.72rem;color:#65b0ec;border-bottom:1px solid #65b0ec}
+
+
+

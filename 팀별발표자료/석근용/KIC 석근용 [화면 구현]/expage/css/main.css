@@ -1,0 +1,94 @@
+/* main Css */
+/*span*/
+/*span { font-family: impact; font-weight: bold; font-size: 9pt; color:black; background-color:#ccffff; }*/
+span { display:none;}
+
+/*body*/
+body {margin:0px 0px 0px 0px;}
+/*화면 배경인 video가 화면을 줄였을 때, 프레임 밖으로 나가는것을 막기위해, margin을 0px로 주었다.*/
+section.phone{display:none;}
+/*pc 화면일때 phone CSS 감추기 */
+
+/*all container*/
+div.all_container { max-width: 1400px; max-height:5000px; position:relative; border:5px solid white; margin:0 auto;}
+div.all2_container { max-width: 1400px; max-height:3000px; position:relative; border:3px solid white; margin:0 auto;}
+  /*큰 컨테이너로 body전체의 느낌을 주었고, header와 footer 이외의 속성은 작업하기 쉽도록, 작은 컨테이너를 둘러쌓아주었다.
+또한, 화면이 작게 줄더라도 반응적이게 크기가 줄어들 수 있도록, max-width 값을 주었고, 가운데 정렬을 위해 margin값을 0 auto로 주었다.*/
+div.store_container {max-width: 1400px;height:400px; position:relative;}
+
+/*header*/
+header.main_header { max-width: 1400px; height:500px; position:relative; border:2px solid white;}
+section.header_text { width:400px; height:100px; position:absolute; bottom: 150px; left:20px; color:white;}
+/*
+헤더의 너비를 웹페이지에 꽉 차고, 유동적이게 변할 수 있도록 최대 너비를 1400px으로 맞춰줌.
+헤더안의 텍스트가 들어있는 section은 화면의 크기가 변해도 위치가 변하지 않도록 position을 absolute로 설정*/
+
+/*nav-left*/
+div.nav_container { display:block; width:250px; height: 260px; position:fixed; background-color:#ff8080; border:1px solid black; bottom:200px; z-index:100;}
+div.nav_container_clicked {display:none; width:250px; height: 260px; position:fixed; border:2px solid black; bottom:200px; z-index:100;}
+
+nav.nav_left { width:250px; height:200px; position:relative; border: 0px solid #ff99ff; z-index:100;}
+nav.nav_left > section { max-width: 150px; height: 25px; position:relative; background-color:#ff80ff; border: 0px solid black; margin:2px 2px 18px 8px; cursor:pointer; z-index:100;}
+nav.nav_login { width: 120px; position:absolute; right:0px; border: 0px solid blue;}
+/*스크롤을 내려도 사용자에게 계속되어 보여지는 메뉴를 위해서 생성된 nav_left를 position:fixed;로 설정
+추 후에 버튼을 누르게 되면 메뉴가 보였다, 사라졌다 하기 위해 class 별 display:block; or none;을 따로 설정
+또한, 추후 개발될 새로운 개체에 묻히지 않도록 z-index를 100;으로 설정
+nav 안에 메뉴버튼이 정렬 될 수 있도록 안에 section을 생성 및 margin으로 정렬
+또한, cursor:pointer; 설정으로 마우스를 올렸을시, 클릭이 가능한 것을 시각적으로 표현하기 위해서 pointer 모양 사용
+nav 개체 안에서 독립적인 위치를 가질 수 있도록 login nav는 position:absolute;로 설정*/
+
+/*nav-left-controller*/
+div.nav_left_controller { width:20px; height:100px; position:fixed; background-color: red; bottom:230px; margin-left:250px; cursor:pointer; z-index:99;}
+/*nav_left 메뉴를 껏다 킬 수 있도록 controller 버튼같은 div를 넣어줌. 또한, nav_left를 항상 따라다닐 수 있도록 position을 fixed로 생성*/
+
+/*login*/
+span#login{display:inline-block; font-weight: bold; font-size: 9pt; cursor:pointer;}
+span#regist{display:inline-block;  font-weight: bold; font-size: 9pt; cursor:pointer;}
+/*nav_left 안에서 버튼 처럼 존재하는 로그인, 회원가입을 표현하고, 마우스를 올리면 커서모양이 손모양이 될 수 있도록 cursor:pointer; 설정*/
+
+/*main-section in all2-container*/
+div.all2_container > section { max-width:1400px; height:400px; position:relative; border: 2px solid white; margin:0px auto; background-color:white; z-index:1;}
+div.all2_container > section.store{ height:700px }
+div.all2_container > section.video { background-color: rgba(0,0,0,0);}
+div.all2_container > section.video1 {clear:both; border:0px; position:fixed; top:10px; margin-left: -5px; z-index:-10; }
+/*실질적인 페이지를 보여주는 all2_container 최대 넓이를 1400px로 설정하여 body와 함께 동적으로 움직이도록 설정.
+section.video 배경을 투명으로 해주기 위하여 rgba로 값을 0으로 설정
+video1 동영상을 동적으로 재생되는 것처럼 보여주기 위하여 position:fixed; 설정 및 전에 있던 위치설정을 지우기 위하여 clear:both; 사용*/
+
+/*video*/
+video.video1{ width:1400px; height:800px; top: -800px;}
+video.video2{ width:100%;height:100%; object-fit:cover;}
+/*가장 뒤에있는 video1 배경은 시작지점을 조절하기 위해여 top을 -800px로 주었다.
+  video2 는 동영상을 모두 보여주되 object-fit을 이용하여 프레임에 맞게 크기를 자동으로 맞춰주었다.*/
+
+/*main-footer*/
+footer.main_footer { max-width: 1400px; height:150px; position:relative; border: 2px solid #686868; background-color:#686868; color:white; margin:0 auto;
+								bottom:0px;}
+/*main 페이지 맨 밑에 있는 footer는 위에있는 all2_container와 같은 상위이기 때문에 max-width를 최대크기 1400px로 잡아주고
+페이지 맨 밑에 위치하기 위해서 bottom:0px;로 설정 */
+
+
+/* hr */
+hr { width:5%; border: solid 2px #9fff40;} /*Hr은 크기를 5%로 주고 실선이 2px크기가 되는 연두색이 될 수 있도록 전역설정*/
+/* h1 */
+h1 {font-size: 25pt; font-family:impact;}/*H1은 font 크기를 25pt를 주고 글꼴을 impact로 주어서 강한 인상을 줄 수 있도록 전역설정*/
+/* h2 */
+h2 { font-size: 40pt; color:white; text-shadow: 4px 4px 10px white;} /*글자 크기 40pt, 글자 색 white, 글자 그림자, 수직 수평 흐림 정도 색깔 설정*/
+/* rogo */
+img.rogo {width:400px; height:88px;}/*로고 이미지 크기 설정*/
+/* article */
+article.text {text-align:center; margin: 0px auto;} /*article에 글자를 입력할 때 가운데 정렬이 될 수 있도록 text-align:center를 정하고, 개체를 중앙으로 올 수 있도록 margin 설정*/
+article.rogo {text-align:center;} /*rogo가 들어가는 article에 글자 가운데 정렬*/
+article.video2_text {width:50%; height:100%; position:relative; background-color:#585858; color:white; margin: 0px 0px 0px 50%; } 
+ /*Video2가 있는 곳 옆에 text를 넣어주기 위해서 설정한 article에 글자가 중앙에 보이고, 배경색을 회색으로 하고, 글자색을 white로 설정
+또한, 옆에있는 video에 겹치지 않도록 margin값을 50% 줌으로서 반을 video 영역을 글자 입력 범위에서 제외 시켰다.*/
+article.video2 {width:50%;height:100% ; position:relative; float:left; overflow:hidden;}
+    /*video2는 프레임에 넘치더라도, 밖으로 세지 않도록 overflow 값을 hidden으로 주었다. */
+article.store { display:inline-block; width:400px; height:100%; position:relative; text-align:center; margin: 30px 10px 10px 10px;}
+   /*Store가 들어가있는 article은 이미지들이 보다 쉽게 정렬될 수 있도록 display:inline-block을 주었고, 다른 개체에 딱 붙지 않기위해
+Margin값을 주었다.*/
+/*figcaption*/
+figcaption { color:#009f00; font-size:14pt; text-align:left;}/*Figure 이미지가  있는 곳 바로 밑에 설명 text를 달기 위한 figcaption에 글자색을 연두로 주었고, 글자 정렬을 좌측 정렬도 주었다.*/
+/*a href */
+a { text-decoration:none;}
+ /*링크 문자 밑에 밑줄 없애기 */

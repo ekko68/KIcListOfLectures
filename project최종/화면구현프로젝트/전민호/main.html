@@ -1,0 +1,975 @@
+<!doctype html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>html5</title>
+
+    <style>
+        @import url(http://fonts.googleapis.com/earlyaccess/hanna.css);
+        @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+    </style>
+
+    <!-- 	크면 -->
+    <link href="css/main.css" rel="stylesheet" type="text/css" media="screen and (min-width:768px)">
+    <!-- 	작아지면 -->
+    <link href="css/main-1.css" rel="stylesheet" type="text/css" media="screen and (max-width:767px)">
+
+
+    <style>
+        body,
+        ul,
+        li,
+        a {
+            font-family: 'Hanna', serif;
+        }
+        /* 폰트적용될 class */
+        
+        img {
+            border: 0px;
+        }
+        
+        body,
+        ul {
+            /*좌단 상단*/
+            margin: 0;
+            padding: 0;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        /*밑줄삭제!*/
+        
+        li {
+            list-style: none;
+        }
+        /*순서삭제!*/
+        /* 초기화 */
+        
+        #warp {
+            width: 100%;
+            margin: 0 auto;
+            height: 100%;
+            position: absolute;
+            background: #FE6D0D;
+        }
+        /*    메뉴의 헤더*/
+        
+        .menu-head {
+            position: absolute;
+            top: 0px;
+            left: -15%;
+            width: 100%;
+            margin: 0 auto;
+            height: 50px;
+            /*        border: 1px solid black;*/
+        }
+        
+        .menu-head .util {
+            float: right;
+            border-top: 0;
+            border-bottom: 0;
+        }
+        
+        .menu-head .util li {
+            width: 50px;
+            height: 50px;
+            top: 0px;
+            position: relative;
+            text-align: center;
+        }
+        
+        .menu-head .util li a {
+            /*            #B3B3B3*/
+            color: #000;
+            font-size: 1.5em;
+            font-weight: 700;
+            line-height: 50px;
+        }
+        
+        .util>ul>.rightbar {
+            border-right: 1px solid #eee;
+        }
+        
+        .menu-head>div {
+            font-size: 8px;
+            display: inline-block;
+            height: 100%;
+        }
+        
+        .menu-head>div ul li {
+            float: left;
+            height: 100%;
+            min-height: 50px;
+        }
+        
+        .sns-util {
+            display: inline;
+            float: right;
+            padding-left: 11px;
+            margin-right: 21px;
+        }
+        
+        .sns-util li {
+            width: 40px;
+            top: 10px;
+            position: relative;
+        }
+        
+        .sns-util li a {
+            display: inline-block;
+            margin: 0px 8px 0;
+            width: 26px;
+            height: 26px;
+            overflow: hidden;
+        }
+        /*로그인 회원가입 누를때 배경색*/
+        
+        .util>ul li:hover {
+            background-color: #eee;
+        }
+        /*
+             <div class="util">
+                    <ul>
+                        <li><a href="#">로그인</a></li>
+                        <div class="border-right"></div>
+                        <li><a href="#">회원가입</a></li>
+                    </ul>
+                </div>
+*/
+        
+        .sns-util li a.tw {
+            background: url(img/ic_sns_tw.png) 50% 50% no-repeat;
+            background-size: 26px 26px;
+        }
+        
+        .sns-util li a.fc {
+            background: url(img/ic_sns_fc.png) 50% 50% no-repeat;
+            background-size: 26px 26px;
+        }
+        
+        .sns-util li a.gg {
+            background: url(img/ic_sns_gg.png) 50% 50% no-repeat;
+            background-size: 26px 26px;
+        }
+        /*세로바*/
+        /* .border-right { position: relative;display: inline-block;float:right; height:50px; widows:50px; border-left:1px solid #eee; background:#999; left:%; }*/
+        /* 헤더와 메뉴사이의 줄 */
+        
+        .line1 {
+            width: 100%;
+            height: 1px;
+            position: absolute;
+            top: 50px;
+            background: #eee;
+            margin: 0 auto;
+        }
+        /* 메뉴전체틀*/
+        
+        .menu-wrap {
+            position: fixed;
+            /*fixed*/
+            top: 52px;
+            left: 0;
+            width: 100%;
+            height: 110px;
+            /*여기임*/
+            z-index: 999;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            /*       border: 1px solid black;*/
+        }
+        /*로고 div*/
+        
+        #menu-logo {
+            position: relative;
+            width: 100%;
+            top: 10px;
+        }
+        /*메뉴 틀*/
+        
+        #menu-body {
+            position: absolute;
+            width: 80%;
+            margin: 0 auto;
+            padding: 0px;
+            left: 10%;
+        }
+        
+        #menu-logo_m {
+            position: fixed;
+            width: 100%;
+            top: -999px;
+            /*스크롤시 노출*/
+        }
+        /*메뉴 틀*/
+        /*모바일 메뉴 버튼*/
+        
+        .m_menulogo {
+            float: right;
+            clear: both;
+            position: absolute;
+            width: 100%;
+            top: 30px;
+            left: 68%;
+        }
+        /*모바일메뉴 틀*/
+        
+        #m_menu {
+            top: 112px;
+            position: absolute;
+            width: 100%;
+            z-index: 999;
+            background-color: #000;
+            opacity: 0.9;
+        }
+        /*모바일메뉴 리스트*/
+        
+        #navigation-list>ul a {
+            display: block;
+            color: #aaa;
+            font-size: 12px;
+            line-height: 40px;
+            background: #000;
+            padding-left: 20px;
+        }
+        /*모바일 메뉴 바*/
+        
+        #navigation-list>ul hr {
+            /*            display: block;*/
+            width: 90%;
+            color: #aaa;
+            opacity: 0.2;
+            background: #000;
+        }
+        
+        #menu {
+            float: right;
+            clear: both;
+            position: absolute;
+            width: 80%;
+            top: 0px;
+            left: 34%;
+            /*메뉴 좌우이동*/
+        }
+        /* 1레벨 메뉴*/
+        
+        .dropmenu>li {
+            float: left;
+            position: relative;
+            background: #fff;
+            width: 16%;
+        }
+        
+        .dropmenu>li>a {
+            display: block;
+            /* 무조건 한줄은 점유하고 다음줄로 개행*/
+            font-size: 16px;
+            color: #000;
+            text-align: center;
+            /* 글자정렬 가운데 */
+            height: 110px;
+            /* 높이 */
+            /*여기임*/
+            line-height: 94px;
+            /*94*/
+            /* 텍스트 행 사이의 간격*/
+        }
+        
+        .dropmenu>li:hover>a {
+            /*메뉴에 마우스를 올리면 배경을 바꿈*/
+            color: #FF6262;
+        }
+        
+        .dropmenu>li:hover>ul {
+            top: 80px;
+            left: 0px;
+        }
+        /* 2레벨 메뉴 부터의 속성 */
+        
+        .dropmenu ul {
+            position: absolute;
+            top: -9999px;
+            /* 위쪽으로 완전히 감춤 */
+            z-index: 9999;
+            /* 숫자가 크면 앞으로 나옴*/
+            width: 100%;
+            border: 1px solid #ccc;
+        }
+        /* 2레벨 메뉴의 위치속성 지정*/
+        
+        .dropmenu ul li {
+            position: relative;
+        }
+        
+        .dropmenu ul a {
+            display: block;
+            color: #aaa;
+            font-size: 12px;
+            line-height: 40px;
+            background: #fff;
+            padding-left: 20px;
+        }
+        /* 2레벨 메뉴에 마우스를 올렸을 때 배경색 지정 */
+        
+        .dropmenu ul li a:hover {
+            color: #fff;
+            background: #67b0d1;
+        }
+        /* 2레벨 메뉴에 마우스를 올렸을 때 하위메뉴 위치지정 */
+        
+        .dropmenu ul li:hover>ul {
+            position: absolute;
+            top: 0;
+            left: 100%;
+        }
+        /*
+        .line2 {
+            width: 100%;
+            height: 2px;
+            position: absolute;
+            top: 110px;
+            background: #eee;
+            margin: 0 auto;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, .3);
+            opacity: 0.9;
+            z-index: 999;
+        }
+*/
+          /*슬라이드 이미지*/
+        
+        .cycle-slideshow {
+            clear: both;
+            position: relative;
+            top: 0;
+            left: 0px;
+            width: 100%;
+            height: 450px;
+            margin: 0 auto;
+        }
+        
+        /*모바일과 데스크탑 호환정렬 1은 데스크탑 2는 모바일!*/
+        #slidebanner1{
+            margin-bottom: 0px;
+        }
+         #slidebanner2{
+            margin-bottom: -200px;
+        }
+        /*바디 감싸기*/
+        
+        .bodywarp {
+             clear: both;
+            position: relative;
+            top: 145px;
+            left: 0px;
+            font-family: '나눔고딕', NanumGothic, '돋움', Dotum, AppleGothic, sans-serif;
+            background: #e3e3e3;
+            margin: 0px auto;
+            /*위쪽(상단), 아래쪽(하단)의 여백을 0*/
+        }
+      
+        /*바디몸통*/
+        
+        .bodybody {
+            width: 80%;
+            background: #fff;
+            position: relative;
+            margin: 0 auto;
+            top:0px;
+        }
+        /* 바디 상단 문구*/
+        
+        #at1 {
+            padding-top:100px; 
+            position: relative;
+            font-family: 'Hanna', serif;
+            text-align: center;
+            margin: 0 auto;
+        }
+           .at1_1 {
+            padding-top:100px; 
+            position: relative;
+            font-family: 'Hanna', serif;
+            text-align: center;
+            margin: 0 auto;
+        }
+        /*배너 감싸기*/
+        
+        #at2 {
+            position: relative;
+            width: 85%;
+            height: 240px;
+            margin: 0 auto;
+            font-family: 'Nanum Gothic', serif;
+            background-color: #fff;
+            -moz-box-shadow: 6px 6px 3px #B3B3B3;
+            /* Firefox 3.6 and earlier */
+            box-shadow: 6px 6px 3px #B3B3B3;
+        }
+        /*좌측배너*/
+        
+        .banner01 {
+            position: relative;
+            float: left;
+            width: 30%;
+            left: 2%;
+            top: 7px;
+        }
+        /*좌측배너2*/
+        
+        .banner02 {
+            position: relative;
+            float: left;
+            left: 11%;
+            width: 30%;
+            top: 7px;
+        }
+        /*좌측 배너 마우스오버하면 투명도효과*/
+        
+        #banner a:hover {
+            opacity: 0.6;
+        }
+        /*우측배너*/
+        
+        #r_banner {
+            position: relative;
+            float: left;
+            left: 20%;
+            width: 30%;
+            top: 7px;
+        }
+        /*우측 배너 마우스오버하면 투명도효과*/
+        
+        #r_banner a:hover {
+            opacity: 0.8;
+        }
+      
+        
+        .m_at1 {
+            clear: both;
+            position: relative;
+            top: 0;
+            left: 0px;
+            width: 100%;
+            height: 450px;
+            margin: 0 auto;
+        }
+        /*여자 스타일링 이미지 감싸기*/
+        
+        .at3 {
+            position: relative;
+            width: 85%;
+            height: 820px;
+            background-color: #fff;
+            margin: 0 auto;
+            font-family: 'Nanum Gothic', serif;
+            -moz-box-shadow: 6px 6px 3px #B3B3B3;
+            /* Firefox 3.6 and earlier */
+            box-shadow: 6px 6px 3px #B3B3B3;
+        }
+        /*스타일링 액자틀*/
+        
+        .st {
+            position: relative;
+            float: left;
+            width: 30%;
+            height: 364px;
+            margin: 1.55%;
+        }
+        
+        .st a:hover {
+            opacity: 0.4;
+        }
+        /*남자 스타일링 이미지 감싸기*/
+        
+        .at4 {
+            top: -20px;
+            position: relative;
+            width: 85%;
+            height: 820px;
+            background-color: #fff;
+            margin: 0 auto;
+            margin-bottom: 160px;
+            /*메뉴크기만큼 띄우기*/
+            font-family: 'Nanum Gothic', serif;
+            -moz-box-shadow: 6px 6px 3px #B3B3B3;
+            /* Firefox 3.6 and earlier */
+            box-shadow: 6px 6px 3px #B3B3B3;
+        }
+        /*스타일링 마우스오버시 설명*/
+        
+        .middle {
+            transition: .5s ease;
+            opacity: 0;
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%)
+        }
+        .han{font-family: 'Nanum Gothic', serif;
+            text-align: center;
+        }
+        .m_jido{
+            clear: both;
+            position: relative;
+            width: 100%;
+        }
+        
+        .st a:hover {
+            opacity: 0.7;
+        }
+        
+        .st a:hover .middle {
+            opacity: 0.8;
+        }
+        
+        .text {
+            background-color: #B3B3B3;
+            color: black;
+            font-size: 17px;
+            padding: 10px 32px;
+        }
+        /*스타일링 마우스오버시 설명 끝*/
+        /*하단부*/
+        
+        .footer01 {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            background-color: #515658;
+            margin: 0 auto;
+            font-family: 'Nanum Gothic', serif;
+        }
+        
+        .footer01_1 {
+            position: relative;
+            float: left;
+            left: 1%;
+            width: 40%;
+            height: 330px;
+            text-align: center;
+        }
+        
+        .footer01_2 {
+            position: relative;
+            float: left;
+            width: 34.5%;
+            height: 330px;
+            text-align: center;
+        }
+        
+        .footer01_3 {
+            position: relative;
+            float: left;
+            width: 25%;
+            height: 330px;
+            text-align: center;
+        }
+        /*최하단부*/
+        
+        .footer02 {
+            clear: both;
+            position: relative;
+            width: 100%;
+            height: 50px;
+            background-color: #292929;
+            margin: 0 auto;
+            font-family: 'Nanum Gothic', serif;
+            text-align: right;
+            color: #464646;
+            line-height: 20px;
+        }
+
+    </style>
+
+
+    <!--
+<html xmlns="http://www.w3.org/1999/xhtml">
+<link href="layout.css" rel="stylesheet" type="text/css" /> -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="http://malsup.github.com/jquery.cycle2.js"></script>
+    <script type=text/javascript>
+        /*스크롤을 내렸을 때 2번째 메뉴를 고정시키고 메뉴의 높이를 110에서 60으로 조정*/
+        $(document).ready(function() {
+
+            var nav5 = $('#menu-logo');
+            var nav4 = $('#menu-logo_m');
+            var nav3 = $('.dropmenu>li');
+            var nav2 = $('#menu');
+            var nav = $('.menu-wrap');
+            var navoffset = $('.menu-wrap').offset();
+            /* offset을 이용하여 .allmenu(메뉴영역)의 위치값을 알아내어 navoffset에 넣어둔다 */
+
+            $(window).scroll(function() {
+                if ($(this).scrollTop() >= (navoffset.top)) { /* 화면 스크롤 값이 > top+150을주자!(유연한대처)*/
+                    nav.css('position', 'fixed').css('top', 0).css('opacity', '0.9').css('border-bottom', '3px solid #eee').css('box-shadow', '0px 5px 5px #eee') /*그림자넣기*/
+                        .css('height', '60') /*크기변경*/
+                    nav2.css('top', -20) /*크기변경 위치값*/ /*top-20*/
+                    nav3.css('height', '60')
+                    nav4.css('top', 10) /*nav4와 nav5는 스크롤시 서로 로고를 스왑함*/
+                    nav5.css('top', -999)
+                } else {
+                    nav.css('position', 'fixed').css('top', 52).css('border-bottom', '1px solid #eee').css('opacity', '1').css('box-shadow', '0px 0px 0px #eee').css('height', '110') /*.css('opacity',1); /* 처음 메뉴영역의 top 값으로 돌리기 */
+                    nav2.css('top', 0)
+                    nav3.css('height', '100')
+                    nav4.css('top', -999)
+                    nav5.css('top', 10)
+
+                }
+            });
+        });
+
+        /*모바일 드랍메뉴 구현*/
+        jQuery(document).ready(function($) {
+            // 페이지 로드시 드랍메뉴감추기
+            $("#navigation-list").hide();
+            // 클릭시 이벤트발생
+            $(".menuBtn").click(function() {
+                // 슬라이드 이벤트
+                $("#navigation-list").slideToggle(300);
+            });
+        });
+
+    </script>
+
+
+</head>
+
+<body>
+
+    <!-- 시작 -->
+    <div id="wrap">
+        <header>
+            <!--메뉴의 헤더부분-->
+            <div class="menu-head">
+                <div class="util">
+                    <ul>
+                        <li class="rightbar"><a href="#">로그인</a>
+                        </li>
+
+                        <li><a href="#">회원가입</a></li>
+                    </ul>
+
+                </div>
+                <div class="sns-util">
+                    <!--sns-->
+                    <ul>
+                        <li>
+                            <a href="https://plus.google.com/#" target="_blank" title="새창열림" class="gg"></a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/#" target="_blank" title="새창열림" class="fc"></a>
+                        </li>
+                        <li>
+                            <a href="https://twitter.com/#" target="_blank" title="새창열림" class="tw"></a>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- //.sns-util -->
+            </div>
+            <!--메뉴의 헤더 끝-->
+
+
+            <!--헤더와 메뉴의 바디사이의 라인-->
+            <div class="line1"></div>
+
+
+            <!--메뉴의 바디 감싸기-->
+            <div class="menu-wrap">
+                <!--메뉴바디 틀-->
+                <div id="menu-body">
+                    <!--메뉴로고-->
+                    <div id="menu-logo">
+                        <li>
+                            <a href='#'><img src="img/logo.png" alt='logo' id="logo" width="141px" hight="72" /></a>
+                        </li>
+                    </div>
+                    <div id="menu-logo_m">
+                        <li>
+                            <a href='#'><img src="img/logo.png" alt='m_logo' id="m_logo" width="98px" hight="50" /></a>
+                        </li>
+                    </div>
+                    <div id="menu">
+                        <!--드랍메뉴-->
+                        <ul class="dropmenu">
+                            <li class="mtitle"><a href="#">Home</a>
+
+                            </li>
+                            <li class="mtitle"><a href="#">KIC헤어비스</a>
+                                <ul>
+                                    <li><a href="#">헤어비스 소개</a></li>
+                                    <li><a href="#">인사말</a>
+                                    </li>
+                                    <li><a href="#">찾아오시는 길</a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            <li class="mtitle"><a href="#">헤어아카데미</a>
+                            </li>
+                            <li class="mtitle"><a href="#">고객예약</a>
+                            </li>
+                            <li class="mtitle"><a href="#">고객센터</a>
+                                <ul>
+                                    <li><a href="#">공지사항</a></li>
+                                    <li><a href="#">문의하기</a>
+                                    </li>
+
+                                </ul>
+                            </li>
+                        </ul>
+
+
+                        <!--모바일 드랍메뉴-->
+                        <div class="m_menulogo">
+                            <header>
+                                <span class="menuBtn">
+                                
+                                <img src="img/m_menu.png" alt="Menu icon" width="35px"
+                            heigh="35px" id="mobliemenu">
+                                </span>
+                            </header>
+                        </div>
+                    </div>
+                </div>
+                <div class="line2"></div>
+                <!--                모바일 드랍다운 메뉴리스트-->
+                <div id="m_menu">
+                    <nav id="navigation-list">
+                        <ul>
+                            <li><a href="#item1">병원소개</a></li>
+                            <hr>
+                            <li><a href="#item2">의료진소개</a>
+                                <hr>
+                            </li>
+                            <li><a href="#item3">프로그램</a></li>
+                            <hr>
+                            <li><a href="#item4">진료예약</a></li>
+                            <hr>
+                            <li><a href="#item5">고객센터</a></li>
+                            <hr>
+                            <li>
+                                <a href="#item6"></a>
+                            </li>
+
+
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <!--메뉴 본체 끝-->
+        </header>
+
+
+
+
+        <!--본문상단-->
+
+
+        <!--본문시작-->
+
+
+        <div class="bodywarp">
+
+
+            <!--슬라이드 이미지구현-->
+            <!--데스크탑-->
+            <div class="cycle-slideshow" cycle-slideshow data-cycle-loader="wait" data-cycle-timeout=2000 id="slidebanner1">
+                <img src="img/img_1.jpg" width="100%" height="500px">
+                <img src="img/img_2.jpg" width="100%" height="500px">
+                <img src="img/img_3.jpg" width="100%" height="500px">
+                <img src="img/img_4.jpg" width="100%" height="500px">
+            </div>
+            <br><!--모바일-->
+            <div class="cycle-slideshow" cycle-slideshow data-cycle-loader="wait" data-cycle-timeout=2000 id="slidebanner2">
+                <img src="img/m_img_1.jpg" width="100%" height="251px">
+                <img src="img/m_img_2.jpg" width="100%" height="251px">
+                <img src="img/m_img_3.jpg" width="100%" height="251px">
+                <img src="img/m_img_4.jpg" width="100%" height="251px">
+            </div>
+
+
+
+            <!--본문내용의 가로길이를 80%로 제한-->
+            <div class="bodybody">
+
+                <article id="at1">
+
+                    KIC 헤어비스<br> SIMPLE UNIQUE STYLE. SPECIAL FOR YOU
+
+
+                </article>
+
+                <!--배너 부분-->
+                <div id="at2">
+                    <div class="banner01">
+                        <a href="#"><img src="img/banner01.jpg"></a>
+                    </div>
+
+                    <div class="banner02">
+                        <a href="#"><img src="img/banner02.jpg"></a>
+                    </div>
+                    <div id="r_banner">
+                        <a href="#"><img src="img/r_banner01.jpg"></a>
+                        <a href="#"><img src="img/r_banner02.jpg"></a>
+                    </div>
+                </div>
+
+                <!--        여자스타일링 도입부-->
+                <article id="at1">
+                    <h>W&nbsp;&nbsp;O&nbsp;&nbsp;M&nbsp;&nbsp;E&nbsp;&nbsp;N &nbsp;&nbsp;&nbsp;&nbsp;H&nbsp;&nbsp;A&nbsp;&nbsp;I&nbsp;&nbsp;R
+                    </h>
+                </article>
+
+                <!--        여자스타일링-->
+                <!--데스크탑-->
+                <div class="at3">
+                    <div class="st">
+                        <a href="#"><img src="img/st1.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">단발빨간머리<br>판매가 : 1,000,000<br>할인가 : 80,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st2.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">노란C컬머리<br>판매가 : 1,000,000<br>할인가 : 70,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st18.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">볼륨긴생머리<br>판매가 : 1,000,000<br>할인가 : 90,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st4.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">파랑색없는 신호등머리<br>판매가 : 1,000,000<br>할인가 : 100,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st5.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">은색머리<br>판매가 : 1,000,000<br>할인가 : 110,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st6.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">뒤통수<br>판매가 : 3,000,000<br>할인가 : 10,000</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <!--모바일-->
+                <div class="cycle-slideshow" cycle-slideshow data-cycle-loader="wait" data-cycle-timeout=2000 id="m_at3">
+                <img src="img/st1.jpg" width="100%" height="100%">
+                <img src="img/st2.jpg" width="100%" height="100%">
+                <img src="img/st4.jpg" width="100%" height="100%">
+                <img src="img/st5.jpg" width="100%" height="100%">
+            </div>
+            <!--여자스타일링 끝-->
+
+
+                <!--남자스타일링 도입부-->
+                <article class="at1_1">
+
+                    <h>M&nbsp;&nbsp;E&nbsp;&nbsp;N &nbsp;&nbsp;&nbsp;&nbsp;H&nbsp;&nbsp;A&nbsp;&nbsp;I&nbsp;&nbsp;R
+                    </h>
+
+
+                </article>
+
+                <!--        남자스타일링 시작-->
+                <!--데스크탑-->
+                <div class="at4">
+                    <div class="st">
+                        <a href="#"><img src="img/st7.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">이대팔 펌<br>판매가 : 1,000,000<br>할인가 : 80,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st10.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">투블럭 갈색염색<br>판매가 : 1,000,000<br>할인가 : 30,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st12.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">오대오 펌<br>판매가 : 1,000,000<br>할인가 : 150,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st14.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">오대오 펌 다른버전<br>판매가 : 1,000,000<br>할인가 : 100,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st15.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">애매한 파마머리<br>판매가 : 1,000,000<br>할인가 : 770,000</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="st">
+                        <a href="#"><img src="img/st17.jpg" width="100%" height="100%">
+                            <div class="middle">
+                                <div class="text">뽀글이 머리<br>판매가 : 3,000,000<br>할인가 : 10,000</div>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                
+            
+               <!--남자스타일링 끝-->
+                <div class="m_jido"><br><p class="han">찾아오시는 길</p><br><img src="img/map.PNG" width="100%" height="100%"></div>
+                
+                
+                
+                
+                
+                
+            </div>
+        </div>
+    </div>
+    <!--    바디끝-->
+    <footer>
+
+        <!--        푸터 시작-->
+        <div class="footer01">
+            <div class="footer01_1"><br>수석디자이너 영상<br>
+                <embed src="mv/mv.mp4" width="100%" height="90%">
+            </div>
+            <div class="footer01_2"><br>찾아오시는 길<br><img src="img/map.PNG" width="90%" height="90%"></div>
+            <div class="footer01_3"><br><br><br>KIC 미용실<br>
+                <br><br> 서울특별시 강남구 <br> 테헤란로1길 10 세경빌딩 <br> 대표자명: 전민호<br> 사업자번호: 000-000-000<br> Phone: (81) 02-123-1234<br> Fax: (81) 02-123-1234<br> Email: google@gmail.com<br> 가맹 및 구직문의 :<br> 나헤어 이사 010-0000-0000</div>
+        </div>
+        <!--        두번째 푸터-->
+        <div class="footer02">Copyrights © 2017 All Rights Reserved by KIC HAIRBIS.<br> Terms of Use / Privacy Policy</div>
+    </footer>
+    <!--        푸터끝-->
+</body>
+
+</html>

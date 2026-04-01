@@ -1,0 +1,167 @@
+﻿6일차(jQuery의 effect마무리 및 Ajax사용법)
+
+->03TabMenu.html
+Ajax의 개요
+ 
+클라이언트--xhr객체--->서버
+------------------------------------
+01load().html
+
+$('#menu1').click(function(){
+		//형식)$('선택자').load('경로포함해서 불러올 문서명')
+		$('#message1').load('menu.html')
+		return false;//링크의 기본기능을 중지
+	})
+	//메뉴보기 삭제
+	$('#menu1-1').click(function(){
+		$('#message1').empty()//내용지우기
+		return false;//링크의 기본기능을 중지
+	})
+
+----------------------------------------------------------
+**02$.post().html
+
+//$.post()->$.ajax()를 실행->post방식으로 서버에 요청
+	//               서버에서 요청한 문서결과->콜백함수가 받아서
+	//               처리
+	//http://localhost:8090/jQueryTest/aa.jsp?name=?->url
+	$('#saveButton').click(function(){
+		var value=$('#name').val()
+		//alert(value)
+		//$.post(1.url(요청문서),
+		//2.전달할 매개변수명{매개변수명:전달할값}),3.콜백함수명,4.요청문서종류(생략))
+	    $.post('aa.jsp',{name:value},function(args){//<b>홍길동</b>,홍길동
+	    	//args-><%=name%>님 jQuery Ajax 환영합니다.
+	    	$('#resultDIV').html(args)
+	    })
+	})
+-----------------------------------------------------------------------------------------
+03$.ajax(3).html
+
+//$.ajax(1.url(요청문서),2.매개변수(생략가능),3.콜백함수)
+	//~aa2.jsp?name='test'&age=23&addr='서울시'
+	$.ajax({
+		 url:'aa2.jsp', //{1.url(속성명):value값만 변경가능}
+	     data:{name:'test',age:23},//2.data:{매개변수명:값,매개변수명2:값2,,,}
+	     success:function(args){//3.success:성공적으로 보내준경우 익명함수(매개)
+	    	 $('body').append(args)
+	     }//success
+	})//$.ajax
+
+04.ajax()xml.html->1)순수 xml문서를 불러오는 경우
+                              2)jsp파일로 만들어지는 xml문서를 불러오는 경우(getXml.jsp)
+
+<%@ page language="java" contentType="text/xml; charset=UTF-8"
+    pageEncoding="UTF-8"
+    trimDirectiveWhitespaces="true"%>
+
+contentType="text/xml;//xml문서로 만들어서 전송
+
+trimDirectiveWhitespaces="true"
+
+xml문서를 읽어들이다가 혹 공백때문에 못불러오는 경우를
+대비해서 공백빼고 불러오라는 옵션
+-----------------------------------------------------------
+//1.url요청문서
+	$.ajax('getXml.jsp',{
+		      //data:~ 매개변수가 전달하지 않기때문에 생략가능
+		      success:function(data){
+		    	 //분리작업(파싱분석)parse->find() or filter()
+		    	 $(data).find('person').each(function(){
+		    		 var name='<li>'+$(this).find('name').text()+'</li>'
+		    		 var job='<li>'+$(this).find('job').text()+'</li>'
+		    		 var age='<li>'+$(this).find('age').text()+'</li>'
+		    		 //<div>에 출력
+		    		 $('#output').append('<ul>'+name+job+age+'</ul>')
+		    	 })//.each
+		      }//success
+	})//$.ajax
+})
+------------------------------------------------
+JSON 표기법
+
+xml문서를 간단한 정보 저장-->읽어들이고 저장(문서작업 불편)
+ ->트리구조가 복잡-->소스코드 복잡->유지보수도 어려워짐
+
+->가볍고 간단하게 텍스트형태로 저장->구조가 단순->~.json(파일 저장)
+
+JSON 공식 사이트(http://www.json.org)에서의 JSON 설명
+ 
+   “JSON(JavaScript Object Notation)는 경량의 데이터 교환 포맷이다.
+                                                          =============
+  {키:'값'}
+
+   인간에게 있어서 읽고 쓰기가 용이하고, 기계에 있어서도 간단하게 파싱이나 생성을 행할 수 있는 형식이다.
+   JavaScript 프로그램 언어(ECMA-262 표준 제 3판 1999년 12월)의 일부를 베이스로 만들어져 있다.
+   JSON(은)는 완전하게 언어로부터 독립한 텍스트 형식이지만, 
+   C,C++,C#,Java,JavaScript,Perl,Python, 그 외 많은 C패밀리의 언어를 사용하는프로그래머에게 있어서는, 
+   친숙한규약이 사용되고 있다.이러한 성질이,JSON를 이상적인 데이터 교환 언어로 하고 있다.”
+ 
+ 
+ 
+- JSON 관련 사이트에서 JSON 설명
+ 
+   “영어 그대로 해석하자면 자바스트립트를 객체형식으로 표현하는 것이다.
+                                    ====================>표기법
+
+ **   JSON표기법의 장점 **
+ 
+    JSON은 XML보다 빠르고 변환하기도 쉬워 많이 대체해서 쓰고 있다.
+    ---------------------------------------------------------------------
+    적은양의 데이터가 송수신 되므로 모바일쪽에서 쓰기에도 부담이 적다.”
+ 
+   “JSON은 이종 시스템간 데이터 교환시에 사용할 수 있는 이상적인 방법이다.
+   -----------------------------------------------------------------------------
+    JSON은 자바스크립트에 기반하고 있기 때문에 모든 웹 브라우저에서 호환 된다고 할 수 있다.”
+
+JSON과 XML의 장단점->ppt참조
+
+ //Json표기법->키값:저장할값(숫자,문자열,논리적인값,객체,배열(객체묶음))
+ var myjson={
+		 "name":"홍길동",  /* key:value */
+		 "sung":"남자",
+		 "func":"function(){alert('test')}"  /* 함수정의 부분을 문자형태로 저장*/
+		 //var eval()함수->자바스크립트 코드(문자열)->자바스크립트구문 변환
+		 // "var re"+"sult=123"->eval("var result=123")->var result=123
+		 //var a=function(){alert('test')}   alert(a())
+ }
+ var myjson2={"number":123}  /* 객체명.키명(읽기),객체명.키명=값(저장) */
+ var myjson3={"temp":true}
+ //배열
+ var myjson4={"temp":["aaa","bbb","ccc"]} /* [] 배열을 의미 */
+ var mem={name:'홍길동',
+		                fColor:['파랑','녹색','빨강색']}
+ function print1(){
+	 var msg=mem.name+"님이 좋아하는 색깔은"+mem.fColor.length+"개이고,"
+	       msg+="그 중에서 제일 좋아하는 색깔은 "+mem.fColor[1]+"입니다."
+	      alert(msg)
+ }
+=========================================
+xml의 장점
+
+1.작성하기가 간편하다(tag구조)
+2.XML 사람이 읽기가 쉽다. (즉 각 장보들이 의미하는 바를 한눈에 보기가 좋다.
+3.DTD 등 XML자체의 기능을 확장할 여지가 많이 있다.
+
+4.파싱 : DOM 또는 SAX 
+
+xml의 단점
+
+1.하나의 데이타를 정의하기 위한 부수적인 정의가 너무 많이 필요하다(치명적 단점)
+2. 배열형식이나 반복구조의 경우 불필요한 데이터가 계속 해서 나타난다.
+3. 결국 이로 인해 파싱이 힘들어지고 속도는 느려진다.
+------------------------------------------------------------------------
+JSON의 장점
+
+1.내용이 함축적으로 최소한의 정보만을 가지고있다.
+ 그렇기 때문에 XML대비 용량이 획기적으로 줄어들고 속도는 그만큼 빨라지게 된다.
+2. 객체구조와 {} 배열구조의 [] 적절한 만남으로 아주 효율적인 데이터 구성이 가능하다. 
+3.파싱이 매우 간편하고, 때로는 일반적인 변수처럼 사용도 가능하다. 즉, 사용하기 쉽다. 
+
+JSON의 단점
+
+1.내용이 함축적이다 보니 내용의 의미파악은 힘들수 있다. 
+2.아무래도 적은 규격의 데이터 전송에 적합한 방식이기떄문에 XML보다는 빠르지만, 
+   대용량급의 데이터 송수신엔 부적합 모습도 있다. 
+
+3.JSONP : URL을 통해서 Get 방식 (약 2KB 용량 제한)

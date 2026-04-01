@@ -1,0 +1,214 @@
+package bag.design.page;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import bag.db.data.Customer;
+import bag.handle.sql.HandleCustomDB;
+import bag.lend.connection.MakeConnection;
+import java.util.ArrayList;
+
+
+public class CustomerPage extends JFrame implements ListSelectionListener {
+
+	JButton btnClose, btnHome;
+	private JList<String> list;
+	private JTextField txtC_Gender,txtC_Num, txtC_Name, txtC_Tel, txtC_Age, txtC_Address, txtC_Coupon, txtC_Products;
+	private JLabel C_Num, C_Name, C_Tel, C_Age, C_Address, C_Coupon, C_Products, C_GenderLabel;
+	private Canvas Product_image;
+	private JPanel panel;
+	private Color color;
+	
+	
+
+	public CustomerPage() {
+		design();
+		addListener();// 각 버튼의 이벤트연결
+		display();
+
+	}
+
+	public void design() {
+		setExtendedState(MAXIMIZED_BOTH);
+
+		// 명령 버튼 패널--------------------------------------------------
+		JPanel pannel = new JPanel();
+		getContentPane().add(pannel);
+
+		JPanel info = new JPanel();
+		info.setBounds(174, 20, 503, 809);
+		info.setLayout(null);
+		info.setBorder(
+				new TitledBorder(new TitledBorder("회원정보"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		C_Num = new JLabel("번호");
+		C_Num.setBounds(14, 33, 57, 15);
+		C_Num.setForeground(new Color(0x0000ff));
+		C_Num.setBackground(new Color(255,0,0));
+		info.add(C_Num);
+
+		C_Name = new JLabel("회원이름");
+		C_Name.setBounds(14, 61, 57, 15);
+		info.add(C_Name);
+
+		C_Tel = new JLabel("전화");
+		C_Tel.setBounds(14, 87, 57, 15);
+		info.add(C_Tel);
+
+		C_GenderLabel = new JLabel("성별");
+		C_GenderLabel.setBounds(14, 114, 57, 15);
+		info.add(C_GenderLabel);
+
+		C_Products = new JLabel("제품");
+		C_Products.setBounds(14, 480, 57, 15);
+		info.add(C_Products);
+
+		C_Age = new JLabel("나이");
+		C_Age.setBounds(14, 142, 57, 15);
+		info.add(C_Age);
+
+		C_Address = new JLabel("주소");
+		C_Address.setBounds(14, 171, 57, 15);
+		info.add(C_Address);
+
+		C_Coupon = new JLabel("쿠폰정보");
+		C_Coupon.setBounds(14, 243, 57, 15);
+		info.add(C_Coupon);
+
+		txtC_Num = new JTextField();
+		txtC_Num.setBounds(114, 32, 377, 21);
+		info.add(txtC_Num);
+		txtC_Num.setColumns(10);
+		txtC_Num.setEditable(false);
+		
+		txtC_Name = new JTextField();
+		txtC_Name.setBounds(114, 59, 377, 21);
+		info.add(txtC_Name);
+		txtC_Name.setColumns(10);
+		txtC_Name.setEditable(false);
+
+		txtC_Tel = new JTextField();
+		txtC_Tel.setBounds(114, 85, 377, 21);
+		info.add(txtC_Tel);
+		txtC_Tel.setColumns(10);
+		txtC_Tel.setEditable(false);
+
+		txtC_Gender = new JTextField();
+
+
+		txtC_Gender.setBounds(114, 112, 116, 21);
+		txtC_Gender.setEditable(false);
+		info.add(txtC_Gender);
+
+		txtC_Age = new JTextField();
+		txtC_Age.setBounds(114, 140, 116, 21);
+		info.add(txtC_Age);
+		txtC_Age.setColumns(10);
+		txtC_Age.setEditable(false);
+
+		txtC_Address = new JTextField();
+		txtC_Address.setBounds(114, 168, 377, 67);
+		info.add(txtC_Address);
+		txtC_Address.setColumns(10);
+		txtC_Address.setEditable(false);
+
+		txtC_Coupon = new JTextField();
+		txtC_Coupon.setBounds(114, 242, 377, 228);
+		info.add(txtC_Coupon);
+		txtC_Coupon.setColumns(10);
+		txtC_Coupon.setEditable(false);
+
+		txtC_Products = new JTextField();
+		txtC_Products.setBounds(114, 480, 377, 305);
+		info.add(txtC_Products);
+		txtC_Products.setColumns(10);
+		txtC_Products.setEditable(false);
+		pannel.setLayout(null);
+
+		JPanel list_1 = new JPanel();
+		list_1.setBounds(12, 20, 150, 810);
+		pannel.add(list_1);
+		list_1.setLayout(null);
+		list_1.setBorder(
+				new TitledBorder(new TitledBorder("회원리스트"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		list = new JList<String>();
+		list.setBackground(Color.WHITE);
+		list.setBounds(17, 30, 100, 756);
+		list_1.add(list);
+
+		Scrollbar scrollbar = new Scrollbar();
+		scrollbar.setBounds(123, 30, 17, 757);
+		list_1.add(scrollbar);
+		pannel.add(info);
+		pannel.setBounds(0, 0, 2100, 1000);
+
+		panel = new JPanel();
+		panel.setBorder(
+				new TitledBorder(new TitledBorder("상품정보"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		panel.setBounds(688, 20, 906, 809);
+		pannel.add(panel);
+		panel.setLayout(null);
+
+		Product_image = new Canvas();
+		
+		Product_image.setBounds(27, 33, 866, 718);
+		panel.add(Product_image);
+		Product_image.setBackground(Color.LIGHT_GRAY);
+
+		btnClose = new JButton("닫기");
+		btnClose.setBounds(813, 765, 79, 23);
+		panel.add(btnClose);
+
+		setVisible(true);
+		list.addListSelectionListener(this);
+
+	}
+
+	private void addListener() {
+
+	}
+	
+	public void display(){ //db연동
+		HandleCustomDB customerDB = new HandleCustomDB();
+		ArrayList<Customer> customer = customerDB.selectAllData(MakeConnection.getInstance());
+		String[] name = new String[customer.size()]; 
+	//	txtC_Num,txtC_Name,txtC_Tel,txtC_Age, txtC_Address,txtC_Coupon, txtC_Products;
+		
+		for(int i=0;i<customer.size();i++) {
+			name[i]=customer.get(i).getName();
+		}
+		
+		list.setListData(name);
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		
+		HandleCustomDB customerDB = new HandleCustomDB();
+		ArrayList<Customer> customer = customerDB.selectAllData(MakeConnection.getInstance());
+		//txtC_Num,txtC_Name,txtC_Tel,txtC_Age, txtC_Address,txtC_Coupon, txtC_Products
+		System.out.println("check1");
+		for(int i=0; i<customer.size();i++) {
+			if(list.getSelectedIndex() == i) { 
+				System.out.println("check");
+				txtC_Num.setText(customer.get(i).getNumber()+"");
+		//		txtC_Num.setForeground(new Color(255,0,0));
+				txtC_Name.setText(customer.get(i).getName());
+				txtC_Tel.setText(customer.get(i).getTel());
+				txtC_Gender.setText(customer.get(i).getGender());
+	            txtC_Age.setText(""+customer.get(i).getAge());
+	            txtC_Address.setText(customer.get(i).getAddress());
+	            txtC_Coupon.setText(customer.get(i).getCoupon());
+			}
+		}
+
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		CustomerPage CustomerInfo = new CustomerPage();
+
+	}
+}

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>하늘 블로그</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <!-- 구글 아이콘 삽입-->
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="js/jquery.cycle2.js"></script>
+</head>
+<body>
+  <section id="container">
+    <nav id="main_nav">
+      <a href="#"><p class="sitename" onclick="home()">MENU</p></a>
+      <img src="images/logo.png" alt="" onclick="home()"><!-- 로고-->
+      <div class="button-group"id="list"><!-- 좌측 메뉴바-->
+        <ul>
+          <li id="list_home"><i class="material-icons button" onclick="home()">&#xE88A;HOME</i></li>
+          <li id="list_notice"><i class="material-icons button" onclick="notice()">&#xE02F;공지사항</i></li>
+          <li id="list_board"><i class="material-icons button" onclick="board()">&#xE0B9;게시판</i></li>
+          <li id="list_pic"><i class="material-icons button" onclick="pic()">&#xE86F;갤러리</i></li>
+          <li id="list_tel"><i class="material-icons button" onclick="tel()">&#xE0E1;연락하기</i></li>
+        </ul>
+      </div>
+      <footer id="sub_footer">
+        <address>
+          경기도 고양시
+        </address>
+        <p>
+          © 하늘블로그 2017 All right reserved. By Nai-com
+        </p>
+      </footer>
+    </nav>
+    <section id="main_sectionhome"><!--메인 페이지 -->
+      <header id="sub_header">
+        <h1>어서오세요!</h1>
+      </header>
+      <nav id="sub_nav">
+        <h3>index / home</h3>
+      </nav>
+      <article id="sub_container">
+        <section>
+          <article class="homerow1"><!-- 페이지 인삿말-->
+            <div class="homediv1">
+                <span>하늘 블로그</span>에 오신것을 환영합니다!
+            </div>
+          </article>
+          <article class="mainslide">
+            <div class="cycle-slideshow"><!-- 이미지슬라이드 부분 -->
+        	     <img src="images/mainslide1.png" alt="sd-1" style="width: 100%;">
+        	     <img src="images/mainslide2.png" alt="sd-2" style="width: 100%;">
+        		   <img src="images/mainslide3.png" alt="sd-3" style="width: 100%;">
+        	  </div>
+          </article>
+          <article class="homerow2"><!-- 4가지 링크 메뉴-->
+            <div class="homediv2">
+              <p>공지사항</p>
+              <div class="notice_button" onclick="notice()"><!-- 클릭시 화면전환 효과-->
+              more
+              </div>
+            </div>
+            <div class="homediv3">
+              <p>게시판</p>
+              <div class="notice_button" onclick="board()">
+              more
+              </div>
+            </div>
+          </article>
+          <article class="homerow3">
+            <div class="homediv4">
+              <p>갤러리</p>
+              <div class="notice_button" onclick="pic()">
+              more
+              </div>
+            </div>
+            <div class="homediv5">
+              <p>연락하기</p>
+              <div class="notice_button" onclick="tel()">
+              more
+              </div>
+            </div>
+          </article>
+        </section>
+        <footer class="homefooter"><!-- 게시판 부분-->
+          <div class="homefoodiv1">
+            <dl>
+              <dt>공지사항내용</dt>
+              <dd>공지1 관리자 2017-05-01</dd>
+              <dd>공지2 관리자 2017-05-02</dd>
+              <dd>공지3 관리자 2017-05-03</dd>
+              <dd>공지4 관리자 2017-05-04</dd>
+              <dd>공지5 관리자 2017-05-05</dd>
+              <dd>공지6 관리자 2017-05-06</dd>
+            </dl>
+          </div>
+          <div class="homefoodiv2">
+            <dl>
+              <dt>게시판내용</dt>
+              <dd>게시글1 관리자 2017-05-01</dd>
+              <dd>게시글2 관리자 2017-05-02</dd>
+              <dd>게시글3 관리자 2017-05-03</dd>
+              <dd>게시글4 관리자 2017-05-04</dd>
+              <dd>게시글5 관리자 2017-05-05</dd>
+              <dd>게시글6 관리자 2017-05-06</dd>
+            </dl>
+          </div>
+        </footer>
+      </article>
+    </section>
+    <section id="main_sectionnotice"><!-- 공지사항 페이지 -->
+      <header id="sub_header">
+        <h1>공지사항</h1>
+      </header>
+      <nav id="sub_nav">
+        <h3>index / notice</h3>
+      </nav>
+      <article id="sub_container">
+        <article class="homerow1">
+          <div class="homediv1">
+            <span>하늘</span> 블로그 이용안내!
+          </div>
+        </article>
+        <section class="notice_section"><!-- 공지사항 게시판부분-->
+          <article class="notice_article">
+            <div class="notice_header">
+              <h4>공지사항1</h4>
+              <p>2017-01-05</p>
+              <p>관리자</p>
+            </div>
+            <div class="notice_body">내용.......</div>
+          </article>
+          <article class="notice_article">
+            <div class="notice_header">
+              <h4>공지사항2</h4>
+              <p>2017-01-07</p>
+              <p>관리자</p>
+            </div>
+            <div class="notice_body">내용.......</div>
+          </article>
+          <article class="notice_article">
+            <div class="notice_header">
+              <h4>공지사항3</h4>
+              <p>2017-01-09</p>
+              <p>관리자</p>
+            </div>
+            <div class="notice_body">내용.......</div>
+          </article>
+          <article class="notice_article">
+            <div class="notice_header">
+              <h4>공지사항4</h4>
+              <p>2017-01-11</p>
+              <p>관리자</p>
+            </div>
+            <div class="notice_body">내용.......</div>
+          </article>
+          <article class="notice_article">
+            <div class="notice_header">
+              <h4>공지사항5</h4>
+              <p>2017-01-13</p>
+              <p>관리자</p>
+            </div>
+            <div class="notice_body">내용.......</div>
+          </article>
+        </section>
+      </article>
+    </section>
+    <section id="main_sectionboard"><!-- 게시판 페이지-->
+      <header id="sub_header">
+        <h1>자유게시판</h1>
+      </header>
+      <nav id="sub_nav">
+        <h3>index / board</h3>
+      </nav>
+      <article id="sub_container">
+        <article class="homerow1">
+          <div class="homediv1">
+            <span>하늘</span> 블로그 게시판!
+          </div>
+        </article>
+        <section class="board_section"><!-- 게시판부분-->
+          <article class="board_article">
+            <div class="board_header">
+              <h4>공지사항1</h4>
+              <p>2017-01-05</p>
+              <p>관리자</p>
+            </div>
+            <div class="board_body">내용.......</div>
+          </article>
+          <article class="board_article">
+            <div class="board_header">
+              <h4>공지사항2</h4>
+              <p>2017-01-07</p>
+              <p>관리자</p>
+            </div>
+            <div class="board_body">내용.......</div>
+          </article>
+          <article class="board_article">
+            <div class="board_header">
+              <h4>공지사항3</h4>
+              <p>2017-01-09</p>
+              <p>관리자</p>
+            </div>
+            <div class="board_body">내용.......</div>
+          </article>
+          <article class="board_article">
+            <div class="board_header">
+              <h4>공지사항4</h4>
+              <p>2017-01-11</p>
+              <p>관리자</p>
+            </div>
+            <div class="board_body">내용.......</div>
+          </article>
+          <article class="board_article">
+            <div class="board_header">
+              <h4>공지사항5</h4>
+              <p>2017-01-13</p>
+              <p>관리자</p>
+            </div>
+            <div class="board_body">내용.......</div>
+          </article>
+        </section>
+      </article>
+    </section>
+    <section id="main_sectionpic"><!-- 갤러리 페이지-->
+      <header id="sub_header">
+        <h1>하늘 사진관</h1>
+      </header>
+      <nav id="sub_nav">
+        <h3>index / pic</h3>
+      </nav>
+      <article id="sub_container">
+        <article class="homerow1">
+          <div class="homediv1">
+              저희와 함께<span> 하늘 </span>을 봐요!
+          </div>
+        </article>
+        <div id="columns"><!-- masonry 스타일의 css갤러리-->
+          <figure>
+            <img src="images/sky_01.jpg">
+            <figcaption>사막에서 바라본 하늘</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_02.jpg">
+            <figcaption>맑디 맑은 하늘</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_03.jpg">
+            <figcaption>해변가에서 바라본 하늘</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_04.jpg">
+            <figcaption>산위에 걸친 하늘</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_05.jpg">
+            <figcaption>하늘위 구름을 뚫고 나온 빛</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_06.jpg">
+            <figcaption>하늘속 동굴</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_07.jpg">
+            <figcaption>하늘 위에서 내려다본 구름</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_08.jpg">
+            <figcaption>파란 하늘</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_09.jpg">
+            <figcaption>하늘을 넘어 우주를 보다</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_10.jpg">
+            <figcaption>태양이 지고있는 하늘</figcaption>
+          </figure>
+
+          <figure>
+            <img src="images/sky_11.jpg">
+            <figcaption>산등성이로 넘어가는 저녁 노을</figcaption>
+          </figure>
+        </div>
+      </article>
+    </section>
+    <section id="main_sectiontel"><!-- 연락하기 페이지-->
+      <header id="sub_header">
+        <h1>연락주세요</h1>
+      </header>
+      <nav id="sub_nav">
+        <h3>index / tel</h3>
+      </nav>
+      <article id="sub_container">
+        <article class="homerow1">
+          <div class="homediv1">
+              방문 해주셔서<span>감사합니다!</span>
+          </div>
+        </article>
+        <table class="tel_table"><!-- 연락하기 내용 테이블 구성-->
+          <tbody>
+            <tr id="table_child">
+              <th>이름</th>
+              <td><input type="text" name="user_name" value></td>
+            </tr>
+            <tr>
+              <th>이메일</th>
+              <td><input type="email" name="user_email" value></td>
+            </tr>
+            <tr>
+              <th>연락처</th>
+              <td><input type="tel" name="user_tel" value></td>
+            </tr>
+            <tr>
+              <td colspan="2"><input type="text" id="area" value=""></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" name="button" id="tel_button">보내기</button>
+      </article>
+    </section><!-- -->
+  </section>
+  <footer id="main_footer"><!--최하단 푸터 -->
+    <address>
+      경기도 고양시
+    </address>
+    <p>
+      © 하늘블로그 2017 All right reserved. By Nai-com
+    </p>
+  </footer>
+  <script>
+    window.onload = function() {/*화면크기 변환시 텍스트 변화*/
+      if (window.innerWidth <= 900) {
+          document.getElementsByTagName('i')[0].innerHTML='&#xE88A;'
+          document.getElementsByTagName('i')[1].innerHTML='&#xE02F;'
+          document.getElementsByTagName('i')[2].innerHTML='&#xE0B9;'
+          document.getElementsByTagName('i')[3].innerHTML='&#xE86F;'
+          document.getElementsByTagName('i')[4].innerHTML='&#xE0E1;'
+        }  else {
+          document.getElementsByTagName('i')[0].innerHTML='&#xE88A;HOME'
+          document.getElementsByTagName('i')[1].innerHTML='&#xE02F;공지사항'
+          document.getElementsByTagName('i')[2].innerHTML='&#xE0B9;게시판'
+          document.getElementsByTagName('i')[3].innerHTML='&#xE86F;갤러리'
+          document.getElementsByTagName('i')[4].innerHTML='&#xE0E1;연락하기'
+        }
+      }
+    window.onresize = function() {
+      if (window.innerWidth <= 900) {
+          document.getElementsByTagName('i')[0].innerHTML='&#xE88A;'
+          document.getElementsByTagName('i')[1].innerHTML='&#xE02F;'
+          document.getElementsByTagName('i')[2].innerHTML='&#xE0B9;'
+          document.getElementsByTagName('i')[3].innerHTML='&#xE86F;'
+          document.getElementsByTagName('i')[4].innerHTML='&#xE0E1;'
+        }  else {
+          document.getElementsByTagName('i')[0].innerHTML='&#xE88A;HOME'
+          document.getElementsByTagName('i')[1].innerHTML='&#xE02F;공지사항'
+          document.getElementsByTagName('i')[2].innerHTML='&#xE0B9;게시판'
+          document.getElementsByTagName('i')[3].innerHTML='&#xE86F;갤러리'
+          document.getElementsByTagName('i')[4].innerHTML='&#xE0E1;연락하기'
+        }
+      }
+
+    function home() {/*클릭시 디스플레이 스타일 변경*/
+      document.getElementById('main_sectionhome').style.display = 'flex'
+      document.getElementById('main_sectionnotice').style.display = 'none'
+      document.getElementById('main_sectionboard').style.display = 'none'
+      document.getElementById('main_sectionpic').style.display = 'none'
+      document.getElementById('main_sectiontel').style.display = 'none'
+    }
+    function notice() {/*클릭시 디스플레이 스타일 변경*/
+      document.getElementById('main_sectionhome').style.display = 'none'
+      document.getElementById('main_sectionnotice').style.display = 'flex'
+      document.getElementById('main_sectionboard').style.display = 'none'
+      document.getElementById('main_sectionpic').style.display = 'none'
+      document.getElementById('main_sectiontel').style.display = 'none'
+    }
+    function board() {/*클릭시 디스플레이 스타일 변경*/
+      document.getElementById('main_sectionhome').style.display = 'none'
+      document.getElementById('main_sectionnotice').style.display = 'none'
+      document.getElementById('main_sectionboard').style.display = 'flex'
+      document.getElementById('main_sectionpic').style.display = 'none'
+      document.getElementById('main_sectiontel').style.display = 'none'
+    }
+    function pic() {/*클릭시 디스플레이 스타일 변경*/
+      document.getElementById('main_sectionhome').style.display = 'none'
+      document.getElementById('main_sectionnotice').style.display = 'none'
+      document.getElementById('main_sectionboard').style.display = 'none'
+      document.getElementById('main_sectionpic').style.display = 'flex'
+      document.getElementById('main_sectiontel').style.display = 'none'
+    }
+    function tel() {/*클릭시 디스플레이 스타일 변경*/
+      document.getElementById('main_sectionhome').style.display = 'none'
+      document.getElementById('main_sectionnotice').style.display = 'none'
+      document.getElementById('main_sectionboard').style.display = 'none'
+      document.getElementById('main_sectionpic').style.display = 'none'
+      document.getElementById('main_sectiontel').style.display = 'flex'
+    }
+  </script>
+</body>
+</html>

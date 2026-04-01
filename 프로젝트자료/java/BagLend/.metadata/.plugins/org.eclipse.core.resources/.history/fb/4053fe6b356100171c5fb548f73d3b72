@@ -1,0 +1,507 @@
+package bag.design.page;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import bag.db.data.Product;
+import bag.get.connection.MakeConnection;
+import bag.handle.sql.HandleProductDB;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+
+public class ProductInfoPage extends JFrame implements ActionListener {
+	
+	private JTextField txtB_Num, txtB_Title, txtB_Check;// 제품번호, 제품제목, 제품정보, 상태여부
+	private JTextArea txtB_Infor;
+	private JLabel pdPic, pdRec;// 제품번호, 제품제목, 제품정보, 상태여부
+	private JLabel Product_image;
+	private JButton C_Insert, C_delete, C_Update, C_Select, btnClose, C_Back, C_Next;
+	private Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	
+	private JLabel P_Num, P_Title, P_Infor, P_Check, Product_Image, P_Name_Label, P_List_Label;// 제품번호,
+	private JPanel aPn2, aPn1, picPn;
+	Color trans = new Color(0, 0, 0, 0);
+	
+	private JFrame frame;
+	private int start,end;
+	private ArrayList<Product> product;
+
+	// 생성자
+	public ProductInfoPage() {
+
+		frame = new JFrame();
+		product = makeProduct();
+		start = 0; //왼쪽 하단버튼 사이의 숫자. 시작인덱스
+		end = product.size();
+		Design();
+		outPutProduct();
+
+		setVisible(true);
+
+		//JPanel panel = new JPanel();
+
+	}
+	// 디자인
+	public void Design() {
+		setBounds(screen.width / 9, screen.height / 9, 1280, 720);
+		getContentPane().setLayout(null);
+		
+		// 이미지 패널----------------------------------------------------
+/*		
+		JLabel prImg = new JLabel("Product Image");
+		prImg.setForeground(new Color(255, 255, 255));
+		prImg.setFont(new Font("SansSerif", Font.BOLD, 14));
+		prImg.setBounds(12, 10, 124, 28);
+		getContentPane().add(prImg);*/
+				
+		JPanel picPn = new JPanel(); // new JPanel(new BorderLayout())
+		picPn.setBackground(new Color(255, 255, 255,50));
+		
+		picPn.setBorder(new LineBorder(new Color(255, 255, 255), 2));
+		picPn.setBounds(10, 10, 585, 540);
+		
+		// picPn.setLayout(null);
+		JPanel aPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		aPn1.setBackground(new Color(255, 255, 255,50));
+		aPn1.setOpaque(false);
+
+		// 제품 이미지
+		pdPic = new JLabel();
+		Product_image = new JLabel();
+		Product_image.setFont(new Font("Rockwell", Font.ITALIC, 12));
+		//Product_image.setEnabled(false);
+		Product_image.setBounds(25, 40, 520, 532);
+		aPn1.add(Product_image);
+		Product_image.setBackground(Color.LIGHT_GRAY);
+
+		// 레코드 패널
+		aPn1.add(pdPic);
+		picPn.add(aPn1);
+		this.getContentPane().add(picPn);
+		
+		C_Back = new JButton();
+		C_Back.setIcon(new ImageIcon("C:/image/icn_arw_p.png"));
+		C_Back.setRolloverIcon(new ImageIcon("C:/image/icn_arw_p_a.png"));
+		C_Back.setPreferredSize(new Dimension(80,80));
+		C_Back.setBorderPainted(false);
+		C_Back.setContentAreaFilled(false);
+		C_Back.addActionListener(this);
+		
+		C_Next = new JButton();
+		C_Next.setPreferredSize(new Dimension(80,80));
+		C_Next.setIcon(new ImageIcon("C:/image/icn_arw_n.png"));
+		C_Next.setRolloverIcon(new ImageIcon("C:/image/icn_arw_n_a.png"));
+		C_Next.setBorderPainted(false);
+		C_Next.setContentAreaFilled(false);
+		C_Next.addActionListener(this);
+		pdRec = new JLabel("1/"+end);
+		pdRec.setPreferredSize(new Dimension(35,20));
+		pdRec.setBackground(Color.white);
+		pdRec.setForeground(Color.white);
+		
+		JPanel aPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		aPn2.setBounds(190, 560, 211, 90);
+		getContentPane().add(aPn2);
+		aPn2.setOpaque(false);
+		
+		aPn2.add(C_Back);
+		aPn2.add(pdRec);
+		aPn2.add(C_Next);
+
+
+		// 제품정보 패널
+
+/*		JLabel prInfo = new JLabel("Product Information");
+		 prInfo.setForeground(Color.WHITE);
+		 prInfo.setFont(new Font("SansSerif", Font.BOLD, 14));
+		 prInfo.setBounds(612, 10, 175, 28);
+		getContentPane().add( prInfo);*/
+		
+		
+		JPanel infoPn = new JPanel();
+		infoPn.setBackground(new Color(255, 255, 255, 50));
+		infoPn.setBorder(new LineBorder(new Color(255, 255, 255), 2));		
+		infoPn.setBounds(612, 10, 640, 540);
+		infoPn.setLayout(null);
+
+		JPanel bPn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn1.setBackground(new Color(255, 255, 255, 50));
+		bPn1.setBounds(20, 10, 600, 60);
+		
+		JPanel bPn2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn2.setBackground(new Color(255, 255, 255, 50));
+		bPn2.setBounds(20, 80, 600, 60);
+		
+		JPanel bPn3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn3.setBackground(new Color(255, 255, 255, 50));
+		bPn3.setBounds(20, 150, 600, 60);
+		
+		JPanel bPn4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn4.setBackground(new Color(255, 255, 255, 50));
+		bPn4.setBounds(20, 220, 600, 30);
+		
+		JPanel bPn5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bPn5.setBackground(new Color(255, 255, 255, 50));
+		bPn5.setBounds(20, 250, 600, 271);
+
+		txtB_Num = new JTextField("", 53);
+		txtB_Check = new JTextField("", 53);
+		txtB_Title = new JTextField("", 53);
+		txtB_Infor = new JTextArea(14, 53);
+		//txtB_Infor.setAlignment(txtB_Infor.cen)
+
+		setTextEditable(false);
+		// JScrollBar scroll=new JScrollBar();
+
+		// 라벨-패널-패널 부착
+		JLabel label = new JLabel("Product Number :");
+		label.setForeground(new Color(255, 255, 255));
+		label.setFont(new Font("SansSerif", Font.BOLD, 14));
+		bPn1.add(label);
+		bPn1.add(txtB_Num);
+		JLabel label_1 = new JLabel("Product Name :");
+		label_1.setForeground(new Color(255, 255, 255));
+		label_1.setFont(new Font("SansSerif", Font.BOLD, 14));
+		bPn2.add(label_1);
+		bPn2.add(txtB_Check);
+		JLabel label_2 = new JLabel("Product Condition(Y/N) :");
+		label_2.setForeground(new Color(255, 255, 255));
+		label_2.setFont(new Font("SansSerif", Font.BOLD, 14));
+		bPn3.add(label_2);
+		bPn3.add(txtB_Title);
+		JLabel label_3 = new JLabel("Product Information :");
+		label_3.setForeground(new Color(255, 255, 255));
+		label_3.setFont(new Font("SansSerif", Font.BOLD, 14));
+		bPn4.add(label_3);
+		bPn5.add(txtB_Infor);
+		
+		// bPn5.add(scroll);
+		infoPn.add(bPn1);
+		infoPn.add(bPn2);
+		infoPn.add(bPn3);
+		infoPn.add(bPn4);
+		infoPn.add(bPn5);
+		this.getContentPane().add(infoPn);
+
+		// 버튼 생성
+		C_Insert = new JButton();
+		C_Insert.setIcon(new ImageIcon("C:/image/btn_insert.jpg"));
+		//C_Insert.setFont(new Font("SansSerif", Font.BOLD, 13));
+		C_Insert.addActionListener(this);
+		C_Insert.setPreferredSize(new Dimension(100, 30));
+		
+		C_delete = new JButton();
+		C_delete.setIcon(new ImageIcon("C:/image/btn_del.jpg"));
+		//C_delete.setFont(new Font("SansSerif", Font.BOLD, 13));
+		C_delete.addActionListener(this);
+		C_delete.setPreferredSize(new Dimension(100, 30));
+		
+		C_Update = new JButton();
+		C_Update.setIcon(new ImageIcon("C:/image/btn_edit.jpg"));
+		//C_Update.setFont(new Font("SansSerif", Font.BOLD, 13));
+		C_Update.setPreferredSize(new Dimension(100, 30));
+		C_Update.addActionListener(this);
+		
+		C_Select = new JButton();
+		C_Select.setIcon(new ImageIcon("C:/image/btn_srch.jpg"));
+		C_Select.addActionListener(this);	
+		//C_Select.setFont(new Font("SansSerif", Font.BOLD, 13));
+		C_Select.setPreferredSize(new Dimension(100, 30));
+
+		// 신규, 수정, 버튼
+		JPanel btnPn = new JPanel();
+		btnPn.setBackground(new Color(255, 255, 255,50));
+		btnPn.setOpaque(false);
+		btnPn.setBounds(650, 560, 600, 40);
+		getContentPane().add(btnPn);
+		btnPn.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+		btnPn.add(C_Insert);
+		btnPn.add(C_delete);
+		btnPn.add(C_Update);
+		btnPn.add(C_Select);
+		
+		btnClose = new JButton(new ImageIcon("C:/image/icn_close_d.png"));
+		btnClose.setRolloverIcon(new ImageIcon("C:/image/icn_close_a.png"));
+		btnClose.setFont(new Font("SansSerif", Font.BOLD, 14));
+		btnClose.setBackground(new Color(255, 255, 255,0));
+		btnClose.setBorderPainted(false);
+		btnClose.setContentAreaFilled(false);
+		btnClose.setOpaque(false);
+		btnClose.setPreferredSize(new Dimension(36, 36));
+
+		JPanel delPn = new JPanel();
+		delPn.setBackground(new Color(255, 255, 255, 50));
+		delPn.setBounds(1190, 626, 62, 46);
+		delPn.setOpaque(false);
+		getContentPane().add(delPn);
+		delPn.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		delPn.add(btnClose);
+
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon("C:/image/bg01.jpg").getImage()
+				.getScaledInstance(screen.width, screen.height, Image.SCALE_DEFAULT));
+
+		JLabel bgImg = new JLabel();
+		bgImg.setFont(new Font("Gulim", Font.PLAIN, 12));
+		bgImg.setToolTipText("배경이미지");
+		bgImg.setBounds(0, 0, screen.width, screen.height);
+		bgImg.setIcon(imageIcon);
+		getContentPane().add(bgImg);
+
+	}//-----------------------------------------디자인 코드 끝------------------
+
+
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new ProductInfoPage();
+
+	}
+	
+	
+	//-------------------------------------------백 엔드 코드-----------------
+
+	private ArrayList<Product> makeProduct() {
+		// TODO Auto-generated method stub
+		HandleProductDB productDB = new HandleProductDB();
+		ArrayList<Product> product = productDB.selectAllData(MakeConnection.getInstance());
+
+		return product;	
+	}
+
+	
+	
+	public JTextField getTxtB_Num() {
+		return txtB_Num;
+	}
+
+	public void setTxtB_Num(JTextField txtB_Num) {
+		this.txtB_Num = txtB_Num;
+	}
+
+	public JTextField getTxtB_Title() {
+		return txtB_Title;
+	}
+
+	public void setTxtB_Title(JTextField txtB_Title) {
+		this.txtB_Title = txtB_Title;
+	}
+
+	public JTextField getTxtB_Check() {
+		return txtB_Check;
+	}
+
+	public void setTxtB_Check(JTextField txtB_Check) {
+		this.txtB_Check = txtB_Check;
+	}
+
+	public JTextArea getTxtB_Infor() {
+		return txtB_Infor;
+	}
+
+	public void setTxtB_Infor(JTextArea txtB_Infor) {
+		this.txtB_Infor = txtB_Infor;
+	}
+
+	public JLabel getPdPic() {
+		return pdPic;
+	}
+
+	public void setPdPic(JLabel pdPic) {
+		this.pdPic = pdPic;
+	}
+
+	public JLabel getPdRec() {
+		return pdRec;
+	}
+
+	public void setPdRec(JLabel pdRec) {
+		this.pdRec = pdRec;
+	}
+
+	public JLabel getProduct_image() {
+		return Product_image;
+	}
+
+	public void setProduct_image(JLabel product_image) {
+		Product_image = product_image;
+	}
+
+	public JButton getC_Insert() {
+		return C_Insert;
+	}
+
+	public void setC_Insert(JButton c_Insert) {
+		C_Insert = c_Insert;
+	}
+
+	public JButton getC_delete() {
+		return C_delete;
+	}
+
+	public void setC_delete(JButton c_delete) {
+		C_delete = c_delete;
+	}
+
+	public JButton getC_Update() {
+		return C_Update;
+	}
+
+	public void setC_Update(JButton c_Update) {
+		C_Update = c_Update;
+	}
+
+	public JButton getC_Select() {
+		return C_Select;
+	}
+
+	public void setC_Select(JButton c_Select) {
+		C_Select = c_Select;
+	}
+
+	public JButton getBtnClose() {
+		return btnClose;
+	}
+
+	public void setBtnClose(JButton btnClose) {
+		this.btnClose = btnClose;
+	}
+
+	public JButton getC_Back() {
+		return C_Back;
+	}
+
+	public void setC_Back(JButton c_Back) {
+		C_Back = c_Back;
+	}
+
+	public JButton getC_Next() {
+		return C_Next;
+	}
+
+	public void setC_Next(JButton c_Next) {
+		C_Next = c_Next;
+	}
+
+	public Dimension getScreen() {
+		return screen;
+	}
+
+	public void setScreen(Dimension screen) {
+		this.screen = screen;
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	public int getStart() {
+		return start;
+	}
+
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
+
+	public void setEnd(int end) {
+		this.end = end;
+	}
+
+	public ArrayList<Product> getProduct() {
+		return product;
+	}
+
+	public void setProduct(ArrayList<Product> product) {
+		this.product = product;
+	}
+	
+	public void setTextEditable(Boolean bool) {
+		txtB_Num.setEditable(bool);
+		txtB_Check.setEditable(bool);
+		txtB_Title.setEditable(bool);
+		txtB_Infor.setEditable(bool);
+	}
+	
+	public void outPutProduct() {
+		ImageIcon pdImg=new ImageIcon(product.get(start).getImage());
+		Image pd_Img = pdImg.getImage();
+		Image imgResize = pd_Img.getScaledInstance(565, 520, Image.SCALE_DEFAULT);
+		ImageIcon imgIcon = new ImageIcon(imgResize);
+
+		txtB_Num.setText(product.get(start).getNum() + "");
+		txtB_Check.setText(product.get(start).getTitle());
+		txtB_Title.setText(product.get(start).getState());
+		txtB_Title.setForeground(new Color(255, 0, 0));
+		txtB_Infor.setText(product.get(start).getInfo());
+		Product_image.setIcon(imgIcon);
+		
+	}
+	
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource() == C_Select) {   //검색 눌렀을때
+			SearchPage search = new SearchPage(this);
+		}
+		
+		
+		else if(e.getSource() == C_Back) { // 이전버튼 눌렀을때
+			if(start-1<0) {
+				JOptionPane.showMessageDialog(frame, "첫 페이지입니다");
+				return ;
+			}
+			else
+				start--;	
+		}
+		
+		
+		else if(e.getSource() == C_Next) { // 다음버튼 눌렀을때
+			if(start>=product.size()-1) {
+				JOptionPane.showMessageDialog(frame, "마지막 페이지입니다");
+				return ;	
+			}
+			else
+				start++;		
+		}
+		
+		else if(e.getSource() == C_Insert) { // 신규등록 버튼 눌렀을때
+			new InsertProductPage();
+			
+		}
+		
+		else if(e.getSource() == C_delete) { //삭제 버튼 눌렀을때
+			int a =JOptionPane.showConfirmDialog(frame, "삭제하시겠습니까?","삭제",
+					JOptionPane.OK_CANCEL_OPTION,JOptionPane.WARNING_MESSAGE,null);//확인 0 취소2
+
+			if(a==0) {
+				HandleProductDB db = new HandleProductDB();
+				db.deleteProduct(MakeConnection.getInstance(), txtB_Num.getText());
+			}
+			
+		}	
+		
+		else if(e.getSource() == C_Update) { // 수정하기 눌렀을때
+			JOptionPane.showMessageDialog(frame, "입력필드에 수정할 값을 입력하세요");
+			UpdateImage upImage = new UpdateImage();
+			setTextEditable(true);
+			
+		}
+		
+		product = makeProduct();
+		pdRec.setText((start+1)+"/"+(end=product.size()));
+		outPutProduct();
+		
+	}
+
+	
+}

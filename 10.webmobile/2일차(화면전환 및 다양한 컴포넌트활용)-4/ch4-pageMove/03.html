@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,
+                                     maximum-scale=1.0,minimum-scale=1.0,
+                                     user-scalable=no">
+<title>외부에서 파일을 불러오는데 공유X</title>
+<link rel="stylesheet" href="../mobile/jquery.mobile-1.3.2.min.css">
+<script type="text/javascript" src="../mobile/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="../mobile/jquery.mobile-1.3.2.min.js"></script>
+</head>
+<body>
+
+<div data-role="page">
+    <!-- 1.header지정 -->
+    <div data-role="header">
+         <h1>세번째 페이지</h1>
+    </div>
+    <!-- 2.content 지정(공유X) css,js->페이지 이동시켜도 사용X
+        data-ajax="true"(디폴트)->메모리 공유 O(스타일 공유)
+        data-ajax="false"->url변경시 전체 페이지를 다시 로드하라
+      -->
+    <div data-role="content">
+       <a href="03-2.html" data-role="button" data-ajax="false">네번째 페이지로 이동</a>
+    </div>
+    <!-- 3.Footer 지정 -->
+    <div data-role="footer">
+         <h1>화면하단</h1>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

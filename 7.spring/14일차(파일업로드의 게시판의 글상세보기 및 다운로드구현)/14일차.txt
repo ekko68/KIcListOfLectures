@@ -1,0 +1,241 @@
+14일차(파일업로드의 게시판의 글 상세보기 및 다운로드 구현)
+
+1.DB연동->ListController
+2.리소스 번들-->Validator(에러정보를 저장)->화면에 출력(스프링 액션태그)
+  =>글쓰기 (업로드) ->하나의 요청명령어-->1)Get방식
+                                                              2)Post방식
+------------------------------------------------------------------------------
+3.다운로드->1.글목록보기->디스켓모양의 아이콘 다운
+                  2.글상세보기->첨부한 파일을 클릭->다운로드
+                      ->하나의 컨트롤러에서 여러개의 요청에 따라 다른 메서드호출
+
+http://localhost:8090/Springfileboard/board/detail.do?seq=4
+
+->요청 명령어 board/detail.do?seq=4
+----------------------------------------------------------------------------
+1)dispatcher-servlet.xml에 등록
+
+=><bean class="com.board.controller.DetailController" />
+
+a.jsp에서 선언문에
+
+<%@ page language="java" contentType="application/download; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+contentType="text/html"=>"application/download"; //다운로드 받는 뷰
+           viewResolver(1)                    viewResolover (0)
+
+
+<!--파일 다운로드 뷰를 위한 전용 viewResolver를 빈즈로 등록 -->
+  =>  <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"
+               p:order="0" />
+    
+    <!-- 파일업로드(52428800->byte단위 50MB->51,200kB->52,428,800byte -->
+    <bean id="multipartResolver"
+               class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="52428800" />
+        <property name="defaultEncoding" value="utf-8" />
+     </bean>
+
+2.DetailController->글제목을 클릭->조회수가 증가,글을 화면에 출력
+   BoardMapper.xml-><update>,<select>
+
+   <!-- 글상세보기(레코드 한개 출력)  -->
+ <select id="selectBoard" parameterType="Integer" resultType="BoardCommand">
+    select * from springboard2 where seq=#{seq}
+ </select>
+ 
+ <!-- 조회수 -->
+ <update id="updateHit" parameterType="Integer">
+    update springboard2 set hit=hit+1 where seq=#{seq}
+ </update>
+
+ ####
+ #### 에러표시
+ ####
+
+   BoardDao->2개의 메서드 선언
+
+   //5.게시물에 대한 게시물(레코드)한개 찾기
+  public BoardCommand selectBoard(Integer seq);//~(int seq);
+  
+  //6.게시물번호에 해당하는 조회수 증가
+  public void updateHit(Integer seq);
+
+   BoardDaoImpl->2개의 메서드를 호출 코딩
+//레코드 한개
+	public BoardCommand selectBoard(Integer seq) {
+			// TODO Auto-generated method stub
+		   //BoardCommand command=
+		   //(BoardCommand)getSqlSession().selectOne("selectBoard",seq);
+		   //return command;
+			return (BoardCommand)getSqlSession().selectOne("selectBoard",seq);//Object->BoardCommand
+		}
+	//조회수 
+	public void updateHit(Integer seq) {
+			// TODO Auto-generated method stub
+		getSqlSession().update("updateHit",seq);
+		}
+==========================================
+3.DetatilController작성->2개 메서드 호출->boardView.jsp
+
+@Controller
+public class DetailController {
+
+	private Logger log=Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private BoardDao boardDao;
+	
+	//String->페이지만 이동, 페이지가 이동하면서 데이터도 함께 전달(ModelAndView)
+	@RequestMapping("/board/detail.do")
+	public ModelAndView process(@RequestParam("seq") int seq) {
+		//int seq=Integer.parseInt(request.getParameter("seq"));
+		//?,?
+		if(log.isDebugEnabled()) { //로그객체가 작동중이라면(디버그상태)
+			log.debug("seq=>"+seq);//System.out.println("seq=>"+seq);
+		}
+		//1.조회수 증가
+		boardDao.updateHit(seq);
+		BoardCommand board=boardDao.selectBoard(seq);
+		//글내용에 \r\n  ㅁㅇㅁㅁ\r\n->메서드가 있다.<pre></pre>
+		board.setContent(StringUtil.parseBr(board.getContent()));
+		/*ModelAndView mav=new ModelAndView("boardView");
+		mav.addObject("board",board);
+		return mav;*/ //1.이동할페이지명 2.전달할키명 3.전달할값
+		return new ModelAndView("boardView","board",board);
+	}
+}
+--------------------------------------------------------------------------
+
+4.tilesdef.xml에서 body=>/WEB-INF/tiles-view/boardView.jsp
+
+             <definition name="boardView" extends="boardList">
+   	  <put-attribute name="title" value="글상세보기"/>
+   	  <put-attribute name="js"  value=""/> 
+   	  <put-attribute name="body"  value="/WEB-INF/tiles-view/boardView.jsp" />
+   	</definition>
+
+5.boardView.jsp화면에 출력
+
+
+  ${board.seq} 형태로 출력->el문법이 적용이 안되기때문에
+
+만약 EL이 인식이 안되면 페이지 상단에 
+<%@ page isELIgnored="false"%> 를 선언해야 EL을 사용할 수 있습니다.
+
+<%@ page isELIgnored="false" contentType = "text/html; charset=euc-kr" %>
+
+<table width="600" border="0" cellspacing="0" cellpagging="0" align="center">
+	<tr>
+		<td colspan="2"><h3>스프링 게시판 </h3></td>	
+	</tr>
+	<tr>
+		<td>번호</td>		
+		<td>${board.seq}</td>		
+	</tr>
+	<tr>
+		<td>글쓴이</td>
+		<td>${board.writer}</td>
+	</tr>
+	<tr>
+		<td>제목</td>
+		<td>${board.title}</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<hr size="1" width="100%" noshade>
+		</td>
+	</tr>
+	<tr>
+		<td>내용</td>
+		<td>${board.content}</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<hr size="1" width="100%" noshade>
+		</td>
+	</tr>
+	<tr>
+		<td>조회수</td>
+		<td>${board.hit}</td>
+	</tr>
+	<tr>
+		<td>등록날짜</td>
+		<td>${board.regdate}</td>
+	</tr>
+	<tr>
+		<td>첨부파일</td>
+		<td><a href="file.do?filename=${board.filename}">${board.filename }</a></td>
+	</tr>
+	<tr>
+		<td align="right" colspan="2">
+			<input type="button" value="수정" 
+			   onclick="location.href='update.do?seq=${board.seq}'">
+			<input type="button" value="삭제" 
+			   onclick="location.href='delete.do?seq=${board.seq}'">
+			<input type="button" value="목록" onclick="location.href='list.do'">
+		</td>
+	</tr>
+</table>
+---------------------------------------------------------------------------------
+*****다운로드 하는 방법******
+
+http://localhost:8090/Springfileboard/board/file.do?filename=150468279425729.jpg
+
+링크문자열 클릭->404에러 
+/board/file.do?filename=150468279425729.jpg =>업로드위치를 알고있어야함
+
+/board/file.do=>요청명령어에 해당하는 컨트롤러가 없다.FileController 작성X
+1.DetailController에 작성(요청해서 처리해주는 메서드이기때문에)
+
+   //추가->다운로드
+	@RequestMapping("/board/file.do")
+	public ModelAndView download(@RequestParam("filename") String filename) {
+		//다운로드 받을 파일의 위치와 이름
+		File downloadFile=new File(FileUtil.UPLOAD_PATH+"/"+filename);
+		//AbstractView를 상속받은 뷰클래스에게 전달
+		//1.다운로드받을 뷰객체  2.모델객체명(키),3.전달할값(다운로드받을 파일명)
+		return new ModelAndView("downloadView","downloadFile",downloadFile);
+	}
+
+2.다운로드를 위한 뷰를 새로 작성->AbstractView클래스를 상속을 받아서 새로 뷰를
+                                                작성(대화상자의 형태)->DownloadView
+                                             ->기존의 jsp와 다르다
+                                             ->renderMergedOutputModel()를 이용해서
+                                                 다운로드 처리해준다.(모델)
+                                             ->다운로드 받는 파일의 형식,위치,크기를 지정
+                                             ->브라우저별로 다운로드 받을시 한글처리해야함
+
+실행을 한 결과
+
+Description The server encountered an unexpected condition that prevented it from fulfilling the request.
+
+Exception
+javax.servlet.ServletException:
+ Could not resolve view with name 'downloadView' in servlet with name 'dispatcher'
+---------------------------------------------------------------------------------
+==>DownloadView 빈즈 클래스의 객체가 생성이 되지 않아서 메서드를 호출
+       하지 못하기때문에 발생한 에러메세지
+
+3.distpacter-servlet.xml에서 빈즈로 등록(DownloadView)
+
+<!--  return new ModelAndView("downloadView","downloadFile"~ -->
+                                                 ----------------
+                                                 DownloadView의 객체를 가져오라는 id값
+    <bean id="downloadView" class="com.board.view.DownloadView" />
+                     ----------------
+                      구분자
+
+***********************************************************
+
+
+
+
+
+
+
+
+
+
+

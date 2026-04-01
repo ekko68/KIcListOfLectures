@@ -1,0 +1,12 @@
+package bag.handle.sql;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+
+import bag.db.data.CustomerInfo;
+
+public class HandleCustomerInfo {
+	
+	
+	
+}

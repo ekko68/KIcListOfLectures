@@ -1,0 +1,18 @@
+/* UI Object */
+#wrap{width:100%}
+#header{width:100%}
+#container{_display:inline-block;width:100%}
+#container:after{display:block;clear:both;content:''}
+.snb{float:left;width:180px;margin-right:-200px}
+#content{margin-left:200px}
+#footer{width:100%}
+
+/* Layout Color - 실제 서비스 적용 후 아래 코드는 삭제 하세요 */
+div{margin:0 0 10px;padding:10px 0;color:#2d2c2d;font-family:Tahoma;font-size:14px;font-weight:bold}
+#wrap{width:auto;margin:0;padding:10px;border:1px solid #bdbdbd;background:yellow}
+#header{margin-top:10px}
+#header,#container{width:auto;padding:10px;border:2px solid #bfbfbf;background:#e5e5e5}
+.snb,#content{margin-top:10px;border:1px solid #bdbdbd;background:#fff;text-align:center}
+#content{height:200px}
+#footer{width:auto;padding:10px;border:2px solid #bfbfbf;background:#e5e5e5}
+/* //UI Object */

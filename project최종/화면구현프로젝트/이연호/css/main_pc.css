@@ -1,0 +1,125 @@
+@CHARSET "UTF-8";
+/* PC용 CSS */
+
+/* 기본 폭 */
+#wrapper{width:900px}
+#mfmHeadWrap{
+    height:70px;
+
+    position:fixed;
+    
+   	padding-top:10px;
+   
+    background-color:#fff;
+    z-index:100;
+    width:900px;
+    
+    /* chrome 영상 & css - fixed & 스크롤에서 fixed위치(상하떨림) 및 잔상 버그처리 */
+    -webkit-backface-visibility:hidden;
+	-webkit-transform:translateZ(0);
+    /* //chrome 영상 & css - fixed & 스크롤에서 fixed위치(상하떨림) 및 잔상 버그처리 */
+}
+#mfmHead>h1{width:350px;float:left}
+/* #mfmHead:AFTER{clear:both} */
+#mfmServiceLogo{
+	font-family:HanSans;
+    font-weight:bold;
+    font-size:36px;
+    color:#333
+}
+#mfmGnb>ul{float:right;padding-top:5px;}
+#mfmGnb>ul>li{float:left;margin-left:20px}
+/* #mfmGnb:after {clear:both} */
+#mfmContent{padding-top:80px}
+#mfmContent.main{height:505px}
+.main p{
+	margin-top:415px;
+	margin-left:20px;
+	z-index:9;	    
+	position:absolute;	    
+	font-size:20pt
+}
+#main_morning{display:block}
+#main_morning_poster{display:none}
+.board{
+	width:710px;
+	height:300px;
+	margin:0 auto
+}
+
+.board>div{
+	width:305px;
+	height:295px;
+	float:left
+}
+.board>div>p {
+	color:#333;
+	font-size:20px;
+	text-align:center;
+	margin-top:34px;
+	font-weight:bold
+}
+.board ul{
+/*말줄임표 추가*/
+	width:270px; text-overflow:ellipsis; white-space:nowrap; /*overflow:hidden;*/
+	font-size:18px;
+	line-height:1.7em;
+	margin-top:20px;
+	margin-left:40px;
+	-moz-binding:url(../lib/moz_ellipsis/ellipsis.xml);
+	-o-text-overflow:ellipsis; -ms-text-overflow:ellipsis;
+	margin-bottom:10px
+}
+   /* 게시판 > 고객문의 */
+ .board>div:nth-last-child(1){
+	margin-left:100px;
+ }
+/* 게시판 자세히*/
+ .more_board_news{
+	width:150px;
+	font-size:16px;
+	line-height:2.5em;
+	border-top-left-radius:4px;
+	border-top-right-radius:4px;
+	border-bottom-right-radius:4px;
+	border-bottom-left-radius:4px
+}
+ 
+ /* 주문 - 제품목록*/
+.products{width:900px;height:700px}
+.products ul{width:780px;height:50px;margin:0 auto}
+.wrap_product li{
+	width:180px;
+	/* margin-left:20px; */
+	text-align:left;
+	/*
+	padding-left:5px;
+	*/
+	font-size:15px
+}
+
+.wrap_product, .products > div{width:900px;height:700px}	
+/* .wrap_product{width:780px} */
+.wrap_product li:nth-child(4n+5){clear:both} /* 5번째마다 4번째 속성을 닮은 부분에 clear처리-개행처리 */
+  .wrap_product figure{font-size:13pt}
+hr{margin:20px 0}
+  
+footer{
+	width:900px;
+	height:60px;
+	margin-top:40px;  	
+	font-size:10pt;
+	padding-top:22px;  	    	
+	margin-bottom:22px
+}
+footer p:first-child{
+	width:125px;
+	font-size:12pt;
+	float:left
+}
+footer *{
+	float:left;
+	margin-left:15px;
+	line-height:28pt
+}
+footer p:last-child{font-weight:bold}

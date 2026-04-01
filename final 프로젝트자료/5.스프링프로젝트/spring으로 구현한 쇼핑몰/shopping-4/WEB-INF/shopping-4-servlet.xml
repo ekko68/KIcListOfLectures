@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- HandlerMapping -->
+		<bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/userEntry.html">userEntryFormController</prop>
+            </props>
+        </property>
+	</bean>
+
+	<!-- Controller -->
+	<bean id="userEntryFormController" class="controller.UserEntryFormController">
+		<property name="sessionForm"><value>false</value></property>
+		<property name="commandName"><value>user</value></property>
+		<property name="commandClass"><value>logic.User</value></property>
+		<property name="validator"><ref bean="userEntryValidator"/></property>
+		<property name="formView"><value>userEntry</value></property>
+		<property name="successView"><value>userEntrySuccess</value></property>
+		<property name="shopService"><ref bean="shopService" /></property>
+	</bean>
+	
+	<!-- ViewResolver -->
+    <bean id="resourceBundleViewResolver" 
+        class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+		<property name="basename">
+			<value>views</value>
+		</property> 
+	</bean>
+</beans>

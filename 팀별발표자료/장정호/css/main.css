@@ -1,0 +1,347 @@
+/*배경색을 설정*/
+* {
+	margin:0; padding:0;
+	background-color:#4A1616;
+	}
+/*전체를 넓이를 1000px로 지정*/
+.all{
+	width:1000px;
+	margin:0 auto;
+}
+/*모바일 에서만 보이게 설정*/
+.m1,.sc2,.sc3 {display:none;}
+/*좌상단에 로고를 위치함*/
+ .logo {
+	float:left;
+	position:relative; /*상대적인 위치*/
+	left:3%; top:30px;
+}
+
+
+ul { /*동그란 마크 안나오게 설정*/
+	list-style-type:none;
+}
+/*상단바 메뉴의 위치를 지정*/
+.main1 {
+   position:relative; 
+   left:15%; /*왼쪽에서 15%의 위치*/
+   top:30px;  /*위에서 30px*/
+}
+}
+/*상단바 매뉴의 색상을 지정*/
+.main1 ul{
+background:#af6060;
+height:50px;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+.main1 li{
+float:left;
+padding:0px;
+}
+
+.main1 li a{
+background: #af6060; /*상단메뉴의 배경색*/
+color:#cccccc;  /*상단메뉴의 글씨색*/
+display:block;
+font-weight:normal;
+line-height:50px;
+margin:0px;
+padding:0px 25px;
+text-align:center; /*글씨정렬*/
+text-decoration:none; /*택스트에 언더라인 안나오게 설정*/
+}
+
+.main1 li a:hover, .main1 ul li:hover a{ /*마우스를 올려놓으면 반응하게*/
+background: #724a4a; /*마우스를 올렸을때 배경색*/
+color:#FFFFFF; /*마우스를 올려두었을때의 글씨색*/
+text-decoration:none;
+}
+/* 드랍메뉴를 설정*/
+.main1 li ul{
+background: white;
+display:none; /* 평상시에는 드랍메뉴가 안보이게 하기 */
+height:auto;
+padding:0px;
+margin:0px;
+border:0px;
+position:absolute;
+width:200px;
+z-index:200;
+}
+
+.main1 li:hover ul{
+display:block; /* 마우스 커서 올리면 드랍메뉴 보이게 하기 */
+}
+/*드랍메뉴의 배경색 밑 화면에 보이게 하기*/
+.main1 li li {
+background:#af6060;
+display:block;
+float:none;
+margin:0px;
+padding:0px;
+width:200px;
+}
+
+.main1 li:hover li a{
+background:none;
+}
+/*드랍매뉴의 글씨속성*/
+.main1 li ul a{
+display:block;
+height:50px;
+font-size:12px;
+font-style:normal;
+margin:0px;
+padding:0px 10px 0px 15px;
+text-align:left;
+}
+/*드랍메뉴 마우스 올렸을때의 배경색 밑 화면에 보이게 하기*/
+.main1 li ul a:hover, .main1 li ul li:hover a{
+background: #724a4a;
+border:0px;
+color:#ffffff;
+text-decoration:none;
+}
+
+
+/* 로그인,회원가입 위치 를설정*/
+.nv2 {
+	width:10%; height:50px;
+	border:1px solid black;
+	float:right;
+	position:relative;
+	top:30px;
+	right:7%;
+}
+.nv2 ul li {
+	float:left;
+	margin-left:10%;
+	margin-top:1px;
+	font-size:15px;
+}
+.nv2 ul li a {
+	display:inline-block;
+	text-decoration:none;
+	padding:2px;
+	color:white;
+}
+/*마우스를 올렸을때 색상*/
+.nv2 ul li a:hover {
+	background-color:#ff3cbb;
+	color:white;
+}
+/*메인페이지에 사진을 슬라이드 쇼로 설정*/
+.cycle-slideshow{
+  position:relative;
+  top:100px; /*위에서 100px 내림 */
+  z-index:1; /*같은위치에서 있을때 큰숫자가 앞으로
+  나오게 하는 z-index를 사용해서 영상과 겹치지 않게 해줌*/
+}
+/*사진의 크기를 설정*/
+.cycle-slideshow img{
+	   width:1000px;
+       height:600px;
+}
+
+/* 인기상품의 전체 공간을 설정 */
+.at1{
+	width:94%;
+	height:300px;
+	border:4px solid black;
+	float:left;
+	left:3%;
+	position:relative;
+	top:100px;
+	z-index:7;
+}
+/*첫번째 사진의 위치와 속성을 설정*/
+.s1>figure>img {
+	width:200px;height:200px;
+	border:2px solid black;
+	display:inline-block;
+	position:absolute;
+	float:left;
+	left:2%;
+	top:50px;
+	z-index:9;
+}
+/*두번째 사진의 위치와 속성을 설정*/
+.s2>figure>img {
+	width:200px;height:200px;
+	border:2px solid black;
+	display:inline-block;
+	position:absolute;
+	float:left;
+	left:26%;
+	top:50px;
+	z-index:9;
+}
+/*세번째 사진의 위치와 속성을 설정*/
+.s3>figure>img {
+	width:200px;height:200px;
+	border:2px solid black;
+	display:inline-block;
+	position:absolute;
+	float:left;
+	left:51%;
+	top:50px;
+	z-index:9;
+}
+/*네번째 사진의 위치와 속성을 설정*/
+.s4>figure>img {
+	width:200px;height:200px;
+	border:2px solid black;
+	display:inline-block;
+	position:absolute;
+	float:left;
+	left:75%;
+	top:50px;
+	z-index:9;
+}
+/*첫번째 사진의 제목을 설정.*/
+.q1{
+	font-size:20px;
+	float:left;
+	position:relative;
+	left:2%;
+	color:#6a8518;
+}
+/*두번째 사진의 제목을 설정.*/
+.q2{
+	font-size:20px;
+	float:left;
+	position:relative;
+	left:25%;
+	color:#6a8518;
+}
+/*세번째 사진의 제목을 설정.*/
+.q3{
+	font-size:20px;
+	float:left;
+	position:relative;
+	left:49%;
+	color:#6a8518;
+}
+/*네번째 사진의 제목을 설정.*/
+.q4{
+	font-size:20px;
+	float:left;
+	position:relative;
+	left:72%;
+	color:#6a8518;
+}
+/* 첫번째 사진의 상품을 설명하는 곳의 위치를 지정 */
+.s1>figure>figcaption {
+	display:inline-block;
+	position:absolute;
+	float:left;
+	left:3%;
+	top:255px;
+	z-index:9;
+	color:#6a8518;
+}
+/* 두번째 사진의 상품을 설명하는 곳의 위치를 지정 */
+.s2>figure>figcaption {
+	display:inline-block;
+	position:absolute;
+	float:left;
+	left:30%;
+	top:255px;
+	z-index:9;
+	color:#6a8518;
+}
+/* 세번째 사진의 상품을 설명하는 곳의 위치를 지정 */
+.s3>figure>figcaption {
+	display:inline-block;
+	position:absolute;
+	float:left;
+	left:52%;
+	top:255px;
+	z-index:9;
+	color:#6a8518;
+}
+/* 네번째 사진의 상품을 설명하는 곳의 위치를 지정 */
+.s4>figure>figcaption {
+	display:inline-block;
+	position:absolute;
+	float:left;
+	left:79%;
+	top:255px;
+	z-index:9;
+	color:#6a8518;
+}
+/*각 아티클들의 제목의 글씨색을 설정 */
+h3{
+	color:#6a8518;
+}/*동영상의 위치를 설정*/
+.at2 {
+	width:45%;
+	height:300px;
+	border:4px solid black;
+	float:left;
+	left:3%;
+	position:relative;
+	top:150px;
+	z-index:7;
+}
+/* 상품 상세설명 위치를 동영상 오른쪽으로 지정 */
+.at3 {
+	width:45%;
+	height:300px;
+	border:4px solid black;
+	float:right;
+	right:3%;
+	position:relative;
+	top:150px;
+	z-index:7;
+}
+/* 마지막 footer 부분의 위치를 지정*/
+.ft {
+	clear:both;
+	width:94%;
+	height:80px;
+	border:1px solid black;
+	margin:0 auto;
+	position:relative;
+	top:200px;
+	z-index:8;
+}
+/*이용 약관 부분의 위치 지정*/
+.nv3 {
+	position:relative;
+	top:10px;
+}
+/*이용 약관 부분의 글씨의 위치를 지정*/
+.nv3 ol > li{
+	float:left;
+	margin-left:7%;
+	font-size:16px;
+
+	color:white;
+}
+.nv3 ol{
+	list-style-type:none;
+}
+.nv3 ol li a{
+	display:inline-block;
+	text-decoration:none;
+	padding:4px;
+	color:white;
+}
+/*마지막 주소 이메일 등의 위치를 지정*/
+.nv4{
+	left:7%;
+	position:relative;
+	top:10px;
+}
+.nv4 ol{
+	list-style-type:none;
+}
+.nv4 ol  li{
+	float:left;
+	padding:9px;
+}
+

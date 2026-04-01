@@ -1,0 +1,9 @@
+import bag.design.page.MainPage;
+
+public class BagLend {
+
+	public static void main(String[] args) {
+
+		new MainPage();
+	}
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- ForwardAction For Login -->
+	<bean name="/mstLogin" class="org.apache.struts.actions.ForwardAction">
+	</bean>
+
+  <!-- ItemMenuAction Event -->
+  <bean name="/findAll" class="web.action.ItemMenuAction">
+    <property name="shopService"><ref bean="shopService" /></property>
+  </bean>
+  <bean name="/findByItemName" class="web.action.ItemMenuAction">
+    <property name="shopService"><ref bean="shopService" /></property>
+  </bean>
+  <bean name="/updateEdit" class="web.action.ItemMenuAction">
+    <property name="shopService"><ref bean="shopService" /></property>
+  </bean>
+  <bean name="/createEdit" class="web.action.ItemMenuAction">
+    <property name="shopService"><ref bean="shopService" /></property>
+  </bean>
+  <bean name="/deleteEdit" class="web.action.ItemMenuAction">
+    <property name="shopService"><ref bean="shopService" /></property>
+  </bean>
+
+  <!-- ItemEditAction Event -->
+  <bean name="/updateExecute" class="web.action.ItemEditAction">
+    <property name="shopService"><ref bean="shopService" /></property>
+  </bean>
+  <bean name="/createExecute" class="web.action.ItemEditAction">
+    <property name="shopService"><ref bean="shopService" /></property>
+  </bean>
+  <bean name="/deleteExecute" class="web.action.ItemEditAction">
+    <property name="shopService"><ref bean="shopService" /></property>
+  </bean>
+</beans>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+<!-- @Required,@Autowired,@Resource -->
+<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" />
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+<bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+
+<!--빈즈등록(빈즈객체생성 X)  -->
+<bean id="camera1" class="com.spring.anno1.Camera">
+    <property name="number" value="12" /> 
+</bean>
+
+<bean  id="moniter" class="com.spring.anno2.SystemMoniter" />
+<bean id="sender"  class="com.spring.anno2.SmsSender" /> 
+
+
+
+
+
+</beans>

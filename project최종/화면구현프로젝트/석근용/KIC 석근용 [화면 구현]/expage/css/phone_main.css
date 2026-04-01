@@ -1,0 +1,4 @@
+/*phone-main.css*/
+.all_container{display:none;}
+ /*phone 화면일때 pc CSS 감추기 */
+section.phone{display:block;}

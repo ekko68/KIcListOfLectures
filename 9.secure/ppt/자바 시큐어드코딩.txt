@@ -1,0 +1,4334 @@
+﻿
+ =>Java 프로그램 보안 취약점
+ =>입력 데이터 검증 및 표현
+
+ 사용자의 입력을 검증없이 그대로 받아들여 사용하면 많은 보안위협에 노출되게
+ 된다. 해당 보안취약점을 예방하기 위해서는 유효한 입력데이터만 허용할 수 있도록
+ 코딩하는 것이 좋으며,부득이한 경우 입력값을 검증하여 검증된 데이터만 허용
+ 하도록 코딩하여 취약점을 제거해야 한다.
+
+1.크로스 사이트 스크립트 공격 취약점(XSS)
+
+=>외부에서 입력되는 검증되지 않은 입력이 동적 웹페이지의 생성에 사용될경우
+     전송된 동적 웹페이지를 열람하는 접속자의 권한으로 부적절한 스크립트가 수행
+     되어 정보 유출 등의 피해를 입힐 수 있다.
+
+해결책)
+1.자바의 문자열의 replaceAll()예제 구현
+  =>외부로 부터 값을 입력을 받을때 -><,>=>&lt,&gt로 변경
+
+<문제의 코드>
+1:<%@page contentType="text/html" pageEncoding="UTF-8"%>
+2: <html>
+3: <head>
+4: <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+5: </head>
+6: <body>
+7: <h1>XSS Sample</h1>
+8: <%
+9: <!- 외부로 부터 이름을 받음 -->
+10: String name = request.getParameter("name");
+11: %>
+12: <!-- 외부로 부터 받은 name이 그대로 출력 -->
+13: <p>NAME:<%=name%></p>
+14: </body>
+15: </html>
+
+■ 안전한 코드의 예- HTML
+1: <%@page contentType="text/html" pageEncoding="UTF-8"%>
+2: <html>
+3: <head>
+4: <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+5: </head>
+6: <body>
+7: <h1>XSS Sample</h1>
+8: <%
+9: <!-- 외부로 부터 이름을 받음-->
+10: String name = request.getParameter("name");
+11:
+12: <!-- 외부의 입력값에 대한 검증을 한다. -->
+13: if ( name != null ) {
+14: name = name.replaceAll("<","&lt;");
+15: name = name.replaceAll(">","&gt;");
+16: } else {
+17: return;
+18: }
+19: %>
+20: <!-- 외부로 부터 받은 name에서 '위험 문자'를 제거한 후 출력-->
+21: <p>NAME:<%=name%></p>
+22: </body>
+23: </html>
+
+=>입력받은  문자열 name에 임의로
+<script>url = "http://devil.com/attack.jsp;</script>
+같은 문자열을 쓰면 악의적인 코드가 실행이 될 수도 있다.
+ <body>와 </body>태그 내부에 자바스크립트 태그가 올 수가 있다.
+====================================
+=>replaceAll()메서드를 이용해서 ->"<",">" 같이 html에서 스크립트 생성에
+    사용되는 모든 문자열을  "&lt;"와 "&gt;"로 변경함으로써 악의 적인 스크립트
+    수행의 위험성을 줄일 수 있다.=>위험성을 완전히 제거는 아니다.
+
+
+2.JDBC Programming->SQL구문 작성시
+  =>SQL 삽입(SQL Injection)
+  =>PreparedStatement 클래스와 executeQuery(), execute(),
+     executeUpdate()사용
+
+                      PersistenceManager pm;
+3.SQL삽입 공격=>javax.jdo.Query q=pm.newQuery(query);//사용
+              return (List<Contact>) q.execute(name);
+ //----------------------------------------------------
+                               
+4.SQL삽입 공격->Persistence        
+
+ =>외부의 입력이 질의문의 구조를 변경할 수없는 인자화된
+   질의문(Parameterize Query)을 사용한다.
+ =>즉, 질의문의 생성시 상수문자열만을 사용하고, 
+   javax.persistence.Query.setParameter()메서드 사용해서
+   인자값을 설정하는 방법을 사용한다.
+
+5.SQL 삽입 공격:mybatis Data Map의 경우
+  =>mybatis Data Map 파일의 인자를 받는 질의 명령어 정의시에
+    문자열 삽입 인자($...$)을 사용하지 않는다.
+     즉 #<인자이름># 형태의 질의문을 사용한다.
+
+  <delete id="delStudent" paramterClass="Student">
+     delete students where num=#num# and name='#name#'
+ </delete>
+
+6.상대 디렉토리 경로 조작(Relative Path Traversal)
+ =>외부의 입력을 통하여 '디렉토리 경로 문자열' 생성이 필요한
+   경우,외부입력에서 경로 조작에 사용될 수있는 문자를 필터링
+   하지 않으면 안된다.
+
+=>해결)외부의 입력이 직접 파일이름을 생성하는 사용될수 없도록함
+   =>replaceAll() 사용해 '',/,\을 제거하는 필터거친다.
+
+  ex)File file=new File("/user/local/tmp/"+name);
+      file.delete();  //name->의도하지 않은 파일명이 오면 안된다.
+
+ ex) 
+                  String  name  =  request.getProperty("user"); 
+
+                   if  (  name  !=  null  &&  !"".equals(name)  )  { 
+
+                         name  =  name.replaceAll("/",  "");  //  '/'->""로 변경
+
+                         name  =  name.replaceAll("\\",  ""); 
+
+                         name  =  name.replaceAll(".",  ""); 
+
+                         name  =  name.replaceAll("&",  ""); 
+
+                         name  =  name  +  "-report"; 
+
+                       File  file  =  new  File("/usr/local/tmp/"  +  name); 
+                       if  (file  !=  null)  file.delete(); 
+
+                  } 
+=============================================================================
+ 7.절대 디렉토리 경로 조작(Absolute Path Traversal)
+
+ =>외부 입력이 파일 시스템을 조작하는 경로를 직접 제어할 수
+   있거나 영향을 끼치면 위험하다.
+ =>즉, 경로조작을 통해서 공격자가 허용되지 않은 권한을 획득하여
+   설정에 관계된 파일을 변경할 수있거나 실행 시킬 수 있다.
+
+ =>해결) 외부의 입력을 통해 파일이름의 생성 및 접근을 허용하지
+         말고,외부 입력에 따라 접근이 허용된 파일의 리스트에서
+         선택하도록 프로그램을 작성한다.
+
+public  void  f(Properties  cfg)  throws  IOException  { 
+
+       3:    FileInputStream fis  =  new  FileInputStream(cfg.getProperty("subject")); 
+
+       4:    byte[]  arr  =  new  byte[30]; 
+
+       5:    fis.read(arr); 
+
+       6:    System.out.println(arr); 
+
+       7:    …… 
+
+       8:    } 
+========================================================================
+=>대신에
+              public  void  f(Properties  cfg)    throws  IOException  { 
+
+              3:       FileInputStream  fis; 
+
+              4:       String  subject  =  cfg.getProperty("subject"); 
+
+
+              6:       if  (subject.equals("math"))  //과목이 math이면  
+
+              7:              fis  =  new  FileInputStream("math");           
+
+              8:       else  if  (subject.equals("physics"))  //physics이면
+
+              9:              fis  =  new  FileInputStream("physics");   
+
+              10:      else  if  (subject.equals("chemistry"))  
+
+              11:             fis  =  new  FileInputStream("chemistry");   
+
+              12:      else  
+
+              13:             fis  =  new  FileInputStream("default"); 
+
+
+              15:      byte[]  arr  =  new  byte[30]; 
+
+              16:      fis.read(arr); 
+
+              17:      System.out.println(arr); 
+
+              18:    …… 
+
+ ========================================================================
+  8.운영체제 명령어 삽입
+  =>외부에서 전달되는 값은 바로 시스템 내부 명령어의 생성에
+    사용되지 않아야 한다.
+  =>외부 입력에 따른 명령어 생성 또는 선택이 필요한 경우에는
+    명령어 생성에 필요한 값들을 미리 지정해 놓고 외부의 입력에
+    따라 선택하여 사용하는 것이 안전하다.
+
+
+              2:    public  void  f()  throws  IOException  { 
+
+              3:        Properties  props  =  new  Properties(); 
+
+              4:        String  fileName  =  "file_list"; 
+
+              5:        FileInputStream  in  =  new      FileInputStream(fileName); 
+
+              6:        props.load(in); 
+
+              7:        String  version[]  =  {"1.0",      "1.01",  "1.11",  "1.4"}; 
+
+              8:        int  versionSelection  =  Integer.parseInt(props.getProperty("version"));              
+
+              9:        String  cmd  =  new  String("cmd.exe  /K      \"rmanDB.bat  \""); 
+
+              10:       String  vs  =  ""; 
+
+              11:    
+
+              12:       //  . 
+
+              13:       if  (versionSelection  ==  0)  
+
+              14:              vs  =  version[0]; 
+
+              15:       else  if  (versionSelection  ==  1)  
+
+              16:              vs  =  version[1]; 
+
+              17:       else  if  (versionSelection  ==  2)  
+              18:              vs  =  version[2]; 
+
+              19:       else  if  (versionSelection  ==  3)  
+
+              20:              vs  =  version[3]; 
+
+              21:       else  
+
+              22:              vs  =  version[3]; 
+
+              23:       Runtime.getRuntime().exec(cmd  +  "      c:\\prog_cmd\\"  +  vs); 
+
+              24:       …… 
+
+              25:    } 
+===========================================================
+  9.LDAP 삽입(LDAP Injection)->리눅스에서 실습
+ =>공격자가 외부 입력을 통해서 의도하지 않은 LDAP 명령어를
+   수행할 수가 있다.=>가능한 입력의 집합 또는 위험한 입력
+   문자열의 집합(ex +,<,>,#,;, \)을 설정하여,임의의 외부의
+   입력이 필터 생성에 사용되지 않도록 관리한다.
+
+ex)
+              2:       public  void  f()  { 
+
+              3:       Hashtable  env  =  new  Hashtable(); 
+
+              4:       env.put(Context.INITIAL_CONTEXT_FACTORY,  "com.sun.jndi.ldap.LdapCtxFactory"); 
+
+              5:       env.put(Context.PROVIDER_URL,  "ldap://localhost:389/o=rootDir"); 
+
+              6:       try  { 
+
+              7:              javax.naming.directory.DirContext  ctx  =  new  InitialDirContext(env); 
+
+              8:              Properties  props  =  new  Properties(); 
+
+              9:              String  fileName  =  "ldap.properties"; 
+
+              10:             FileInputStream  in  =  new  FileInputStream(fileName); 
+
+              11:    
+
+              12:             if  (in  ==  null  ||  in.available()  <=  0)  return; 
+
+              13:             props.load(in); 
+
+           
+
+              15:             if  (props  ==  null  ||  props.isEmpty())  return; 
+
+              16:             String  name  =  props.getProperty("name"); 
+
+              17:             if  (name  ==  null  ||  "".equals(name))  return; 
+
+              18:             //  name‘*’  . 
+
+              19:             String  filter  =  "(name  ="  +  name.replaceAll("\\*",  "")  +  ")"; 
+                              //--------------------------------------------------
+
+              20:             NamingEnumeration  answer  =  
+
+              21:                      ctx.search("ou=NewHires",  filter,  new  SearchControls()); 
+
+              22:                    printSearchEnumeration(answer); 
+
+              23:                    ctx.close(); 
+
+              24:            }  catch  (NamingException  e)  {        ……            } 
+
+=================================================================================
+  10.LDAP처리(LDAP Manipulation=>replaceAll("*","")
+
+  11.자원 삽입(Resource Injection)=>기존의 임의의 포트입력시
+                                    주의할것
+  =>네트워크 부분(소켓)에서 처리=>채팅 프로그램에서 코딩할것.
+  =>외부의 입력을 아무 검증없이 자원 식별자로 사용하지 말고
+    외부의 입력에 따라 적합한 리스트에서 선택되도록 작성한다.
+  =>만일,외부의 입력이 파일명이면 경로 순회를 수행하는 위험한
+    문자를 제거한다.
+
+  1:    …… 
+
+               2:    public  void  f()  throws  IOException  { 
+
+               3:       ServerSocket  serverSocket; 
+
+               4:       Properties  props  =  new  Properties(); 
+
+               5:       String  fileName  =  "file_list"; 
+
+               6:       FileInputStream  in  =  new  FileInputStream(fileName); 
+
+               7:       String  service  =  ""; 
+
+               8:    
+
+               9:       if  (in  !=  null  &&  in.available()  >  0)  { 
+
+               10:              props.load(in); 
+
+               11:              //  . 
+
+               12:              service  =  props.getProperty("Service  No"); 
+
+               13:      } 
+
+               14:      //  .  
+
+               15:              if  ("".equals(service))  service  =  "8080"; 
+               16:    
+
+               17:              int  port  =  Integer.parseInt(service); 
+
+               18:      //  .  ->port는 정해진 port내에서 사용이 가능하도록 코딩
+
+               19:      switch  (port)  { 
+
+               20:              case  1: 
+
+               21:                      port  =  3001;  break; 
+
+               22:              case  2: 
+
+               23:                      port  =  3002;  break; 
+
+               24:              case  3: 
+
+               25:                      port  =  3003;  break; 
+
+               26:              default: 
+
+               27:                      port  =  3000; 
+
+               28:              } 
+
+               29:                //  . 
+
+               30:              serverSocket  =  new  ServerSocket(port); 
+
+               31:       …… 
+
+               32:    } 
+
+12.HTTP 응답 분할=>Jsp 페이지에서 작성
+
+    (Failure to Sanitize CRLF Sequences in HTTP Headers ('HTTP Response Splitting')) 
+====================================================================================
+
+1:    public  class  S113  extends  HttpServlet  { 
+
+            2:       public  void  doPost(HttpServletRequest  request,  HttpServletResponse  response) 
+
+            3:                                               throws  IOException,  ServletException  { 
+
+            4:             response.setContentType("text/html"); 
+
+            6:             //  . 
+
+            7:             String  author  =  request.getParameter("authorName"); 
+                           //반드시 null값을 체크
+
+            8:             if  (author  ==  null  ||  "".equals(author))  return; 
+
+
+            10:            //   \n\r  
+
+                           // =>\r, \n을 제거->""해서 입력받아서 처리할 것.
+
+            11:            String  filtered_author  =  author.replaceAll("\r","").replaceAll("\n",""); 
+
+            12:            Cookie  cookie  =  new  Cookie("replidedAuthor",  filtered_author); 
+
+            13:            cookie.setMaxAge(1000); 
+
+            14:            cookie.setSecure(true); 
+
+            ...
+
+            17:            response.addCookie(cookie); 
+
+            18:            RequestDispatcher  frd  =  request.getRequestDispatcher("cookieTest.jsp"); 
+
+            19:            frd.forward(request,  response); 
+
+            20:      } 
+
+            21:    } 
+
+   13.시스템 또는 구성 설정의 외부 제어
+    =>jsp에서 코딩
+    =>외부의 입력을 Connection.setCatalog()메서드의 인자값을
+      생성하는 데 사용하지 않도록 한다.
+    =>불가피하게 사용해야 한다면,외부의 입력을 화이트 리스트
+      방식으로 검사한 후 사용한다.
+===========================================================
+ 
+   2:   public void f() {
+3:      try { 
+4:          // caltalog 
+5:          InitialContext ctx = new InitialContext(); 
+6:          DataSource datasource = (DataSource) ctx.lookup("jdbc:ocl:orcl"); 
+7:          Connection con = datasource.getConnection(); 
+8:  
+9:          Properties props = new Properties(); 
+10:         String fileName= "file.properties"; 
+11:         String catalog; 
+12:  
+13:         FileInputStream in = new FileInputStream(fileName); 
+14:         if (in != null && in.available() > 0) { 
+15:            props.load(in); 
+16:            //입력을 못받았으면 특정 catalog값으로 대치할 수 있도록//
+17:            if (props == null || props.isEmpty()) catalog = "c1"; 
+18:            else
+19:               catalog = props.getProperty("catalog"); 
+20:          } else
+21:               catalog = "c1"; 
+22:  
+23:          // 외부 유입변수(catalog)에 대해서 값을 반드시
+             //체크하고 걸러야 한다.
+24:            if ("c1".equals(catalog)) 
+25:                con.setCatalog("c1"); 
+26:           else
+27:                con.setCatalog("c2"); 
+          //--------------------------------------------------
+28:          con.close(); 
+29:      } catch (SQLException ex) { 
+30:          System.err.println("SQLException Occured"); 
+31:      } catch (NamingException e) { 
+32:          System.err.println("NamingException Occured"); 
+33:      } catch (FileNotFoundException e) { 
+34:          System.err.println("FileNotFoundException Occured"); 
+35:      } catch (IOException e) { 
+36:          System.err.println("IOException Occured"); 
+37:      } 
+38:   } 
+
+   14.크로스 사이트 스크립트 공격 취약점:DOM (JSP)
+
+  정의)->외부에서 입력되는 스크립트 문자열이 웹페이지 생성에
+         사용되면 생성된 웹페이지를 열람하는 사용자에게 피해를
+         입힐 수 있다.
+
+     ->JSP의 document.write()메서드와 같이 JSP의 DOM객체 출력을
+       수행하는 메서드의 인자값으로 외부의 입력을 사용할 경우
+       위험한 문자를 제거하는 과정이 수행되어야 한다.
+================================================================
+ 
+1:    …… 안전한 코드의 예
+
+       2:    <%  
+
+       3:    //외부의 입력을 받는다.
+
+       4:    String  name  =  request.getParameter("name"); 
+
+       5:    //입력값에 대한 유효성 검사를 한다.
+
+       6:    if  (  name  !=  null  )  { 
+
+       7:        name  =  name.replaceAll("<","&lt;"); 
+
+       8:        name  =  name.replaceAll(">","&gt"); 
+
+       9:    }  else  {        return;        } 
+
+       10:    %> 
+
+       11:    <SCRIPT  language="javascript"> 
+
+       12:    //  .  
+
+       13:    document.write("name:"  +  <%=name%>  ); 
+=============================================================
+  15.동적으로 생성되어 수행되는 명령어 삽입
+  ->자바스크립트에서 eval()의 매개변수값을 입력받을때 주의
+
+  =>정의) 신뢰할 수없는 외부입력이 적절한 검사과정을 거치지않고
+          동적으로 수행되는 스크립트 또는 프로그램 명령어 문자열
+          의 생성에 사용될 경우 의도했던 형태의 입력만 사용되도록
+          적절히 필터링해야 한다.그렇지 않으면,외부의 임의의 입력
+          이 명령어로 사용되어 공격자는 원하는 임의의 작업을
+          수행할 수있다.          
+
+=>외부의 입력이 eval()함수의 인자로 사용될 경우 외부에서 입력되는
+  javascript가 수행되지 않도록 위험문자를 제거해야 한다.
+
+11:     String  evalParam  =  request.getparameter("eval"); 
+
+             12:     //  . 
+
+             13:     if  (  evalParam  !=  null  )  { 
+
+             14:           evalParam  =  evalParam.replaceAll("<","&lt;"); 
+
+             15:           evalParam  =  evalParam.replaceAll(">","&gt;"); 
+
+             16:           evalParam  =  evalParam.replaceAll("&","&amp;"); 
+
+             17:           evalParam  =  evalParam.replaceAll("(","&#40;"); 
+
+             18:           evalParam  =  evalParam.replaceAll(")","&#41;"); 
+
+             19:           evalParam  =  evalParam.replaceAll("\"","&quot;"); 
+
+             20:           evalParam  =  evalParam.replaceAll("\'","&apos;"); 
+
+             21:     } 
+
+             22:     …… 
+
+             23:     %>  
+
+             24:     <script>   //eval함수의 매개변수로 넣기전에 위험문자열 제거시킴
+
+             25:           eval(<%=evalParam%>);  
+
+             18:     </script> 
+
+             19:    </body>  
+
+             20:    </html> 
+
+  ->위와 같이 스크립트를 작성하는데 필요한 문자들(ex <,>,&,\)
+   을 변경함으로써 외부 입력코드의 수행을 방지할 수 있다.
+==============================================================
+     16.프로세스 제어(Process Control)=>Java
+
+  신뢰되지 않은 소스나 신뢰되지 않은 환경으로부터 라이브러리를
+  적재하거나 명령을 실행하면,악의적인 코드가 실행될 수있다.
+
+
+         ■ -  JAVA 
+
+       1:    …… 
+
+       2:    public  void  loadLibrary()  throws  SecurityException,  UnsatisfiedLinkError,  NullPointerException  
+
+          { 
+
+       3:    // 절대경로를 사용하지 않은 경우
+             // 공격자가 환경변수를 조작하면 다른 라이브러리를
+             //적재될 수 있다.
+       4:    Runtime.getRuntime().loadLibrary("libraryName"); 
+              
+
+       5:    } 
+
+       6:    …… 
+
+
+         ■ -  JAVA 
+
+       1:    …… 
+
+       2:    public  void  loadLibrary()  throws  SecurityException,  UnsatisfiedLinkError,  NullPointerException  
+
+          { 
+
+       3:    //  절대경로를 통해서 불러오자.
+
+       4:    Runtime.getRuntime().loadLibrary("/usr/lib/libraryName"); 
+
+       5:    } 
+
+       6:    …… 
+     =====================================
+   
+   17.정수 오버플로우(Integer Overflow)->자바의 배열작성하는 경우
+    
+  =>정수형 변수의 오버플로우는 정수값이 증가하면서,Java에서
+    허용된 가장 큰 값보다 더 커져서 실제 저장되는 값은 의도하지
+    않게 아주 작은 수이거나 음수가 될 수있다.
+    이러한 상황을 검사하지 않고, 그 값을 순환문의 조건이나
+    메모리 할당,메모리 복사 등에 쓰거나 그 값에 근거해서 보안
+    관련 결정을 하면 취약점을 야기할 수있다.
+
+   =>동적 메모리 할당을 위해서 사용되는 변수가 이전 처리과정에서
+     오버플로우에 의해서 음수값으로 변환될 수 있으므로 미리 변수
+     의 값 범위를 검사한다.
+
+
+
+     ■ -  JAVA 
+
+        1:    …… 
+
+        2:    public  static  void  main(String[]  args)  { 
+
+        3:    int  size  =  new  Integer(args[0]).intValue(); 
+
+        4:    size  +=    new  Integer(args[1]).intValue(); 
+
+        5:    MyClass[]  data  =  new  MyClass[size]; 
+
+        6:    …… 
+
+        7:        
+
+       (args[0],  args[1]) 
+
+       (size).  (size) 
+=====================================================
+
+           ■ -  JAVA 
+
+        1:    …… 
+
+        2:    public  static  void  main(String[]  args)  { 
+
+        3:          int  size  =  new  Integer(args[0]).intValue(); 
+
+        4:          size  +=    new  Integer(args[1]).intValue(); 
+
+        5:    //배열의 크기 값이 음수값이 아닌지 검사한다.
+
+        6:    if  (size  <  0)  return  ; 
+
+        7:    MyClass[  ]  data  =  new  MyClass[size]; 
+
+        8:    …… 
+      
+ 동적 메모리 할당을 위해 크기를 사용하는 경우, 그 값이 음수가
+  아닌지 검사하는 문장이 필요하다.
+
+  18.무제한 파일업로드=>jsp에서 구현
+  ====================================
+
+  운영환경 내에서 자동으로 처리될 수 있는 위험
+  한 유형의 파일을 공격자가 업로드하거나
+  전송할 수있게 허용하면 취약점을 야기할 수있다.
+
+  1)업로드하는 파일 타입과 크기를 제한
+     업로드 디렉토리를 웹서의 다큐먼트
+     외부에 설정한다.
+
+  2)화이트리스트 방식으로 허용된 확장자만
+    업로드되도록 하고,확장자도 대소문자
+    구분 없이 처리하도록 한다.
+
+    ■ -  JAVA 
+
+             1:    …… 
+
+             2:    public  void  upload(HttpServletRequest  request)  throws  ServletException  { 
+
+             3:       MultipartHttpServletRequest  mRequest  =  (MultipartHttpServletRequest)  request; 
+
+             4:       String  next  =  (String)  mRequest.getFileNames().next(); 
+
+             5:       MultipartFile  file  =  mRequest.getFile(next); 
+
+             6:          if  (  file  ==  null  ) 
+
+             7:              return  ; 
+
+             8:    
+
+             9:       //업로드 파일 크기를 제한한다
+
+             10:      int  size  =  file.getSize(); 
+
+             11:      if  (  size  >  MAX_FILE_SIZE  )  throw  new  ServletException("“); 
+
+             12:    
+
+             13:      //  MultipartFilefile 
+
+             14:      String  fileName  =  file.getOriginalFilename().toLowerCase(); 
+
+             15:    
+16:      // 화이트리스트 방식으로 업로드파일의 확장자를
+         // 체크한다.
+
+             17:      if  (  fileName  !=  null  )  { 
+
+             18:             if  (  fileName.endsWith(".doc")  ||  fileName.endsWith(".hwp")  
+
+             19:                    ||  fileName.endsWith(".pdf")  ||  fileName.endsWith(".xls")  )  { 
+
+             20:                   /*  file업로드 루틴  */ 
+
+             21:             } 
+
+             22:             else  throw  new  ServletExeption(""); 
+
+             23:      }  
+
+             24: //업로드 파일의 디렉토리위치는 다큐먼트
+                 //루트의 밖에 위치시킨다. 
+
+             25:      File  uploadDir  =  new  File("/app/webapp/data/upload/notice"); 
+
+             26:      String  uploadFilePath  =  uploadDir.getAbsolutePath()+"/"  +  fileName; 
+
+             27:    
+
+             28:      /*  file  upload  */ 
+
+             29:    …… 
+==========================================
+ 위의 예제는 업로드 파일의 크기와 위치를
+ 제한하고 있다. 또한 파일의 확장자를 검사
+ 하여 허용되지 않은 확장자일 경우 업로드를
+ 제한하고 있다.
+
+==================================================
+   19.안전하지 않은 리플렉션
+    =>동적 클래스 적재(loading)에 외부의 검증되지
+      않은 입력을 사용할 경우,공격자가 외부 입력을
+      변조하여 의도하지 않은 클래스가 적제되도록
+      할 수있다.
+
+
+ 해결)=>외부의 입력을 직접 클래스이름으로 사용하지
+        말고,외부의 입력에 따라 미리 정한 후보
+        (while list)중에서 적절한 클래스이름을 선택
+        하도록 한다.
+
+
+   ■ -  JAVA 
+
+          1:    …… 
+
+          2:    public  void  f()  { 
+
+          3:      Properties  props  =  new  Properties(); 
+
+          4:          .... 
+
+          5:          if  (  in  !=null  &&  in.available()  >  0  )  { 
+
+          6:              props.load(in); 
+
+          7:              if  (  props  ==  null  ||  props.isEmpty()  ) 
+
+          8:                  return  ; 
+
+          9:          } 
+
+          10:     String  type  =  props.getProperty("type"); 
+
+          11:     Worker  w; 
+
+ 
+
+          13:     //  type. 
+
+          14:     try  { 
+                        //직접적인 클래스명을 로드는 위험하다.
+                        //정해진것만 불러올 수 있도록 설정해야 한다.
+          15:           Class  workClass  =  Class.forName(type  +  "Worker"); 
+
+          16:           w  =  (Worker)  workClass.newInstance(); 
+          17:           w.doAction(); 
+
+          18:     }  catch  (ClassNotFoundException  e)  {        …… }             
+
+          19:    …… 
+
+          20:    } 
+
+          21:      
+
+          22:    abstract  class  Worker  { 
+
+          23:     String  work  =  ""; 
+
+          24:     public  abstract  void  doAction(); 
+
+          25:    } 
+    ===============================================
+
+    ■ -  JAVA (해결부분)
+
+               1:    …… 
+
+               2:    public  void  f()  { 
+
+               3:        Properties  props  =  new  Properties(); 
+
+               4:          .... 
+
+               5:          if  (  in  !=null  &&  in.available()  >  0  )  { 
+
+               6:              props.load(in); 
+
+               7:              if  (  props  ==  null  ||  props.isEmpty()  ) 
+
+               8:                  return  ; 
+
+               9:          } 
+
+               10:       String  type  =  props.getProperty("type"); 
+
+               11:       Worker  w; 
+
+               12:    
+
+               13: //외부 입력되는 값에 대해 유효성을
+                   //검증하여야 한다
+
+               14:       if  (type  ==  null  ||  "".equals(type))  return; 
+
+               15:       if  (type.equals("Slow"))  { 
+
+               16:               w  =  new  SlowWorker(); 
+               17:               w.doAction(); 
+
+               18:       }  else  if  (type.equals("Hard"))  { 
+
+               19:               w  =  new  HardWorker(); 
+
+               20:               w.doAction(); 
+
+               21:       }  else  { 
+
+               22:               System.err.printf("No  propper  class  name!"); 
+
+               23:       } 
+
+               24:     …… 
+
+               25:    } 
+
+               26: //-----------추상 클래스--------
+
+               27:    abstract  class  Worker  { 
+
+               28:       String  work  =  ""; 
+
+               29:       public  abstract  void  doAction(); 
+
+               30:    } 
+
+===============================================
+ 20.무결성 점검 없는 코드 다운로드
+ ->웹서버에서 수행될 수있는 위험한 형식의 파일을
+   원격지로부터 다운로드 하여, 코드의 출처나 무결성
+   검사 없이 클라이언트에서 실행하는 경우 공격자가
+   의도하는 행위를 수행할 수 있다.
+
+=>SW의 자동 업데이트와 같이 다운로드될 코드를 제공
+  할 때는 코드에 대한 암호화된 시그너쳐를 사용하고
+  클라이언트가 시그너쳐를 검증하도록 한다.
+
+//서버에서는 private Key를 가지고 MyClass를 암호화한다
+
+String jarFile = "./download/util.jar";
+byte[] loadFile = FileManager.getBytes(jarFile);
+loadFile =  encrypt(loadFile,privateKey);
+// jarFile명으로 암호화된 파일을 생성한다.
+FileManager.createFile(loadFile,jarFileName);
+....
+// 클라이언트에서는 파일을 다운로드 받을 경우
+// public key로 복호화  한다.
+
+URL[] classURLs= new URL[]{new URL("http://filesave.com/download/util.jar")};
+  URLConnection conn=classURLs.openConnection();
+  InputStream is = conn.getInputStream();
+  //입력 스트림을 읽어 서버의 jarFile명으로 파일을 출력한다.
+
+  FileOutputStream fos = new FileOutputStream(new File(jarFile));
+  while ( is.read(buf) != -1 ) {
+  ...
+  }
+  byte[] loadFile = FileManager.getBytes(jarFile);
+  loadFile =  decrypt(loadFile,publicKey); 
+  // 복호화된 파일을 생성한다.
+
+  FileManager.createFile(loadFile,jarFile);
+  URLClassLoader loader = new URLClassLoader(classURLs);
+  Class loadedClass = Class.forName("MyClass", true, loader);
+
+=>공개키 방식의 암호알고리즘과 메카니즘을 이용하여
+전송파일에 대한 시그니처를 생성하고,파일의 변조유무를
+판단한다.
+
+
+21.SQL 삽입 공격:Hibernate(SQL Injection;Hibernate)
+
+1:   ……
+2:   public void listHoney() {
+3:   Session session = new Configuration().configure().buildSessionFactory().openSession();
+4:   try {
+5:   Properties props = new Properties();
+6:   String fileName = "Hibernate.properties";
+7:   FileInputStream in = new FileInputStream(fileName);
+8:   if (in == null || in.available() <= 0) return;
+9:   props.load(in);
+10:   ……
+11:   //외부로 부터 입력을 받는다.
+12:   String idValue = props.getProperty("idLow");
+13:   //입력값에 대한 유효성을 검사한다.
+14:   if (idValue == null || "".equals(idValue)) idValue = "defaultID";
+15:   // SQL query 문장을 작성한다. 
+16:   Query query = session.createSQLQuery("select h from Honey as h where h.id '=  :idVal‘");
+17:            query.setParameter("idVal", idValue);
+18:   query.list();
+19:   } catch (IOException e) {    …… }
+20:   ……
+
+==========================================
+22.신뢰되지 않는 URL 주소로의 자동 접속 연결
+
+=>외부로부터 받은 문자열을 URL주소로 사용하여 자동으로
+  연결하는 서버프로그램은 취약점을 가질 수 있다.
+  일반적으로 클라이언트에게 전송된 폼으로부터 전송
+  된 URL주소로 연결하기 때문에 안전하다고 생각할 수
+  있으나,해당 폼의 요청을 변조함으로써 공격자는 희생
+  자가 위험한 URL로 접속할 수 있도록 공격할 수있다.
+
+=>타 사이트로 자동전환에 사용할 URL과 도메인인들의
+  화이트리스트를 사용한다.
+
+
+protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+throws ServletException, IOException {
+   String query = request.getQueryString();
+     if (query.contains("url")) {
+        String url = request.getParameter("url");
+          response.sendRedirect(url); 
+}
+……
+=>위의 코드가 서버에 존재할 경우 공격자가 다음과 같은
+링크를 희생자가 접근하도록 함으로써 희생자가 의도치
+않은 사이트(피싱 사이트등)로 접근하도록 만들 수 있다.
+======================================================
+  =>해결코딩
+
+……
+protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+throws ServletException, IOException {
+String query = request.getQueryString();
+// 다른 페이지 이동하는 URL 리스트를 만든다.
+
+String allowURL[] = { "url1", "url2", "url3" };
+ArrayList arr = new ArrayList();
+for ( int i = 0; i < allowURL.length; i++ ) 
+ arr.add(allowURL[i]);
+
+ if (query.contains("url")) {
+ String url = request.getParameter("url");
+ // url에 대한 유효성 점검을 한다. 만약 http://가 있다면
+ //다른 도메인으로 URL을 redirect로 의심된다.
+
+ if (url != null && url.indexOf("http://") != -1 ) {
+ url = url.replaceAll("\r", "").replaceAll("\n",   "");
+ // URL 목록에 있지 않으면 요청을 거부한다.
+ if (  !arr.contains(url) ) throw new MyException("ᶾ࿚“);
+ response.sendRedirect(url);
+  }
+ }
+ ……
+(<a href="http://bank.example.com/redirect?url=http://attacker.example.net">Click here to 
+log in</a>)
+======================================================
+=>접근할 URL주소를 외부에서 직접 받는것이 아니라,허용할
+  URL과 도메인들의 화이트리스트를 작성한 다음 그 중에서
+  선택함으로써 악의적인 사이트 접근을 근원적으로 차단할
+  수 있다.
+=========================================================
+  23.XPath 삽입
+
+=>외부의 신뢰할 수 없는 입력을 적절한 검사 과정을 거치지
+  않고 XPath 질의문 생성을 위한 문자열로 사용하면, 공격자
+  가 프로그래머가 의도하지 않았던 문자열을 전달함으로써
+  질의문의 의미를 왜곡시키거나 그 구조를 변경하고 임의의
+  질의 명령어를 수행할 수 있다.
+
+=>해결) 기본 질의문 골격에 인자값을 설정하는 인자화된 질의
+        문을 사용할 수있는 XQuery 등을 사용한다.
+===========================================================
+1:   ……
+2:   // 외부로 부터 입력을 받음
+3:   String name = props.getProperty("name");
+4:   String passwd = props.getProperty("password");
+5:   ……
+6:   XPathFactory factory = XPathFactory.newInstance();
+7:   XPath xpath = factory.newXPath();
+8:   ……
+9:   // 외부 입력이 xpath의 인자로 사용
+10:   XPathExpression expr = xpath.compile("//users/user[login/text()='" +  name 
+11:   + "' and password/text() = '" +  passwd + "']/home_dir/text()");
+12:   Object result = expr.evaluate(doc, XPathConstants.NODESET);
+13:   NodeList nodes = (NodeList) result;
+14:   for (int i = 0; i < nodes.getLength(); i++) {
+15:   String value = nodes.item(i).getNodeValue();
+16:   if (value.indexOf(">") < 0) {
+17:   System.out.println(value);
+18:   }
+19:   ……
+
+name의 값으로 "user1" , passwd의 값으로 " 'or "="을 전달
+하면 다음과 같은 질의문이 생성되어 인증과정을 거치지
+ 않고 로그인할 수 있다.
+=========================================================
+(//users/user[login/text()=‘user1' or ''='' and password/text()  = “ or ”=“]/home_dir/text())
+=================================================
+=>해결코딩
+
+dologin.xp 파일
+
+1:   declare variable  $loginID as xs:string external;
+2:   declare variable  $password as xs:string external;
+3:   //users/user[@loginID=$loginID and @password=$password]
+XQuery를 이용한 XPath Injection 방지
+
+1:   //외부로 부터 입력을 받음
+2:   String name = props.getProperty("name");
+3:   String passwd = props.getProperty("password");
+4:   Document doc = new Builder().build("users.xml");
+5:   // XQueryᅪỲⵊ ᓢ၊ഗ
+6:   XQuery xquery = new XQueryFactory().createXQuery(new File("dologin.xq"));
+7:   Map vars = new HashMap();
+//XQuery를 사용하여 미리 질의 골격을 생성하고 이에 인자값을
+// 설정함으로써 외부의 입력으로 인하여 질의 구조가 바뀌는것
+//을 막을 수 있다.
+8:   vars.put("loginID", name);
+9:   vars.put("password", passwd);
+10:   Nodes results =  xquery.execute(doc, null, vars).toNodes();
+11:   for (int i=0; i < results.size(); i++) {
+12:       System.out.println(results.get(i).toXML());
+13:   }
+
+ 24.XQuery 삽입=>prepareExpression()메서드에 상수 문자열을
+                 사용하여 인자를 받는 질의문을 생성하고,
+                 나중에 인자를 설정함으로써 질의 구조의 변형
+                 을 방지한다.
+=============================================================
+25.보안결정을 신뢰할 수 없는 입력값에 의존=>JSP에서 강의
+
+=>ex)쿠키값을 저장->파일에 저장->보안에 취약
+ 
+해결책)
+
+시스템의 상태정보와 중요한 정보는 서버에만 저장한다.
+중요한 정보를 클라이언트쪽에 저장할 경우,암호화와 무결성
+검사를 거친 데이터만 저장하도록 한다.
+
+외부입력과 관련된 검사가 자바스크립트를 통해 브라우저에서
+이루어지더라도 서버측에서 재검사를 한다.
+=========================================================
+
+<%
+String username = request.getParameter("username");
+String password = request.getParameter("password");
+if (username==nill || password==null || !isAuthenticatedUser(usename, password)) {
+throw new MyException("인증에러");
+}
+Cookie userCookie =  new Cookie("user",username);
+Cookie authCookie =  new Cookie("authenticated","1");
+response.addCookie(userCookie);
+response.addCookie(authCookie);
+%>
+======================================================
+해결코딩)
+<%
+String username = request.getParameter("username");
+String password = request.getParameter("password");
+if (username==nill || password==null || !isAuthenticatedUser(usename, password)) {
+throw new MyException("인증에러");
+}
+// 사용자정보를 세션에 저장한다.
+HttpSession ses = new HttpSession(true);
+ses.putValue("user",username);
+ses.putValue("authenticated","1");
+%>
+=>사용자의 인증정보를 세션에 저장함으로써 인증정보가
+  외부에 노출될 가능성은 없다.
+======================================================
+=>제2절 API 악용
+
+API의 사용=>개발효율성 및 유지보수성의 저하 및 보안상의
+            심각한 위협요인이 될 수 있다.
+=======================================================
+J2EE: 직접 연결 관리
+(J2EE Bad Practices: Direct Management of Connections)
+
+J2EE 애플리케이션이 컨테이너에서 제공하는 자원 연결 관리를
+사용하지 않고 직접 제작하는 경우 에러를 유발 할 수 있기
+때문에 J2EE 표준에서 금지하고 있다.
+
+=>안전한 방법=>J2EE 애플리케이션이 컨테이너에서 제공하는
+               연결관리 기능을 사용한다.
+=========================================================
+
+public class U245 extends   javax.servlet.http.HttpServlet {
+    private Connection conn;
+ 
+    public void dbConnection(String url, String user, String pw) {
+         try {
+             // j2ee 서블릿에서 자원에 대한 연결을 직접
+             // 얻는다.
+
+              conn =   DriverManager.getConnection(url, user, pw);
+         } catch (SQLException e) {
+             System.err.println("...");
+         } finally {
+  ……
+}
+============>연결(Connection)을 직접 관리하면 안된다.
+
+해결코딩)
+
+1:   public class S245 extends   javax.servlet.http.HttpServlet {
+2:       private static final String CONNECT_STRING =   "jdbc:ocl:orcl";
+3:   
+4:       public void dbConnection() throws NamingException, SQLException {
+5:           Connection conn = null;
+6:            try {
+7:                // 자원관리 기능을 이용해서 자원에 대한 연결을 얻는다.
+                   //---------------------------------------------------
+8:                 InitialContext ctx = new InitialContext();
+9:                DataSource datasource = (DataSource) ctx.lookup(CONNECT_STRING);
+10:               conn = datasource.getConnection();
+                   //----------------------------------------------------
+11:            } catch (SQLException e) {
+12:        ……
+13:            } finally {
+14:              if ( conn != null )
+15:                conn.close();
+16:            }
+17:   }
+===============================================================================
+
+J2EE: 직접 소켓 사용(J2EE Bad Practices: Direct Use of Sockets)
+
+=>J2EE 애플리케이션이 프레임워크 메서드 호출을 사용하지 않고,소켓을 직접 사용
+  하는경우 채널보안,에러처리,세션 관리 등 다양한 고려 사항이 필요하다.
+
+  =>해결책) 소켓을 직접 사용하는 대신에 프레임워크에서 제공하는 메서드호출을
+            사용해야 한다.
+ ===========================================================================
+  
+ public class S246 extends   javax.servlet.http.HttpServlet {
+      private Socket socket;
+      protected void doGet(HttpServletRequest request,
+             HttpServletResponse   response) throws ServletException {
+         try {
+         // J2EE  응용프로그램에서 프레임워크 메서드 호출 대신에
+         // 소켓(Socket)을 직접 사용하고 있다.
+              socket = new Socket("kisa.or.kr", 8080); //문제의 코드
+          //---------------------------------------------
+          } catch (UnknownHostException e) {
+             System.err.println("UnknownHostException   occured");
+         } catch (IOException e) {
+             System.err.println("IOException   occured");
+         } finally {
+             ...
+         }
+    }
+}
+
+=>doGet()메서드 내에서 소켓을 직접 사용하면 위험하다.
+======================================================
+해결 코딩)
+
+public class S246 extends   javax.servlet.http.HttpServlet {
+    protected   void doGet(HttpServletRequest request, 
+                   HttpServletResponse response) throws   ServletException {
+
+         ObjectOutputStream oos = null;
+         ObjectInputStream ois = null;
+         try {
+         // 타겟이 WAS로 작성이 되면 URL Connection을 이용하거나,EJB를 
+         // 통해서 호출한다.
+
+               URL url = new URL("http://127.0.0.1:8080/DataServlet");
+               URLConnection urlConn = url.openConnection();
+               urlConn.setDoOutput(true);
+              oos = new ObjectOutputStream(urlConn.getOutputStream());
+              oos.writeObject("data");
+              ois = new  ObjectInputStream(urlConn.getInputStream());
+              Object obj = ois.readObject(); 
+         } catch (ClassNotFoundException e) {
+              System.err.println("Class   Not Found");
+         } catch (IOException e) {
+              System.err.println("URL   Connection Error occured");
+         } finally {
+           ……
+         }
+    }   
+}
+=>자원 관리 기능을 사용하여 자원에 대한 연결을 얻어야 한다.
+==================================================================
+
+3.보안 결정시 DNS lookup에 의존적
+(Reliance on DNS Lookups in a Security Decision )
+
+=>공격자가 DNS엔트리를 속일 수있다. 보안 상 DNS명에 의존하면 안된다.
+ DNS서버는 스푸핑 공격대상이며,SW가 훼손된 DNS 서버 환경에서 언젠가는
+ 실행될 수 있음을 가정하여야 한다. 만일 공격자가 DNS를 수정할 수 있다면
+ 공격자 ip주소로 도메인명을 지정할 수 있다.
+========================================================================
+해결)=>ip주소도 조작 가능하지만 DNS 이름보다는 안전하다.
+
+public class U247 extends   HttpServlet {
+    public void doGet(HttpServletRequest req,   HttpServletResponse res)
+                        throws ServletException,   IOException {
+
+         boolean trusted = false;
+         String ip = req.getRemoteAddr();
+ 
+         // 호스트의 ip주소를 얻어온다.
+          InetAddress addr = InetAddress.getByName(ip);
+          // 호스트의 ip정보와 지정된 문자열이 일치하는지 검사한다.
+          if (addr.getCanonicalHostName().endsWith("trustme.com") ) {
+              trusted = true;
+          } 
+          if (trusted) {
+             ……
+          } else {
+             ……
+          }
+     }
+ }
+
+=>DNS 이름을 통해 해당 요청이 신뢰할 수 있는지를 검사한다. 그러나 공격자가
+  DNS 캐쉬 등을 조작하면 잘못된 신뢰 상태 정보를 얻을 수 있다.
+==========================================================================
+
+좀더 안전한 코드
+
+public class S247 extends   HttpServlet {
+     
+    public void doGet(HttpServletRequest req, HttpServletResponse   res)
+             throws ServletException,   IOException {
+         
+         String ip = req.getRemoteAddr();
+         if ( ip == null || "".equals(ip) )
+           return ;
+      
+          String trustedAddr = "127.0.0.1";//비교할 ip주소
+  
+          if (ip.equals(trustedAddr) ) {
+              ……
+          } else {
+              ……
+          }
+     }
+ }
+=>DNS lookup에 의한 호스트 이름 비교를 하지 않고 IP주소를 직접 비교하도록 수정한다.
+=================================================================================
+4. J2EE: System.exit()사용(J2EE Bad Practices：Use of System.exit())
+
+ =>J2EE 응용프로그램에서 System.exit()의 사용은 컨테이너까지 종료시킨다.
+ =>해결책) J2EE 프로그램(웹)에서는 System.exit()를 사용해서는 안된다.
+
+
+public class S382 extends   HttpServlet {
+    public void doPost(HttpServletRequest request,   HttpServletResponse r
+             throws ServletException,   IOException {
+ 
+         FileHandler handler = new   FileHandler("errors.log");
+         Logger logger =   Logger.getLogger("com.mycompany");
+         logger.addHandler(handler);
+         try {
+             do_something(logger);
+         } catch (IOException ase) {
+             logger.info("Caught:   " + ase.toString());
+              // System.exit(1);//사용을 금한다.
+             // System.exit(1);
+         }
+    }
+ 
+    private void do_something(Logger logger) throws   IOException {
+    }
+}
+=====================================================================
+
+5. null 매개변수 미검사(Missing Check for Null Parameter)
+
+ =>Java 표준에 따르면 Object.equals(), Comparable.compareTo() 및
+   Comparator.compare()의 구현은 매개변수가 null인 경우 지정된 값을 반환
+   해야 한다. 이 약속을 따르지 않으면 예기치 못한 동작이 발생할 수 있다.
+ 
+해결책) Object.equals(), Comparable.compareTo()과 Comparator.compare()구현
+        에서는 매개변수를 null과 비교해야 한다.
+============================================================================
+public class U9201 implements java.util.Comparator {
+public int  compare(Object o1, Object o2) {
+// o1, o2에 대한 null 체크 유무가 없다.
+================================================
+int i1 = o1.hashCode();
+int i2 = o2.hashCode();
+int ret;
+if (i1 > i2) {    ret = 1;     }
+else if (i1 == i2) {    ret = 0;     }
+else {    ret = -1;     }
+ return ret;
+ }
+ ……
+ } 
+===========================================================================
+해결 코딩)
+
+  public class S9201 implements java.util.Comparator {
+public int  compare(Object o1, Object o2) {
+int ret;
+// 비교되는 객체에 대한 null여부를 점검을 한다.
+//------------------------------------------
+if (o1 != null && o2 != null) {
+//------------------------------------------
+int i1 = o1.hashCode();
+int i2 = o2.hashCode();
+if (i1 > i2) {    ret = 1;    }
+else if (i1 == i2) {    ret = 0;    }
+  else {    ret = -1;    }
+  } else
+  ret = -1;
+  return ret;
+  }
+  ……
+  } 
+================================================
+6. EJB: 소켓 사용 (EJB Bad Practices: Use of Sockets)
+
+ =>p69페이지 부터 시작
+
+Enterprise JavaBeans(EJB)규격에는 bean 내부에서 서버소켓(ServerSocket)을 직접 사용
+하여 클라이언트에 서비스를 제공하는 것을 금지하고 있다. EJB 컨테이너 내의 bean은 모두
+EJB 클라이언트에 대해서 네트워크서버형태로 서비스를 제공하도록 설계되어 있는데
+bean 내에서 다시 ServerSocket을 생성 할 경우 구조적인 혼동을 야기할 수있기 때문이다.
+
+
+JAVA 
+
+        1:          …… 
+
+        2:            public  void  function_test()  throws  IOException  { 
+
+        3:                   //  EJB server  socket 사용을 금한다.
+
+        4:                    //  ServerSocket  s  =  new  ServerSocket(1122); 
+
+        8:                    //  Socket  clientSocket  =  serverSocket.accept(); 
+
+        9:                    …… 
+
+        5:            } 
+
+        6:            …… 
+==========================================================================
+   7.equals()와 hashCode() 하나만 정의하면 안된다(둘 다 다 정의해야 한다.)
+
+
+정의)=>Java 표준에 따르면,Java의 같은 객체는 같은 해시코드를 가져야 한다.
+       즉 a.equals(b)==true이면 a.hashCode()==b.hashCode()이어야 한다.
+       따라서 한 클래스 내에서 equals()와 hashCode()는 둘다 구현하거나
+       둘 다 구현하지 않아야 한다.
+
+=>해결책)한 클래스 내에 equals()를 정의하면 hashCode()도 정의해야 하고, hashCode()
+         를 정의하면 equals()도 정의해야 한다.
+===================================================================================
+
+public class S581 {
+……
+// 자신의 객체와 비교하는 equals()구현
+public boolean equals(Object obj) {
+boolean ret;
+if (obj != null) {
+int i1 = this.hashCode();
+int i2 = obj.hashCode();
+if (i1 == i2) {    ret = true;    }
+else {    ret = false;    }
+} else {
+ ret = false;
+}
+return ret;
+}
+  // hashCode() 구현
+public int hashCode() {
+return new HashCodeBuilder(17, 37).toHashCode();
+}
+……
+}
+
+=====================================================
+3절 보안특성=>인증,접근제어,기밀성,암호화,권한 관리등이 포함
+
+  1.하드코드된 패스워드(Hard-coded Password)
+
+ SW가 코드 내부에 하드코드된 패스워드를 포함하고,이를 이용하여 내부 인증에
+ 사용하거나 외부 컴포넌트와 통신을 하는 것은 위험하다.
+
+ =>패스워드는 암호화하여 별도의 파일에저장하여 사용하는 것이 바람직하다.
+   SW설치시 사용하는 디폴트 패스워드,키 등을 사용하느 대신 "최도-로그인"
+   모드를 두어 사용자가 직접 강력한 패스워드나 키를 입력하도록 설계한다.
+
+ public  class  U259  { 
+
+         2:            private  Connection  conn; 
+
+         3:      
+
+         4:            public  Connection  DBConnect(String  url,  String  id)  { 
+
+         5:                      try  { 
+
+         6:  //  password가 하드 코드 되어있다.
+             //데이터베이스를 연결하기 위하여 코드 내부에 상수 형태로 정의된
+             //패스워드를 사용하면 프로그램에 취약점을 야기할 수 있다.
+
+         7:              conn=DriverManager.getConnection(url,  id,  "tiger"); 
+             //-----------------------------------------------------------------
+
+         8:                      }  catch  (SQLException  e)  { 
+
+         9:                              System.err.println("..."); 
+
+         10:                    } 
+
+         11:                    return  conn; 
+
+         12:          } 
+
+         13:      …… 
+
+         14:    } 
+================================================================================
+
+해결책)
+
+■ -  JAVA 
+
+   1:    public  class  S259  { 
+
+   2:       public  Connection  connect(Properties  props)  throws  NoSuchAlgorithmException,  
+
+                           NoSuchPaddingException,  InvalidKeyException,  IllegalBlockSizeException,  
+
+                                                                       BadPaddingException  { 
+
+   3:       try  { 
+
+   4:               String  url  =  props.getProperty("url"); 
+
+   5:               String  id  =  props.getProperty("id"); 
+
+   6:               String  pwd  =  props.getProperty("passwd"); 
+
+   7:    
+
+   8:       //외부 설정 파일에서 패스워드를 가져오며,패스워드가 값이 있는지 체크
+
+   9:               if  (url  !=  null  &&  !"".equals(url)  &&  id  !=  null  &&      !"".equals(id) 
+
+   10:                      &&  pwd  !=  null  &&      !"".equals(pwd))  { 
+
+   11:                     KeyGenerator  kgen  =  KeyGenerator.getInstance("Blowfish"); 
+
+   12:                     SecretKey  skey  =  kgen.generateKey(); 
+
+   13:                     byte[]  raw  =  skey.getEncoded(); 
+
+   14:                     SecretKeySpec  skeySpec  =  new  SecretKeySpec(raw,  "Blowfish"); 
+   15:
+   16:                     Cipher  cipher  =  Cipher.getInstance("Blowfish"); 
+
+   17:                     cipher.init(Cipher.DECRYPT_MODE,  skeySpec); 
+
+   18:                     byte[]  decrypted_pwd  =  cipher.doFinal(pwd.getBytes()); 
+
+   19:                     pwd  =  new  String(decrypted_pwd); 
+
+   20:                      conn  =  DriverManager.getConnection(url,  id,  pwd); 
+
+   21:                  } 
+
+   22:            }  catch  (SQLException  e)  { 
+
+   23:    ……
+  //데이터베이스를 사용하는 프로그램 작성시 패스워드를 구하는 로직을 따로 구현하여
+  //주어진 로직에 의해 검증된 패스워드를 사용한다.
+===========================================================================
+try {
+2:   Connection con = DriverManager.getConnection(url,  "scott", "tiger");
+3:       ......
+4:   } catch (SQLException e) {
+5:   throw new MyException("DB에러“);
+6:   }
+
+DB Connection객체를 생성할때, 디폴트 설치시 제공되는 계정을 사용하고 있다.
+패스워드가 프로그램 내에 하드 코딩 되어있어 외부에 노출되기 쉽다.
+=========================================================================
+해결책중 하나)
+
+/*  mkstore -wrl /mydir -createCredential MyTNSName some_user some_password */
+try {
+System.setProperty("oracle.net.tns_admin", "/mydir");
+java.util.Properties info = new java.util.Properties();
+
+// DB 커넥션을 위한 계정은 oracle 기능을 사용한다.
+
+info.put("oracle.net.wallet_location",
+"(SOURCE=(METHOD=file)(METHOD_DATA=(DIRECTORY=/mydir)))");
+OracleDataSource ds = new OracleDataSource();
+ds.setURL("jdbc:oracle:thin:@MyTNSName");
+ds.setConnectionProperties(info);
+Connection conn = ds.getConnection();
+} catch (SQLException e) {
+throw new MyException("DB에러“);
+}
+
+=>오라클 툴인 mkstore를 사용하여 DB계정을 암호화하여 사용한다.
+==============================================================
+ 2.부적절한 인가(Imporper Authorization)
+
+SW가 모든 가능한 실행경로에 대해서 접근제어를 검사하지 않거나 불완전하게 검사하는
+경우, 공격자는 접근가능한 실행경로를 통해 정보를 유출 할 수 있다.
+
+해결)->응용 프로그램이 제공하는 정보와 기능을 역할에 따라 배분함으로써 공격자에게
+       노출되는 공격표면을 감소시킨다.
+
+       사용자의 권한에 따른 ACL(Access Control List)을 관리한다.
+       프레임워크를 사용해서 취약점을 피할 수 있다.
+       (JAAS Authorization Framework나 OWASP ESAPI Access Control등이 인증
+        프레임워크로 사용 가능하다)
+
+public void f(String sSingleId, int iFlag, String sServiceProvider, String sUid, String sPwd) 
+{
+……
+env.put(Context.INITIAL_CONTEXT_FACTORY, CommonMySingleConst.INITCTX);
+env.put(Context.PROVIDER_URL, sServiceProvider);
+// 익명으로 LDAP 인증을 사용
+env.put(Context.SECURITY_AUTHENTICATION, "none");//임의의 사용자도 접근이 가능하다
+//----------------------------------------------------------------------------------
+env.put(Context.SECURITY_PRINCIPAL, sUid);
+env.put(Context.SECURITY_CREDENTIALS, sPwd);
+==========================================
+
+해결책)
+
+■ -  JAVA 
+
+       1:    public  void  f(String  sSingleId,  int  iFlag,  String  sServiceProvider,  String  sUid,  String  sPwd)  
+
+          { 
+
+       2:    …… 
+
+       3:    env.put(Context.PROVIDER_URL,  sServiceProvider); 
+
+       4:     //익명의 인증을 사용하지 않는다.(중요)
+
+       5:    env.put(Context.SECURITY_AUTHENTICATION,  "simple"); 
+             //---------------------------------------------------
+
+       6:          env.put(Context.SECURITY_PRINCIPAL,  sUid); 
+
+       7:    env.put(Context.SECURITY_CREDENTIALS,  sPwd); 
+
+       8:    …… 
+  =>사용자 ID와 password를 컨텍스트에 설정한 후 접근하도록 접근제어를 사용한다.
+===============================================================================
+ 위험한 코드
+
+               1:    <% 
+
+               2:    String  username  =  request.getParameter("username"); 
+
+               3:    String  password  =  request.getParameter("password"); 
+
+               4:    if  (username==nill  ||  password==null  ||  !isAuthenticatedUser(usename,  password))  { 
+
+               5:       throw  new  Exception("invalid  username  or  password"); 
+
+               6:    } 
+
+               7:    
+
+               8:    String  msgId  =  request.getParameter("msgId"); 
+
+               9:    if  (  msgId  ==  null  )  { 
+
+               10:      throw  new  MyException("데이터오류"); 
+
+               11:    } 
+
+               12:    Message  msg  =  LookupMessageObject(msgId); 
+
+               13:    if  (  msg  !=  null  )  { 
+
+               14:       out.println("From:  "  +  msg.getUserName()"); 
+
+               15:       out.println("Subject:  "  +  msg.getSubField()"); 
+
+               16:       out.println("\n"  +  msg.getBodyField()"); 
+               17:  }
+               18: %>
+  =>인증이 성공적으로 끝나면, 어떤 메세지도 조회가능하다.즉 타인의 메세지 정보를
+   볼 수가 있다.
+
+해결책)
+    ■ -  JSP 
+
+               1:    <% 
+
+               2:    String  username  =  request.getParameter("username"); 
+
+               3:    String  password  =  request.getParameter("password"); 
+
+               4:    if  (username==nill  ||  password==null  ||  !isAuthenticatedUser(usename,  password))  { 
+
+               5:       throw  new  MyException("인증에러"); 
+
+               6:    } 
+
+               7:    
+
+               8:    String  msgId  =  request.getParameter("msgId"); 
+
+               9:    if  (  msgId  ==  null  )  { 
+
+               10:      throw  new  MyException("데이터오류"); 
+
+               11:    } 
+
+               12:    Message  msg  =  LookupMessageObject(msgId); 
+
+               13:    
+
+               14:    if  (  msg  !=  null  &&  username.equals(msg.getUserName())  )  {  
+
+               15:       out.println("From:  "  +  msg.getUserName()"); 
+               16:       out.println("Subject:  "  +  msg.getSubField()"); 
+
+               17:       out.println("\n"  +  msg.getBodyField()"); 
+
+               18:    }  else  {  throw  new  MyException("권한에러);  } 
+
+               19:    %> 
+
+  =>인증한 사용자와 메세지 박스 사용자가 일치했을 경우,해당 메세지를 조회하도록 
+    한다.
+================================================================================
+
+ 3.사이트 간 요청위조(Cross-Site Request Forgery (CSRF))
+
+ CSRF 공격은 악의적인 웹사이트가 사용자의 웹 브라우저로 하여금 신뢰하는 사이트에서
+ 원치 않는 행동을 취하도록 할때 발생한다.
+ 공격자는 사용자가 인증한 세션이 특정 동작을 수행하여도 계속 유지되어 정상적인
+ 요청과 비정상적인 요청을 구분하지 못하는 점을 악용하여 피해가 발생한다.
+
+  웹 응용프로그램에 요청을 전달할 경우, 해당요청의 적법성을 입증하기위해
+  전달되는 값이 고정되어잇고, 이러한 자료가 GET방식으로 전달된다면 공격자가
+  이를 쉽게 알아내어 원하는 요청을 보냄으로써 위험한 작업을 요청할 수있게 된다.
+==============================================================================
+
+해결책) form data posting에 있어서는 post방식을 사용한다.
+        OWASP CSRFGuard 등의 anti-CSRF 패키지를 사용한다.
+ =========================================================
+
+ ■ -  JAVA 
+
+        1:    …… 
+
+        2:    <form  name="MyForm"  method="get"  action="customer.do"> 
+                                   ------------->가능한 Post방식으로
+        3:    <input  type=text  name="txt1"> 
+
+        4:    <input  type=submit  value=""> 
+
+        5:    </form> 
+
+        6:    …… 
+해결책->get==>post방식으로 전달
+
+ ■ -  JAVA 
+
+        1:    …… 
+
+        2:    <form  name="MyForm"  method="post"  action="customer.do"> 
+
+        3:    <input  type=text  name="txt1"> 
+
+        4:    <input  type=submit  value=""> 
+
+        5:    </form> 
+
+        6:    ……  
+=============================================
+  4.적절하지 못한 세션만료(Insufficient Session Expiration)=>p79
+
+정의)=>웹사이트에서 공격자가 인증에 사용된 세션 인증 정보 또는 세션 아이디의
+       재사용을 허용하는 경우 발생한다.
+
+
+해결)=>세션의 만료시간을 정해줄 때에는 적당한 양수를 사용하여 일정 시간이
+       흐르면 세션이 종료되도록 하여야 한다.
+
+ public class U613 extends HttpServlet {
+public void noExpiration(HttpSession session) {
+if (session.isNew()) {
+// 만료시간이 -1으로 세팅되어 세션이 절대고 끝나지 않는다.
+//이와 같은 경우는 프로그램에 취약점을 야기할 수 있다.
+=========================================================
+session.setMaxInactiveInterval(-1);
+   }
+  }
+}
+
+==============================================>해결책
+public class S613 extends HttpServlet {
+public void noExpiration(HttpSession session) {
+if (session.isNew()) {
+// 세션이 끝날 수 있도록 적절한 양의 정수값으로 설정한다. 
+session.setMaxInactiveInterval(12000);
+  }
+ }
+} 
+
+=============================================================
+5.패스워드 관리:힙메모리 조사(Password Management:Heap Inspection)
+
+정의)=>보안상 중요한 데이터를 String객체에 저장하면 보안상 위험하다.
+       자바의 String객체는 수정불가능(immutable)하기 때문에,JVM의 가비지
+       컬렉터가 동작하기 전까지 항상 메모리에 상주해 있으며, 프로그램에서
+       이 메모리를 해제할 수 없다. 따라서 애플리케이션의 실행이 비정상적으로
+       중단되어, 메모리 덤프가 일어나는 경우에 애플리케이션의 보안관련 데이터가
+       외부에 노출될 수있다.
+
+=>해결책) 패스워드를 String객체에 저장하는 것은 위험하므로,변경이 가능한 객체에
+          저장해야 한다. 또한 사용한 후에는 내용을 메모리에서 소거해야 한다.
+          =>StringBuffer객체를 대신 사용
+================================================================================
+
+해결코드)
+
+// private static final long serialVersionUID = 1L;
+3:   protected void doGet(HttpServletRequest request,
+4:              HttpServletResponse   response) throws ServletException, IOException {
+5:   ……
+6:   }
+7:  
+8:   protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+9:   // 외부로 부터 입력을 받는다.
+
+10:   String pass = request.getParameter("psw");
+11:   // 입력값을 체크한다.
+12:   if (pass != null) {
+13:   if (-1 != pass.indexOf("<"))
+14:   System.out.println("bad input");
+15:   else {
+16:   // password를 힙 메모리에 저장하지 않아야 한다.
+17:   // String str = new String(pass);  //보안상 위험한 코드이다.
+      //------------------------------------------------
+18:   }
+19:          } else { System.out.println("bad input");    }
+20:   }
+21:   ……
+==============================================================
+6.하드코드된 사용자 계정(Hard-coded Username)
+
+=>SW가 코드 내부에 고정된 사용자 계정 이름을 포함하고,이를 이용하여 내부인증에
+  사용하거나 외부 컴포넌트와 통신을 하는 것은 위험하다. 코드 내부에 하드코드된
+  사용자 계정이 인증 실패를 야기하게 되면, 시스템 관리자가 그 실패의 원인을
+  찾아내기가 매우 어렵다. 원인이 파악이 되더라도 하드코드된 패스워드를 수정
+  해야 하기 때문에,시스템 관리자는 SW 시스템 전체를 중지시켜 해결해야 하는 경우가
+  발생할 수 있다.
+
+=>패스워드는 암호화하여 사용하는 것이 바람직하다.
+===========================================================
+
+……
+2:   private Connection conn;
+3:  
+4:   // 계정과 비밀번호를 상수로 정의하면 취약하다.
+     //--------------------------------------------
+5:   public Connection DBConnect() {
+6:   String url = "DBServer";
+7:   String id = "scott";
+8:   String password = "tiger";
+9:  
+10:   try {
+11:   conn = DriverManager.getConnection(url,  id, password);
+12:   } catch (SQLException e) {    …… }
+13:   return conn;
+14:   }
+
+============================================================
+=>코드내부에 사용자 이름과 패스워드를 상수로 설정하여,별도의 인증 과정없이
+  로그인이 가능하도록 작성되었다. 이는 프로그램에 취약점을 야기시킨다.
+=========================================================================
+ 해결책)
+
+1:   ……
+2:   private Connection conn;
+3:  
+4:   //계정과 비밀번호는 인자로 입력을 받는다.
+
+5:   public Connection DBConnect(String id, String password) {
+6:        String url = "DBServer";
+7:        try {
+8:            String CONNECT_STRING = url + ":" +  id + ":" +  password;
+9:            InitialContext ctx = new InitialContext(); 
+10:           DataSource datasource = (DataSource) ctx.lookup(CONNECT_STRING); 
+11:          
+12:           // 입력받은 인자로 connection을 연결한다.
+13:           conn = datasource.getConnection();
+14:         } catch (SQLException e) {    …… }
+15:         return conn;
+16:   }
+
+=>데이터베이스를 사용하는 프로그램 작성시 "빈문자열"을 패스워드로 사용하는 계정이
+  존재하지 않도록 데이터베이스 계정을 관리한다. 또한 사용자 계정 및 패스워드는
+  암,복호화하여 사용하거나 가능한 경우 필요시 사용자로부터 직접 입력을 받ㅇ사
+  사용한다.
+=================================================================================
+ 7.패스워드 평문 저장(Plaintext Storage of Password)
+
+=>패스워드를 암호화되지 않은 텍스트의 형태로 저장하는 것은 시스템 손상의 원인이
+  될 수 있다. 환경설정 파일에 평문으로 패스워드를 저장하면,환경설정 파일에
+  접근할 수 있는 사람은 누구나 패스워드를 알아낼 수 있다. 패스워드는 높은 수준의
+  암호화 알고리즘을 사용하여 관리되어져야 한다.
+
+=>해결책) 패스워드를 외부 환경파일에 저장한다면,암호화하여 저장하는것이 바람직하다.
+=================================================================================
+ 안전하지 않은 자바코드임
+=========================================
+1:   package testbed.unsafe;
+2:   import java.sql.*;
+3:   import java.util.Properties;
+4:   import java.io.*;
+5:   public class U256 {
+6:        public void f(String url, String name) throws IOException  {
+7:            Connection con = null;         
+8:            try {
+9:                Properties props = new Properties();
+10:                FileInputStream in = new FileInputStream("External.properties");
+11:                byte[] pass = new byte[8];               
+12:                // 외부 파일로부터 password를 읽는다.
+13:                 in.read(pass);
+14:            // password가 DB connection의 인자변수로 그대로 사용이 된다.
+15:                con = DriverManager.getConnection(url, name,  new String(pass));
+16:                con.close();
+17:            } catch (SQLException e) {
+18:                System.err.println("SQLException Occured ");
+19:            } finally {
+20:                try {
+21:                    if (con != null)
+22:                        con.close();
+23:                } catch (SQLException e) {
+24:                    System.err.println("SQLException Occured ");
+25:                } 
+26:           } 
+27:       }
+28:   }
+
+=>속성파일에서 읽어들인 패스워드를 String형태 그대로 데이터베이스를 연결하는데
+  사용하고 있다. 사용자가 속성파일에 공격을 위한 문자열을 저장한 경우,프로그램이
+  의도한 공격에 노출될 수 있다.
+===========================================
+해결 코드
+=========
+
+1:   package testbed.safe;
+2:   import java.sql.*;
+3:   import java.util.Properties;
+4:   import java.io.*;
+5:   public class S256 {
+6:        public void f(String[] args) throws IOException {
+7:            Connection con = null;
+8:            try {
+9:               Properties props = new Properties();
+10:                FileInputStream in = new FileInputStream("External.properties");
+11:                props.load(in);
+12:                String url = props.getProperty("url");
+13:                String name = props.getProperty("name");
+14:                 // 외부 파일로부터 password를 읽은 후, 복호화 한다.
+15:                  String pass = decrypt(props.getProperty("password"));
+                    //------------------------------------------------------
+16:                //외부 파일로부터의 패스워드를 복호화 후 사용함.
+17:                con = DriverManager.getConnection(url, name, pass);
+                   //---------------------------------------------------------
+18:            } catch (SQLException e) {
+19:                System.err.println("SQLException Occured ");
+20:            } finally {
+21:                try {
+22:                    if (con != null)
+23:                        con.close();
+24:                } catch (SQLException e) {
+25:                    System.err.println("SQLException Occured ");
+26:                }
+27:            }
+28:        }
+29:    }
+//외부에서 입력된 패스워드는 사용 전에 복호화 후 사용되어야 한다.
+===================================================================
+
+ 8.설정파일에 패스워드(Password in Configuration File)
+
+ =>패스워드는 쉽게 접근할 수 없는 저장소에 저장하든지 아니면 암호화한 상태로
+   저장하여야 한다.
+
+1:   package testbed.unsafe;
+2:   import java.io.FileInputStream;
+3:   import java.io.FileNotFoundException;
+4:   import java.io.IOException;
+5:   import java.sql.Connection;
+6:   import java.sql.DriverManager;
+7:   import java.sql.SQLException;
+8:   public class U260 {
+9:      public boolean connectTest(String url, String usr) {
+10:      Connection con = null;
+11:      byte[] b = new byte[1024];
+12:      boolean result = false;
+13:              try {
+14:                FileInputStream fs = new FileInputStream("sample.cfg");
+15:                //외부데이터를 배열로 읽어온다.
+16:                 fs.read(b);
+17:               // 패스워드 문자열을 만든다.
+18:                 String password = new String(b);
+19:              // 패스워드가 DB연결 정보로 사용이 된다.
+
+20:                con = DriverManager.getConnection(url, usr,  password);
+21:            } catch (FileNotFoundException e) {
+22:                System.err.println("File Not Found Exception Occurred!");
+23:            } catch (IOException e) {
+24:                System.err.println("I/O Exception Occurred!");
+25:            } catch (SQLException e) { 
+26:                System.err.println("SQL Exception Occurred!");
+27:            } finally {
+28:                try {
+29:                    if (con != null) {
+30:                        con.close();
+31:                        result = true;
+32:                    }
+33:                } catch (SQLException e) {
+34:                    System.err.println("SQL Exception Occurred!");
+35:                }
+36:            }
+37:                      return result;
+38:        }
+39:    }
+=================================================================
+=>configuration파일에 저장된 패스워드를 읽어서 그대로 데이터베이스 연결에 
+  사용하고 있다. 이것은 다른 사람이 패스워드에 쉽게 접근할 수 있도록 하므로
+프로그램의 취약점을 유발할 수있다.
+============================================================================
+ 해결코딩)
+
+1:   public class S260 {
+2:        public boolean connectTest(String url, String usr, Key key) {
+3:            Connection con = null;
+4:            byte[] b = new byte[1024];
+5:            boolean result = false;
+6:              try {
+7:                FileInputStream fs = new FileInputStream("sample.cfg");
+8:                  if (fs == null || fs.available() <= 0) return false;
+9:                // 외부 파일로 부터 암호화된 입력값을 받는다.
+10:                              int length = fs.read(b);
+11:                              if (length == 0) {
+12:                    result = false;
+13:                } else {
+14:                    // 암호화된 패스워드를 복호화한다.
+15:                     Cipher cipher = Cipher.getInstance("DES/ECB/PKCS5Padding");
+16:                     cipher.init(Cipher.DECRYPT_MODE, key);
+17:                     byte[] db = cipher.doFinal(b);
+18:                                      //문자열 변환
+19:                   String password = new String(db, "utf-8");
+20:                                      // DB 연결
+21:                    con = DriverManager.getConnection(url, usr,  password);
+22:                }
+                  //-----------------------------------------------------------
+23:              } catch (FileNotFoundException e) {
+24:                System.err.println("File Not Found Exception Occurred!");
+25:            } catch (IOException e) {
+26:                System.err.println("I/O Exception Occurred!");          
+27:            } catch (SQLException e) {
+28:                System.err.println("SQL Exception Occurred!");
+29:            } catch (NoSuchAlgorithmException e) {
+30:                System.err.println("NoSuchAlgorithmException Occurred!");
+31:            } catch (NoSuchPaddingException e) {
+32:                System.err.println("NoSuchPaddingException Occurred!");
+33:            } catch (InvalidKeyException e) {
+34:                System.err.println("InvalidKeyException Occurred!");
+35:            } catch (IllegalBlockSizeException e) {
+36:                System.err.println("IllegalBlockSizeException Occurred!");
+37:            } catch (BadPaddingException e) {
+38:                System.err.println("BadPaddingException Occurred!");
+39:            }  finally {
+40:                try { 
+41:                   if (con != null) {
+42:                       con.close();
+43:                        result = true; } } catch (SQLException e)  {
+44:                    System.err.println("SQL Exception Occurred!");
+45:                }  }  return result;     
+         }
+  }
+==================================================================================
+=>외부에 저장된 패스워드(예를 들어,환경파일)를 데이터베이스 연결에 사용하는 경우,
+  읽어들인 패스워드를 검증하거나 추가적인 정보로 가공하는 로직을 거쳐서 사용해야한다.
+====================================================================================
+
+9.패스워드에 사용된 취약한 암호화(Weak Cryptography for Passwords)
+
+=>SW개발자들은 환경설정 파일에 저장된 패스워드를 보호하기 위하여 간단한 인코딩
+  함수를 이용하여 패스워드를 감추는 방법을 사용하기도 한다. 그렇지만 base64와
+  같은 지나치게 간단한 인코딩 함수를 사용하는 것은 패스워드를 제대로 보호할 수없다.
+
+=>해결책)패스워드는 최소한 128비트 길이의 키를 이용하여 암호화하는 것이 바람직하
+
+1:    ……
+2:   public boolean DBConnect() throws SQLException {
+3:       String url = "DBServer";
+4:        String usr = "Scott";
+5:        Connection con = null;
+6:    
+7:   try {
+8:   Properties prop = new Properties();
+9:   prop.load(new FileInputStream("config.properties"));
+10: // 패스워드를 64bit로 decoding한다.
+12:   byte password[] = Base64.decode(prop.getProperty("password"));
+13:  
+14:      // 유효성 점검없이 패스워드를 문자열로 읽는다.
+15:        con = DriverManager.getConnection(url, usr,  password.toString());
+16:       } catch (FileNotFoundException e) {
+17:             e.printStackTrace();
+18:       } catch (IOException e) {
+19:              e.printStackTrace();
+20:    }
+21:   }
+
+=>패스워드를 base64로 인코딩하여 configuration 파일에 저장한 경우이다. 
+  Basea64 인코딩 기법 자체가 가지는 취약점 때문에 이 경우 패스워드를 안전하게
+  보호할 수 없다.
+=============================================================================
+=>안전한 코드로 변경
+
+   public boolean DBConnect() throws SQLException {
+3:   String url = "DBServer";
+4:   String usr = "Scott";
+5:   Connection con = null;
+6:   ¦
+7:   try {
+8:   Properties prop = new Properties();
+9:   prop.load(new FileInputStream("config.properties"));
+10:   ¦
+11:   // 패스워드를 AES 알고리즘 기반의 복호화 코드로 암호화 한다.
+      //---------------------------------------------------------
+12:   String password =  decrypt(prop.getProperty("password"));
+      //---------------------------------------------------------
+13:  
+14:   con = DriverManager.getConnection(url, usr,  password);
+15:   } catch (FileNotFoundException e) {
+16:       e.printStackTrace();
+17:   } catch (IOException e) {
+18:      e.printStackTrace();
+19:   }
+20:  }
+      //패스워드를 사용하는 경우에는 최소한 128비트 길이의 키를 이용하여
+      //암호화하는 것이 바람직하다.
+
+21:      private static String decrypt(String encrypted) throws Exception {
+22:        SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(), "AES");
+23:        Cipher cipher = Cipher.getInstance("AES");
+24:        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+25:        byte[] original = cipher.doFinal(hexToByteArray(encrypted));
+26:        return new String(original);
+27:      }
+=================================================================================
+  10.중요한 함수 사용시 자격인증 미비(Missing Authentication for Critical Function)
+
+ =>사용자의 신원이 요구되는 기능이나 상당한 자원을 소모하는 기능을 사용할 때,SW가
+   사용자의 자격인증 과정을 수행하지 않게 된다.
+
+ 해결방법)
+    =>클라이언트의 보안검사를 우회하여 서버에 접근하지 못하도록 한다.
+    =>중요한 정보가 있는 페이지는 재인증이 적용되도록 설계하여야 한다.
+      (은행 계좌이체등)
+    =>안전하다고 확인된 라이브러리나 프레임워크를 사용한다.
+      즉 OpenSSL이나 ESAPI의 보안 기능을 사용한다.
+
+문제 있는 코딩부분
+=======================
+1:   public void sendBankAccount(String accountNumber,double balance) {
+2:       ...
+3:        BankAccount account = new BankAccount();
+4:       account.setAccountNumber(accountNumber);
+5:       account.setToPerson(toPerson);
+6:       account.setBalance(balance);
+7:        AccountManager.send(account);
+8:       ...
+9:   }
+ =>재 인증을 거치지 않고 계좌이체를 하고 있다.
+===============================================
+해결 코딩
+
+1:   public void sendBankAccount(HttpServletRequest request, HttpSession session,
+2:                                String accountNumber,double balance) {
+3:       ...
+4:       // 재인증을 위한 팝업 화면을 통해 사용자의 credential을 받는다.
+5:       String newUserName = request.getParameter("username");  
+6:       String newPassword = request.getParameter("password");
+7:       if ( newUserName == null || newPassword == null ) {
+8:           throw new MyEception("데이터오류");
+9:       }
+10:  
+11:       // 세션으로부터 로긴한 사용자의 credential을 읽는다.
+12:       String password = session.getValue("password");  
+13:       String userName = session.getValue("username");
+14:  
+15:   // 재인증을 통해서 이체여부를 판단한다.
+16:       if (  isAuthenticatedUser()  && newUserName.equal(userName) &&
+17:           newPassword.equal(password) ) {
+18:       BankAccount account = new BankAccount();
+19:       account.setAccountNumber(accountNumber);
+20:       account.setToPerson(toPerson);
+21:       account.setBalance(balance);
+22:       AccountManager.send(account);
+23:       }
+24:       ...
+25:   }
+===========================================================================
+==>인증을 수행된 사용자만이 다시 재인증을 거쳐 계좌 이체가 가능하도록 한다.
+===========================================================================
+  11.취약한 암호화:충분하지 못한 키의 길이
+
+ 현재 RSA 알고리즘은 적어도 1024 비트 이상의 길이를 가진 키와 함께 사용해야 한다고
+ 알려져 있다. Symmetric 암호화의 경우에는 적어도 128비트 이상의 키를 사용하는것이
+ 바람직하다.
+
+1:   ……
+2:   public void target() throws NoSuchAlgorithmException {
+3:   KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+
+4:   // Key generator의 값은 최소 1024bit로 설정한다.
+
+5:   keyGen.initialize(1024);//512->1024이상으로 설정한다.
+6:   KeyPair myKeys = keyGen.generateKeyPair();
+7:    }
+ =>암호화에 사용하는 키의 길이는 적어도 1024비트 이상으로 설정한다.
+==================================================================
+
+12.민감한 데이터의 암호화 실패(Missing Encryption of Sensitive Data)
+
+=>중요한 민감한 데이터를 디스크에 저장하거나 외부 전송시,SW가 해당 데이터를
+  암호화하지 않을 경우 민감한 데이터가 노출될 수 있다.
+
+=>해결책)
+   계좌번호,신용카드번호,패스워드 정보가 디스크에 출력시 단방향 암호화 알고리즘을
+   사용하고,해쉬 알고리즘은 SHA-256을 사용한다.
+
+   SW 설계시 민감한 데이터와 일반 데이터를 가능한 분리하도록 한다.
+   민감한 데이터가 네트워크를 통해 전송될때, SSL 또는 HTTPS등과 같은 Secure
+   Channel을 사용한다.
+=============================================================================
+
+문제 코드
+
+1:   String username = request.getParameter("username");
+2:   String  password = request.getParameter("password");
+3:   PreparedStatement p=null;
+4:   try {
+5:   ......
+6:   if (username==nill || password==null 
+7:         || !isAuthenticatedUser(usename, password)) {
+8:   throw new MyException("인증에러");
+9:       }
+10:   p = conn.prepareStatement("INSERT INTO employees VALUES(?,?)"); 
+11:       p.setString(1,username);
+12:       p.setString(2,password);
+13:   p.execute();
+14:      ......
+15:   }
+
+===>인증을 통과한 사용자의 패스워드 정보가 평문으로 DB에 저장된다.(문제점)
+==================================================================
+
+안전한 코드
+
+1:   String username = request.getParameter("username");
+2:   String  password = request.getParameter("password");
+3:   PreparedStatement p=null;
+4:   try {
+5:   ......
+6:   if (username==nill || password==null 
+7:         || !isAuthenticatedUser(usename, password)) {
+8:   throw new MyException("인증에러");
+9:   }
+10:       MessageDigest md = MessageDigest.getInstance("SHA-256");
+11:       md.reset();
+12:       ......
+13:   // 패스워드는 해쉬함수를 이용하여 DB에 저장한다.
+
+14:        password =md.digest(password.getBytes());
+15:   p = conn.preparedStatement("INSERT INTO employees VALUES(?,?)"); 
+16:       p.setString(1,username);
+17:       p.setString(2,password);
+18:   p.execute();
+19:      ......
+20:   }
+
+=>패스워드 등 중요 데이터를 해쉬값으로 변환하여 저장한다.
+============================================================
+ 13.기밀 정보의 단순한 텍스트 전송
+
+=>SW가 보안과 관련된 민감한 데이터를 명백한 텍스트의 형태로 통신 채널을 
+  통해서 보내는 경우, 인증받지 않은 주체에 의해서 스니핑이 일어날 수 있다.
+
+=>해결책) 민감한 정보를 통신 채널을 통하여 내보낼 때는 반드시 암호화
+          과정을 거쳐야 한다.
+===========================================================================
+ 문제가 있는 코드
+===================
+
+  ■ -  JAVA 
+
+            1:            ……  
+
+            2:            String  getPassword()        { 
+
+            3:                      return  "secret"; 
+
+            4:            } 
+
+            5:            
+
+            6:            void  foo()    { 
+
+            7:                  try      { 
+
+            8:        Socket  socket  =  new  Socket("taranis",  4444); 
+
+            9:       PrintWriter  out  =  new  PrintWriter(socket.getOutputStream(), true); 
+
+             //-------------------------------------------
+            10:      String  password  =  getPassword(); 
+
+            11:       out.write(password);  //암호를 그냥 전달하는 경우->문제발생
+            //-----------------------------------------------
+
+            12:                      }  catch  (FileNotFoundException  e)  { 
+
+            13:                 …… 
+
+            14:     } 
+
+  =>속성 파일에서 읽어들인 패스워드(Plain text)를 네트워크를 통하여 서버에
+    전송하고 있다. 이 경우 패킷 스니핑을 통하여 패스워드가 노출될 수있다.
+=============================================================================
+<해결코드>
+            채팅서버를 통해서 데이터 전송하는 경우라고 가정.
+
+ ■ -  JAVA 
+
+        1:        …… 
+
+        2:        String  getPassword()        { 
+
+        3:                      return  "secret_password"; 
+
+        4:        } 
+
+        5:        
+
+        6:        void  foo()    { 
+
+        7:                      try  { 
+
+        8:               Socket  socket  =  new  Socket("taranis",  4444); 
+
+        9:               PrintStream  out  =  new  PrintStream(socket.getOutputStream(),  true); 
+        //--------------------------------------------------------------------------
+        //패스워드를 네트워크를 통하여 서버에 전송하기 전에 최소한 128비트 길이의
+        //키를 이용하여 암호화하는 것이 바람직하다.
+        //--------------------------------------------------------------------------
+        10:              Cipher  c  =  Cipher.getInstance("AES/CBC/PKCS5Padding"); 
+
+        11:              String  password  =  getPassword(); 
+
+        12:              byte[]  encryptedStr  =  c.update(password.getBytes()); 
+
+        13:              out.write(encryptedStr,  0,  encryptedStr.length); 
+         //-------------------------------------------------------------------------
+
+        14:                   }  catch  (FileNotFoundException  e)  { 
+
+        15:                            …… 
+
+        16:       } 
+
+      128 
+=================================================================================
+=>14.하드코드된 암호화키 사용(Use of Hard-coded Cryptographic Key)
+
+=>문제)코드 내부에 하드코드된 암호화키를 사용하여 암호화를 수행하면 암호화된
+       정보가 유출될 가능성이 높아진다. 많은 SW 개발자들이 코드내부의 고정된
+       패스워드의 해쉬를 계산하여 저장하는 것이 패스워드를 악의적인 공격자로부터
+       보호할 수 있다고 믿고 있다. 그러나 많은 해쉬함수들이 역계산이 가능하며,
+       적어도 brute-force공격에는 취약하다는 것을 고려해야만 한다.
+
+=>해결책)암호화되었더라도 패스워드를 상수의 형태로 프로그램 내부에 저장하여
+         사용하면 안된다. 대칭형 알고리즘으로 AES,ARIA,SEED,3DES등의 사용이 권고
+         되며,비대칭형 알고리즘으로 RSA 사용시 키는 1024이상을 사용한다.
+         해쉬함수로 MD4,MD5,SHA1은 사용하지 말아야 한다.
+ =================================================================================
+
+<문제코드>
+■ -  JAVA 
+
+        1:            …… 
+
+        2:    private  Connection  con; 
+
+        3:     
+
+        4:    public  String  encryptString  (String  usr)  { 
+
+        5:    Stringc  seed  =  "68af404b513073584c4b6f22b6c63e6b"; 
+
+        6:     
+
+        7:    try  { 
+
+        8:    // 상수로 정의된 암호화키를 이용하여 encrypt를 수행한다.
+
+        9:                          SecretKeySpec  skeySpec  =  new  SecretKeySpec(seed.getBytes(),  "AES"); 
+
+        10:    
+
+        11:  //   해당 암호화키 기반의 암호화 또는 복호화 업무 수행
+
+        12:                          .. 
+
+        13:    }  catch  (SQLException  e)  { 
+
+        14:           …… 
+
+        15:    } 
+
+        16:    return  con; 
+        17:    } 
+
+        18:    } 
+
+=>암호화에 사용되는 키를 상수의 형태로 코드 내부에서 사용하는 것은 프로그램 소스가
+  노출되는 경우 암호화 키도 동시에 노출되는 취약점을 가지게 된다.
+=====================================================================
+<해결코드>
+
+■ -  JAVA 
+
+      1:            …… 
+
+      2:    private  Connection  con; 
+
+      3:     
+
+      4:    public  String  encryptString  (String  usr)  { 
+
+      5:    Stringc  seed  =  null; 
+
+      6:     
+
+      7:    try  { 
+
+      8:     //암호화 키를 외부환경에서 읽음.
+
+      9:     seed  =  getPassword("./password.ini"); 
+
+      10:    //암호화된 암호화 키를 복호화함. 
+
+      11:     seed  =  decrypt(seed); 
+
+      12:    //  상수로 정의된 암호화키를 이용하여 encrypt를 수행한다. 
+
+      13:    //  use  key  coss2 
+
+      14:    SecretKeySpec  skeySpec  =  new  SecretKeySpec(seed.getBytes(),  "AES"); 
+
+      15:    
+
+      16:   //해당 암호화키 기반의 암호화 또는 복호화 업무 수행   
+      17:                          .. 
+
+      18:        }  catch  (SQLException  e)  { 
+
+      19:                …… 
+
+      20:       } 
+
+      21:    return  con; 
+
+      22:      } 
+
+      23:    } 
+
+      24:    
+
+ =>암호화된 패스워드를 복호화하기 위하여 사용되는 암호화키도 코드 내부에 상수형태로
+   정의해서 사용하면 안된다.
+====================================================================================
+
+ 15.취약한 암호화:적절하지 못한 RSA 패딩
+    (Weak Encryption:Inadequate RSA Padding)
+
+ =>RSA 알고리즘 사용시 패딩없이 사요("RSA/NONE/NoPadding")하지 말고,암호화 알고
+   리즘에 적합한 패딩과 함께 사용해야 한다.
+ ===========================================
+ 
+             ■ -  JAVA 
+
+          1:    …… 
+
+          2:    public  Cipher  getCipher()  { 
+
+          3:     Cipher  rsa  =  null; 
+
+          4:    
+
+          5:     try  { 
+
+          6:          /*  paddingRSA.  */ 
+            //---------------RSA알고리즘을 사용할 경우 PKCS5Padding패딩과 함께 사용해야 한다.
+             //rsa  =  javax.crypto.Cipher.getInstance("RSA/NONE/NoPadding");
+             //이렇게 사용하면 안된다. 
+
+          7:   rsa  =      javax.crypto.Cipher.getInstance("RSA/CBC/PKCS5Padding"); 
+
+          8:     }  catch  (java.security.NoSuchAlgorithmException  e)  {        ……            } 
+
+          9:     return  rsa; 
+
+          10:    } 
+
+
+ =>사용하는 알고리즘에 따라 알려져 있는 적절한 패딩방식을 사용해야 한다.예를 들어
+   RSA알고리즘을 사용하는 경우에는 PKCS1 Padding 방식이나 PKCS5 Padding 방식을 
+   사용하는 것이 바람직하다.
+==================================================================================
+
+  16.취약한 암호화 해쉬함수:하드코드된 솔트
+      (Weak Cryptographic Hash:Hardcoded Salt)
+  ============================================
+  p102부터 시작
+
+<문제가 되는 코드>
+1: ……
+2: public byte[] encrypt(byte[] msg) {
+
+3: // 소스가 노출되었을때 사용자가 값을 알 수 있다.
+4: final byte badsalt = (byte) 100;
+5: byte[] rslt = null;
+6:
+7: try {
+8: MessageDigest md = MessageDigest.getInstance("SHA-256");
+9: // Salt 값을 상수로 받는다.
+
+10: md.update(badsalt);
+11: rslt = md.digest(msg);
+12: } catch (NoSuchAlgorithmException e) {
+13: System.out.println("Exception: " + e);
+14: }
+15: return rslt;
+16: }
+
+=>위 예제는 암호화된 해쉬함수를 사용할때 ,상수로 정의된 salt를 사용함으로써
+     취약점을 야기하는 경우이다.
+
+<안전한 코드의 예>
+
+1: ……
+2: public byte[] encrypt(byte[] msg) {
+3: byte[] rslt = null;
+4:
+5: try {
+     //------------------------------------------------------------------------
+6: SecureRandom prng = SecureRandom.getInstance("SHA256PRNG");
+7: String randomNum = new Integer( prng.nextInt() ).toString();
+    //-------------------------------------------------------------------------
+8: MessageDigest md = MessageDigest.getInstance("SHA-256");
+9:
+10: // 랜덤 함수 등을 사용하여 임의의 숫자를 생성해야 한다.
+11: md.update(randomNum.getBytes());
+12: rslt = md.digest(msg);
+13: } catch (NoSuchAlgorithmException e) {
+14: System.out.println("Exception: " + e);
+15: }
+16: return rslt;
+17: }
+18: }
+
+ //Salt(혹은 nonce)값으로는 예측하기 어려운 난수를 사용해야 하므로, 예측이
+    어려운 salt값을 생성하는 로직을 별도로 구현하여 사용하여야 한다.
+========================================
+17. 취약한 암호화 알고리즘의 사용
+(Use of a Broken or Riscky Cryptographic Algorithm)
+
+ 보안적으로 취약하거나 위험한 암호화 알고리즘을 사용해서는 안된다.
+ 옛날거->RC2,RC4,RC5,RC6,MD4,MD5,SHA1,DES
+
+해결책->AES처럼 보다 강력한 암호화 알고리즘을 사용하는 것이 바람직하다.
+
+1: ……
+2: public byte[] encrypt(byte[] msg, Key k) {
+3: byte[] rslt = null;
+4:
+5: try {
+
+6: // DES등의 낮은 보안수준의 알고리즘을 사용하는 것은 안전하지 않다.
+
+7: Cipher c = Cipher.getInstance("DES");
+8: c.init(Cipher.ENCRYPT_MODE, k);
+9: rslt = c.update(msg);
+10: } catch (InvalidKeyException e) {
+11: ……
+12: }
+13: return rslt;
+14: }
+15: }
+
+<안전한 코드>
+
+1: ……
+2: public byte[] encrypt(byte[] msg, Key k) {
+3: byte[] rslt = null;
+4:
+5: try {
+
+6: // 낮은 보안수준의 DES 알고리즘을 높은 보안수준의 AES 알고리즘으로
+    // 대체한다.
+    //-------------------------------------------------------------------
+7: Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+   //--------------------------------------------------------------------
+8: c.init(Cipher.ENCRYPT_MODE, k);
+9: rslt = c.update(msg);
+10: } catch (InvalidKeyException e) {
+11: ……
+12: }
+13: return rslt;
+14: }
+15: }
+
+=>취약하다고 알려진 알고리즘 대신 AES 알고리즘을 최소한 128비트 길이의
+    키를 이용하여 사용하는 것이 바람직하다.
+============================================
+18. 적절하지 않은 난수값의 사용(Use of Insufficiently Random Values)
+
+=>예측 가능한 난수를 사용하는 것은 시스템에 취약점을 야기시킨다. 예측 불가능
+     한 숫자가 필요한 상황에서 예측 가능한 난수를 사용한다면, 공격자는 SW에서
+     생성되는 다음 숫자를 예상하여 시스템을 공격하는 것이 가능하다.
+
+
+=>안전한 코딩기법->난수 발생기에서 seed를 사용하는 경우에는 예측하기
+                               어려운 방법으로 변경하여 사용하는 것이 바람직하다.
+
+<안전하지 않은 코드예>
+
+1: ……
+2: public double roledice() {
+3: return Math.random(); //java.lang.Math클래스의 random() 메서드는
+                                       //seed를 재설정할 수 없기 때문에 위험하다.
+                                       //섞어주는수를 재설정할 수없다.
+4:    }
+5: }
+
+<안전한 코드의 예>
+1: import java.util.Random;
+2: import java.util.Date;
+3: ……
+4: public int roledice() {
+5: Random r = new Random();
+6: // setSeed()메서드를 사용해서 r을 예측 불가능한 long타입으로 설정한다.
+
+7: r.setSeed(new Date().getTime());
+8: // 난수 생성
+9: return (r.nextInt()%6) + 1;
+10: }
+11: }
+
+java.util.Random 클래스는 seed를 재설정하지 않아도 매번 다른 난수를 생성
+한다. 따라서 Random 클래스를 사용하는 것이 보다 안전하다.
+===========================================
+
+19. 패스워드 관리: 리다이렉트시 패스워드
+(Password Management: Password in Redirect)
+
+=>HTTP 리다이렉트는 웹브라우저를 통해 HTTP GET 명령어를 발생시킨다.
+     이 경우 주소창에 매개변수의 형태로 전송내용이 노출되므로, 패스워드를 이 
+     방법을 통해서 보내는 것은 위험하다. 이와 함께 웹서버가 이 행위를 주소와
+     함께 로그에 남기고, 웹프록시는 이 페이지를 캐쉬하므로, 사용자가 전송한
+     패스워드가 시스템의 많은 부분에 남게 된다.
+
+=>안전한 코딩기법
+ =>자바 Servlet에서 sendRedirect메서드를 통해서는 패스워드 등 보안에
+      민감한 보내서는 안된다. 다른 페이지로 보안에 민감함 정보를 보낼 때는
+      GET방식이 아닌 POST방식으로 파라미터를 전달해야 한다.
+==========================================
+<문제가 되는 코드>
+
+1: ……
+2: public void redirect(ServletRequest r, HttpServletResponse response)
+3: throws IOException {
+4: String usr = r.getParameter("username");
+5: String pass = r.getParameter("password");
+6:
+7: // HTTP 리다이렉트는 웹브라우저는 통해 HTTP GET request를 발생시킨다.
+8: response.sendRedirect("j_security_check?j_username=" + usr + "&j_password=" + pass);
+9: } 
+
+=>위 예제는 HTTP 요청(Request)을 GET방식으로 재 전송함으로써 프로그램을
+     취약하게 만드는 경우이다.
+============================================
+
+<안전한 코드의 예>
+1: ……
+2: public void redirect(HttpServletRequest request, HttpServletResponse response)
+3: throws IOException {
+
+4: request.getSession().invalidate();
+5: String usr = request.getParameter("username");
+6: String pass = request.getParameter("password");
+7:
+8: // 패스워드의 유효성을 점검한다.
+    //유저와 비밀번호의 값이 없으면 처리하지 않는다.
+9: if ( usr == null || "".equals(usr) || pass == null || "".equals(pass) ) return;
+  //반드시 값이 있고 4자이상 8자이상이면 처리해준다.-->이런식 코딩방식
+10: if ( !pass.matches("") && pass.indexOf("@!#") > 4 && pass.length() > 8 ) {
+11: ……
+12: }
+13: // POST 방식으로 페이지를 넘겨야 한다.
+14: String send = "j_security_check?j_username=" + usr + "&j_password=" + pass;
+15:  response.encodeRedirectURL(send);
+16: }
+
+다른 페이지로 보안에 민감한 정보를 보낼 때는 GET 방식이 아닌 POST 방식으로
+파라미터를 전달해야 한다.
+============================================
+
+20.취약한 패스워드 요구조건 (Weak Password Requirements)
+
+=>사용자에게 강한 패스워드를 요구하지 않으면,결국 공격자가 사용자 계정을
+     뚫기 쉽게 만들며,사용자 계정을 보호하기 힘들다.
+
+=>안전한 코딩기법->패스워드에 대한 검증을 통해 보안성이 높은 문자열을
+                               입력하도록 유도한다.
+============================================
+<문제의 코드>
+
+1: public void doPost(HttpServletRequest request, HttpServletResponse response)
+2: throws IOException, ServletException {
+3:
+4: try {
+5: String url = "DBServer"; //미리 지정해도 안된다.
+6: String usr = "Scott";  //미리 지정해도 안된다.
+7:
+8: // passwd에 대한 검증이 없음.
+9: String passwd = request.getParameter("passwd");
+10: Connection con = DriverManager.getConnection(url, usr, passwd);
+11:
+12: con.close();
+13: } catch (SQLException e) {
+14: System.err.println("...");
+15: }
+16: }
+===>신뢰할 수 없는 외부입력으로부터 할당된 변수(passwd)가 검증 과정없이
+          패스워드로 사용되는 문장이다.
+============================================
+ <안전한 코드의 예>
+
+1: private static final String CONNECT_STRING = "jdbc:ocl:orcl";
+2:
+3: public void doPost(HttpServletRequest request, HttpServletResponse response)
+4: throws IOException, ServletException {
+5: try {
+6: request.getSession().invalidate();
+7: String passwd = request.getParameter("passwd");
+8:
+9: // passwd에 대한 검증 코드를 작성해야 한다.
+10: if (passwd == null || "".equals(passwd)) return;
+
+11:
+12: //패스워드 조합 규칙을 검사한 후, 위배될 경우 재입력을 요구=>Spring MVC에서 설정방법
+13: if (Password.validate(passwd) == false) return;
+14:
+15: InitialContext ctx = new InitialContext();
+16: DataSource datasource = (DataSource) ctx.lookup(CONNECT_STRING);
+17: Connection con = datasource.getConnection();
+18:
+19: con.close();
+20: } catch (SQLException e) {
+21: System.err.println("...");
+22: } catch (NamingException e) {
+23: System.err.println("...");
+24: }
+25: }
+
+=>패스워드 조합규칙(예: 세 가지 종류 이상의 문자구성으로 8자리 이상의 길이로
+     구성된 문자열)을 검사한 후,위배될 경우 다른 패스워드를 사용하도록 유도
+     한다.
+=============================================
+21. 쿠키보안: 영속적인 쿠키(Cookie Security: Persistent Cookie)
+
+정의) 보안상 민감한 데이터를 영속적인 쿠키에 저장하는 것은 시스템보안을
+        취약하게 만든다. 대부분의 웹 응용프로그램에서 쿠키는 메모리에 상주하며
+        브라우저의 실행이 종료되면 사라진다. 프로그래머가 원하는 경우, 브라우저
+        세션에 관계없이 계속적으로 지속되도록 설정 할 수 있으며, 이것은 디스크에
+        기록되고 다음 브라우저 세션이 시작되었을 때 메모리에 로드된다.
+        만약 개인 정보 등의 이런 형태의 영속적인 쿠키에 저장된다면, 공격자는
+        쿠니에 접근할 수 있는 보다 많은 기회를 가지게 되며, 이는 시스템을 취약하게
+       만든다.
+
+안전한 코딩기법->쿠키의 만료시간은 세션이 지속되는 시간과 관련하여 최소한으로
+                          설정해야 한다.
+
+<안전하지 않은 코드의 예>
+1: ……
+2: public void makeCookie(ServletRequest request) {
+3:    String maxAge = request.getParameter("maxAge");
+4:      if (maxAge.matches("[0-9]+")) {
+5:    String sessionID = request.getParameter("sesionID");
+6:     if (sessionID.matches("[A-Z=0-9a-z]+")) {
+7:     Cookie c = new Cookie("sessionID", sessionID);
+8: // 외부 입력이 쿠키 유효시한 설정에 그대로 사용되었다.
+9: c.setMaxAge(Integer.parseInt(maxAge));
+   //-------------------------------------------------------
+   //javax.servlet.http.Cookie.setMaxAge메서드 호출에 외부의 입력이 쿠키의
+  //유효시한 설정에 그대로 사용되어 프로그램의 취약점을 야기하는 경우이다.
+10: }
+11: ……
+12: }
+
+<안전한 코드의 예>
+
+1: ……
+2: public void makeCookie(ServletRequest request) {
+3: String maxAge = request.getParameter("maxAge");
+4: 
+5:    if (maxAge == null || "".equals(maxAge)) return;
+6:    if (maxAge.matches("[0-9]+")) {
+7: String sessionID = request.getParameter("sesionID");
+8:    if (sessionID == null || "".equals(sessionID)) return;
+9:    if (sessionID.matches("[A-Z=0-9a-z]+")) {
+10: Cookie c = new Cookie("sessionID", sessionID);
+
+11: // 쿠키 유효시한의 최대값을 설정해서, 그 아래 값으로 조정한다.
+12: int t = Integer.parseInt(maxAge);
+13:      if (t > 3600) {
+14:          t = 3600; //최대 6분정도 유지하는 경우
+15: }
+     //---사용자가 요청한 값으로 쿠키의 유효시한을 설정하기 전에  사용자 요청을
+            검증하는 로직을 별도로 작성하여, 메서드 호출전에 호출한다.---
+16: c.setMaxAge(t);
+17: }
+18: ……
+19: }
+
+==========================================
+22.같은 포트번호로의 다중 연결(Multiple Binds to the Same Port)
+
+정의)하나의 포트에 다수의 소켓이 연결되는 것을 허용하는 경우,주어진 포트에서
+       수행되는 서비스로 전달되는 패킷이 도난당하거나 혹은 공격자가 서비스를
+       도용할 수 있다.
+
+=>안전한 코딩기법
+=>패킷 스니핑 공격에 노출될 수 있으므로 UDP 프로토콜에 하나의 포트번호에
+     여러개의 서버측 소켓을 바인딩해서는 안된다.
+
+=><안전하지 않은  코드>
+1: ……
+2:    final int INPORT = 1711;
+3:         void foo () {
+4:   try {
+5:   java.net.DatagramSocket socket = new java.net.DatagramSocket(INPORT);
+6:     //-----------------------------------
+        socket.setReuseAddress(true);
+        //---하나의 포트번호에 여러개의 소켓이 바인딩되는 것을 허용함
+          으로써 패킷 스니핑 공격에 노출될 수 있다.
+7:    } catch (SocketException e) { …… }
+8:  }
+9: }
+
+<안전한 코드의 예>
+1: ……
+2: final int INPORT = 1711;
+3: void foo () {
+4: try {
+5:     java.net.DatagramSocket socket = new java.net.DatagramSocket(INPORT);
+6:     //-----프로토콜에 상관없이 포트의 재사용 옵션을 설정하지 않아야 한다.
+         socket.setReuseAddress(false);
+        //---------------------------------
+7:    } catch (SocketException e) { …… }
+8: }
+ 
+=====================================
+23. HTTPS 세션내에 보안속성없는 민감한 쿠키
+(Sensitive Cookie in HTTPS Session without Secure Attribute)
+
+정의) 
+  HTTPS로만 서비스하는 경우 모든 정보가 암호화 되어 안전하게 전송된다고
+  생각한다. 그러나 보안에 민감한 데이터를 브라우저 쿠키에 저장할 때 보안속성을
+  세팅하지 않으면 공격자에게 단순한 텍스트의 형태로 노출될 수 있다.
+
+안전한 코딩기법
+=========
+HTTPS로만 서비스하는 경우 브라우저 쿠키에 데이터를 저장할 때 반드시 
+Cookie객체의 setSecure(true)메서드를 호출하여야 한다.
+
+주의) 한 사이트(도메인)에서 HTTP나 HTTP와 HTTPS를 함께 사용하는 경우
+ setSecure메서드를 호출하면 브라우저 쿠키의 데이터가 서버에 전송되지
+ 않아 장애가 발생할 수 있다.
+
+<문제의 코드예>
+1: ……
+2: private final String ACCOUNT_ID = "account";
+3:
+4: public void setupCookies(ServletRequest r, HttpServletResponse response) {
+5: String acctID = r.getParameter("accountID");
+
+6: //---- 보안속성 설정되지 않은 쿠키----------------
+7: Cookie c = new Cookie(ACCOUNT_ID, acctID);
+   //---------------------------------------------------
+8: response.addCookie(c);
+9: }
+
+<안전한 코드의 예>
+
+1: ……
+2: private final String ACCOUNT_ID = "account";
+3:
+4: public void setupCookies(ServletRequest r, HttpServletResponse response) {
+5:      String acctID = r.getParameter("accountID");
+6:   //계정 유효성 점검
+7:      if (acctID == null || "".equals(acctID)) return;
+8:     String filtered_ID = acctID.replaceAll("\r", "");
+     //---------------------------------------------------
+9:
+10: Cookie c = new Cookie(ACCOUNT_ID, filtered_ID);
+11: //민감한 정보를 가진 쿠키를 전송할 때에는 보안 속성을 설정하여야 한다.
+12:    c.setSecure(true);
+      //----------------------------------------------------------------------
+13:    response.addCookie(c);
+14: }
+=>HTTPS로만 서비스 하는 경우 민감한 정보를 가진 쿠키를 전송하는 과정에서
+    보안 속성을 설정하지 않으면 공격자에게 정보가 노출될 수 있다.
+============================================
+
+24. 주석문 안에 포함된 패스워드 (Password in Comment)
+
+정의) 패스워드를 주석문에 넣어두면 시스템 보안이 훼손될 수 있다. SW개발자가
+        편의를 위해서 주석문에 패스워드를 적어둔 경우,SW가 완성된 후에는 그것
+        을 제거하는 것이 매우 어렵게 된다. 또한 공격자가 소스코드에 접근할 수
+        있거나, 혹은 역어셈블러를 사용하여 주석문의 내용을 볼 수 있다면 아주
+        쉽게 시스템에 침입할 수 있다.
+
+안정한 코딩기법->개발시에 주석 부분에 남겨놓은 패스워드 및 보안에 관련된
+                          내용은 개발이 끝난 후에는 반드시 제거해야 한다.
+
+<문제된 코드의 예>
+1: ……
+     //-----------------------------------------------------------------------
+2: // Password for administrator is "tiger."<-주석에 패스워드가 적혀있다.
+    //------------------------------------------------------------------------
+3: public boolean DBConnect() {
+4:     
+        String url = "DBServer";
+5:     String password = "tiger";//따로 파일로 만들어서 불러와야 된다.
+6:     Connection con = null;     
+7:
+8: try {
+9: con = DriverManager.getConnection(url, "scott", password);
+10: } catch (SQLException e) {
+11: ……
+12: }
+
+<안전한 코드의 예>
+
+1: ……
+2: // 디버깅 등의 용도로 소스 주석에 적어놓은 패스워드는 삭제해야 한다.
+3: public Connection DBConnect(String id, String password) {
+4:       String url = "DBServer";
+5:       Connection conn = null;
+6:
+7: try {
+8: String CONNECT_STRING = url + ":" + id + ":" + password;
+9:     InitialContext ctx = new InitialContext();
+10:   DataSource datasource = (DataSource) ctx.lookup(CONNECT_STRING);
+11:   conn = datasource.getConnection();
+12:    } catch (SQLException e) { …… }
+13:     return conn;
+14: }
+
+=>프로그램 개발시에 주석문 등에 남겨놓은 사용자 계정이나 패스워드 등의 정보
+     는 개발 완료시에 확실하게 삭제하여야 한다.
+
+==========================================
+25. 중요한 자원에 대한 잘못된 권한허용
+(Incorrect Permission Assignment for Critical Resource)
+
+ 정의)SW가 중요한 보안관련 자원에 대하여 읽기 또는 수정하기 권한을 의도하지
+        않게 허가할 경우, 권한을 갖지 않은 사용자가 해당자원을 사용하게 된다.
+
+안전한 코딩기법
+
+  =>1.설정파일,실행파일,라이브러리 등은 SW관리자에 의해서만 읽고 쓰기가
+          가능하도록 설정한다.
+       2.설정파일과 같이 중요한 자원을 사용하는 경우, 허가받지 않은 사용자가
+          중요한 자원에 접근 가능한지 검사한다.
+
+<문제의 코드>
+1: //파일 권한: rw-rw-rw-, 디렉터리 권한: rwxrwxrwx
+2: String cmd = "umask 0";
+3: File file = new File("/home/report/report.txt");
+4: ...
+     //-----------------------파일을 실행----
+5: Runtime.getRuntime().exec(cmd);
+    //----------------------------------------
+
+=>JAVA 런타임 API를 이용하여 파일을 생성할 때 가장 많은 권한을 허가하는 형태로
+     umask를 사용하고 있어,모든 사용자가 읽기/쓰기 권한을 갖게 된다.
+  
+<안전한 코드의 예>
+
+1: // 파일 권한: rw-------, 디렉터리 권한: rwx------
+2: String cmd = "umask 77";
+    //------------------------------------------------
+3: File file = new File("/home/report/report.txt");
+4: ...
+5: Runtime.getRuntime().exec(cmd);
+//----------------------------------------------------
+ //--->파일에 대한 설정을 가장 제한이 많도록, 즉 사용자를 제외하고는 읽기
+          /쓰기가 가능하지 않도록 umask를 설정하는 것이 필요하다.
+==========================================
+제4절 시간 및 상태
+===========
+ 시간과 상태에 대한  취약점이란 프로그램의 동작 과정에서 시간적 개념을 포함한
+  개념(프로세스 혹은 스레드 등)이나 시스템 상태에 대한 정보(자원 잠금이나
+  세션 정보)에 관련된 취약점을 말한다. 이러한 취약점에 속하는 것들로는 
+  데드락(dead lock)이나, 자원에 대한 경쟁조건, 또는 세션 고착 등을 들 수 있다.
+
+1.경쟁 조건: 정적 데이터베이스 연결
+  (Race Condition: Static Database Connection(dbconn))
+ 
+정의
+  =>정적 필드에 저장된 DB연결은 스레드 사이에 공유되지만,트랜잭션 리소스
+       객체는 동시에 하나의 트랜잭션에만 연결될 수 있어서 오류가 발생할 수 있다
+
+안전한 코딩기법
+   =>정적 필드에 저장된 DB연결은 스레드 사이에 공유되어 경쟁  조건
+       (race condition)을 유발 할 수있으므로 DB연결을 정적 필드에 저장하면
+         안된다.
+
+<문제의 코드>
+1: ……
+2: // DB 연결객체가 정적 필드에 저장되어 에러를 유발 할 수 있다.
+    //경쟁 조건을 유발할 수있다.
+3: private static Connection conn;
+    //---------------------------------------------------------------
+4: private static final String CONNECT_STRING = "jdbc:ocl:orcl";
+5:
+6: public Connection dbConnection(String url, String user, String pw) {
+7: InitialContext ctx;
+8: try {
+9: ctx = new InitialContext();
+10: DataSource datasource = (DataSource) ctx.lookup(CONNECT_STRING);
+11: conn = datasource.getConnection();
+12: } catch (NamingException e) { …… }
+13: return conn;
+14: }
+15: ……
+
+=========================================
+<안전한 코드>
+1: ……
+2: // DB 연결 객체는 정적필드에 저장하지 않는다.
+3: private Connection conn;
+4: private static final String CONNECT_STRING = "jdbc:ocl:orcl";
+5:
+6: public Connection dbConnection() {
+7: InitialContext ctx;
+8: try {
+9:    ctx = new InitialContext();
+10:  DataSource datasource = (DataSource) ctx.lookup(CONNECT_STRING);
+11:  conn = datasource.getConnection();
+12: } catch (NamingException e) { …… }
+13: return conn;
+14: }
+15: ……
+  =>경쟁 조건(Race condition)을 예방하기 위한 DB연결 객체는 동적필드에
+       저장한다.
+===========================================
+2. 경쟁 조건:싱글톤 멤버 필드(Race Condition: Singleton Member Field)
+
+정의)
+ 서블릿의 멤버필드는 다른 스레드와 공유될 수 있기 때문에, 서블릿 멤버 필드에
+ 저장된 값은 다른 사용자에게 노출될 수있다.
+
+안전한 코딩기법
+
+->사용자 데이터를 서블릿의 필드에 저장하면 데이터에 대한 경쟁조건을 야기
+    하여, 사용자가 다른 사용자의 데이터를 볼 수 있다. 따라서, 사용자 입력
+    데이터를 서블릿의 필드에 저장하지 말아야 한다.
+
+<문제의 코드>
+
+1: public class U9404 extends javax.servlet.http.HttpServlet {
+  
+2: // 파라미터의 매개변수값이 전역변수로 할당되어서 다른 사용자의 정보를
+    //  볼 수 있다.
+3: private String name;
+   //---------------------------
+4:
+5: protected void doPost(HttpServletRequest req, HttpServletResponse res)
+6: throws ServletException, IOException {
+    //-----------사용자로 부터 입력받은 값-------------------
+7: name = req.getParameter("name");
+8: ……
+   //----------------------------------------------------------
+=>위의 예제는 요청 매개변수의 값을 필드에 저장한 후, 출력스트림으로 보낸다.
+   이것은 단일 사용자 환경에서는 올바르게 동작하지만, 2면의 사용자가 거의
+   동시에 서블릿에 접근하면 다른 사용자의 정보를 볼 수 있다.
+  //------------------------------------------------------------------------
+
+<안전한 코드의 예>
+
+1: public class S9404 extends javax.servlet.http.HttpServlet {
+
+2:  // private String name; <- 멤버 필드를 사용하지 않는다.
+
+3: protected void doPost(HttpServletRequest req, HttpServletResponse res)
+9: throws ServletException, IOException {
+     //---------------------------------------------------------------
+4: // 파라미터의 매개변수를 지역변수에 할당한다.->좀 더 안전하다.
+5:   String name = req.getParameter("name");
+6:   if (name == null || "".equals(name)) return; //name = "user";
+7: ……
+    //-----------------------------------------------------------------
+
+3. 경쟁 조건:검사 시점과 사용 시점
+(Time-of-check Time-of-use (TOCTOU) Race Condition)
+
+정의
+  병렬 실행 환경의 응용프로그램에서는 자원을 사용하기 전에 자원의 상태를 
+  검사한다. 그러나 자원을 사용하는 시점에 자원의 상태가 변하는 경우가 있다.
+  이것으로 인해 프로그램에 여러가지 문제, 즉 교착상태,경쟁 조건 및 기타 동기화
+  오류 등이 발생할 수 있다.
+
+안전한 코딩기법
+
+1.공유자원(예:파일)을 여러 스레드가 접근하여 사용할 경우, 동기화 구문
+   (synchronized)을 이용하여 한 번에 하나의 스레드만 접근 가능하도록
+   프로그램을 작성하여야 한다.
+
+2.성능에 미치는 영향을 최소화하기 위해 임계코드 주변만을 동기화 구문으로
+   감싼다. 
+  =>다중 쓰레드와 공유변수를 사용할 때는 thread safe함수만을 사용한다.
+==========================================
+<문제의 코드>
+
+1: class FileMgmtThread extends Thread {
+2:
+3: private String manageType = "";
+4:
+5: public FileMgmtThread (String type) {
+6:      manageType = type;
+7: }
+8:
+9: public void run() {
+10: try {
+11: if ( manageType.equals("READ") ) {
+12:    File f = new File("Test_367.txt");
+13:      if (f.exists()) { // 만약 파일이 존재하면 파일 내용을 읽음.
+14:    BufferedReader br = new BufferedReader(new FileReader(f));
+15:    br.close();
+16: }
+17: } else if ( manageType.equals("DELETE") ) {
+18: File f = new File("Test_367.txt");
+19: if (f.exists()) { //  만약 파일이 존재하면 파일을 삭제함
+20: f.delete();
+21: } else {
+22: ;
+23: }
+24: }
+25: } catch (IOException e) {
+26: }
+27: }
+28: }
+29:
+30: public class CWE367 {
+31: public static void main(String[] args) {
+
+32: //파일의 읽기와 파일을 삭제하는 것을 동시에 수행한다
+
+33: FileMgmtThread fileAccessThread = new FileMgmtThread("READ");
+34: FileMgmtThread fileDeleteThread = new FileMgmtThread("DELETE");
+35: fileAccessThread.start();
+36: fileDeleteThread.start();
+37: }
+38: }
+
+=>위 예제는 파일의 존재를 확인하는 부분과 실제로 파일을 사용하는 부분을 
+     실행하는 과정에서 시간차가 발생하는 경우, 파일에 대한 삭제가 발생하여
+     프로그램이 예상하지 못하는 형태로 수행될 수 있다. 또한 위 예제는 시간차를
+     이용하여 파일을 변경하는 등의 공격에 취약할 수 있다.
+============================================
+<안전한 코드의 예>
+
+1: class FileMgmtThread extends Thread {
+2:
+//--------------------------------------------------
+3: private static final String SYNC = "SYNC";
+//--------------------------------------------------
+4:
+5: private String manageType = "";
+6:
+7: public FileMgmtThread (String type) {
+8: manageType = type;
+9: }
+10:
+11: public void run() {
+
+12: // synchronized를 사용함으로써 지정된 객체에 lock이 걸려서
+      // 블록을 수행하는 동안 다른 Thread가 접근 할 수 없다.
+
+14: synchronized(SYNC) {
+15: try {
+16: if ( manageType.equals("READ") ) {
+17: File f = new File("Test_367.txt");
+18: if (f.exists()) { // 만약 파일이 존재하면 파일내용을 읽음.
+19: BufferedReader br = new BufferedReader(new FileReader(f));
+20: br.close();
+21: }
+22: } else if ( manageType.equals("DELETE") ) {
+23: File f = new File("Test_367.txt");
+24: if (f.exists()) { // 만약 파일이 존재하면 파일을 삭제함
+25: f.delete();
+26: } else {
+27: ;
+28: }
+29: }
+30: } catch (IOException e) {
+31: }
+32: }
+33: }
+34: }
+35:
+36: public class CWE367 {
+37: public static void main(String[] args) {
+38: // 파일의 읽기와 파일을 삭제하는 것을 동시에 수행한다.
+
+39: FileMgmtThread fileAccessThread = new FileMgmtThread("READ");
+40: FileMgmtThread fileDeleteThread = new FileMgmtThread("DELETE");
+41: fileAccessThread.start();
+42: fileDeleteThread.start();
+43: }
+44:
+
+주의할점)==================================== 
+=>공유자원(예를 들어, 파일)을 여러 스레드가 접근하여 사용할 경우, 동기화
+     구문을 이용하여 한 번에 하나의 스레드만 접근 가능하도록 변경한다.
+===========================================
+<문제의 코드>
+
+1: public class MyServlet extends HttpServlet {
+2:      String name;//멤버필드로 사용->동시에 사용하는 모든 사용자에게 정보
+                             //가 노출이 된다.
+
+3: public void doPost ( HttpRequestRequest hreq, HttpResponceServlet hres ) {
+4: name = hreq.getParameter("name");
+5: …….
+6: }
+
+<안전한 코드로 1>
+1: public class MyServlet extends HttpServlet {
+2: public void doPost ( HttpRequestRequest hreq, HttpResponceServlet hres ) {
+3: // 서블릿 프로그램의 멤버변수는 공용으로 사용하기 때문에 로컬로 정의해서 
+    //사용->경쟁상태를 제거한다.
+
+4: String name = hreq.getParameter("name");
+5: ...
+6: }
+
+<안전한 코드로 2>
+1: public class MyClass {
+2: String name;
+3: public void doProcess (HttpRequestRequest hreq ) {
+4: // 멤버변수 공유시 동기화 시킨다.
+5: synchronized {
+6: name = hreq.getParameter("name");
+7: ...
+8: }
+9: ...
+10: }
+
+=>업무상 name을 여러 쓰레드 사이에서 공유해야 한다면,synchronized
+     문장을 사용하여 임계코드가 쓰레드들 간 동기화할 필요가 있다.
+==========================================
+
+4. J2EE 잘못된 습관: 스레드의 직접 사용
+(J2EE Bad Practices： Direct Use of Threads)
+
+정의)
+     J2EE 표준은 웹 응용프로그램에서 스레드 사용을 금지하고 있다. 따라서
+     스레드를 직접 사용하는 것 대신에 해당 플랫폼에서 제공하는 병렬 실행을
+     위한 프레임워크를 사용해야 한다. 그렇지 않을 경우, 교착 상태, 경쟁 조건,
+     및 기타 동기화 오류 등이 발생한다.
+
+안전한 코딩기법->J2EE에서는 스레드를 사용하는 것 대신에 병렬 실행을 위한
+                         프레임워크를 사용해야 한다.
+
+<문제의 코드>
+1: public class U383 extends HttpServlet {
+2: protected void doGet(HttpServletRequest request, HttpServletResponse response)
+throws ServletException, IOException {
+
+3: // Thread를 만들고 background에서 작업을 수행한다.
+
+4:     Runnable r = new Runnable() {
+5:     public void run() {
+6:        System.err.println("do something");
+7:    }
+8: };
+        //----------------------------
+9:      new Thread(r).start();
+        //----------------------------
+10: }
+11: }
+
+=>J2EE 프로그램에서 스레드를 직접 생성하여 사용하면, 교착상태,경쟁 조건,
+     및 기타 동기화 오류등이 발생할 수 있다.
+===========================================
+
+<안전한 코드의 예>
+
+1: public class S383 extends HttpServlet {
+2: protected void doGet(HttpServletRequest request, HttpServletResponse response)
+throws ServletException, IOException {
+
+3: // 수행할 Thread에 대해서 일반 자바 클래스를 만든다.
+
+4: // New MyClass().main();
+5:
+6: // 만약 async로 병렬작업을 하기 위해서는 JAVA Runtime을
+7: // 사용하여 async로 통신하는 게 좋다.
+
+8: Runtime.getRuntime().exec("java AsyncClass");
+9: }
+10: }
+11:
+12: class AsyncClass {
+13: public static void main(String args[]) {
+14: // Process and store request statistics.
+15: // ……
+16: System.err.println("do something");
+17: }
+18: }
+=>스레드를 직접 사용하는 것 대신에 해당 플랫폼에서 제공하는 병렬 실행을
+      위한 프레임워크를 사용한다.
+===========================================
+
+5. 심볼릭명이 정확한 대상에 매핑되어 있지 않음
+(Symbolic Name not Mapping to Correct Object)
+
+정의) 심볼릭명을 사용하여 특정 대상을 지정하는 경우 공격자는 심볼릭명이 가리
+        키는 대상을 조작하여 프로그램이 원래 의도했던 동작을 못하게 할 수 있다.
+
+안전한 코딩기법
+   =>클래스 객체가 필요할 때에는 클래스 생성자를 표준적인 방법으로만
+        호출해야 한다.
+
+<문제의 코드>
+
+1: ……
+2: public void f() throws ClassNotFoundException, InstantiationException,
+IllegalAccessException {
+3: // Class.forName으로 클래스를 생성하고 있다.
+    //----------------------------------------------------------
+4: Class c = Class.forName("testbed.unsafe.U386.Add");
+   //-------------------------------------------------------------
+5: Object obj = (Add)c.newInstance();
+6: Add add = (Add) obj;
+7: System.out.println(add.add(3, 5)); // 34
+8:
+//------------------------------------------------------------------------
+9: Object obj2 = (Add)Class.forName("testbed.unsafe.Add").newInstance();
+//------------------------------------------------------------------------
+10: Add add2 = (Add) obj2;
+11: System.out.println(add2.add(3, 5)); // 8
+12: }
+13:
+14: class Add {
+15:      int add(int x, int y) {
+16:      return x + y;
+17:      }
+18:   }
+19: }
+20:
+21: class Add {
+22:      int add(int x, int y) { return (x*x + y*y); }
+23: }
+
+=>java.lang.Class.forName()은 인수 문자열을 기반으로 해당 클래스를 반환
+하지만, 문자열이 "이름"으로서 지시하는 클래스가 언제나 동일한 메서드를 구현
+하고 있음을 보장하지 못한다.
+------------------------------------------------------------------------------
+<안전한 코드의 예>
+
+1: ……
+2: public void f() throws ClassNotFoundException,
+3: InstantiationException, IllegalAccessException {
+4: // 객체의 생성은 직접 생성자를 호출하여 생성한다.
+    //----------------------------------------------------------------
+5: testbed.safe.S386.Add add = new testbed.safe.S386.Add();
+    //----------------------------------------------------------------
+6: System.out.println(add.add(3, 5));
+    //----------------------------------------------------
+7: testbed.safe.Add add2 = new testbed.safe.Add();
+    //-------------------------------------------------------
+8: System.out.println(add2.add(3, 5));
+9: }
+10:
+11: class Add {
+12: private int add(int x, int y) {
+13: return x + y;
+14: }
+15: }
+16: }
+17:
+18: class Add {
+19: int add(int x, int y) { return (x*x + y*y); }
+
+=>java.lang.Class.forName 대신, 각 클래스의 생성자를 제대로 호출하여
+    객체를 생성한다.
+===========================================
+
+6.중복 검사된 잠금(Double-Checked Locking)
+
+ 정의)
+      중복 검사된 잠금은 프로그램의 효율성을 높이기 위해 사용하지 만 ,의도한
+      대로 동작하지 않는다
+      동기화 비용을 줄이기 위해, 프로그래머는 하나의 객체만 할당될 수 있도록
+      코드를 작성하지만, 자바에서는 객체 참조 주소를 할당하고 생성자를 호출
+      하므로 의도한 객체가 완전하게 초기화되지 않은 상태에서 사용되는 경우가
+      발생할 수 있다.
+
+ 안전한 코딩기법
+
+  =>1.특정 리소스가 (비)할당 되었을 경우만 작업을 수행하도록 두 번에 걸쳐 검사
+          를 시도해도 원하는 자원이 (비)할당되었는지 보장이 불가능하다.
+       
+        2.중복 검사된 잠금에 대한 완벽한 보장을 원할 경우 메서드를 동기화
+           해야 한다.
+
+<문제의 코드 예>
+
+1: ……
+2: Helper helper;
+3:
+4: public Helper MakeHelper() {
+5: // helper 객체의 null 체크에 대해서는 동기화가 되지않는다.
+6: if (helper == null) {
+             //---------------------------
+7:           synchronized (this) {
+            //-----------------------------
+8:               if (helper == null) {
+                     //---------------------------
+9:                    helper = new Helper();
+                     //---------------------------
+10:        }
+11:  }
+12: }
+13: return helper;
+14: }
+15:
+16: class Helper {
+17: ……
+18: }
+19: }
+
+=>위 예제는 하나의 helper객체만 할당 될 수 있도록 코드가 작성되었다.
+    이는 불필요한 동기화를 피하면서 스레드 안전성을 보장하는 것처럼 보인다.
+    그러나 자바에서는 객체 참조 주소를 할당하고 생성자를 호출하므로 helpe객체
+   가 완전하게 초기화되지 않은 상태에서 사용되는 경우가 발생할 수 있다.
+
+<안전한 코드의 경우>
+
+1: ……
+2: Helper helper;
+3:
+4: // 메서드 전체에 대해 동기화를 하도록 설정함
+5: public synchronized Helper MakeHelper() {
+    //------------------------------------------------
+6:          if (helper == null) {
+7:               helper = new Helper();
+8:           }
+9:        return helper;
+10:    }
+11: }
+12:
+13: class Helper {
+14: ……
+15: }
+
+=>중복 검사된 잠금에 대한 완벽한 보장을 원할 경우, 메서드 전체에 대해 동기화
+     를 하도록 설정한다.
+============================================
+ 7. 제대로 제어되지 않은 재귀(Uncontrolled Recursion)
+    ====>자바의 메서드 작성영역
+
+정의)재귀의 순환횟수를 제어하지 못하여 할당된 메모리나 프로그램 스택 등의
+       자원을 과다하게 사용하면 위험하다. 대부분의 경우, 귀납 조건(base case)
+       이 없는 재귀는 무한 재귀에 빠진다.
+
+안전한 코딩기법
+=>무한 재귀를 방지하기 위하여 모든 재귀 호출을 조건문 블럭이나 반복문 블럭
+     안에서만 수행해야 한다.
+
+<문제의 코드>
+
+1: ……
+2: public int factorial(int n) {
+3: //재귀 호출이 조건문/반복문 블럭 외부에서 일어나면 대부분 무한 재귀를
+    //유발한다.
+4: return n * factorial(n - 1);
+5: }
+
+<안전한 코드의 예>
+
+1: ……
+2: public int factorial(int n) {
+3: int i;
+4: // 모든 재귀 호출은 조건문이나 반복문 블럭 안에서 이루어져야 한다.
+5:     if (n == 1) {
+6:           i = 1;
+7:      } else {
+8:            i = n * factorial(n - 1);
+9:       }
+     //---------------------------------------------
+10: return i;
+11: }
+ // 모든 재귀 호출은 조건문이나 반복문 블럭 안에서 이루어져야 한다.
+
+제5절 에러 처리
+====================
+ 정상적인 에러는 사전에 정의된 예외사항이 특정 조건에서 발생하는 에러이며,
+ 비정상적인 에러는 사전에 정의되지 않은 상황에서 발생하는 에러이다. 개발자는
+  정상적인 에러 및 비정상적인 에러 발생에 대비한 안전한 에러처리 루틴을 사전에
+ 정의하고 프로그래밍함으로써 에러처리 과정 중에 발생 할 수 있는 보안 위협을
+ 미연에 방지 할 수 있다. 에러를 불충하게 처리(혹은 전혀 처리) 하지 않을 때
+ 혹은 에러 정보에 과도하게 많은 정보를 포함하여 이를 공격자가 악용할 수 있을때
+ 보안 취약점이 발생할 수 있다.
+============================================
+  1. 취약한 패스워드 요구조건 (Weak Password Requirements)
+
+정의=>사용자에게 강한 패스워드를 요구하지 않으면 사용자 계정을 보호하기
+           힘들다.
+
+안전한 코딩기법=>패스워드 관련해서 강한 조건이  필요하다.
+
+ <문제의 코드>
+
+1: ……
+2: public void doPost(HttpServletRequest request, HttpServletResponse response)
+3: throws IOException, ServletException {
+4: try {
+5:       String id = request.getParameter("id");
+6:       String passwd = request.getParameter("passwd");
+7: // 패스워드 복잡도 검증 없이 가입 승인 처리=>사용자 계정 보호 어렵다.
+8: ....
+9: } catch (SQLException e) { …… }
+10: }
+
+<안전한 코드의 예>
+
+1: ……
+2: private static final String CONNECT_STRING = "jdbc:ocl:orcl";
+3:
+4: public void doPost(HttpServletRequest request, HttpServletResponse response)
+5: throws IOException, ServletException {
+6: try {
+7:     String id = request.getParameter("id");
+8:     String passwd = request.getParameter("passwd");
+9:
+10: // passwd에 대한 복잡도 검증
+11: if (passwd == null || "".equals(passwd)) return;
+12: if (!passwd.matches("") && passwd.indexOf("@!#") > 4 && passwd.length() > 8) {
+13: // passwd 복잡도 검증 후, 가입 승인 처리
+      //---------------------------------------------------------------
+14:   }
+15: } catch (SQLException e) { …… }
+16: catch (NamingException e) { …… }
+17: }
+
+2.오류 메세지 통한 정보 노출(Information exposure through an error message)
+
+정의)
+ SW는 오류 메세지를 통해 환경,사용자,관련 데이터 등의 프로그램 내부 정보를
+ 유출될 수 있다. 예를 들어 예외 발생 시 예외이름이나 스택 트레이스를 출력
+ 하면 프로그램 내부 구조를 쉽게 파악할 수 있다.
+
+안전한 코딩기법
+
+  =>최종 사용자에게 배포되는 SW에서는 내부 구조나 공격자에 활용될 수 있는
+       민감한 정보를 오류 메세지로 출력하지 말아야 한다.
+
+<문제 있는 코드>
+
+1: ……
+2: public static void main(String[] args) {
+3: String urlString = args[0];
+4: try{
+5:       URL url = new URL(urlString);
+6:       URLConnection cmx = url.openConnection();
+7:       cmx.connect();
+8: }
+9: catch (Exception e) { 
+         //에러 메세지가 좀더 자세히 출력되기때문에 보안에  취약해 진다.
+         e.printStackTrace(); 
+         //
+        }
+10: }
+
+=>예외 이름이나 스택 트레이스를 출력하면 프로그램의 내부 정보가 유출된다.
+===========================================
+
+<안전한 코드의 예>
+
+1: ……
+2: public static void main(String[] args) {
+3: String urlString = args[0];
+4: try{
+5:     URL url = new URL(urlString);
+6:     URLConnection cmx = url.openConnection();
+7:     cmx.connect();
+8: }
+9: catch (Exception e) { System.out.println("연결 예외 발생"); }
+10: }
+
+=>예외 이름이나 스택 트레이스를 출력하지 않는다.
+=====================================
+
+3. 오류 상황에 대한 처리 부재(Detection of Error Condition Without Action)
+
+정의)오류는 포착했으나 그 오류에 대해서 아무 조치도 하지 않으면, 그 상태에서
+        계속 프로그램이 실행되므로 개발자가 의도하지 않은 결과를 초래한다.
+
+안전한 코딩기법
+  =>예외 또는 오류를 포착(catch)한 경우 그것에 대한 적절한 처리를 해야한다.
+
+<문제의 코드>
+
+1: ……
+2: private Connection conn;
+3:
+4: public Connection DBConnect(String url, String id, String password) {
+5: try {
+6:      String CONNECT_STRING = url + ":" + id + ":" + password;
+7:      InitialContext ctx = new InitialContext();
+8:      DataSource datasource = (DataSource) ctx.lookup(CONNECT_STRING);
+9:      conn = datasource.getConnection();
+10: } catch (SQLException e) {
+11: // catch 블록이 비어있다.=>프로그램에서 어떤 일이 일어났는지 전혀
+                                                알 수 없게 된다.
+12: } catch (NamingException e) {
+13: // catch 블록이 비어있다.
+14: }
+15: return conn;
+16: }
+===========================
+ <안전한 코드>
+
+1: ……
+2: private Connection conn;
+3:
+4: public Connection DBConnect(String url, String id, String password) {
+5: try {
+6:     String CONNECT_STRING = url + ":" + id + ":" + password;
+7:     InitialContext ctx = new InitialContext();
+8:     DataSource datasource = (DataSource) ctx.lookup(CONNECT_STRING);
+9:     conn = datasource.getConnection();
+10: } catch (SQLException e) {
+11: // Exception catch이후 Exception에 대한 적절한 처리를 해야 한다.
+12:     if ( conn != null ) {
+13: try {
+14:      conn.close();
+15:     } catch (SQLException e1) {
+16:    conn = null;
+17:   }
+18: }
+19: } catch (NamingException e) {
+20: // Exception catch이후 Exception에 대한 적절한 예외처리를 해야 한다.
+21: if ( conn != null ) {
+22: try {
+23: conn.close();
+24: } catch (SQLException e1) {
+25: conn = null;
+26:     }
+27:   }
+28:  }
+29: return con
+========================================
+ p138부터 시작
+
+4.비정상적 혹은 예외적 조건의 부적절한 검사
+(Improper Check for Unusual or Exceptional Conditions)
+
+정의) 프로그램 수행 중에 함수의 결과 값에 대한 적절한  처리 또는 예외상황에
+      대한 조건을 적절하게 검사하지 않을 경우, 예기치 않은 문제를 야기할 수
+      있다.
+
+안전한 코딩기법
+
+=>값을 반환하는 모든 함수의 결과 값을 검사하여, 그 값이 기대한 값인지 검사
+     하고,예외처리를 사용하는 경우에 광범위한 예외처리 대신 구체적인 예외처리
+    를 한다.
+
+<문제가 있는  코드>
+1: public void readFromFile(String fileName) {
+2:    try {
+3: ...
+      //------------------------------------
+4:    File myFile = new File(fileName);
+      //-------------------------------------
+5:    FileReader fr = new FileReader(myFile);
+6: ...
+      //-------------------------------
+7:    } catch (Exception ex) {...}
+     //--------------------------------
+8: }
+
+=>함수의 인자로 fileName에 대한 Null 체크없이 File객체를 생성하였으며,
+광범위한 예외 클래스인 Exception을 사용하여 예외처리를 했다.
+
+<안전한 코드의 예>
+
+1: public void readFromFile(String fileName) throws FileNotFoundException,
+2:                                            IOException,MyException {
+3:     try {
+4: ...
+5: // filename에 대한 널을 조사
+6: if ( fileName == NULL ) throw new MyException("에러“);
+7: File myFile = new File(fileName);
+8: FileReader fr = new FileReader(myFile);
+9: ...
+10: // 함수 루틴에서 모든 가능한 예외에 대해서 처리한다.
+11: } catch (FileNotFoundException fe) {...}
+     //--------------------------------------------
+12: } catch (IOException ie) {...}
+    //---------------------------------------------
+13: }
+
+=>fileName이 Null값인지 검사하고 Null이면 에러메세지를 출력과 예외를 
+     발생시킨다. 또한 발생 가능한 모든 예외에 대한 구체적인 예외처리를 한다.
+===========================================
+p140
+
+ 제6절 코드 품질
+
+=>작성 완료된 프로그램은 기능성,신뢰성,사용성,유지보수성,효율성,이식성 등을
+ 충족하기 위하여 일정 수준에 코드품질을 유지하여야 한다. 프로그램의 코드가
+ 너무 복잡하면 관리성,유지보수성, 가독성이 떨어질 뿐 아니라 다른 시스템에 이식
+하기도 힘들며, 프로그램에는 안전성을 위협할 취약점들이 코드 안에 숨겨져 있을
+ 가능성이 있다.
+
+
+1. 코드 정확성: notify() 호출(Code Correctness: Call to notify())
+
+정의) 스레드의 notify()를 직접 호출하면 살아 있는 스레드 중에서 어떤 스레드를
+      깨울지 불명확하다. 따라서 직접 호출하지 않는 것이 좋다.
+
+안전한 코딩기법=>notify()를 직접 호출하면 어떤  스레드를 깨울지 불명확하
+                           므로 사용하지 않는 것이 좋다.
+
+<문제 있는 코드>
+
+1: ……
+2: public synchronized void notifyJob() {
+3:      boolean flag = true;
+4:      notify(); //어떤 스레드를 깨울지 불명확하다.
+5: }
+
+<안전한 코드의 예>
+1: ……
+2: public synchronized void notifyJob() {
+3: boolean flag = true;
+4: // notify() 메서드를  사용하지 않는다.
+5: }
+
+2. 자원의 부적절한 반환 (Improper Resource Shutdown or Release)
+
+정의)
+ 프로그램의 자원, 예를 들면 열린 파일 기술자(open file descriptor),
+ 힙 메모리(heap memory),소켓(socket) 등은 유한한 자원이다. 이러한 자원을
+ 할당 받아 사용한 후, 더 이상 사용하지 않는 경우에는 적절히 반환하여야 한다.
+
+안전한 코딩기법
+
+ =>자원을 획득하여 사용한 다음에는 finally 블록에서 반드시 자원을 해제
+      해야 한다.
+
+<문제의 코드>
+
+1: ……
+2: public void processFile() throws SQLException {
+3:    Connection conn = null;
+4:    final String url = "jdbc:mysql://127.0.0.1/example?user=root&password=1234";
+5: try {
+6:     Class.forName("com.mysql.jdbc.Driver");
+7:     conn = DriverManager.getConnection(url);
+8:     ……
+9:     // 예외발생시 할당 받은 자원이 반환되지 않는다.
+10:    conn.close();
+       //-------------------------------------------------
+11: } catch (ClassNotFoundException e) {
+12:    System.err.println("ClassNotFoundException occured");
+13: } catch (SQLException e) {
+14:    System.err.println("SQLException occured");
+15: } finally {
+16:
+17: ……
+
+=>위의 예제는 데이터베이스에 연결된 후에 사용 중 예외가 발생하면
+    할당된 데이터베이스 컨넥션 및 JDBC 자원이 반환되지 않는다.
+   이와 같은 상황이 반복될 경우 시스템에서 사용 가능한 자원이 소진될 수있다.
+===========================================
+<안전한 코드의 예>
+
+1: ……
+2: public void processFile() throws SQLException {
+3:      Connection conn = null;
+4:      String url = "jdbc:mysql://127.0.0.1/example?user=root&password=1234";
+5: try {
+6:      Class.forName("com.mysql.jdbc.Driver");
+7:      conn = DriverManager.getConnection(url);
+8: ……
+9: } catch (ClassNotFoundException e) {
+10:      System.err.print("error");
+11: } catch (SQLException e) {
+12:     System.err.print("error");
+13: } finally {
+   //------------------------------------------------------
+14: ……
+15: // 더 이상 사용하지 않으면 즉시 close()를 해줘야 한다.
+16: conn.close();
+17: ……
+   //--------------------------------------------------------
+ =>예외상황이 발생하여 함수가 종료될 때 예외의 발생 여부와 상관없이
+      finally 블록에서 할당 받은 자원을 반환한다.
+
+3. 널포인터 역참조(NULL Pointer Dereference)
+
+정의) 널 포인터 역참조는 일반적으로 그 객체가 NULL이 될 수 없다 라고 하는
+    가정을 위반했을 때 발생한다. 공격자가 의도적으로 NULL 포인터 역참조를
+    실행하는 경우, 그 결과 발생하는 예외 사항을 이용하여 추후의 공격을
+    계획하는데 사용될 수 있다.
+
+안전한 코딩기법
+
+ =>널이 될 수 있는 레퍼런스(reference)는 참조하기 전에 널 값인지를 
+      검사하여 안전한 경우에만 사용해야 한다.
+
+<문제의 코드>
+
+1: ……
+2: public void f() {
+3: String cmd = System.getProperty("cmd");
+
+4: // cmd가 null인지 체크하지 않았다.
+5: cmd = cmd.trim();
+   //-------------------------------------------
+6: System.out.println(cmd);
+7: ……
+
+=>위 예제는 cmd 프로퍼티가 항상 정의 되어있다고 가정하고 있지만, 만약
+  공격자가 프로그램의 환경을 제어해 cmd 프로퍼티가 정의 되지 않게 하면,
+  cmd는 널이 되어  trim()메서드를 호출  할때 널 포인터 예외가 발생하게 된다.
+===========================================
+<안전한 코드인 경우>
+
+1: ……
+2: public void f() {
+3: String cmd = System.getProperty("cmd");
+4: // cmd가 null인지 체크해야 한다.
+5: if (cmd != null) {
+   //-----------------------------------
+6: cmd = cmd.trim();
+7: System.out.println(cmd);
+8: } else System.out.println("null command");
+9: ……
+=>먼저 cmd가 널인지 검사한 후에 사용한다.
+================================
+==>이 부분은 좀더 공부를 해야 할듯.
+=================================
+
+4. 코드 정확성: 부정확한 serialPersistentFields 조정자
+(Code Correctness: Incorrect serialPersistentFields Modifier)
+
+정의)
+   serialPersistentFields를 정확하게 사용하기 위해서는 private static final로
+   선언해야 한다. public으로 선언하여 공유하면 정확성을 해칠 수 있다.
+=========================================
+
+안전한 코딩기법
+
+->serialPersistentFields를 정확하게 사용하려면 public,static,final로 선언
+   해야한다.
+
+<문제의 코드>
+
+1: class List implements Serializable {
+   //-----
+2: public ObjectStreamField[] serialPersistentFields =
+  //------
+   { new ObjectStreamField("myField", List.class) };
+
+<안전한 코드의 예>
+1: class List implements Serializable {
+   //-----직렬화의 경우------
+2: private static final ObjectStreamField[] serialPersistentFields =
+  //--------------------------
+   { new ObjectStreamField("myField", List.class) };
+3: ……
+4: }
+3: ……
+4: }
+============================================
+5. 코드 정확성: Thread.run() 호출 (Code Correctness: Call to Thread.run())
+============================================
+ 정의)
+ 
+   프로그램에서 스레드의 start() 대신에 run()을 호출하면 스레드가 생성되지
+   않고, 해당 run()함수를 직접 호출하여 해당 run()함수의 종료를 대기하게 된다.
+   즉, 프로그래머는 새로운 스레드를 시작 시키려고 했지만,start() 대신에 run()
+  을 호출함으로써 호출자의 스레드에서 run()메서드를 실행하게 된다.
+
+안전한 코딩기법
+   =>스레드의 run() 대신에 start()를 수행하도록 한다.
+
+<문제의 코드>
+
+1: ……
+2: protected void cwe_572() {
+3: Thread thr = new PrintThread();
+4: // 스레드 객체의 run() 메서드를 직접 호출하는 것은 대부분 버그이다.
+5:     thr.run();
+6:    } ……
+7: }
+8: class PrintThread extends Thread {
+9: public void run() { System.out.println("CWE 572 TEST"); }
+10: }
+
+ =>start() 대신에 run() 메서드를 사용하고 있다.
+=====================================
+
+<안전한 코드의 예>
+
+1: ……
+2: protected void cwe_572() {
+3: Thread thr = new PrintThread();
+4:    // 새로운 스레드를 시작시킨다.->스레드의 start() 메서드를 사용한다.
+5:    thr.start();
+6:   } ……
+7: }
+
+8: class PrintThread extends Thread {
+9: public void run() { System.out.println("CWE 572 TEST"); }
+10: }
+
+=======================================
+6. 코드 정확성: 동기화된 메서드를 비동기화된 메서드로 재정의
+(Code Correctness: Non-Synchronized Method Overrides Synchronized Method)
+
+정의)
+ 클래스를 상속받아 사용하는 경우, 상위 클래스에서 동기화된(synchronized)
+ 메서드는 하위 클래스에서 재정의(override)를 하지 않거나, 재정의해야 하는 
+ 경우 기존과 동일하게 동기화된(synchronized) 메서드로 정의해야 한다.
+
+안전한 코딩기법
+  =>하위 클래스에서 동기화된(synchronized)메서드를 재정의해야 하는 경우
+  상위 클래스와 동일하게 synchronized 메서드로 재정의 해야 한다.
+
+<문제의 코드>
+
+  1: public class U9627 {
+    2: public synchronized void synchronizedMethod() {
+    3: for (int i=0; i<10; i++) System.out.print(i);
+    4: }
+5: ……
+6: }
+7:
+8: public class Foo extends U9627 {
+9: // 동기화된 메서드로 정의하지 않았다. 
+10: public void synchronizedMethod() {
+   //---------------------------------------
+11: for (int i=0; i<20; i++) System.out.print(i);
+12: }
+13: }
+
+=>상위클래스에서 동기화된 메서드를 하위클래스에서 비동기화된 메서드로
+  재정의 하면 안된다.
+
+<안전한 코드의 예>
+
+1: public class S9627 {
+     //-------------------상위 클래스의 경우
+2:   public synchronized void synchronizedMethod() {
+    //----------------------
+3: for (int i=0; i<10; i++) System.out.print(i);
+4: }
+5: ……
+6: }
+7:
+  //하위 클래스의 경우
+8: public class Foo extends S9627 {
+   //-----------------------------------------------------
+9:   public synchronized void synchronizedMethod() {
+  //------------------------------------------------------
+10: for (int i=0; i<20; i++) System.out.print(i);
+11: }
+12: }
+===================================
+7. 무한 자원 할당(Allocation of Resources Without Limits or Throttling)
+
+정의)
+  프로그램이 자원을 사용 후 해제하지 않거나,한 사용자당 서비스할 수 있는 자원
+  의 양을 제한하지 않고, 서비스 요청마다 요구하는 자원을 할당한다.
+
+안전한 코딩기법
+
+1.프로그램에서 자원을 오픈하여 사용하고 난 후, 반드시 자원을 해제한다.
+2.사용자가 사용할 수있는 자원의 사이즈를 제한한다.
+  =>사용자가 접근할 수있는 자원의 양을 제한한다. 특히 제한된 자원을 효율적
+  으로 사용하기 위해서 Pool(Thread Pool,Connection Pool등을) 사용한다.
+============================================
+
+<문제된 코드>
+
+1: Connection conn = null;
+2: PreparedStatement pstmt = null;
+3: try {
+        conn=getConnection();
+5: ...
+6: pstmt = conn.prepareStatement("SELECT * FROM employees
+7: where name=?");
+8: ...
+      //-----------------------
+9:   conn.close();
+10: pstmt.close();
+      //------------------------
+11: }catch (SQLException ex) {...}
+
+=>close()문을 만나기 전에 예외가 일어나면, open 자원은 dangling resource
+    로 메모리에 존재한다. 즉 참조를 잃어버렸기 때문에 재사용은 불가하다.
+===========================================
+
+<안전화된 코드>
+
+1: Connection conn = null;
+2: PreparedStatement pstmt = null;
+3: try {
+4:     conn=getConnection();
+5: ...
+6:     pstmt = conn.prepareStatement("SELECT * FROM employees
+7:     where name=?");
+8: ...
+9: }catch (SQLException ex) {...}
+10: // 자원을 사용하고 해제 시 항상 finally문에서 한다.
+11: finally {
+12: if ( conn!= null ) try { conn.close(); } catch (SQLException e){...}
+13: if ( pstmt!= null ) try { pstmt.close(); } catch (SQLException e){...}
+14: }
+    //-----------------------------------------------------------------------
+
+=>중간에 예외사항이 발생하더라도 함수가 종료되기 직전에 항상 finally문을
+    수행하므로,자원을 해제할 경우 항상 finally문에서 해제한다.
+===========================================
+
+제7절 캡슐화
+===========
+ 소프트웨어가 중요한 데이터나 기능성을 불충분하게 캡슐화 하는 경우,인가된
+ 데이터와 인가되지 않은 데이터를 구분하지 못하게 되어 허용되지 않는 사용자들
+ 간의 데이터 누출이 가능해진다. 캡슐화는 단순히 일반 소프트웨어 개발 방법상
+ 의 상세한 구현 내용을 감추는 일 뿐 아니라 소프트웨어 보안 측면의 좀 더 넓은
+ 의미로 사용된다.
+
+1.세션 간에 데이터 누츨(Data Leak Between Sessions)
+
+정의)
+  다중  스레드 환경에서는 싱글톤(singleton) 객체 필드에 경쟁 조건이
+  발생할 수 있다. 따라서 다중 스레드 환경에서 서블릿에 정보를 저장하는
+  필드가 포함되지 않도록 하여 세션에서 데이터를 접근할 수 없도록 해야한다.
+===========================================
+
+안전한 코딩기법
+  ->HttpServlet클래스의 하위클래스에서 멤버 필드를 선언하면 안된다.
+   필요한 경우 지역변수를 선언하여 사용한다.
+
+<문제의 코드>
+
+1: public class U488 extends HttpServlet {
+      //-------------------------
+2:    private String name; 멤버변수에 선언하는 경우는 안됨
+     //--------------------------
+3:   protected void doPost(HttpServletRequest request, HttpServletResponse response)
+4: throws ServletException, IOException {
+5: name = request.getParameter("name");
+6: ……
+7: out.println(name + ", thanks for visiting!");
+8: }
+9: }
+
+=>두 사용자가 거의 동시에 접속할 시, 첫번째 사용자를 위한 스레드가 
+   out.println(...)을 수행하기 전에 두번째 사용자의 슬드가 name=...을
+  수행하면 첫번째 사용자는 두번째 사용자의 정보(name)을 보게 된다.
+=========================================
+
+<안전화된 코드>
+
+1: public class S488 extends HttpServlet {
+2: protected void doPost(HttpServletRequest request, HttpServletResponse response)
+3: throws ServletException, IOException {
+
+4: // 필요한 경우 지역변수로 선언하여 사용한다.
+5: String name = request.getParameter("name");
+   //-------------------------------------------------
+6: if (name == null || "".equals(name)) return;
+7: out.println(name + ", thanks for visiting!");
+8: }
+9: }
+==============================
+2. 제거되지 않고 남은 디버거 코드(Leftover Debug Code)
+
+정의) 디버깅 목적으로 삽입된 코드는 개발이 완료되면 제거해야 한다.
+      만일, 남겨진 채로 배포될 경우 공격자가 식별과정을 우회하거나
+     의도하지 않은 정보와 제어정보가 누출될 수 있다.
+======================================
+
+안전한  코딩기법
+
+ ->J2EE와 같은 응용프로그램에서 main() 메서드를 정의하면 안된다.
+ 이것은 보통 디버깅을 위해서 만드는 경우가 있는데,디버깅이 끝나면
+  main()메서드를 삭제해야 한다.
+
+<문제의 코드>
+
+1: public class U489 extends HttpServlet {
+2: protected void doGet(HttpServletRequest request, … ) throws …… { …… }
+3: protected void doPost(HttpServletRequest request, … ) throws …… { …… }
+4: 
+    // 테스트를 위한 main()함수나 디버깅용 로그 출력문 등이 남아 있다.
+5: public static void main(String args[]) {
+6: System.err.printf("Print debug code");
+7: }
+//-------------------------------------------------------------------------
+8: ……
+
+<안전화 코드의 예>
+1: public class S489 extends HttpServlet {
+2: protected void doGet(HttpServletRequest request, … ) throws …… { …… }
+3: protected void doPost(HttpServletRequest request, … ) throws …… { …… }
+4: // 테스트용 코드는 제거해준다.-->main()의 경우(삭제시켜야 한다.)
+5: ……
+
+==========================================
+3. 민감한 데이터를 가진 내부  클래스 사용
+    (Use of Inner Class Containing Sensitive Data)
+
+정의) 내부 클래스는 컴파일 과정에서 패키지 수준의 접근성으로 바뀌기 때문에
+        의도하지 않은 정보 공개가 발생할 수 있다. 이를 피하기 위해서는 
+   정적(static) 내부 클래스, 지역저(local) 내부 클래스 또는 익명의 (anonymous)
+  내부 클래스를 사용하는 것을 고려해야 한다.
+===========================================
+
+안전한 코딩기법
+    
+  =>내부 클래스 사용시 외부클래스의 private 필드를 접근하지 않도록 한다.
+  가급적이면 내부클래스를 사용하지 않도록 하며, 불가피하게 내부 클래스를
+  사용할 경우, 정적(static),또는  지역적(local), 또는 익명 내부클래스를 
+  사용해야 한다.
+
+<문제의 코드>
+
+1: public final class U492 extends Applet {
+
+2: //외부 클래스에서 내부 클래스로 가면서 보안 수준을 낮추어서는 안된다.
+3: public class urlHelper { String openData = secret; }
+    //----
+4: String secret;
+5: urlHelper helper = new urlHelper();
+6: }
+
+=>내부 클래스는 바이트코드에서는 패키지 수준 접근제어로 바뀌기 때문에
+   내부 클래스가 둘러싸고 있는  클래스의 민감한 정보에 접근시 이 내부 클래스
+   를 통해 정보가 유출될 수 있다.
+===========================================
+<안전한 코드 의 예>
+
+1: public class S492 extends Applet {
+2: // 내부 클래스를 정적(static) 선언하여 외부클래스의 private 필드에 접근
+    // 못하게 해야 한다.
+    //-----------
+3: public static class urlHelper { ... }
+    //-----------
+4: String secret;
+5: urlHelper helper = new urlHelper(secret);
+6: }
+7:
+
+====================================
+4. Final 변경자 없는 주요 공용 변수
+(Critical Public Variable Without Final Modifier)
+
+=>정의)
+  public으로 선언된 멤버 변수를 final로 선언하지 않으면, 그 변수의 값을 외부
+  에서 변경할 수 있다. 일반적으로 객체의 상태 변경은 허용된 인터페이스만
+  사용하도록 해야 한다.==>상수화 시킨다.
+
+안전한 코딩기법
+    =>변경되면 안되는 public 멤버변수는 반드시 final로 한다.
+
+<문제의 코드>
+ =====================================
+1: public final class U493 extends Applet {
+2: // price 필드가 final이 아니기 때문에 외부에서 price를 수정할 수가 있다.
+3: public static float price = 500;
+    //------------------------------------------------------------------
+4:
+5: public float getTotal(int count) {
+6: return price * count;
+7: }
+8: ……
+
+=>price 필드가 final이 아니기 때문에, 외부에서 변경이 가능하며, getTotal()값이 변조될 수 있다.
+=========================================================
+<안전한 코드>
+
+1: public final class S493 extends Applet {
+     //------------------------------------------------
+2: // 수정되면 안되는 변수는 final 키워드로 선언한다.
+3: public static final float price = 500;
+    //-------------------------------------------------
+4:
+5: public float getTotal(int count) {
+6: return price * count; // price 수정불가
+7: }
+8: }
+
+=>변경되면 안되는 public 멤버변수는 final키워드로 선언한다.
+====================================
+
+5.공용 메서드로부터 리턴된 private 배열-유형 필드
+(Private Array-Typed Field Returned From A Public Method)
+
+
+정의) private로 선언된 배열을 public으로 선언된 메서드를 통해 반환(return)하면, 그 배열의 레퍼런스가
+        외부에 공개되어 외부에서 배열의 수정할 수 있다.
+
+안전한 코딩 기법
+
+ private로 선언된 배열을 public으로 선언된 메서드를 통해 반환하지 않도록 해야 한다.
+ 필요한 경우 배열의 복제본을 반환하거나, 수정을 제어하는 public 메서드를 별도로 선언
+ 하여 사용한다.
+
+<문제 된 코드>
+
+1: // private 인 배열을 public인 메서드가 return한다.
+2: private String[] colors;
+3: public String[] getColors() { return colors; }
+4: ……
+
+멤버변수 colors는 private로 선언되었지만 public으로 선언된 getColors() 메서드를 통해
+ reference를 얻을 수 있다. 이를 통해 의도하지 않은 수정이 발생할 수 있다.
+
+<안전한 코드의 예>
+
+1: ……
+2: private String[] colors;
+3: // 메서드를 private으로 하거나, 복제본을 반환하거나, 수정을 제어하는 public 메서드를 별도로 만든다.
+    //-------------------------------------------------------------------------------------------------
+4: public String[] getColors() {
+5:       String[] ret = null;
+6:          if ( this.colors != null ) {
+7:         ret = new String[colors.length];
+8:        for (int i = 0; i < colors.length; i++) { ret[i] = this.colors[i]; }
+9:     }
+10:     return ret;
+11: }
+12: ……
+
+->private 배열의 복제본을 만들어서, 그것을 반환하도록 작성하면 private 선언된 배열에 대한 의도하지 않은
+   수정을  방지할 수 있다.
+===============================================================
+
+6. private 배열-유형 필드에 공용 데이터 할당
+(Public Data Assigned to Private Array-Typed Field)
+
+정의) public으로 선언된 데이터 또는 메서드의 인자가 private 선언된 배열에 저장되면 ,private 배열을 외부에서
+        접근할 수 있다.
+
+안전한 코딩기법
+       public으로 선언된 데이터가 private 선언된 배열에 저장되지 않도록 한다.
+
+<문제화된 코드>
+
+1: ……
+2: // userRoles 필드는 private이지만, public인 setUserRoles()를 통해 외부의 배열이 할당되면 
+        사실상 public 필드가 된다.
+
+3: private String[] userRoles;
+4:
+5: public void setUserRoles(String[] userRoles) {
+6: this.userRoles = userRoles;
+7: }
+8: ……
+
+
+<안전화된 코드>
+
+1: ……
+2: // 객체가 클래스의 private member를 수정하지 않도록 한다.
+3: private String[] userRoles;
+4:
+5: public void setUserRoles(String[] userRoles) {
+6:      this.userRoles = new String[userRoles.length];
+          //--------------------------------------------------
+7:       for (int i = 0; i < userRoles.length; ++i)
+8:       this.userRoles[i] = userRoles[i];
+         //---------------------------------------------------
+9: }
+10: ……
+
+=>입력된 배열의 reference가 아닌 배열의 값을 private배열의 할당함으로써 private 멤버로서의
+     접근권한을 유지 시켜준다.
+=========================================================
+
+7. 시스템 데이터 정보 누출(Information Leak of System Data)
+
+정의) 시스템의 내부 데이터나 디버깅 관련 정보가 공개되면, 이를 통해 공격자에게 아이디어를 
+        제공하는 등 공격의 빌미가 된다.
+
+안전한 코딩 기법
+        디버깅을 위해 작성한 시스템 정보 출력 코드를 모두 삭제해야 한다.
+
+<문제화된 코드>
+
+1: ……
+2: public void f() {
+3: try { g(); }
+4: catch (IOException e) {
+5: // 예외 발생시 printf(e.getMessage())를 통해 오류 메시지 정보가 유출된다.
+6: System.err.printf(e.getMessage());
+    //-----------------------------------------
+7: }
+8: }
+9: private void g() throws IOException { …… }
+10: ……
+
+<안전화 된 코드>
+
+1: ……
+2: public void f() {
+3: try { g(); }
+4: catch (IOException e) {
+5: // end user가 볼 수 있는 오류 메세지 정보를 생성하지 않아야 한다.
+6: System.err.println("IOException Occured");
+    //-------------------------------------------------
+7: }
+8: }
+9: private void g() throws IOException { …… }
+10: ……
+
+=>가급적이면 공격의 빌미가 될 수 있는 오류와 관련된 상세한 정보는 최종 사용자에게 노출하지 않는다.
+//===========================================================
+
+8. 동적 클래스 로딩 사용(Use of Dynamic Class Loading)
+
+정의)
+    동적으로 클래스를 로드하면 그 클래스가 악성 코드일 가능성이 있다. 동적으로 클래스를 로드 하지
+    말아야 한다.
+
+안전한 코딩기법=>동적 로딩은 사용하지 않는다.
+
+<문제화 된 코드>
+
+1: ……
+2: public void f() {
+3: // 외부 입력으로 동적 클래스 로딩
+4: String classname = System.getProperty("customClassName");
+5: try {
+6: Class clazz = Class.forName(classname);
+//-------------------------------------------------------------------------
+7: System.out.println(clazz);
+8: } catch (ClassNotFoundException e) { …… }
+9: ……
+=>동적으로 로드 되는 클래스는 악성 코드일 수 있다.
+======================================
+
+<안전화된 코드의 예>
+
+1: ……
+2: public void f() {
+3: // 외부 입력으로 동적 클래스 로딩하지 않도록 한다.
+4: TestClass tc = new TestClass();
+    //-----------------------------------------------
+5: System.out.println(tc);
+6: ……
+
+=>가급적이면 동적 로딩을 사용하지 않는다. 사용해야 하는 경우 로드가 가능한 모든 클래스를 
+     미리 정의하여 사용한다.
+======================================================
+p148까지 정리
+
+제2장 용어정리 및 약어표
+=======================================================

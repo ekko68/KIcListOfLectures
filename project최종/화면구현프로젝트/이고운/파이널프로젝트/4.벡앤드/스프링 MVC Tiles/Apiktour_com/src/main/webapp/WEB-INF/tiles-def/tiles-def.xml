@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- 서비스 페이지 -->
+   <definition name="main" template="/WEB-INF/views/tiles/layouts/Layout.jsp">  
+       <put-attribute name="title" value="" />  
+       <put-attribute name="css" value="/WEB-INF/views/tiles/template/tiles-css/DefaultCss.jsp" />
+       <put-attribute name="js" value="/WEB-INF/views/tiles/template/tiles-css/DefaultJs.jsp" />
+       <put-attribute name="subRes" value=" " />  
+       <put-attribute name="login" value="/WEB-INF/views/tiles/template/login.jsp" />
+       <put-attribute name="sideMenu" value="/WEB-INF/views/tiles/template/sideMenu.jsp" />    
+       <put-attribute name="body" value="서비스페이지" />  
+   </definition>
+   
+   <!--.move 작동을 위해 페이징 우선 순위를 위로 잡아줌. -->
+   	<definition name="*/*.move" extends="admin">
+		<put-attribute name="content" value="/WEB-INF/views/admin/jsp/{1}/{2}.jsp"/>
+	</definition>
+   
+	<definition name="*/*" extends="main">
+   <put-attribute name="title" value="{1}/{2}" />
+   <put-attribute name="subRes" value="/WEB-INF/views/tiles/tiles_res/{1}.jsp" />  
+   <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition>
+
+	<!-- error 페이지 처리 ( 공통 에러페이지를 하기 위해 template로 설정)-->
+      <definition name="pageError" template="/WEB-INF/views/tiles/layouts/Layout.jsp">
+		<put-attribute name="title" value="에러페이지" />
+		<put-attribute name="css" value="" />
+       <put-attribute name="js" value="" />
+       <put-attribute name="subRes" value="" />  
+       <put-attribute name="login" value="" />
+       <put-attribute name="sideMenu" value="" />
+		<put-attribute name="body" value="/WEB-INF/views/tiles/template/pageError.jsp" />
+    </definition>
+
+<definition name="resultMap"
+       template="/WEB-INF/views/tiles/layouts/resultLayout.jsp">  
+       <put-attribute name="title" value="resultLayout" />  
+       <put-attribute name="css" value="/WEB-INF/views/tiles/template/tiles-css/DefaultCss.jsp" />
+       <put-attribute name="js" value="/WEB-INF/views/tiles/template/tiles-css/DefaultJs.jsp" />  
+       <put-attribute name="jsSub" value="/WEB-INF/views/tiles/tiles_res/result_res.jsp" />   
+       <put-attribute name="login" value="/WEB-INF/views/tiles/template/login.jsp" />
+       <put-attribute name="sideMenu" value="/WEB-INF/views/tiles/template/sideMenu.jsp" />  
+        <put-attribute name="cosInfo" value="/WEB-INF/views/result/cos_info.jsp" />  
+       <put-attribute name="body2" value="/WEB-INF/views/result/result.jsp" />  
+</definition>
+	
+	
+
+	<!-- 관리자 페이지  -->
+	<definition name="admin" template="/WEB-INF/views/admin/template/layout.jsp">
+		<put-attribute name="title" value="관리 페이지"/>
+		<put-attribute name="menu" value="/WEB-INF/views/admin/template/menu.jsp"/>
+		<put-attribute name="header" value="/WEB-INF/views/admin/template/header.jsp"/>
+		<put-attribute name="content" value="이 부분이 바뀝니다."/>
+		<put-attribute name="footer" value="/WEB-INF/views/admin/template/footer.jsp"/>
+		
+		<put-attribute name="css" value="/WEB-INF/views/admin/css/admincss.jsp"/>
+		<put-attribute name="js" value="/WEB-INF/views/admin/js/adminjs.jsp"/>  
+	</definition>
+	
+	<!-- 에러 페이지 처리
+	<definition name="pageError" extends="admin">
+        <put-attribute name="title" value="에러 페이지"/>
+        <put-attribute name="content" value="/WEB-INF/views/admin/jsp/error/pageError.jsp"/>
+        <put-attribute name="js" value=""/>
+    </definition> -->
+	
+</tiles-definitions>

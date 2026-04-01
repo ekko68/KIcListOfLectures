@@ -1,0 +1,339 @@
+package bag.design.page;
+
+
+import java.awt.*;
+import java.sql.Connection;
+
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import bag.db.data.Coupon;
+import bag.db.data.CustomPageInfo;
+import bag.db.data.Customer;
+import bag.db.data.Product;
+import bag.get.connection.MakeConnection;
+import bag.handle.sql.HandleCouponDB;
+import bag.handle.sql.HandleCustomDB;
+import bag.handle.sql.HandleProductDB;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+
+public class CustomerPage extends JFrame implements ListSelectionListener {
+
+	JButton btnClose, btnHome;
+	private JList<String> list;
+	private JTextField txtC_Gender,txtC_Num, txtC_Name, txtC_Tel, txtC_Age, txtC_Address, txtC_Coupon, txtC_Products;
+	private JLabel C_Num, C_Name, C_Tel, C_Age, C_Address, C_Coupon, C_Products, C_GenderLabel;
+	private JLabel Product_image;
+	private JPanel panel;
+	private Color color;
+	Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	
+
+	public CustomerPage() {
+		design();
+		getCustomPageInfo();
+		display();
+	}
+
+	public void design() {
+
+		// 사이즈
+		setBounds(screen.width / 9, screen.height / 9, 1280, 720);
+		// 명령 버튼 패널
+		JPanel pannel = new JPanel();
+		getContentPane().add(pannel);
+		pannel.setBackground(new Color(255, 0, 0, 0));
+		// 회원정보
+		JPanel info = new JPanel();
+		info.setBounds(200, 20, 477, 637);
+		info.setBackground(new Color(255, 255, 255, 80));
+		info.setLayout(null);
+		info.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "", TitledBorder.LEADING,
+				TitledBorder.TOP, null, new Color(0, 0, 0)));
+		// 라벨-----------------------------------------------------
+		// 번호
+		C_Num = new JLabel("Number");
+		C_Num.setFont(new Font("Noto Sans UI", Font.BOLD, 14));
+		C_Num.setBounds(22, 48, 57, 15);
+		C_Num.setForeground(Color.DARK_GRAY);
+
+		info.add(C_Num);
+		// 회원이름
+		C_Name = new JLabel("Name");
+		C_Name.setFont(new Font("Noto Sans UI",  Font.BOLD, 14));
+		C_Name.setForeground(Color.DARK_GRAY);
+		C_Name.setBounds(22, 76, 57, 15);
+		info.add(C_Name);
+		// 전화
+		C_Tel = new JLabel("Tel");
+		C_Tel.setForeground(Color.DARK_GRAY);
+		C_Tel.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+		C_Tel.setBounds(22, 102, 57, 15);
+		info.add(C_Tel);
+		// 성별
+		C_GenderLabel = new JLabel("Gender");
+		C_GenderLabel.setForeground(Color.DARK_GRAY);
+		C_GenderLabel.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+		C_GenderLabel.setBounds(22, 129, 57, 15);
+		info.add(C_GenderLabel);
+		// 제품
+		C_Products = new JLabel("Product");
+		C_Products.setForeground(Color.DARK_GRAY);
+		C_Products.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+		C_Products.setBounds(22, 425, 84, 15);
+		info.add(C_Products);
+		// 나이
+		C_Age = new JLabel("Age");
+		C_Age.setForeground(Color.DARK_GRAY);
+		C_Age.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+		C_Age.setBounds(22, 157, 57, 15);
+		info.add(C_Age);
+		// 주소
+		C_Address = new JLabel("Address");
+		C_Address.setForeground(Color.DARK_GRAY);
+		C_Address.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+		C_Address.setBounds(22, 186, 57, 15);
+		info.add(C_Address);
+		// 쿠폰정보
+		C_Coupon = new JLabel("Coupon");
+		C_Coupon.setForeground(Color.DARK_GRAY);
+		C_Coupon.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+		C_Coupon.setBounds(22, 258, 57, 15);
+		info.add(C_Coupon);
+		// 라벨끝-----------------------------------------------------
+		// textfield-----------------------------------------------------
+		txtC_Num = new JTextField();
+		txtC_Num.setDisabledTextColor(new Color(255, 255, 255));
+		txtC_Num.setBounds(110, 48, 355, 21);
+		info.add(txtC_Num);
+		txtC_Num.setColumns(10);
+		txtC_Num.setEditable(false);
+
+		txtC_Name = new JTextField();
+		txtC_Name.setDisabledTextColor(Color.WHITE);
+		txtC_Name.setBounds(110, 73, 355, 21);
+		info.add(txtC_Name);
+		txtC_Name.setColumns(10);
+		txtC_Name.setEditable(false);
+
+		txtC_Tel = new JTextField();
+		txtC_Tel.setBounds(110, 98, 355, 21);
+		info.add(txtC_Tel);
+		txtC_Tel.setColumns(10);
+		txtC_Tel.setEditable(false);
+
+		txtC_Gender = new JTextField();
+
+		txtC_Gender.setBounds(110, 127, 116, 21);
+		txtC_Gender.setEditable(false);
+		info.add(txtC_Gender);
+
+		txtC_Age = new JTextField();
+		txtC_Age.setBounds(110, 156, 116, 21);
+		info.add(txtC_Age);
+		txtC_Age.setColumns(10);
+		txtC_Age.setEditable(false);
+
+		txtC_Address = new JTextField();
+		txtC_Address.setBounds(110, 185, 355, 64);
+		info.add(txtC_Address);
+		txtC_Address.setColumns(10);
+		txtC_Address.setEditable(false);
+
+		txtC_Coupon = new JTextField();
+		txtC_Coupon.setBounds(110, 256, 355, 160);
+		info.add(txtC_Coupon);
+		txtC_Coupon.setColumns(10);
+		txtC_Coupon.setEditable(false);
+
+		txtC_Products = new JTextField();
+		txtC_Products.setBounds(110, 424, 355, 194);
+		info.add(txtC_Products);
+		txtC_Products.setColumns(10);
+		txtC_Products.setEditable(false);
+		pannel.setLayout(null);
+
+		// 회원리스트
+		JPanel list_1 = new JPanel();
+		list_1.setBackground(new Color(255, 255, 255, 80));
+		list_1.setBounds(12, 20, 180, 635);
+		pannel.add(list_1);
+		list_1.setLayout(null);
+		list_1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		list = new JList<String>();
+		list.setBackground(Color.WHITE);
+		list.setBounds(13, 48, 136, 566);
+		list_1.add(list);
+
+		Scrollbar scrollbar = new Scrollbar();
+		scrollbar.setBounds(153, 47, 17, 566);
+		scrollbar.setBackground(new Color(255, 255, 255, 50));
+		list_1.add(scrollbar);
+
+		JLabel lblList = new JLabel("Customer List");
+		lblList.setFont(new Font("Noto Sans UI", Font.BOLD, 12));
+		lblList.setForeground(new Color(255, 255, 255));
+		lblList.setBounds(17, 10, 100, 15);
+		list_1.add(lblList);
+		pannel.add(info);
+
+		JLabel lblCustomerInfo = new JLabel("Customer Info");
+		lblCustomerInfo.setFont(new Font("Noto Sans UI", Font.BOLD, 14));
+		lblCustomerInfo.setForeground(Color.WHITE);
+		lblCustomerInfo.setBounds(23, 11, 100, 15);
+		info.add(lblCustomerInfo);
+		pannel.setBounds(0, 0, 2100, 1000);
+
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		panel.setBackground(new Color(255, 255, 255, 80));
+		panel.setBounds(688, 20, 564, 637);
+		pannel.add(panel);
+		panel.setLayout(null);
+		
+		Product_image = new JLabel();
+		Product_image.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+		Product_image.setBounds(21, 49, 520, 532);
+		panel.add(Product_image);
+		Product_image.setIcon(new ImageIcon("C:\\image\\none.jpg"));
+		Product_image.setBackground(Color.LIGHT_GRAY);
+
+		JLabel lblProduct = new JLabel("Product");
+		lblProduct.setFont(new Font("Noto Sans UI", Font.BOLD, 14));
+		lblProduct.setForeground(Color.WHITE);
+		lblProduct.setBounds(21, 10, 100, 15);
+		panel.add(lblProduct);
+
+		setVisible(true);
+		list.addListSelectionListener(this);
+
+		JLabel bgimage = new JLabel();
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon("C:/image/bg01.jpg").getImage()
+				.getScaledInstance(pannel.getWidth(), pannel.getHeight(), Image.SCALE_DEFAULT));
+
+		bgimage.setToolTipText("배경이미지");
+		bgimage.setBounds(0, 0, 1264, 682);
+		bgimage.setIcon(imageIcon);
+		getContentPane().add(bgimage);
+		setBackground(Color.BLACK);
+
+		btnClose = new JButton("");
+		btnClose.setRolloverEnabled(false);
+		btnClose.setFocusPainted(false);
+		btnClose.setIcon(new ImageIcon("C:/image/close.png"));
+		btnClose.setSelected(false);
+		btnClose.setBounds(505, 591, 36, 36);
+		btnClose.setBorderPainted(false);
+		btnClose.setContentAreaFilled(false);
+		panel.add(btnClose);
+	//	this.setResizable(false);
+	//	this.setMinimumSize(false);
+		
+	}
+
+	
+	public ArrayList<CustomPageInfo> getCustomPageInfo(){ //db연동
+		Connection conn = MakeConnection.getInstance();
+		
+		HandleCustomDB customerDB = new HandleCustomDB();
+		HandleCouponDB couponDB = new HandleCouponDB();
+		HandleProductDB productDB = new HandleProductDB();
+		
+		ArrayList<CustomPageInfo> cpi = new ArrayList<CustomPageInfo>();
+		
+		ArrayList<Customer> customer = customerDB.selectAllData(conn);
+
+		for(Customer arr : customer) {
+			Coupon coupon= couponDB.selectedCoupon(conn, arr.getName());
+			System.out.println(arr.getName());
+			Product product = productDB.selectedProduct(conn, arr.getName());
+			
+			cpi.add(new CustomPageInfo(arr.getProduct_num(),
+									   arr.getName(),
+									   arr.getTel(),
+									   arr.getGender(),
+									   arr.getAge(),
+									   arr.getAddress(),
+									   coupon.getInfo(),
+									   product.getTitle(),
+									   product.getImage()));
+		}
+		
+		return cpi;
+		
+
+	}
+	
+	public void display() {
+		ArrayList<CustomPageInfo> cpi = getCustomPageInfo();
+		String[] name = new String[cpi.size()]; 
+		
+		for(int i=0;i<cpi.size();i++) {
+			name[i]=cpi.get(i).getName();
+		}
+		list.setListData(name);
+		list.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+		list.setForeground(new Color(60,20,70));
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+		ArrayList<CustomPageInfo> cpi = getCustomPageInfo();
+
+
+		for(int i=0; i<cpi.size();i++) {
+			if(list.getSelectedIndex() == i) { 
+				txtC_Num.setText(cpi.get(i).getProduct_num()+"");
+				txtC_Num.setForeground(new Color(255,0,0));
+				txtC_Num.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+				
+				txtC_Name.setText(cpi.get(i).getName());
+				txtC_Name.setForeground(new Color(0,0,0));
+				txtC_Name.setFont(new Font("Noto Sans UI",  Font.BOLD,  12));
+				
+				txtC_Tel.setText(cpi.get(i).getTel());
+				txtC_Tel.setForeground(new Color(122,140,146));
+				txtC_Tel.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+				
+				txtC_Gender.setText(cpi.get(i).getGender());
+				txtC_Gender.setForeground(new Color(122,140,122));
+				txtC_Gender.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+				
+	            txtC_Age.setText(""+cpi.get(i).getAge());
+	            txtC_Age.setForeground(new Color(122,140,122));
+	            txtC_Age.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+	            
+	            txtC_Address.setText(cpi.get(i).getAddress());
+	            txtC_Address.setForeground(new Color(122,140,122));
+	            txtC_Address.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+	            
+	            txtC_Coupon.setText(cpi.get(i).getCoupon_info());
+	            txtC_Coupon.setForeground(new Color(122,140,122));
+	            txtC_Coupon.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+	            
+	            txtC_Products.setText(cpi.get(i).getProduct_title());
+	            txtC_Products.setForeground(new Color(122,140,122));
+	            txtC_Products.setFont(new Font("Noto Sans UI",  Font.BOLD,  14));
+	            
+	            Product_image.setIcon(new ImageIcon(cpi.get(i).getPath()));
+	            //new ImageIcon("C:\\image\\none.jpg")
+	            //txtC_Coupon, txtC_Products
+			}
+		}
+
+	}
+	
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		CustomerPage CustomerInfo = new CustomerPage();
+
+	}
+}

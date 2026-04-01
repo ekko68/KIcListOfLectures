@@ -1,0 +1,200 @@
+4일차(앵귤러의 binding의 종류 및 작성법)
+
+binding 의 종류
+
+1.{{멤버변수 or 반환값을 가지는 메서드호출}}->주로 문자열을 출력
+2.[속성명]="멤버변수" ->태그내부에서 작성->부모->자식컴포넌트의 값을 전달
+
+  name="titleName"
+ [name]="titleName"
+
+ ex) <자식태그명 [속성명]="부모 멤버변수" =>값을 전달(파라미터값을 전달)
+                          멤버변수
+--------------------------------------------------------------------------------
+3.class이름을 화면 디자인 =>[class.클래스명]=true or false
+4.스타일을 바로 적용--------->[style.속성명]=속성값
+                                          [style.color]='red'
+5.이벤트 연결하는 방법--> 
+  <input type="button" onclick="test('aa')" />
+                                   -----------------
+ ->(이벤트종류명)="호출할 함수명($event)" $event=>앵귤러의 이벤트객체
+ ->(click)="test('aa')"
+=================
+        function test(event){  //event객체
+              event.target.value =>$event.target.value
+              ========>이벤트를 발생시킨 컴포넌트명
+        }
+
+h1>{{test}}</h1>
+
+<button (click)="sayEcho($event)">이벤트</button>
+
+<button (click)="setTest('자바')">자바</button>
+
+<button (click)="setTest('Angular4')">Angular4</button>
+
+//추가
+import { FormsModule} from '@angular/forms'; 
+//폼
+import { HttpModule } from '@angular/http'; 
+ //외부와의 통신
+//-------------------------------------------
+
+import { AppComponent } from './app.component';
+
+import { BookComponent } from './book/book.component';
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    BookComponent
+  ],
+ 
+ imports: [  //현재 사용중인 모듈을 불러오는 장소
+    
+BrowserModule,//브라우저에서 실행할때 필요로 하는 모듈
+   
+ FormsModule, //폼(ngModel)
+    
+HttpModule //접속
+  ],
+
+6.양방향->양쪽이 다 변경=>[(ngModel)]="속성명(멤버변수명)"
+             =>이 속성명과 연결된 화면디자인이 모두 변경
+--------------------------------------------------------------------------
+//폼
+import { HttpModule } from '@angular/http'; 
+app.module.ts에 추가(어플리케이션 루트모듈)
+-----------------------------------------------------
+angular>ng new myapp3-search
+
+cd myapp3-search
+myapp3-search>ng g component book
+
+ book.component.html-><li *ngFor~>복사
+ book.component.ts=>복사
+===========================
+C:\webtest\8.web\angular>ng new my-search
+
+  create my-search/e2e/app.e2e-spec.ts (291 bytes)
+  create my-search/e2e/app.po.ts (208 bytes)
+  create my-search/e2e/tsconfig.e2e.json (235 bytes)
+  create my-search/karma.conf.js (923 bytes)
+
+ C:\webtest\8.web\angular\my-search>ng g component book
+  create src/app/book/book.component.html (23 bytes)
+  create src/app/book/book.component.spec.ts (614 bytes)
+  create src/app/book/book.component.ts (261 bytes)
+  create src/app/book/book.component.css (0 bytes)
+  update src/app/app.module.ts (388 bytes)
+
+C:\webtest\8.web\angular\my-search>
+
+
+<h1>{{getTitleName()}}&nbsp; {{books.length}}권</h1>
+검색:
+<input type="text" name="search"
+         
+  (keyup)="searchName($event)">
+
+<ul>
+  <li *ngFor="let book of booksResult">
+    
+<img src="../assets/image/{{book.img}}" width="100" height="100">
+ 
+    {{book.name}}
+  </li>
+</ul>
+-----------------------------------------------------------------------------
+angular>ng new myapp3-bind
+
+angular>ng new myapp-counter
+=====================
+
+C:\webtest\8.web\angular\ng new myapp4
+
+C:\webtest\8.web\angular\cd myapp4
+
+C:\webtest\8.web\angular\myapp4\ng g component book
+
+C:\webtest\8.web\angular\myapp4\ng g component book-image
+
+  create myapp4/src/app/app.component.css (0 bytes)
+Installing packages for tooling via npm.
+Installed packages for tooling via npm.
+Project 'myapp4' successfully created.
+
+C:\webtest\8.web\angular>cd myapp4
+
+C:\webtest\8.web\angular\myapp4>ng g component book
+  create src/app/book/book.component.html (23 bytes)
+  create src/app/book/book.component.spec.ts (614 bytes)
+  create src/app/book/book.component.ts (261 bytes)
+  create src/app/book/book.component.css (0 bytes)
+  update src/app/app.module.ts (388 bytes)
+
+C:\webtest\8.web\angular\myapp4>ng g component book-image
+  create src/app/book-image/book-image.component.html (29 bytes)
+  create src/app/book-image/book-image.component.spec.ts (650 bytes)
+  create src/app/book-image/book-image.component.ts (284 bytes)
+  create src/app/book-image/book-image.component.css (0 bytes)
+  update src/app/app.module.ts (484 bytes)
+
+C:\webtest\8.web\angular\myapp4>
+-----------------------------------------------------------------------------
+@Input()  =>부모 컴포넌트의 정보--->자식 컴포넌트가 불러다 사용이 가능
+------------------------------------------------------------------------------
+
+부모
+
+//자식(book)컴포넌트에게 전달할 값->변수로 선언
+  
+mesg="hello";
+ 
+ mesg2=200;
+
+  mesg3=[10,20,30];//배열
+  
+static mesg4="world";//정적 변수
+
+  //set 메서드명(~) {this.멤버변수=값}
+
+  get getMesg(){
+    return AppComponent.mesg4; //return this.mesg;
+  }
+
+  ppp(){
+    this.mesg="world";
+  }
+
+==========================================
+<p>
+  mesg:{{str}}<br>
+  book.component.html
+ mesg2:{{str2}}<br>
+
+  mesg3:{{str3}}<br>
+
+  mesg4:{{str4}}<br>
+
+  mesg5:{{str5}}<br>
+</p>
+
+<app-book [str]="mesg"  =>[input매개변수명(속성명)]="부모의 멤버변수명"
+                 [str2]="mesg2"                                          "부모의 메서드명"
+                 [str3]="mesg3" 
+         
+                 [str4]="mesg4" 
+                 [str5]="getMesg" >
+</app-book>
+
+=============================================
+ @Output(98~105)
+p125 5장.서비스 ,지시자(9.4)->모듈=>폼~
+
+
+
+
+
+

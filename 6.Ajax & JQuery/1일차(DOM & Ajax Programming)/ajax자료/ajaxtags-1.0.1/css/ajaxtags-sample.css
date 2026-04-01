@@ -1,0 +1,113 @@
+/*
+ * SAMPLE CSS
+ *
+ * You can use this sample Cascading Stylesheet to get started.  Simply modify
+ * the styles to suit your needs.
+ *
+ */
+
+
+/* --- AUTOCOMPLETE CSS --- */
+
+.autocomplete {
+	position: absolute;
+	color: #333;
+	background-color: #fff;
+	border: 1px solid #666;
+	visibility: hidden;
+	font-family: Arial;
+	overflow: hidden;
+}
+
+.autocomplete ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.autocomplete li {
+	display: block;
+	white-space: nowrap;
+	cursor: pointer;
+	margin: 0px;
+	padding-left: 5px;
+	padding-right: 5px;
+	border: 1px solid #fff;
+}
+
+.autocomplete li.selected {
+	background-color: #cef;
+	border-top: 1px solid #9bc;
+	border-bottom: 1px solid #9bc;
+}
+
+/* Animated throbber */
+
+input.form-autocomplete {
+	background: url('../img/throbber.gif') no-repeat 100% 2px;
+}
+
+input.throbbing {
+	background-position: 100% -18px;
+}
+
+
+/* --- CALLOUT CSS --- */
+
+.calloutBox {
+  width: 250px;
+  height: 100px;
+  background-color: #ddd;
+  border-width: 1px;
+  border-style: solid;
+  border-top-color: #eee;
+  border-left-color: #eee;
+  border-right-color: #999;
+  border-bottom-color: #999;
+  padding: 0;
+  display: none;
+  filter:alpha(opacity=80);
+  -moz-opacity:0.8;
+  opacity: 0.8;
+}
+.calloutTitle {
+  background-color: #000;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid #666;
+  padding: 2px 4px;
+  color: #ccc;
+  font: bold 10pt Arial;
+}
+.calloutContent {
+  padding: 4px;
+  color: #000;
+  font: 10pt Arial;
+}
+.calloutClose {
+  float: right;
+  padding: 2px 4px;
+  margin-top: 1px;
+  color: #fff;
+  font: bold 8pt Arial;
+  cursor: pointer;
+}
+
+
+/* --- TOGGLE CSS --- */
+
+#watchedResponseContainer {
+  border: 1px solid #ccc;
+  width: 300px;
+  padding: 4px;
+  margin-top: 10px;
+  background-color: #eee;
+}
+
+#watchedResponse {
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin: 4px;
+  background-color: #fff;
+}

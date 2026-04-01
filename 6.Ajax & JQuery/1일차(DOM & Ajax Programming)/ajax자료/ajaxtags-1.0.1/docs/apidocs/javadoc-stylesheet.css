@@ -1,0 +1,93 @@
+code, pre
+{
+	font-family: "Lucida Console",courier;
+	font-size: 9pt;
+}
+
+td, li, br, div, p
+{
+	font-family : verdana, arial, helvetica, sans-serif;
+	font-size: 11px;
+}
+
+body
+{
+  margin:  0;
+  padding:  0;
+  color:  #333333;
+  background-color: white;
+  font-size: 11px;
+  font-family: verdana, arial, helvetica, sans-serif;
+  line-height: 19px;
+}
+
+a:link {
+ color: #00f;
+}
+a:visited {
+ color: #00a;
+}
+
+TD.NavBarCell1
+{
+  font-size: 10px;
+  font-family: Verdana, Sans-Serif;
+  font-weight: bold;
+  color: #666666;
+  background-color: #DDDDDD;
+}
+
+TD.NavBarCell1Rev
+{
+  font-family: Verdana, Sans-Serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: #dedede;
+  background-color: #888888;
+}
+
+TR.TableHeadingColor
+{
+	background-color: #BBBBBB;
+}
+
+HR
+{
+	size: 1;
+	color: #000000;
+	height: 1;
+}
+
+a
+{
+  text-decoration: none;
+}
+
+
+li
+{
+	padding-bottom: 2pt;
+}
+
+h2
+{
+  color: #990000;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+h3
+{
+  color: #990000;
+}
+
+h4
+{
+  font: 11px verdana, arial, helvetica, sans-serif;
+  font-weight: bold;
+  color: #cc6600;
+}
+h5, h6
+{
+  color: #032588;
+}

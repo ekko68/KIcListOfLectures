@@ -1,0 +1,87 @@
+package bag.lend.dbdata;
+
+public class Customer{
+	private int product_num;
+	private String name;
+	private String tel;
+	private String gender;
+	private int age;
+	private String address;
+	private String coupon_num;
+	private String start_date;
+	private String end_date;
+	
+	public Customer(){};
+	public Customer(int product_num,String name,String tel, String gender, int age, String address, String coupon_num,String start_date, String end_date) {
+		this.product_num = product_num;
+		this.name = name;
+		this.tel = tel;
+		this.gender = gender;
+		this.age = age;
+		this.address = address;
+		this.coupon_num = coupon_num;
+		this.start_date = start_date;
+		this.end_date = end_date;
+		
+	}
+	
+	public int getProduct_num() {
+		return product_num;
+	}
+	
+	public void setProduct_num(int product_num) {
+		this.product_num = product_num;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getCoupon_num() {
+		return coupon_num;
+	}
+	public void setCoupon_num(String coupon_num) {
+		this.coupon_num = coupon_num;
+	}
+	public String getStart_date() {
+		return start_date;
+	}
+	public void setStart_date(String start_date) {
+		this.start_date = start_date;
+	}
+	public String getEnd_date() {
+		return end_date;
+	}
+	public void setEnd_date(String end_date) {
+		this.end_date = end_date;
+	}
+	
+	
+
+
+}

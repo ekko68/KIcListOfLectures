@@ -1,0 +1,15 @@
+package bag.db.data;
+
+public class CustomerPageData {
+	private int product_num;
+	private String name;
+	private String tel;
+	private String gender;
+	private int age;
+	private String address;
+	private String coupon_info;
+	private String product_info;
+	private String path;
+	
+	public CustomerPageData() {}
+}

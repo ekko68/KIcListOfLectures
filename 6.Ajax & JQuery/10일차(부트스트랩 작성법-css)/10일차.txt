@@ -1,0 +1,135 @@
+﻿10일차(부트스트랩 작성법-css)
+
+***그리드의 특징 ***
+
+1.부트스트랩의 핵심 레이아웃
+2.총 12열로 구성=>(1열씩 12개, 8,4, 4,4,4,6,6)로 레이아웃이 가능
+3.그리드의 합은 항상 12가 되어야 한다. 합이 12를 넘거나 부족하면
+   화면 레이아웃을 구성하는 데 문제가 발생할 수 있다.
+4.기능=>클래스 선택자를 기반으로 화면의 레이아웃을 잡아주는 역할
+5.클래스 접두사 분류
+
+모바일폰(<768px)=>.col-xs-
+태블릿(>=768px)=>.col-sm-
+데스크탑(>=992px)=>.col-md-
+데스크탑(>=1200px)=>.col-lg_
+
+<div class="col-md-3">
+     <ul class="nav">
+        <li>회원가입</li>
+        <li>회원로그인</li>
+        <li>게시판</li>
+        <li>설문조사</li>
+     </ul>
+  </div>
+  <div class="col-md-7 col-md-offset-2">
+
+ 여백은 offset-n(갯수)
+
+**css->float속성을 이용(left,right설정)
+부트스트랩->그리드 시스템기준(클래스 선택자를 이용->레이아웃
+                                             변경)
+----------------------------------------------------------------
+pull-n(갯수)=>12개
+
+<div class="col-md-2 col-md-push-10">
+                                           ------>오른쪽에 배치
+     <ul class="nav">
+        <li>회원가입</li>
+        <li>회원로그인</li>
+        <li>게시판</li>
+        <li>설문조사</li>
+     </ul>
+  </div>
+  <div class="col-md-10 col-md-pull-2">
+                                            ----->왼쪽에 배치
+
+-----------------------------------------------------
+타이포그래피
+
+1.부트스트랩의 기본 글꼴 - Helvetica Neue,Helvetica,Arial
+2.전체적인 글꼴 크기 – 14px
+3.전체의 행간->1.42857443
+4.글꼴 색 – 진한 회색
+5.배경 색상 – 흰색
+6.직접 부트스트랩의 파일을 편집하는 것보다 따로 설정이 권장 사항
+
+1.grid
+2.font->font.html
+html파일에 직접 글꼴을 설정하는 것보다는 파일로 만들어서
+불러오는 것이 더 좋다.->template로 만들어 놓으면 더 좋다.
+
+****부트스트랩에서 글꼴 지정하는 방법***
+
+1.html파일에서 직접->@import url(글꼴위치를 사이트주소지정)
+
+2.
+@font-face 키워드를 사용(파일로 만들어서 불러오는 경우)
+
+1.웹폰트는 웹 디자이너가 사용자의 컴퓨터에 설치되지 않은 글꼴을 사용 가능
+
+2.웹폰트는 구입한 폰트를 서버에 올려 놓은 후, CSS에 글꼴 파일을 포함시켜
+놓으면  해당 사이트를 접속하는 사용자의 컴퓨터에 그 폰트가 다운로드 되어
+ 보여집니다.
+
+3.웹폰트를 HTML에 포함하려면 CSS3방식의 @font-face 규칙으로 정의
+4.W3C 권장형식  - *.woff
+5.크롬,사파리,파이어 폭스, 오페라,IE9이상 버전에서 *.woff 글꼴 형식을 지원 
+
+ **주의할점**
+
+<!-- 부트스트랩(사용자가 만든 글꼴파일은 부트스트랩다음에 위치 -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+     <link href="../css/custom.css" rel="stylesheet">
+
+custom1.css
+
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
+3.table->table1.html,,,+그리드 시스템 혼합
+              table2.html,table3.html
+<!--1. class="table"(넓이가 100%인 테이블,행사이에 border적용)  -->
+        <table class="table">
+
+ <!--5. <table class="table-condensed">
+           각 셀의 padding값이 작아져서 타이트한 느낌(셀과 셀안의 문자열간격)
+              6.각 행또는 각 셀마다 색상을 부여->행에 부여하는 클래스선택자
+              active(회색),success(연두색),warning(겨자색),danger(붉은색)부여
+         -->
+
+
+4.input->입력양식+그리드
+             form.html
+
+=>form태그
+**
+입력양식=>1.입력양식에 맞는 클래스 선택자
+                 2.role속성->태그의 역할(기능)을 표시
+                 ex) navigation,form,menuitem(상단메뉴)~
+**
+-------------------------------------------------------------
+<form role="form"><!-- 폼역할을 한다는 표시 -->
+           <div class="form-group">
+               <label for="Name">이름</label>
+               <input type="text" class="form-control" placeholder="이름">
+           </div>
+
+**
+form-group선택자->입력을 받는 부위에 적용(감싸준다)
+form-control 선택자->부트스트랩에서 값을 입력을 받는
+                                  input,textarea,select태그에 적용
+==================================
+<!-- 4.인라인 폼(label부분이 경우에 따라서는 감추는 역할)
+           .sr-only클래스 선택자(화면에 안보이게 설정)
+           (screen reader only) 장애인용 웹사이트에서 필요(label이 필요하기때문에)
+           -->
+==================================
+
+
+
+
+
+
+
+
+

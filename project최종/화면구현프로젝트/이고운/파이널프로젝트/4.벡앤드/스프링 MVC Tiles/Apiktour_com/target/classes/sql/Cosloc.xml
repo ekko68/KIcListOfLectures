@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cosloc">
+	<!-- 
+		cosnum (f)  Integer(3)   코스 id값
+		locnum (f)   Interger(3)  지도 id 값 
+	 -->
+
+	<!-- 코스에 따른 장소 정보 검색 -->
+	<!-- 코스에 따른 장소 정보 등록 -->
+	<!-- 코스에 따른 장소 정보 수정 -->
+	<!-- 코스에 따른 장소 정보 삭제 -->
+</mapper>

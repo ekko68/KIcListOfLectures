@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=euc-kr" />
+	<title>책 목록</title>
+	<script type="text/javascript" src="httpRequest.js"></script>
+	<script type="text/javascript">
+	var xmlDoc = null;
+	var xslDoc = null;
+	
+	function loadBooks() {
+		sendRequest("books.jsp", null, loadedBooksXML, "GET");
+	}
+	function loadedBooksXML() {
+		if (httpRequest.readyState == 4) {
+			if (httpRequest.status == 200) {
+				xmlDoc = httpRequest.responseXML;
+				sendRequest("books.xsl", null, loadedBooksXSL, "GET");
+			}
+		}
+	}
+	function loadedBooksXSL() {
+		if (httpRequest.readyState == 4) {
+			if (httpRequest.status == 200) {
+				xslDoc = httpRequest.responseXML;
+				doXSLT();
+			}
+		}
+	}
+	function doXSLT() {
+		if (xmlDoc == null || xslDoc == null) return;
+		
+		var bookList = document.getElementById("bookList");
+		
+		if (window.ActiveXObject) {
+			bookList.innerHTML = xmlDoc.transformNode(xslDoc);
+		} else {
+			var xsltProc = new XSLTProcessor();
+			xsltProc.importStylesheet(xslDoc);
+			var fragment = xsltProc.transformToFragment(xmlDoc, document);
+			bookList.appendChild(fragment);
+		}
+	}
+	window.onload = function() {
+		loadBooks();
+	}
+	</script>
+</head>
+<body>
+<h1>신규 책 목록</h1>
+<div id="bookList"></div>
+</body>
+</html>

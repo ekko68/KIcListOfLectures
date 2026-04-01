@@ -1,0 +1,19 @@
+//4.arrow.ts(화살표 함수)->자바의 람다함수->
+var pow = function (x) {
+    console.log('x=>', x); //출력문자열,출력할변수명
+    return x * x;
+};
+console.log(pow(10));
+//형식) const 변수명 = (매개변수명,매개변수명2,,)=> {처리구문;
+// 본문내용이 한문장 이상->{} 처리할것               처리구문2;}
+//자료형을 쓰지 않으면 any(어떠한 자료형도 수행)=>권장 X 자료형을 반드시쓸것
+var pow2 = function (x) { return x * x; };
+console.log(pow2(20));
+/*
+c:\webtest\8.web\typescript\dist>node 4.arrow.js
+x=> 10
+100
+400
+*/ 
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIjQuYXJyb3cudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsZ0NBQWdDO0FBRWhDLElBQUksR0FBRyxHQUFHLFVBQVMsQ0FBUTtJQUN6QixPQUFPLENBQUMsR0FBRyxDQUFDLEtBQUssRUFBQyxDQUFDLENBQUMsQ0FBQSxDQUFDLGNBQWM7SUFDbkMsTUFBTSxDQUFDLENBQUMsR0FBRyxDQUFDLENBQUM7QUFDZixDQUFDLENBQUE7QUFFRCxPQUFPLENBQUMsR0FBRyxDQUFDLEdBQUcsQ0FBQyxFQUFFLENBQUMsQ0FBQyxDQUFDO0FBQ3JCLDJDQUEyQztBQUMzQyw4Q0FBOEM7QUFDOUMsK0NBQStDO0FBQy9DLElBQU0sSUFBSSxHQUFHLFVBQUEsQ0FBQyxJQUFJLE9BQUEsQ0FBQyxHQUFHLENBQUMsRUFBTCxDQUFLLENBQUM7QUFDeEIsT0FBTyxDQUFDLEdBQUcsQ0FBQyxJQUFJLENBQUMsRUFBRSxDQUFDLENBQUMsQ0FBQztBQUN0Qjs7Ozs7RUFLRSIsImZpbGUiOiI0LmFycm93LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLy80LmFycm93LnRzKO2ZlOyCtO2RnCDtlajsiJgpLT7snpDrsJTsnZgg656M64uk7ZWo7IiYLT5cclxuXHJcbnZhciBwb3cgPSBmdW5jdGlvbih4Om51bWJlcil7ICAvL2Z1bmN0aW9uIHBvdyh4KXt9XHJcbiAgY29uc29sZS5sb2coJ3g9PicseCkgLy/stpzroKXrrLjsnpDsl7Qs7Lac66Cl7ZWg67OA7IiY66qFXHJcbiAgcmV0dXJuIHggKiB4O1xyXG59XHJcblxyXG5jb25zb2xlLmxvZyhwb3coMTApKTtcclxuLy/tmJXsi50pIGNvbnN0IOuzgOyImOuqhSA9ICjrp6TqsJzrs4DsiJjrqoUs66ek6rCc67OA7IiY66qFMiwsKT0+IHvsspjrpqzqtazrrLg7XHJcbi8vIOuzuOusuOuCtOyaqeydtCDtlZzrrLjsnqUg7J207IOBLT57fSDsspjrpqztlaDqsoMgICAgICAgICAgICAgICDsspjrpqzqtazrrLgyO31cclxuLy/snpDro4ztmJXsnYQg7JOw7KeAIOyViuycvOuptCBhbnko7Ja065ag7ZWcIOyekOujjO2YleuPhCDsiJjtlokpPT7qtozsnqUgWCDsnpDro4ztmJXsnYQg67CY65Oc7Iuc7JO46rKDXHJcbmNvbnN0IHBvdzIgPSB4ID0+IHggKiB4O1xyXG5jb25zb2xlLmxvZyhwb3cyKDIwKSk7XHJcbi8qXHJcbmM6XFx3ZWJ0ZXN0XFw4LndlYlxcdHlwZXNjcmlwdFxcZGlzdD5ub2RlIDQuYXJyb3cuanNcclxueD0+IDEwXHJcbjEwMFxyXG40MDBcclxuKi8iXX0=
