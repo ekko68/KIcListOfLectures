@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(폼의 이벤트를 정리)</title>
+<style>
+  .focused {background-color:#bbb}
+</style>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	$('h1').css({'color':'red','text-decoration':'underline'})
+	//형식) $('자식선택자').wrap('부모태그 내용')
+	$('#message').wrap('<h2>요소안에 자료를 넣기</h2>')
+	//focus이벤트->커서가 들어가는 경우 발생
+	$('input').focus(function(){
+		$(this).addClass('focused')
+	})
+	//blur이벤트->커서가 벗어났을때 발생하는 이벤트
+	$('input').blur(function(){
+		$(this).removeClass('focused')
+	})
+	//전송버튼의 기본적인 기능->데이터를 전송시키는 기능(action="aa.jsp")
+	$('#frm').submit(function(event){
+		var new_line=$('<li>'+$('#data').val()+'</li>')
+		$('#disp').append(new_line)
+		event.preventDefault();//전송을 하지 못하게 설정
+		//return false
+	})
+	//a링크 문자열을 클릭한 경우
+	$('a').click(function(){
+		alert('당신은 이동할 권한이 없습니다.')
+		return false;
+	})
+})
+</script>
+</head>
+<body>
+ <h1>jQuery의 이벤트종류 정리</h1>
+  <!-- <h2>요소안에 자료를 넣기 -->
+ <div id="message"></div>
+  <!-- </h2> -->
+ <form id="frm" action="aa.jsp">
+   <input type="text" id="data">
+   <input type="submit" value="확인">
+ </form>
+ <ul id="disp">
+      <!-- 
+      <li>aaa</li>
+      <li>bbb</li> -->
+ </ul><p>
+ <a href="http://www.naver.com">naver</a>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

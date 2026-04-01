@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+ <!--@Autowired ->모든 클래스에 @Autowired적용  -->   
+ <context:annotation-config />
+ 
+<!-- 요청명령어에 따른 컨트롤러 클래스를 등록 -->
+<!-- 1.목록보기 -->
+<!-- 
+<bean name="/list.do"  
+             class="dr.mini.controller.SelectListController" >
+     <property name="memberDao" ref="" /> 
+</bean> -->
+
+<bean class="dr.mini.controller.SelectListController" />
+
+<!-- 2.등록하기 -->
+<bean class="dr.mini.controller.InsertController" />
+
+<!-- 3.상세보기 -->
+<bean class="dr.mini.controller.SelectController" />
+
+<!-- 4.삭제하기 -->
+<bean class="dr.mini.controller.DeleteController" />
+
+<!-- 5.수정보기 -->
+<bean class="dr.mini.controller.UpdateController" />
+
+<!-- messageSource지정(다국어지원)리소스 번들
+        확장자는 생략(properties)
+  형식) <value>패키지명.파일명</value>
+ -->
+<bean id="messageSource"
+  class="org.springframework.context.support.ResourceBundleMessageSource">
+   <property name="basenames">
+     <list>
+        <value>messages.label</value>
+        <value>messages.validation</value>
+     </list>
+   </property>
+  </bean>
+
+<!-- exception 설정(예외처리)->예외처리페이지로 이동
+     (Properties ~)
+     형식)<prop key="패키지명...예외가 발생가능성이 있는 클래스명">이동할 페이지명</prop>
+ -->
+<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+   <property name="exceptionMappings">
+      <props>
+         <prop key="java.lang.Exception">exception</prop>
+      </props>
+   </property>
+</bean>
+
+    <!-- viewResolver 설정 -->
+    <bean id="viewResolver"
+ class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean> 
+</beans>
+
+
+
+
+
+
+
+

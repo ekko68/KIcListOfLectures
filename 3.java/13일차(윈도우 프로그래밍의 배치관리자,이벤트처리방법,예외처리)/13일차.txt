@@ -1,0 +1,234 @@
+13일차(윈도우 프로그래밍의 배치관리자,이벤트처리방법,예외처리)
+
+조건1  ==>OpTest.java로 저장할것.(2가지)
+ 
+ 실행결과 ==>Scanner->숫자(nextInt()),문자(next())
+                                                                 nextLine()
+
+  첫번째 숫자를 입력?6
+  연산자를 선택?(+,-,*,/)"+"
+  두번째 숫자를 입력?7
+  
+  실행결과 13
+=================================
+
+첫수를 입력?
+2
+연산자[+,-,*,/]
+Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String index out of range: 0
+	at java.lang.String.charAt(String.java:658)
+	at j0613.OpTest.main(OpTest.java:16)
+
+=>nextLine()->"abc   dddd   "  =>한줄 통째로 입력받음
+                                                   한문장 단위(enter도 입력받음)
+
+     next()=>"abc   dddd   "==>"abc"만 입력을 받는다.(단어중심)
+              =>공백 또는 enter 입력X
+
+
+1.숫자(nextInt()) ,문자(next())
+2.무조건 문자,숫자든 nextLine()으로 입력받은뒤
+숫자->Integer.parseInt()로 형변환시켜서 계산
+====================================
+ new연산자를 이용
+
+//2.Scanner객체를 만들어주는 갖다주는 메서드 작성->getXXX
+형식) public 객체자료형(Scanner) 메서드명(){
+           return 생성된 객체명;
+        }
+        public  Scanner getScan() { //public 반환형객체자료형 getXXX(){
+		Scanner sc=new Scanner(System.in);
+		return sc;
+	}
+
+//3. public void setXXX(객체자료형 변수명(객체)){
+      객체명.메서드명(~)
+}
+
+//3.Scanner객체를 넘겨받아서 대신 일을 처리해주는 메서드->setXXX
+	public void setScan(Scanner sc) {
+		System.out.println("문자를 입력하세요?");
+        String s=sc.nextLine();//"+"->'+' (2)
+        System.out.println("입력받은 문자열은=>"+s);
+	}
+====================================
+윈도우창을 실행->화면에 배치
+
+화면에 배치시키는 방법=>배치관리자를 이용->배치를 한다.
+                        대상자.setLayout(변경시킬 배치관리자객체명)
+                          창
+1.BorderLayout 방법->Frame의 기본 레이아웃
+   컴포넌트를 왼,오,위,아래,가운데(5군데)에 부착시키는 방법
+   부착시키는 위치를 지정하지 않으면 무조건 맨 마지막 컴포넌트만
+   화면전체에 배치
+
+2.FlowLayout 방법->컴포넌트를 왼쪽으로 기준->오른쪽으로 배치
+                         ->오른쪽에 배치X->다음줄에 개행
+
+3.GridLayout 방법->바둑판식 방식으로 컴포넌트를 배치시키는 방법
+                            (표형식)
+
+
+4.순수 좌표값으로 화면배치->setSize(w,h) or setBounds(x,y,w,h)
+   =>나중에 프로젝트를 할때 
+========================================
+AWT or Swing 이벤트처리 방식
+==================
+이벤트(Event)->운영체제가 인식가능한 사용자들의 모든 행동양식
+                      (키보드작업,마우스작업(Drag & Drop))
+
+
+1.Event Source(이벤트 소스)->이벤트를 발생시킨 대상 컴포넌트
+                            ex)버튼클릭->버튼,메뉴 클릭->메뉴
+
+2.발생시킨 이벤트 종류->*ActionEvent(버튼 클릭,메뉴항목을 클릭)
+                                  *MouseEvent(마우스 클릭,드래그~)
+                                  *WindowEvent(창 x)->창의크기 조절,종료
+                                  KeyEvent(자판기의 특정키를 눌렀을때)
+
+3.발생시킨 이벤트종류에 따라 내부적으로 호출해주는 메서드
+       =>이벤트 핸들러(Event Handler)
+       =>이벤트종류명뒤에 Listener or Adapter를 붙이면 된다
+
+ex) 버튼 클릭->ActionEvent->ActionListener or Adapter붙인다.
+                                             (인터페이스)     (클래스)
+
+                      WindowEvent->WindowListener
+======================================
+이벤트 처리 프로그래밍->4가지 공식 분류하는 기준
+
+1.이벤트가 발생이 되면 과연 누가 처리해줄까?(발생 내가 처리 내가)
+  보편적인 방법->WindowListener(상속)
+
+public class WindowTest extends Frame implements WindowListener
+
+객체명.일반메서드(~)=>수동으로 호출
+
+메서드 자동호출=>시스템에서 호출하는 경우
+객체명.일반메서드(~)X==>연결만 시킨다.
+
+ =>콜백메서드
+
+▶ 3단계 이벤트 처리 프로그래밍
+1. 이벤트 처리를 해줄 이벤트 소스와 이벤트를 결정 한다.
+2. 이벤트 핸들러의 프로그래밍 한다.
+
+3. 이벤트 소스와 이벤트 핸들러의 연결
+
+   이벤트소스(대상자).addXXXXListener(처리해줄객체명)
+   this.addWindowListener(this);
+=============================
+2.이벤트 발생시 이벤트를 처리해주는 클래스를 따로 만들어서 상속
+  받는 경우                                                  (Other클래스)
+
+ //이벤트 연결구문->이벤트소스(대상자).addXXXXListener(처리해줄객체명)
+/*Other ot=new Other();
+   this.addWindowListener(ot);*/
+   this.addWindowListener(new Other());
+//------------------------------------------
+3.p403   =>WindowTest3.java(이름이 있는 Inner Class 작성방법)
+    Inner Class를 이용하는 방법->AWT or Swing
+    ->클래스 내부에 또 다른  클래스 존재
+    =>오라클->서브쿼리->select내부에 또 다른 select구문
+    이벤트를 발생시키는 클래스<-->이벤트를 처리해주는 클래스
+    =>접근지정자의 제한을 덜 받는다.
+     =>두 클래스간의 멤버변수의 접근이 용이하다.(자유롭다)
+           WindowTest3                            
+                 Other2
+
+4. Inner Class를 이용하는 방법->WindowTest4.java
+                                            (이름이 없는 Inner Class 작성방법)
+                                             =>익명 Inner Class
+                                                (Annonymous Inner Class)
+                                             =>WindowTest4$1.class
+
+이벤트처리를 할때=>Listener를 이용 Adapter를 사용
+
+Listener를 사용 단점
+=>windowClosing()만 필요=>나머지 6개까지도 다 작성을 해야된다.
+=>대신 해주는 방법(Adapter 클래스)
+
+WindowListener(보편)
+WindowAdapter(클래스)->내가 원하는 경우만 메서드를 오버라이딩
+
+=>클래스내부에 또 다른 클래스를 선언->처리
+
+Inner Class를 작성
+
+WindowTest3.class
+WindowTest3$Other2.class=>Inner class을 작성하는 경우에 만들어진
+                                            클래스
+형식)OuterClass명$InnerClass명.class명
+==================================
+하나의 파일에 클래스가 한개이상->WindowTest3.class
+                                               Other2.class
+
+형식) class 클래스명{  //클래스 선언
+       멤버변수명;    ==>        클래스명 객체명=new 클래스명();
+       메서드명(){}
+   }
+
+  **객체생성과 동시에 생성시 호출할 메서드도 같이 구현하는 방법**
+  ===>형식2) 클래스명 객체명=new 클래스명(){
+                         멤버변수명;
+                       호출할 메서드명();
+                       ,,,
+                     };
+==================================
+ButtonEvent.java 새로 작성
+-------------------
+
+//버튼을 클릭할때 자동적으로 호출(ActionEvent e->이벤트 발생컴포넌트정보)
+	//1.이벤트 발생시킨 이름을 얻어올 수 있다.(e.getActionCommand())
+	//2.이벤트를 발생시킨 컴포넌트의 종류->e.getSource()->tf
+
+수정목적
+
+setXXXX(boolean )->false =>Frame에서 찾기
+-------------------------------------------------
+=>한줄 찾기
+메서드 찾기
+===========================
+그래픽->AWT->Swing(그래픽이 좀더 화려하고, 컴포넌트 도 다양)
+                               =>독립적인 운영체제와 상관없이 그래픽지원
+
+           (그래픽의 색깔이 지원->운영체제에 영향)
+==============================
+공식) AWT=>Swing으로 전환시키는 방법
+
+1.import javax.swing.*을 추가
+2.AWT컴포넌트 앞에 J자만 붙이면 Swing가 된다.
+
+ Frame---->JFrame, Button->JButton,  TextField->JTextField
+,,,
+---------------------------------------------------------------
+Choice--->JChoice(X)---->JComboBox(O)
+
+3.setLayout()와 setBackground앞에 getContentPane()을 부착
+4.x버튼 종료
+   setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+----------------------------------------------------------------
+->프로젝트 할때 필요
+->예습=>객체형변환 **8장.예외처리=>***15장. 입출력(p868)
+              (인터페이스,클래스)->instanceof 연산자(p383)
+
+윈도우(그래픽)(문법을 정리목적)->프로젝트
+  =>**8장.예외처리=>***15장. 입출력(p868)->13장.쓰레드(p722)
+  =>**11장.켈력션 프레임워크(p578)->**12장.제네릭,열거형=>*14장.람다
+  =>*16장.네트워크?->소켓프로그래밍->프로젝트
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(이미지이동,복사)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	   $('img').css('width',250)//고양이 이미지의 초기값은 250
+	   
+	setInterval(function(){
+		//clone()->복사
+	   $('img').first().clone().appendTo('body')
+	},2000)
+})
+</script>
+</head>
+<body>
+   <img src="../picCats/Persian.jpg">
+   <img src="../picCats/RussianBlue.jpg">
+   <img src="../picCats/BritishShorthairs.jpg">
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

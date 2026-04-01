@@ -1,0 +1,61 @@
+***  고객과 도서 테이블 작성 ( 오라클 기준)
+
+CREATE TABLE CUSTOMER(
+  C_BUN     NUMBER               NOT NULL,
+  C_IRUM    VARCHAR2(10)         NOT NULL,
+  C_JUNHWA  VARCHAR2(14)         NOT NULL,
+  C_JUSO    VARCHAR2(50),
+  C_DAESU   NUMBER   DEFAULT 0   NOT NULL,
+  C_MEMO    VARCHAR2(4000),
+  PRIMARY KEY (C_BUN)
+);
+
+CREATE TABLE BOOK(
+  B_BUN     NUMBER              NOT NULL,
+  B_JEMOK   VARCHAR2(50)        NOT NULL,
+  B_JANG    VARCHAR2(20),
+  B_KUIPIL   DATE,
+  B_DAESU   NUMBER  DEFAULT 0   NOT NULL,
+  B_DAEYN   CHAR(1) DEFAULT 'n' NOT NULL,
+  B_DAEBUN  NUMBER,
+  B_DAEIL    DATE,
+  B_BANIL    DATE,
+  B_MEMO    VARCHAR2(4000),
+  B_IMAGE   VARCHAR2(50),
+  PRIMARY KEY (B_BUN)
+);
+
+
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(1, '이광민', '010-6397-8274', '서울시 중구 필동123', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(2, '이영애', '010-2598-2165', '서울시 종로구 숭인동111', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(3, '최강희', '010-6123-8435', '서울시 강남구 역삼1동111', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(4, '김옥빈', '010-5666-2435', '서울시 강남구 역삼1동222', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(5, '손예진', '010-5336-5687', '서울시 강남구 역삼1동333', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(6, '김연아', '011-6996-9945', '서울시 강남구 역삼1동444', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(7, '김연희', '010-6966-9945', '서울시 강남구 역삼1동555', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(8, '이효리', '010-3289-1329', '서울시 강남구 역삼1동666', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(9, '한지민', '010-3976-1328', '서울시 강남구 역삼1동777', 0, null);
+Insert into CUSTOMER(C_BUN, C_IRUM, C_JUNHWA, C_JUSO, C_DAESU, C_MEMO) Values(10, '한예슬', '010-1393-1317', '서울시 중구 필동456', 0, null);
+
+
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(1,
+ '청춘 거침없이 달려라', '수필', '2013-1-5', 0, 'n', 0, null, null, 'c:/bookimage/book1.jpg');
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(2,
+ '뱅크', '소설', '2013-1-6', 0, 'n', 0, null, null, 'c:/bookimage/book2.jpg');
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(3,
+ '어떻게 살 것인가', '수필', '2013-1-7', 0, 'n', 0, null, null, 'c:/bookimage/book3.jpg');
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(4,
+ '안녕 누구나의 인생', '수필', '2013-1-8', 0, 'n', 0, null, null, 'c:/bookimage/book4.jpg');
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(5,
+ '채식의 배신', '수필', '2013-1-9', 0, 'n', 0, null, null, 'c:/bookimage/book5.jpg');
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(6,
+ '창백한 말', '만화', '2013-1-15', 0, 'n', 0, null, null, 'c:/bookimage/book6.jpg');
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(7,
+ '주석달린 드라큘라', '소설', '2013-1-16', 0, 'n', 0, null, null, 'c:/bookimage/book7.jpg');
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(8,
+ '나는 내일을 기다리지 않는다', '수필', '2013-1-17', 0, 'n', 0, null, null, 'c:/bookimage/book8.jpg');
+Insert into BOOK(B_BUN, B_JEMOK, B_JANG, B_KUIPIL, B_DAESU, B_DAEYN, B_DAEBUN, B_DAEIL, B_BANIL, B_IMAGE) Values(9,
+ '나무 부자들', '소설', '2013-2-5', 0, 'n', 0, null, null, 'c:/bookimage/book9.jpg');
+
+
+COMMIT;

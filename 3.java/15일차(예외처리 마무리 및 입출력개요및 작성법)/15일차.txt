@@ -1,0 +1,153 @@
+15일차(예외처리 마무리 및 입출력 개요및 작성법)->파일저장?
+          ---------               --------------------
+ ExceptionTest.java
+
+예외를 일부러 발생시키는 방법을 제시
+
+//프로그램작성->예외처리 작성->제대로 작동되는 지확인하기 위해서
+ NullPointerException이 발생되는 지 확인?
+  //Scanner sc=new Scanner(System.in);
+    sc.nextInt()
+
+형식) throw 발생시키킬 원하는 예외처리클래스명("인수");
+ ->throw new NullPointerException("널에러");
+ ->throw new NumberFormatException("~")
+
+*주의할점
+ 메서드명() throws IndexOutOfBoundsException {
+                ====
+}
+
+사용자 정의 예외 처리클래스를 작성
+
+기존의 예외처리클래스를 상속받아서 작성
+  extens Exception
+--------------------------------------------
+p868
+
+스트림->소스와 타켓사이의 데이터 전송을 위한  가상의 통로
+
+Source=>데이터를 전송해주는 쪽 컴퓨터/핸드폰,,,
+Target=>데이터를 받는쪽 컴퓨터/핸드폰,,
+
+스트림의 특징
+
+1.양방향X ->단방향만 된다.(입력스트림,출력스트림)
+2.다단계 결합이 있다.->스트림은 여러개 결합이 가능(생성자로 연결)
+3.무한 대기가 존재한다.->입력받을때 까지 계속해서 대기하는 상태
+======================================
+
+입출력클래스=>70~80개 (잘 쓰는 위주로 예제)
+입출력클래스 분류==>전송해주는 데이터(문자,이미지,동영상,,,,)
+
+1.Byte기반 스트림(p874)->주로 이미지,동영상,문자(영문자)위주로 전송
+    입력스트림->read(),close()
+    출력스트림->write(대상자),close()
+    FileInputStream->외부에서 파일의 정보를 읽어오기
+    ==
+    FileOutputStream=>파일 저장
+    ==
+    FilterInputStream=>데이터 가공=>brige class(중간매개체)
+    ===
+    FilterOutputStream
+    ===
+    BufferedInputStream
+    =====(대용량)-->읽는속도 빠름
+    BufferedOutputStream
+    =====
+    DataInputStream
+    ===(자바의 기본자료형의 데이터(byte,short~8가지 자료형)
+    DataOutputStream
+     ===
+2.문자기반(char)기반->p898(영어권외 한글~)
+                             =>FileReader,FileWriter(한글위주)
+============================
+ 자바에서 예외처리를 해야되는 경우
+
+1.선택적으로 예외처리하는 경우->try~catch구문
+                                       un-checked Exception
+
+2.필수로 예외처리하는 경우->checked Exception클래스
+
+ ->입출력,네트워크접속,DB접속을 할때(무조건 예외처리해야한다.)
+ ->throws Exception
+ ----------------------------------------
+ 만약에 예외처리구문을 쓰지 않으면 컴파일할때 에러유발
+
+unhandled Exception type IOException
+=>입출력하는  프로그램을 작성할때에는 반드시 예외처리를 하라는
+     경고성 에러메세지
+
+System.out.print(변수명)=>변수의 저장된 값을 확인
+System.out.write(변수명)=>데이터의 값을 변환시켜서
+                                         출력(숫자(아스키코드)=>문자
+                                         로 변환해서 출력
+==================================
+                    SimpleIn.java
+                    FileInputTest.java=>Save as FileInputTest2.java
+
+Exception in thread "main" java.io.FileNotFoundException: C:\webtest\3.java\readme2.txt (지정된 파일을 찾을 수 없습니다)
+->경로가 틀렸거나 파일명이 틀린경우 =>파일의 내용을 불러오지
+    못했을 경우의 에러메세지
+
+	at java.io.FileInputStream.open0(Native Method)
+	at java.io.FileInputStream.open(FileInputStream.java:195)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at java.io.FileInputStream.<init>(FileInputStream.java:93)
+	at j0615.FileInputTest.main(FileInputTest.java:11)
+------------------------------------------------------------------
+Koala.jpg==>복사(파일명 변경)
+epp420_64bit.exe=>복사
+
+=>FileViewer.java(파일읽어서 줄여서 출력하는데 TextArea에 출력)
+
+채팅 프로그램(입출력,실시간 데이터(Thread),컬렉션,네트워크)
+  =>250라인
+
+TextArea,TextField->setText(~),getText()->내용을 가져오기
+------------------------------------------------------------------
+FileInputStream->read()->단순히 읽어들이는 경우(파일의 내용 직접)
+                           read(byte[] b)=>이미 불러올 파일의 내용을
+                                                     메모리에 저장된 상태의 문자열을
+                                                     불러올때 사용하는 메서드
+                           byte[]=>불러올 파일의 내용만큼 크기를 지정해준다
+----------------------------------------------------------------------
+C:/webtest/3.java/readme.txt
+
+ 다단계결합->입력스트림이 한개이상 연결된 상태(가공처리)
+ =>BufferedInputStream
+ =>InputStreamReader<-->OutputStreamWriter(p 905)
+
+ 키보드로 한글로 된 데이터를 입력을 받아서 콘솔에 출력하는 프로그램
+-------System.in
+-------한글이 깨지지 않도록 설정->입력(InputStreamReader)
+-------한꺼번에 많은 양의 데이터를 읽어들이기(BufferedInputStream)
+------>Scanner
+
+         FilterTest.java
+======================================
+예습=>p886 DataInputStream,DataOutputStream 
+          p894->PrintStream=>System.out.println(~)표준출력장치
+          p889   FileReader,FileWriter
+          p911  ->RandomAccessFile->쓰레드 시간
+          p15    File 표15-26->p918->delete()
+          p934 직렬화? ObjectInputStream,ObjectOutputStream
+          p937 직렬화가 가능한 클래스 만들기
+---------------------------------------------------------------------
+          쓰레드 개요 및 정리
+===============
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+

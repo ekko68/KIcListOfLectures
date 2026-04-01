@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(배열을 이용동시에 2가지속성 설정)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//var 배열명=[요소값1,요소값2,,,]
+	var color=['red','white','purple']
+	var background=['gray','pink','yellow']
+	//1)글자색 변경
+	/* $('h1').css('color',function(index){
+		return color[index]
+	}) */
+	 $('h1').css({color:function(index){
+		         return color[index]
+	           },
+		       background:function(index){
+		    	 return background[index]
+		       }
+	    })
+})
+</script>
+</head>
+<body>
+ <h1>Header-0</h1>
+ <h1>Header-1</h1>
+ <h1>Header-2</h1>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

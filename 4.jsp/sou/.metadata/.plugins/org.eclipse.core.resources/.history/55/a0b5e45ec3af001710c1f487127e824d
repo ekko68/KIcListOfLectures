@@ -1,0 +1,17 @@
+package sp.aop;
+
+public class TestServiceImpl implements TestService {
+
+	@Override
+	public void save(String msg) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void write() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

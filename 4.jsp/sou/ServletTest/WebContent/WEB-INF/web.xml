@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>ServletTest</display-name>
+  
+  <!-- 서블릿의 정보를 기록(p419) -->
+  <!--실행시킬 서블릿의 이름과 별칭을 부여  -->
+  <servlet>
+     <servlet-name>Hello</servlet-name>
+     <servlet-class>HelloServlet</servlet-class>
+  </servlet>
+  
+  <!-- 웹상에서 어떻게 하면 서블릿을 실행시킬 수있는지에 대한 정보  -->
+  <servlet-mapping>
+       <servlet-name>Hello</servlet-name>
+       <url-pattern>/test/Hello</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 메인페이지 지정 -->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
+
+

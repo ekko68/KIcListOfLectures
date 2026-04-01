@@ -1,0 +1,199 @@
+25일차(JDBC Programming 도서관리프로젝트-반납관리
+                          
+Ansi Join=>inner join~on 공통필드
+Oracle Join=>where절
+=======================
+//추가
+	private void addListener() {
+		btnBbun.addActionListener(this);//반납할 도서번호
+		btnChange.addActionListener(this);//변경
+		btnBannap.addActionListener(this);//반납버튼
+		btnNew.addActionListener(this);//새로 작성
+		btnClose.addActionListener(this);//종료
+	}
+	
+	private void accDb() {
+		try {
+			 //1.접속할 드라이버를 메모리에 올리기
+    	  Class.forName("oracle.jdbc.driver.OracleDriver");
+    	  String url="jdbc:oracle:thin:@localhost:1521:orcl";//url주소값
+    	  //2.접속하기위한 메서드(1.접속url ,2.계정명,3.접속 암호)
+    	  conn=DriverManager.getConnection(url, "test1", "t1234");
+    	  //추가 (신규,수정->레코드이동->자동으로 스크롤 이동시 수정이 반영)
+    	  stmt=conn.createStatement();
+    	  System.out.println("접속conn=>"+conn);
+		}catch(Exception e) {
+			System.out.println("DB접속 오류=>"+e);
+		}
+		//일반메서드->다른 일반메서드 호출
+		daeDisplay();
+	}
+	//대여한 책과 고객의 정보를 출력시켜주는 메서드 작성
+	private void daeDisplay() {
+		try {
+			mod.setNumRows(0);//처음에 행의수를 0개로 설정->전데이터삭제 후 
+			                                //새로 불러오기 위해
+			//도서번호,도서제목(book),대여자번호 대여자이름~
+			//도서 대여일이 가장 최근일 기준으로 정렬하되, 도서번호는 오름차순으로 정렬하라
+			sql="select b_bun,b_jemok,c_bun,c_irum,b_daeil "+
+			       " from book inner join customer "+
+				   " on b_daebun=c_bun order by b_daeil desc,b_bun asc";
+			rs1=stmt.executeQuery(sql);
+			int count=0;//전체 건수
+			//번호","제목","대번","이름","대여일
+		    while(rs1.next()) {
+		    	String [] imsi= {
+		    			rs1.getString("b_bun"),
+		    			rs1.getString("b_jemok"),
+		    			rs1.getString("c_bun"),
+		    			rs1.getString("c_irum"),
+		    			rs1.getString("b_daeil").substring(0,10)
+		    	};
+		    	mod.addRow(imsi);//모델에 데이터 추가
+		    	count++;//전체 건수 증가
+		    }
+		    //다른행 총 전체건수를 출력
+		    String [] imsi2= {null,"전체건수:"+count};
+		    mod.addRow(imsi2);
+		    rs1.close();
+		}catch(Exception e) {
+			System.out.println("daeDisplay() 에러유발=>"+e);
+		}
+	}
+--------------------------------------
+반납할 책->뱅크
+청춘 거침없이 달려라,뱅크==>c_memo
+청춘 거침없이 달려라   
+start=0,end=10       
+                             뱅크->start=12 end=13                  
+--------------------------------------------
+일치하는 책을 찾아서 블럭지정해서 지운다.
+
+c_memo->청춘 거침없이 달려라을 따로 저장
+
+ 최종 정리
+
+청춘 거침없이 달려라,뱅크 =>실제 DB상에 저장된 문자열
+
+ ,바로 앞의 책도서를 반납하는 경우
+1.청춘 거침없이 달려라
+ ,까지 블럭처리해서 지우고 나머지 부분을 DB에 저장(뱅크)
+
+2.뱅크 삭제->춘 거침없이 달려라,->,이 남아있기때문
+ ,위치를 구한다.->, 바로앞의 도서제목을 따로 구해서 덮어버린다
+==>,를 지운다.
+=============================
+if(e.getSource()==btnBbun) {//반납할 도서번호 버튼을 눌렀다면
+			if(txtBbun.getText().equals("")) {
+				txtBbun.requestFocus();//커서
+				JOptionPane.showMessageDialog(this, "반납할 도서번호를 입력하세요");
+				return;
+			}
+			try {
+			sql="select * from book where b_bun="+txtBbun.getText();
+			rs1=stmt.executeQuery(sql);
+			if(!rs1.next()) {//1.찾은 도서가 없다면
+				JOptionPane.showMessageDialog
+				             (this,"등록된 도서가 아닙니다.\n확인바람");
+				txtBbun.setText(null);
+				rs1.close();//연결끊고
+				return;//빠져나감
+			}
+			//2.등록된 도서가 맞는 경우
+			txtBjemok.setText(rs1.getString("b_jemok"));
+			//정식대여절차 통과여부 체크
+			if(rs1.getString("b_daeyn").equals("n")) {//대여중이지 않은 도서선택시
+				JOptionPane.showMessageDialog
+	             (this,"정식으로 대여된 도서가 아닙니다.\n확인바람");
+	              txtBbun.setText(null);
+	              txtBjemok.setText(null);
+	               rs1.close();//연결끊고
+	              return;
+			}
+			//반납절차 
+			txtBdaeil.setText(rs1.getString("b_daeil").substring(0,10));
+			txtBdaebun.setText(rs1.getString("b_daebun"));//대여자번호
+			//반납일 설정
+			Calendar cal=Calendar.getInstance();
+			String imsi=cal.get(Calendar.YEAR)+"-"+
+			                  (cal.get(Calendar.MONTH)+1)+"-"+
+					           cal.get(Calendar.DATE);
+			txtBbanil.setText(imsi);
+			//---반납되는 도서제목을 고객의 메모에서 삭제시키는 작업
+			sql="select * from customer where c_bun="+txtBdaebun.getText();
+			rs2=stmt.executeQuery(sql);
+			rs2.next();//찾았다면 레코드 이동
+			//고객에서 c_memo필드값을 불러와서 txtJemo출력
+			//ex) 도서명1  or  도서명1,도서명2 or 도서명1,도서명2,도서명3
+			txtJemok.setText(rs2.getString("c_memo"));
+			String ban_jemok=txtJemok.getText();//DB상의 저장된 c_memo
+			//DB상의 c_memo글자값과 반납하고자하는 도서제목과 일치하는위치
+			int start=ban_jemok.indexOf(txtBjemok.getText());//처음위치
+			int end=txtBjemok.getText().length();//반납할 책의 마지막위치
+			System.out.println("start="+start+",end=>"+end);
+			txtJemok.setSelectionStart(start);//블럭의 시작위치지정
+			txtJemok.setSelectionEnd(start+end+1);//,까지포함하기위해서
+			txtJemok.requestFocus();
+			txtJemok.replaceSelection("");//블럭지정한 부분을 수정하라
+			//마지막 ,(콤마)를 떼내기
+			try {
+				String str=txtJemok.getText();//반납 도서 제목(,가 포함된 전체문자열)
+				int a=str.length()-1;//콤마앞
+				System.out.println("a=>"+a);//11
+				String str1=str.substring(a);//a위치부터 끝까지
+				System.out.println("str1=>"+str1);//,
+				if(str1.equals(","))
+					str=str.substring(0,a);//0포함 a-1=10(콤마바로 앞의 문자열까지)
+				System.out.println("str="+str);
+				txtJemok.setText(str);//,빠진 앞의 도서제목
+			}catch(Exception e2) {}
+			btnBannap.setEnabled(true);//반납버튼 활성화
+			
+			}catch(Exception e2) {
+				System.out.println("반납할 도서 조회 실패=>"+e2);
+			}
+		}
+---------------------------------------------------------------
+else if(e.getSource()==btnBannap) {//반납 버튼
+			try {
+				//고객테이블 수정(customer)
+			  sql="update customer set c_memo='"+txtJemok.getText()+
+					  "'  where c_bun="+txtBdaebun.getText(); //대여자번호
+			  System.out.println("customer수정 sql="+sql);
+			  int update=stmt.executeUpdate(sql);
+			  System.out.println("customer수정 성공유무(update)=>"+update);
+			  
+				//도서테이블 수정(book)->b_daeyn=>n, b_daebun=0,b_daeil=null
+	  sql="update book set b_daeyn='n' ,b_daebun=0, b_daeil=null,b_banil='"+
+			  txtBbanil.getText()+"'  where b_bun="+txtBbun.getText();
+	         System.out.println("book수정 sql="+sql);
+	         int update2=stmt.executeUpdate(sql);
+	         System.out.println("book수정 성공유무(update2)=>"+update2);
+	         //반납초기화
+	         btnBannap.setEnabled(false);//불활성화
+	         btnNew.setEnabled(true);//새로 다시 반납하기위해서 필요->지우고
+	         //daeDisplay()다시 읽어들여기
+			 daeDisplay();//변경된 내용을 다시 읽어들인다.(실시간 수정반영)
+			}catch(Exception e2) {
+				System.out.println("도서 반납과정에서 오류발생=>"+e2);
+			}
+			
+		}
+
+---------------------------------------------------------------
+최종 결과
+
+start=0,end=>11
+a=>1
+str1=>크
+str=뱅크
+customer수정 sql=update customer set c_memo='뱅크'  where c_bun=1
+customer수정 성공유무(update)=>1
+book수정 sql=update book set b_daeyn='n' ,b_daebun=0, b_daeil=null,b_banil='2017-6-29'  where b_bun=1
+book수정 성공유무(update2)=>1
+start=0,end=>2
+a=>-1
+customer수정 sql=update customer set c_memo=''  where c_bun=1
+customer수정 성공유무(update)=>1
+book수정 sql=update book set b_daeyn='n' ,b_daebun=0, b_daeil=null,b_banil='2017-6-29'  where b_bun=2
+book수정 성공유무(update2)=>1

@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>입력을 받는 값을 출력</title>
+</head>
+<body>
+<%
+  request.setCharacterEncoding("utf-8");
+  String name=request.getParameter("name");
+  //입력을 받은 부분이 특정위치에 출력->문제발생->
+  //자바스크립트구문이 만약에 입력이 되도 실행되지 못하도록 추가코딩
+  if(name!=null){
+	  //문자열 메서드->(1.변경전 문자열->2.변경후 문자열)
+	  name=name.replaceAll("<","&lt;");
+	  name=name.replaceAll(">","&gt;");
+  }else{
+	  return;
+  }
+  System.out.println("name->"+name);
+%>
+<p>Name:<%=name%></p>
+</body>
+</html>
+
+

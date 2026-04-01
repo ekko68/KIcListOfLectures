@@ -1,0 +1,397 @@
+11일차(모델1의 게시판-글상세보기 및 글 답변달기,글수정하기)
+===================================
+
+             int startPage=0;
+    	if(currentPage%blockSize!=0){ //1~9,11~19,21~29
+	    	startPage=currentPage/blockSize*blockSize+1;
+	    }else{ //10,20,30,40~
+	    	//                ((10/10)-1)*10+1=1
+	    	startPage=((currentPage/blockSize)-1)*blockSize+1;
+	    }
+------------------------------------------------------------------
+ 답변글을 다는 로직
+
+ num  writer           ref  re_step, re_level
+    1      aaa              0       0           0
+             |
+              -aaa-1        0        1            1
+                   
+             -------aaa-3  0        2            2
+                     -aaa-2  0        2+1           2
+                   |                        3
+                     
+
+ 답변을 달때 같은 레벨에서의 답변을 다는 경우의 SQL구문
+1. 같은 레벨의 답변을 달때 자기와 같은 그룹번호를 찾는다.
+   ->update가 되어야 한다.
+2. 자기보다 step값이 큰놈을 찾아서 insert를 한다.
+
+
+ =>게시판의 글상세보기를 구현 =>확인 가능
+
+
+
+    2      bbb       1      0           0
+              |
+               -        1       1          1
+    3      ccc        2      0           0    
+========================
+신규글인 경우 
+
+sql = "insert into board(writer,email,subject,passwd,reg_date,";
+sql += " ref,re_step,re_level,content,ip)values(?,?,?,?,?,?,?,?,?,?)";
+
+답변글인 경우
+
+sql = "update board set re_step=re_step+1 where ref=? and re_step > ?";
+sql = "insert into board(writer,email,subject,passwd,reg_date,";
+sql += " ref,re_step,re_level,content,ip)values(?,?,?,?,?,?,?,?,?,?)";
+
+// 게시판의 글쓰기 및 글 답변달기
+	// insert into board values(~)
+	public void insertArticle(BoardDTO article) { // ~(MemberDTO mem)
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;// num의 최대값을 구해야 된다.->select
+
+		// article->신규글인지 답변글인지 구분
+		int num = article.getNum();// 0(신규글) 인지 아닌지를 체크->답변글
+		int ref = article.getRef();
+		int re_step = article.getRe_step();
+		int re_level = article.getRe_level();
+		// 테이블에 입력할 게시물 번호 저장할 변수
+		int number = 0;
+		System.out.println("insertArticle메서드의 내부의  num=" + num);
+		System.out.println("ref=" + ref + ",re_step=>" + re_step + ",re_level=" + re_level);
+		String sql = "";
+		try {
+			con = pool.getConnection();
+			sql = "select max(num) from board";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) { // 현재 테이블에서 데이터가 한개라도 존재한다면
+				number = rs.getInt(1) + 1;// 필드명이 아니기때문에 select ~ from사이에 나오는순서
+			} else {// 맨 처음에 레코드가 한개라도 없는 경우->무조건 number=1
+				number = 1;
+			}
+
+			// 만약에 답변글이라면
+			// 같은 그룹번호 이면서 나보다 step값이 큰 놈을 찾아서 그 step을 하나 증가
+			if (num != 0) {
+				sql = "update board set re_step=re_step+1 where ref=? and re_step > ?";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, ref);
+				pstmt.setInt(2, re_step);
+				int update = pstmt.executeUpdate();
+				System.out.println("댓글수정유무(update)=>" + update);
+				re_step = re_step + 1;
+				re_level = re_level + 1;
+			} else { // 신규글이라면
+				ref = number;// ref=1,2,3,4,5
+				re_step = 0;
+				re_level = 0;
+			}
+			// 12개 ->num,reg_date,readcount(생략)->sysdate ,now()<-?대신에
+			sql = "insert into board(writer,email,subject,passwd,reg_date,";
+			sql += " ref,re_step,re_level,content,ip)values(?,?,?,?,?,?,?,?,?,?)";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, article.getWriter());// 작성자
+			pstmt.setString(2, article.getEmail());// 이메일
+			pstmt.setString(3, article.getSubject());// 글제목
+			pstmt.setString(4, article.getPasswd());// 암호
+			pstmt.setTimestamp(5, article.getReg_date());
+			// ------ref,re_step,re_level->신규글 또는 답변글에 맞는 계산값이 적용
+			pstmt.setInt(6, ref);// pstmt.setInt(6, article.getRef());X
+			pstmt.setInt(7, re_step);// 0
+			pstmt.setInt(8, re_level);// 0
+			// -------------------------------------------------------------------------
+			pstmt.setString(9, article.getContent());// 글내용
+			pstmt.setString(10, article.getIp());// request.getRemoteAddr(); //jsp
+			int insert = pstmt.executeUpdate();
+			System.out.println("게시판의 글쓰기 성공유무(insert)=" + insert);
+		} catch (Exception e) {
+			System.out.println("insertArticle()메서드 에러유발" + e);
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+	}
+-----------------------------------------------------------------------
+<a href="content.jsp?num=<%=article.getNum() %>&pageNum=<%=currentPage%>">
+  content.jsp->num
+
+  //글상세보기의 메서드를 호출=>select * from board where num=3;
+ //1.게시물에 해당되는 조회수를 증가  2.증가된 조회수를 가진 레코드를 출력
+ public BoardDTO getArticle(int num) {
+	 
+	    Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		BoardDTO article=null;//게시물번호에 해당하는 레코드 한개를 담을 변수
+		
+		try {
+			con = pool.getConnection();
+			String sql = "update board set readcount=readcount+1 where num=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);//
+			int update=pstmt.executeUpdate();
+			System.out.println("조회수 증가유무(update)=>"+update);
+			
+			sql="select * from board where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {// 레코드가 존재한다면(1개)
+				
+					article = new BoardDTO();
+					article.setNum(rs.getInt("num"));// 최대값+1->코딩
+					article.setWriter(rs.getString("writer"));
+					article.setEmail(rs.getString("email"));
+					article.setSubject(rs.getString("subject"));
+					article.setPasswd(rs.getString("passwd"));
+					article.setReg_date(rs.getTimestamp("reg_date"));// 오늘날짜->코딩 now()
+					article.setReadcount(rs.getInt("readcount"));// ->default->0
+					article.setRef(rs.getInt("ref"));// 그룹번호->언어
+					article.setRe_step(rs.getInt("re_step"));// 답변글순서->언어
+					article.setRe_level(rs.getInt("re_level"));// 답변의 깊이
+					article.setContent(rs.getString("content"));// 글내용
+					article.setIp(rs.getString("ip"));// 글쓴이의 ip주소->request.getRemoteAddr();
+			}
+		} catch (Exception e) {
+			System.out.println("getArticle()메서드 에러유발" + e);
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return article;
+ }
+--------------------------------------------------------------------
+content.jsp를 작성
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="lys.board.*,java.text.SimpleDateFormat" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>게시판</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<%
+  //list.jsp에서 링크 content.jsp?num=3&pageNum=1
+  int num=Integer.parseInt(request.getParameter("num"));
+  String pageNum=request.getParameter("pageNum");
+  SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm");
+  BoardDAO dbPro=new BoardDAO();
+  BoardDTO article=dbPro.getArticle(num);
+  //링크문자열의 길이를 줄이기위해서
+  int ref=article.getRef();
+  int re_step=article.getRe_step();
+  int re_level=article.getRe_level();
+  System.out.println("content.jsp의 매개변수");
+  System.out.println("ref->"+ref+",re_step->"+re_step+",re_level->"+re_level);
+  
+%>
+<body bgcolor="#e0ffff">  
+<center><b>글내용 보기</b>
+<br>
+<form>
+<table width="500" border="1" cellspacing="0" cellpadding="0"  bgcolor="#e0ffff" align="center">  
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">글번호</td>
+    <td align="center" width="125" align="center">
+	     <%=article.getNum()%></td>
+    <td align="center" width="125" bgcolor="#b0e0e6">조회수</td>
+    <td align="center" width="125" align="center">
+	     <%=article.getReadcount()%></td>
+  </tr>
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">작성자</td>
+    <td align="center" width="125" align="center">
+	     <%=article.getWriter()%></td>
+    <td align="center" width="125" bgcolor="#b0e0e6" >작성일</td>
+    <td align="center" width="125" align="center">
+	     <%=sdf.format(article.getReg_date())%></td>
+  </tr>
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">글제목</td>
+    <td align="center" width="375" align="center" colspan="3">
+	     <%=article.getSubject()%></td>
+  </tr>
+  <tr>
+    <td align="center" width="125" bgcolor="#b0e0e6">글내용</td>
+    <td align="left" width="375" colspan="3">
+    <pre><%=article.getContent()%></pre></td>
+  </tr>
+  <tr height="30">      
+    <td colspan="4" bgcolor="#b0e0e6" align="right" > 
+	  <input type="button" value="글수정" 
+       onclick="document.location.href='updateForm.jsp?num=<%=article.getNum()%>&pageNum=<%=pageNum%>'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	  <input type="button" value="글삭제" 
+       onclick="document.location.href='deleteForm.jsp?num=<%=article.getNum()%>&pageNum=<%=pageNum%>'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="button" value="답글쓰기" 
+       onclick="document.location.href='writeForm.jsp?num=<%=num%>&ref=<%=ref%>&re_step=<%=re_step%>&re_level=<%=re_level%>'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+       <input type="button" value="글목록" 
+       onclick="document.location.href='list.jsp?pageNum=<%=pageNum%>'">
+    </td>
+  </tr>
+</table>    
+</form>      
+</body>
+</html>      
+---------------------------------------------------------------------
+**
+글상세보기 위한 게시물 출력->1.조회수를 증가 2.번호에 해당하는 게시물출력
+                                      =>편집불가
+
+글수정하기 위한 게시물 출력->1.조회수를 증가(X) 
+                                          2.번호에 해당하는 게시물출력(O)=>편집이 가능
+                                           updateForm.jsp
+
+                                  updatePro.jsp에서 호출
+글수정시켜주는 메서드->updateArticle(article)<->insertArticle(article)
+
+ 'updateForm.jsp?num=<%=article.getNum()%>&pageNum=<%=pageNum%>'">
+ =>수정할 게시물이 화면에 출력 ->getArticle(num)
+-----------------------------------------------------------------------------------
+//글 수정을 하기위한 게시물번호에 해당하는 레코드 찾는 메서드
+ public BoardDTO updateGetArticle(int num) {
+	 
+	    Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		BoardDTO article=null;//게시물번호에 해당하는 레코드 한개를 담을 변수
+		
+		try {
+			con = pool.getConnection();
+			String sql="select * from board where num=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {// 레코드가 존재한다면(1개)
+				     article=makeArticleFromResult(rs);
+					/*article = new BoardDTO();
+					article.setNum(rs.getInt("num"));// 최대값+1->코딩
+					article.setWriter(rs.getString("writer"));
+					article.setEmail(rs.getString("email"));
+					article.setSubject(rs.getString("subject"));
+					article.setPasswd(rs.getString("passwd"));
+					article.setReg_date(rs.getTimestamp("reg_date"));// 오늘날짜->코딩 now()
+					article.setReadcount(rs.getInt("readcount"));// ->default->0
+					article.setRef(rs.getInt("ref"));// 그룹번호->언어
+					article.setRe_step(rs.getInt("re_step"));// 답변글순서->언어
+					article.setRe_level(rs.getInt("re_level"));// 답변의 깊이
+					article.setContent(rs.getString("content"));// 글내용
+					article.setIp(rs.getString("ip"));*/// 글쓴이의 ip주소->request.getRemoteAddr();
+			}
+		} catch (Exception e) {
+			System.out.println("updateGetArticle()메서드 에러유발" + e);
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return article;
+}
+ //중복된 레코드 한개를 담을 수있는 메서드를 따로 처리해주는 메서드 작성
+ private BoardDTO makeArticleFromResult(ResultSet rs) throws Exception {
+	    
+	    BoardDTO article = new BoardDTO();
+		article.setNum(rs.getInt("num"));// 최대값+1->코딩
+		article.setWriter(rs.getString("writer"));
+		article.setEmail(rs.getString("email"));
+		article.setSubject(rs.getString("subject"));
+		article.setPasswd(rs.getString("passwd"));
+		article.setReg_date(rs.getTimestamp("reg_date"));// 오늘날짜->코딩 now()
+		article.setReadcount(rs.getInt("readcount"));// ->default->0
+		article.setRef(rs.getInt("ref"));// 그룹번호->언어
+		article.setRe_step(rs.getInt("re_step"));// 답변글순서->언어
+		article.setRe_level(rs.getInt("re_level"));// 답변의 깊이
+		article.setContent(rs.getString("content"));// 글내용
+		article.setIp(rs.getString("ip"));
+		return article;
+ }
+----------------------------------------------------------------------------
+// 글 수정시켜주는 메서드->insertArticle와 거의 동일=>암호를 물어본다.
+	public int updateArticle(BoardDTO article) {
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;// passwd를 조회할 >select
+		String dbpasswd = null;// db에서 찾은 암호를 저장
+		String sql = "";
+		int x = -1;// 게시물의 수정성공유무
+
+		try {
+			con = pool.getConnection();
+			sql = "select passwd from board where num=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, article.getNum());// 여러개를 입력->필드별로 Getter호출
+			rs = pstmt.executeQuery();
+			if (rs.next()) { // 현재 테이블에서 데이터가 한개라도 존재한다면
+				dbpasswd = rs.getString("passwd");
+				System.out.println("dbpasswd=>" + dbpasswd);
+				// db상의 암호=웹상에 입력한 암호가 맞다면
+				if (dbpasswd.equals(article.getPasswd())) {
+
+					// 12개 ->num,reg_date,readcount(생략)->sysdate ,now()<-?대신에
+					sql = "update board set writer=?, email=?, subject=?, passwd=?,";
+					sql += " content=?  where num=?";
+					pstmt = con.prepareStatement(sql);
+
+					pstmt.setString(1, article.getWriter());// 작성자
+					pstmt.setString(2, article.getEmail());// 이메일
+					pstmt.setString(3, article.getSubject());// 글제목
+					pstmt.setString(4, article.getPasswd());// 암호
+					pstmt.setString(5, article.getContent());// 글내용
+					pstmt.setInt(6, article.getNum());
+
+					int update = pstmt.executeUpdate();
+					System.out.println("게시판의 글수정 성공유무(update)=" + update);
+					x = 1;
+				} else {
+					x = 0;// 수정 실패
+				}
+			} // if(rs.next())
+		} catch (Exception e) {
+			System.out.println("updateArticle()메서드 에러유발" + e);
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return x;
+	}
+
+-----------------------------------------------------------------------------
+   updateForm.jsp로 작업=>글상세 보기와 동일->updatePro.jsp
+   updateGetArticle()이용->출력                     dbpasswd==웹상암호=>
+                                                                  성공->수정이된 페이지로 이동
+                                     updateArticle
+   deleteForm.jsp(암호)------------------------->deletePro.jsp
+                                     deleteArticle
+ ***다양한방법으로 매개변수를 전달하는 경우***
+------------------------------------------------------------------------------------                 
+action="updatePro.jsp?num=<%=num%>&pageNum=<%=pageNum%>"
+---------------------------------------------------------------------------------
+action="updatePro.jsp"
+
+<input type="hidden" name="num" value="<%=num%>">
+<input type="hidden" name="pageNum" value="<%=pageNum%>">
+----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

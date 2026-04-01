@@ -1,0 +1,251 @@
+21일차(JDBC Programming 개요 및  작성법 ,도서관리프로젝트1)
+
+오라클----JDBC 기술------>자바 프로그램(연동)
+                                         주제(웹까지)
+=============================
+ JavaBook
+     |
+      -src
+          j0623
+              DBTest->DB연결 테스트
+
+DB연결 테스트 실패=>java.lang.ClassNotFoundException: oracle.jdbc.driver.OracleDriver
+
+=>1.오타일 가능
+     2.환경의 문제->ojdbc6.jar
+
+***외부의 라이브러리를 이클립스에서 불러와서 사용하는 방법***
+ JavaBook 오click
+          Build path->Configure Build path=>ojdbc6.jar 추가
+                                    add external jar파일버튼클릭 ->경로지정
+                         ->apply and close버튼 종료
+=======================================
+
+DB연결 테스트 실패=>java.sql.SQLException: 부적합한 Oracle URL이 지정되었습니다
+==>url이 잘못 입력한 경우(오타)
+
+접속con=>oracle.jdbc.driver.T4CConnection@4629104a
+
+SQL 문장을 실행할때
+
+SQL> select * from dept;  //Satement객체를 이용
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        10 ACCOUNTING     NEW YORK
+        20 RESEARCH       DALLAS
+        30 SALES          CHICAGO
+        40 OPERATIONS     BOSTON
+
+SQL> select * from dept where deptno=&deptno; //값을 입력받아서처리
+  =>PreparedStatement 객체
+       =====>미리 준비된 SQL문장  ->속도가 훨씬 빠르다.(statement)
+        SQL구문 하나당 ->객체도 하나씩 사용
+============================================
+ executeQuery()이용->select구문실행=>테이블의 구조에 영향X
+
+
+ executeUpdate()->insert,update,delete를 사용할때 이용하는 메서드
+                         ->테이블의 구조에 영향을 미치는 SQL구문에 사용
+                           ex) create~ alter table~ drop table~
+
+=========================================
+
+deptno의 값을 입력하십시오: 20
+구   1: select * from dept where deptno=&deptno
+신   1: select * from dept where deptno=20
+
+    DEPTNO DNAME          LOC
+---------- -------------- -------------
+        20 RESEARCH       DALLAS
+
+SQL>
+
+SQL> select * from dept;
+
+ 테이블형태->ResulSet 형태의 객체 rs
+=======================
+    DEPTNO DNAME          LOC
+---------- -------------- ----------
+        10 ACCOUNTING     NEW YORK ->rs.first()->맨 처음 레코드로 이동
+        20 RESEARCH       DALLAS->rs.previous()->이전 레코드로 이동
+        30 SALES          CHICAGO->rs.next()->다음 레코드로 이동
+        40 OPERATIONS     BOSTON->rs.last()->마지막 레코드로 이동
+=========================
+칼럼 값 가져오기
+ 
+  index-->필드의 나열되는 순서를 의미
+
+-->select deptno,dname from dept;
+->rs.getString("dname") or rs.getString(2)->비추(인덱스 번호는 변경가능)
+
+   select dname,deptno from dept;
+
+문자형 칼럼 : rs.getString(index) or getString(“컬럼명”) =>권장(필드명)
+숫자형 칼럼 : rs.getInt(index) or getInt(“컬럼명”) 
+
+ while(rs.next()==true) =>다음번 레코드를 보여줄 수 있는 동안 계속
+                                        반복해서 레코드를 읽어들여라
+------------------------------------------------------------------------
+Connection 을 close()해주지 않으면 사용하지 않는 연결이 유지됨.
+DB 자원을 낭비하게 됨
+ResultSet 커서 연결 포인터, SQL문, DB 연결 해제
+close() 메소드 이용
+
+ 생성시키는 순서의 역순->
+
+rs.close();			/*-- ResultSet 커서 --*/
+pstmt.close(); // stmt.close();	/*-- SQL 문 --*/
+Conn.close();			/*-- DB 연결 --*/
+========================================
+ JTable_Test2.java==>save as DB_Person.java로 저장
+
+create table person(
+name varchar2(15),
+age varchar2(3),
+tel varchar2(20));
+
+desc person
+
+이름                                      널?      유형
+----------------------------------------- -------- ---------------
+
+NAME                                               VARCHAR2(15)
+AGE                                                VARCHAR2(3)
+TEL                                                VARCHAR2(20)
+
+
+insert into person values('홍길동','23','02-123-0987');
+insert into person values('테스트','45','02-444-8765');
+
+select * from person;
+
+commit;
+===================================
+
+//추가(2)
+	Connection con=null;//연결객체
+	PreparedStatement pstmt=null;//SQL 구문을 실행
+	ResultSet rs=null;//select구문을 사용하는 경우
+	//----
+
+ 생성자에 코딩
+
+//1.DB접속->2.select->JTable에 관한 구문에 코딩
+		 connect();
+		 select();
+		 this.addWindowListener(new WindowAdapter() {
+			 @Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				try {  //프로그램 종료하기전에 메모리에 DB연동 부분 해제
+					if(rs!=null) rs.close();
+					if(pstmt!=null) pstmt.close();
+					if(con!=null) con.close();
+				}catch(Exception e2) {}
+				System.exit(0);
+			}
+		 });
+
+=====================================
+//connect메서드는 다른 클래스에서 호출X->내부적으로 호출->처리
+	private void connect() {
+		try {
+			//1.오라클 드라이버 메모리에 올림
+			 //1.접속할 드라이버를 메모리에 올리기
+      	  Class.forName("oracle.jdbc.driver.OracleDriver");
+      	  String url="jdbc:oracle:thin:@localhost:1521:orcl";//url주소값
+      	  //2.접속하기위한 메서드(1.접속url ,2.계정명,3.접속 암호)
+      	  con=DriverManager.getConnection(url, "test1", "t1234");
+      	  System.out.println("접속con=>"+con);
+		}catch(Exception e) {
+			System.out.println("DB접속 오류=>"+e);
+		}
+	}
+	public void select() {
+		try {
+			String sql="select * from person";
+			pstmt=con.prepareStatement(sql);
+			System.out.println("pstmt=>"+pstmt);
+			rs=pstmt.executeQuery();
+			System.out.println("rs=>"+rs);
+			//person테이블에서 불러오기
+			while(rs.next()) {
+				String name=rs.getString("name");
+				String age=rs.getString("age");
+				String tel=rs.getString("tel");
+				//Object []=>저장->model에 추가->JTable에 결과를 확인
+				Object data[]= {name,age,tel};
+				model.addRow(data);
+				System.out.println(name+","+age+","+tel);
+			}
+		}catch(Exception e) {
+			System.out.println("select()메서드 실행오류=>"+e);
+		}
+	}
+===========================================
+<실행결과>
+접속con=>oracle.jdbc.driver.T4CConnection@1761e840
+pstmt=>oracle.jdbc.driver.OraclePreparedStatementWrapper@185d8b6
+rs=>oracle.jdbc.driver.OracleResultSetImpl@2b552920
+홍길동,23,02-123-0987
+테스트,45,02-444-8765
+
+====================================
+프로젝트명 ->JavaBook(도서 관리)->2개 정도
+                
+c:/bookimage/book1.jpg
+
+1.c:\에 bookimage폴더에 이미지복사(8개)책
+
+2.테이블 생성=>도서대여 프로그램
+
+CREATE TABLE CUSTOMER(             //고객-->한권의 책만 빌린것이 아니다
+  C_BUN     NUMBER               NOT NULL,  /* 고객 번호 */->pk
+  C_IRUM    VARCHAR2(10)         NOT NULL, /* 고객명 */
+  C_JUNHWA  VARCHAR2(14)         NOT NULL, /* 전화 */
+  C_JUSO    VARCHAR2(50),                           /* 주소 */
+  C_DAESU   NUMBER   DEFAULT 0   NOT NULL, /* 책을 대여한 수 */
+  C_MEMO    VARCHAR2(4000),   /* 메모장->대여한 책의 리스트(,) */ 
+  PRIMARY KEY (C_BUN)  ---------->primary key(적용 필드명)
+);
+
+CREATE TABLE BOOK(   //도서
+  B_BUN     NUMBER              NOT NULL,  /* 도서 번호 */
+  B_JEMOK   VARCHAR2(50)        NOT NULL,/* 도서 제목 */
+  B_JANG    VARCHAR2(20),                       /* 도서 장르 */
+  B_KUIPIL   DATE,                                   /* 도서 구입 날짜 */
+  B_DAESU   NUMBER  DEFAULT 0   NOT NULL, /* 도서 대여수 ->인기 */
+  B_DAEYN   CHAR(1) DEFAULT 'n' NOT NULL,  /* 도서 대여유무->n(보관중)
+                                                                         y(대여중)
+                                                                      */
+  B_DAEBUN  NUMBER,  /* 대여자번호=>고객번호를 의미 */
+  B_DAEIL    DATE,        /* 대여날짜 */
+  B_BANIL    DATE,        /* 반납날짜 */
+  B_MEMO    VARCHAR2(4000), /* 책과 대여자의 정보 출력 */
+  B_IMAGE   VARCHAR2(50),     /* 책을 이미지로 관리 */
+  PRIMARY KEY (B_BUN)   /* 도서번호->pk */
+);
+
+3.모든 클래스 package j0623;->메뉴에서 불러올 수가 있다.
+-------------------------------------------------------------
+4.BookMain클래스->오늘 날짜  출력
+
+public static void main(String[] args) {
+		//오늘 날짜를 창의 제목에 출력->Date,Calendar
+		Calendar calendar=Calendar.getInstance();
+		int y=calendar.get(Calendar.YEAR);//2017->get(정적상수명)
+		int m=calendar.get(Calendar.MONTH)+1;//0~11 만 리턴
+		int d=calendar.get(Calendar.DATE);//일
+		new BookMain("도서관리 ver 1.0   ★ 오늘은 " + y + "년 " + m + "월 " + d + "일");
+	}
+--------------------------------------------------------------------------------------
+ 총레코드수 ->select count(*) from customer;
+ 마지막레코드번호=>select max(c_bun) from customer;
+-------------------------------------------------------
+
+
+
+
+
+

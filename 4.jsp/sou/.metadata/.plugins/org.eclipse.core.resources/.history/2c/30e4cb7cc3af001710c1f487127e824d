@@ -1,0 +1,19 @@
+package sp.aop;
+
+public class TestServiceImpl implements TestService {
+
+	private String msg="before AOP 연습";
+	@Override
+	public void save(String msg) { //회원수정
+		// TODO Auto-generated method stub
+        this.msg=msg;
+        System.out.println("save() 메서드호출됨");
+	}
+
+	@Override
+	public void write() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

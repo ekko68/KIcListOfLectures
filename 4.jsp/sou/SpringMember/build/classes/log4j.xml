@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+<!--기본적인 출력양식이 설정  -->
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%p:%C{1}.%M()] %m%n" />
+		</layout>
+	</appender>
+
+<!-- dr.mini(패키지)로 시작하는 패키지내의 모든  클래스에서
+       정보를 출력(매개변수전달,객체값출력)
+ -->
+	<category name="dr.mini" additivity="false">
+		<priority value="debug" />
+		<appender-ref ref="STDOUT" />
+	</category>
+
+<!-- 에러가 발생이 될때 출력하도록 설정  -->
+	<root>
+		<priority value="error" />
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</log4j:configuration>

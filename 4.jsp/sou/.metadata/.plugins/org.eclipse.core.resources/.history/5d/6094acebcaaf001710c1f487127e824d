@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
+
+<!-- 1.핵심클래스 빈즈등록 -->
+<bean id="testServiceImpl" class="sp.aop.TestServiceImpl" />
+
+<!-- 2.Advice클래스 빈즈등록 -->
+<bean id="beforeLog" class="sp.aop.BeforeLogAdvice" />
+
+<!-- 3.PointCut 생성->어느위치에 AOP메서드를 지정해서 실행
+       접근지정 반환형 패키지명....클래스명 하위패키지(..) 특정메서드명(..) 0개이상
+         (*)매개변수 한개 표시, (*,*)매개변수 2개
+  -->
+<bean id="writePointcut" 
+          class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+   <property name="pattern" value=".*write.*" />
+</bean>
+
+<!-- 4.Advice+PointCut(Advisor)설정 -->
+<bean id="testAdvisor"  
+          class="org.springframework.aop.support.DefaultPointcutAdvisor">
+     <property name="advice" ref="beforeLog" />
+     <property name="pointcut" ref="writePointcut" />
+</bean>
+
+<!-- 5.AOP를 적용-->
+
+
+
+
+
+
+
+
+</beans>

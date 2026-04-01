@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(폼입력양식 속성2)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//요소:selected->select태그의 option객체중에서 선택된 태그를
+	//                        가리킬때 사용
+	//setTimeout(호출할 함수명|익명함수(function(){}),초단위(1000))->1초(한번만 실행)
+	//setInterval(호출할 함수명|익명함수(function(){}),초단위(1000))->1초(계속 반복해서 실행)
+	setInterval(function(){
+		var value=$('select > option:selected').val()
+	    alert(value)
+	},3000)  //3초뒤에 선택한 항목을 화면에 출력
+	
+	/* (1)
+	 var value=$('select > option:selected').val()
+	alert(value) */
+})
+
+</script>
+</head>
+<body>
+ <select>
+    <option>화면구현</option>
+    <option>오라클</option>
+    <option>자바</option>
+    <option>웹프로그래밍</option>
+ </select>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

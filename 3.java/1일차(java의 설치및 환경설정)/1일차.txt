@@ -1,0 +1,137 @@
+1일차(java의 설치및 환경설정)
+
+1.프로그램 설치(java->oracle사)
+ java.sun.com=>oracle사로 이동(http://www.oracle.com)
+
+http://www.oracle.com/technetwork/java/index.html
+
+ JDK(java Development Kit)=>자바 개발버전->down
+
+ JRE(Java RunTime Environment)->이미 개발이 완료된 자바
+                                                   프로그램을 실행시킬 수 
+                                                    있는 버전(테스트버전)
+                                                ->배타테스트
+=====================================
+Java API 문서(영어)->자바 기본 문법습득(guide)
+
+자바의 최신버전 8.0=>자바의 1.2 버전
++추가된 문법
+===============================
+자바프로그램 설치->1.설치경로 지정->default(next)
+
+C:\Program Files\Java\jdk1.8.0_131\=>C:\jdk1.8\
+
+->환경설정=>긴 설치경로보다 짧게주는 것이 도움
+
+->c:\program files\jre1.8.0_131 ->경로변경X
+=>컴퓨터작업(파일로 저장)->~.java
+
+C:\jdk1.8\bin=>javac.exe
+                        java.exe
+                        javaw.exe
+
+ jre=>자바프로그램을 실행할때 중요한 파일들이 필요
+     =>라이브러리가 설치되는 위치
+===============================
+
+ 2.설치하고 나서 환경설정
+  ->바로가기 아이콘이 만들어지지 않으면서 설치되는 경우
+ ->콘솔에서 작업=>java -version
+
+C:\Users\kitcoop>java -version
+
+java version "1.8.0_131"
+Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
+Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
+
+C:\Users\kitcoop>
+============================
+내컴퓨터=>속성->고급사용자 설정->환경변수
+
+환경변수->프로그램이 설치되면 그 설치된 경로를 자동으로
+              설정해주는 운영체제 내부의 정보장소
+
+1.8_031 버전->자동으로 인식할 수 있도록 설정이 된 버전
+
+
+
+
+.;C:\jdk1.8\bin;C:\ProgramData\Oracle\Java\javapath;c:\oracle\product\11.2.0\dbhome_1\bin;%Sy
+========================
+=>자바의 설치경로가 들어가 있는 위치
+=====================================
+
+1.자바->응용프로그램 개발(webX)->메모장,그림판,,,
+         ->비주얼베이직,델파이,,,,
+
+2.웹사이트 개발(Jsp)->html5,css3,javascript,+oracle+java
+
+ 관공서->jsp,방송국
+http://www.sbs.co.kr/main.jsp  or main.do
+                                       ===    =====
+3.안드로이드 프로그래밍(스마트폰)
+====================================
+
+3)편집기가 필요->~.java->Editplus->Eclipse 로 설치
+
+//한줄주석->자바의 설치 및 예제1개
+/*
+ 여러줄 주석
+ 기본문법
+ 1.확장자->~.java
+ 2.형식) public class 프로그램이름(=파일명){
+      public static void main(String args[]){
+
+   }
+}
+ 3.대소문자 구분->소문자 위주로 작성할것.
+ 4.작업단위->클래스 단위로 작업
+ 5.결과를 보기위해서는 main 메서드가 필요하다.
+ 6.System.out(표준출력장치)->모니터,
+    System.in(표준입력장치) ->키보드
+ 7.매 문장 뒤에는 반드시 ;를 줘야 된다.
+ 8.컴파일(소스파일->컴퓨터가 알아듣는 말로 변환
+                            2진수(1,0))->javac.exe
+   ~.class
+*/
+
+public class Hello{
+    public static void main(String args[]){
+       //document.write("연습")
+       System.out.print("자바연습");
+    }
+}
+
+  컴파일 시키는 방법) javac 컴파일시킬파일명.java
+  ex) javac Hello.java --->Hello.class(컴파일)
+       java 클래스파일명
+
+  실행시키는 방법(=화면에 결과)==>메모리에 올려놓고 작업
+      java 실행시킬 클래스파일명(확장자는 생략)
+
+ 자바스크립트->컴파일 과정X->바로 실행(에러잡기가 쉽지않다.)
+--------------------------------------------------------------
+
+C:\webtest\3.java\1일차(java의 설치및 환경설정)>javac Hello.java
+
+C:\webtest\3.java\1일차(java의 설치및 환경설정)>java Hello.class
+오류: 기본 클래스 Hello.class을(를) 찾거나 로드할 수 없습니다.
+
+C:\webtest\3.java\1일차(java의 설치및 환경설정)>java Hello
+hello
+C:\webtest\3.java\1일차(java의 설치및 환경설정)>
+
+.;C:\jdk1.8\bin;c:\oracle\product\11.2.0\dbhome_1\bin;%Sy
+-----------------  설치경로(수동으로 등록)->java.exe,javac.exe
+. ->현재위치를 기준
+
+C:\Users\kitcoop>java -version
+java version "1.8.0_131"
+Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
+Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
+
+C:\Users\kitcoop>javac
+'javac'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
+배치 파일이 아닙니다.
+
+C:\Users\kitcoop>

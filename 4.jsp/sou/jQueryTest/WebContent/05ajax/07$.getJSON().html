@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(07$.getJSON().html)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//1.url요청문서
+	/* (1)$.ajax()를 이용
+	$.ajax({
+		       url:'item2.json', 
+		       dataType:'json', 
+		      success:function(data){  */
+	//(2)$.getJSON('경로포함해서 불러올 파일명(사이트주소)',function(매개변수){})	    	  
+		    	 $.getJSON('item2.json',function(data){
+		    	 $('#treeData').append('<tr><td>id</td>'+'<td>name</td>'
+		    	                         +'<td>price</td>'+'<td>description</td></tr>')
+		    	 //$.each(컬렉션객체(배열),호출할 함수명 or 익명함수처리)
+		    	 $.each(data,function(){
+		    		 $('#treeData').append('<tr><td>'+this.id+'</td><td>'
+		    				                           +this.name+'</td><td>'
+		    				                           +this.price+'</td><td>'
+		    				                           +this.description+'</td></tr>')
+	
+		    	 })//.each
+	})//$.getJSON
+})
+</script>
+</head>
+<body>
+  <table id="treeData"></table>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

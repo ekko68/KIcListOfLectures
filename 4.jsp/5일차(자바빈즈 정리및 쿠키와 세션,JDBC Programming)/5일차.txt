@@ -1,0 +1,249 @@
+5일차(자바빈즈 정리및 쿠키와 세션,JDBC Programming)
+
+ 요청을 하는 페이지------>요청을 처리해주는 페이지(응답페이지)
+          투수                           포수
+
+ 요청을 하는 페이지와 요청을 처리하는 페이지를 한꺼번에 한다.
+<form name="form1" method="post" action="cal2.jsp">
+                                                                     ======
+                                                                  자기페이지 이름을 쓰거나 생략
+                                                                   하거나
+<form name="form1" method="post">
+<input type="submit" value="계산" name="b1">
+          ==========
+           type="button"주면 안된다.(주의할점)
+----------------------------------------------------------------
+ JspWork3->프로젝트-->쿠키와 세션에 대해 정리
+        |
+         -cookietest->makeCookie.jsp->useCookie.jsp
+        |
+         -sessiontest->준비된 예제
+
+Windows7의 쿠키 위치
+
+모뎀으로 인터넷으로 접속->인터넷속도가 너무 느린관계->쿠키를 이용
+                                   ->접속속도를 향상시킬 목적
+
+쿠키파일->특정 사이트에 접속->접속한 컴퓨터(서버)->자기 컴퓨터의 정보를
+                담은 파일을 재전송->
+
+==>해킹소지(개인정보 보호)->잘 사용하지 않는다.
+---------------------------------------------------------------------------
+
+C:\Users\kitcoop\AppData\Roaming\Microsoft\Windows\Cookies
+              =====
+              계정명
+
+http://192.168.0.13:8090/JspWork3/cookietest/makeCookie.jsp
+         192.168.0.57
+
+mycookie
+Melone
+192.168.0.13/JspWork3/cookietest/
+1536
+3891973248
+30603962
+2698993780
+30603962
+*
+
+----------------------------------------------------------------------------
+URLEncoder 클래스
+일반 문자열을 웹에서 통용되는 'x-www-form-urlencoded' 형식으로 변환하는 역할
+
+=>Cookie cookie = new Cookie("name",  URLEncoder.encode("이연수") );
+=>java.net.URLEncoder.encode("이연수")=>한글이 깨지지 않도록 저장이가능
+                                    =====>포장해주는것(데이터 보호목적)
+
+URLDecoder 클래스
+URLEncoder로 인코딩된 결과를 디코딩하는 클래스
+
+  java.net.URLDecoder.decode(cookie.getValue())
+                     ====>포장을 푸는것
+
+====>Tomcat 8.5기준에서는 이러한 클래스가 필요없다.
+-------------------------------------------------------------
+**
+쿠키와 세션의 공통점->둘다 클라이언트---------서버와의 연결을 일정시간동안
+                                                                 유지시켜주는 방법(로그인)
+
+쿠키->파일로 저장->해킹의 소지,개인정보 유출->잘 사용X
+세션->서버의 메모리에 저장->30분(default)유지->30분후 자동 종료
+**
+->ex) 은행->번호표 받기(세션id)=>새로 발급(번호표)=>강제로 종료
+---------------------------------------------------------------------------
+             세션의 메모리에 저장(HashMap)->키,value로 저장
+
+         request.setAttribute(키,저장할값);
+         ---------
+         session.setAttribute(키,저장할값(계정id));
+          <->session.getAttribute(키명)
+
+화면디자인을 먼저 하면 안되는 이유->설계(자바빈즈)
+
+
+ hp  __________ or ___  _____ ______->매개변수는 한개만 입력이 가능
+                               hp1  hp2       hp3
+                                               ---------->hp1+hp2+hp3=>hp
+ member(hp)
+                             테이블의 필드를 3개준비 hp1,hp2,hp3 or hp
+ ---------------------------------------------------------------------
+JDBC Programming 정리->회원관리 준비
+-------------------------------------------
+  JspMember=>프로젝트명(회원관리)->오라클
+        |
+       WebContent
+         -db=>oratest.jsp(테이블생성->입력->화면에 출력)
+
+->회원로그인->회원가입->회원수정,회원탈퇴->
+                           |
+                      중복id를 체크
+                       우편번호 검색
+   ==========================
+******************************
+1.Java Application의 DB연동방법(JDBC)
+
+ 1)접속 ojdbc6.jar->C:\jdk1.8\jre\lib\ext=>복사를 할것(전역)=>추가적인 작업
+                                                                                                    X
+  ->이클립스에서 경로를 지정 ojdbc6.jar를 불러오기
+
+  ->다른 경로에 ojdbc6.jar를 복사->classpath환경변수를 선언->그 경로지정
+     (지역)
+
+2.Web Application의 DB연동방법=>
+
+       1)Tomcat8.5.x\lib\ 접속 드라이버를 복사
+                                      ojdbc6.jar (전역)
+       2)JspMember
+                |
+                 -WebContent
+                         |
+                          -WEB-INF
+                                 |
+                                   -lib->ojdbc6.jar (지역)
+                                            my~.jar
+
+     ->이클립스에서 경로를 지정 ojdbc6.jar를 불러오기
+----------------------------------------------------
+*******************************
+  test1계정 or scott=>1.테이블생성 MyTest->2.insert into 테이블~3.select
+-----------------------------------------------------------------------------------
+   '"+~+"'->?
+  jsp=>
+-----------------------------------------
+모델1->자바빈즈
+
+try{
+    	  //1.드라이버 메모리에 로드
+    	  Class.forName("oracle.jdbc.driver.OracleDriver");
+    	  //2.Connection객체를 얻어오기
+    	  con=DriverManager.getConnection(url,"test1","t1234");//scott,tiger
+    	  System.out.println("con=>"+con);
+===============================>반복적인 구문
+2.
+                stmt=con.createStatement();//반환형
+    	  sql="create table MyTest(name varchar2(20),age number)";
+    	  stmt.executeUpdate(sql);
+    	  System.out.println("MyTest 테이블 생성 OK!");
+    	  //2.insert->pstmt
+    	  pstmt=con.prepareStatement("insert into MyTest values(?,?)");
+    	  //setString,setInt,setDouble,,,(?의순서,입력할값)
+    	  pstmt.setString(1,"Lee");//request.getParameter("name");
+    	  pstmt.setInt(2,34);
+    	  pstmt.execute();//executeUpdate()
+    	  //3.select->필드별로 출력하자
+    	  stmt2=con.createStatement();
+    	  String sql2="select * from MyTest";
+    	  //4.ResultSet 객체 필요
+    	  rs=stmt2.executeQuery(sql2);
+
+3.
+         rs.close(); //con->stmt,pstmt,stmt2,rs
+         stmt2.close();
+         pstmt.close();
+         stmt.close();
+         con.close();
+=====================================
+ 자바빈즈 3가지 종류
+
+1.DB Connection빈->DB연결관리빈(연결 및 해제)
+ =>DBConnectionMgr.java(350line)
+
+--------------------------------------------------------------------
+ 1.DB에 관련된 설정정보만 변경 시켜된다.
+
+private String _driver = "oracle.jdbc.driver.OracleDriver",
+    _url = "jdbc:oracle:thin:@localhost:1521:orcl",
+    _user = "test1",
+    _password = "t1234";
+
+2.DBConnectionMgr클래스의 객체를 생성->getConnection() 필요->Connection
+              정적메서드로 구현
+--------------------------------------------------------------------
+//커넥션풀객체를 선언
+
+    private static DBConnectionMgr instance = null;
+
+    public DBConnectionMgr() {
+    }
+
+    /** Use this method to set the maximum number of open connections before
+     unused connections are closed.
+     */
+  
+    //커넥션풀을 얻어오는 정적메소드
+    public static DBConnectionMgr getInstance() {
+        //커넥션풀이 생성이 안되어있다면
+		if (instance == null) {
+            synchronized (DBConnectionMgr.class) {
+                //생성이 안되어있다면
+				if (instance == null) {
+					//객체생성
+                    instance = new DBConnectionMgr();
+                }
+            }
+        }
+        return instance;//호출한 클래스쪽으로 반환
+    }
+
+3) freeConnection()을 이용해서 ->DB메모리 해제구문
+
+public void freeConnection(Connection c, PreparedStatement p, ResultSet r) {
+        try {
+            if (r != null) r.close();
+            if (p != null) p.close();
+            freeConnection(c);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+-------------------------------------------------------------
+=>회원로그인 부터 시작->회원 중복id체크->우편번호 검색
+-------------------------------------------------------------
+
+
+
+
+2.SQL구문을 실행--->자바빈즈의 메서드선언=>메서드를 호출
+                               (DAO->Data Access Object)=>DB접속후->메서드 선언
+3.DTO(데이터 저장빈)->Setter,Getter메서드 구성(테이블의 필드와 연관)
+--------------------------------------------------------------------------------
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(인접한 태그 찾기)</title>
+<style>
+        .textstyle{
+                       font-size:14pt;
+                       line-height:20pt; /* 행간(세로) */
+                       margin:10px;
+         }
+</style>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	/*
+	형식) 1.$(부모태그 > 자식태그)->부모태그 바로밑의 자식태그를 찾을때(자손X)
+	        2.$(부모태그  자식태그)->부모태그 바로밑의 자식태그를 찾을때(자손O)
+	        3.$(부모태그+ 자식태그)->바로 인접한 형제태그(짝궁)
+	        4.$(부모태그~ 자식태그)->짝궁+다른 인접한 태그까지 찾기
+	        $('선택자').append(자식태그)
+	*/
+	$('*').addClass('textstyle')
+	$('em~a').css('background-color','yellow')
+	  .each(function(){ //현재 조건에 만족시키는 태그->$(this)
+		  $('.result1').append($(this))
+	  })
+	 alert('검색된 엘리먼트의 수:'+$('em~a').length)
+})
+
+</script>
+</head>
+<body>
+   <em>one</em>
+   <a>two</a>
+   <a>three</a>
+   <b>four</b>
+   <a>five</a>
+   <em>six</em>
+   <hr>
+   <div>
+      <span>prev+next로 검색된 엘리먼트</span>
+      <span class="result1"></span>
+   </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

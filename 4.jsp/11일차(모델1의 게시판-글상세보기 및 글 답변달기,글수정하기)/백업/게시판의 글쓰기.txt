@@ -1,0 +1,62 @@
+ //게시판의 글쓰기 및 글 답변달기
+    //insert into board values(~)
+    public void insertArticle(BoardDTO article) {  //~(MemberDTO mem)
+    	
+    	Connection con=null;
+    	PreparedStatement pstmt=null;
+    	ResultSet rs=null;//num의 최대값을 구해야 된다.->select
+    	//article->신규글인지 답변글인지 구분
+    	int num=article.getNum();//0(신규글) 인지 아닌지를 체크->답변글
+    	int ref=article.getRef();
+    	int re_step=article.getRe_step();
+    	int re_level=article.getRe_level();
+    	//테이블에 입력할 게시물 번호 저장할 변수
+    	int number=0;
+    	System.out.println("insertArticle메서드의 내부의  num="+num);
+    	System.out.println("ref="+ref+",re_step=>"+
+    	                                                   re_step+",re_level="+re_level);	
+    	String sql="";
+    	try {
+    		con=pool.getConnection();
+    		sql="select max(num) from board";
+    		pstmt=con.prepareStatement(sql);
+    		rs=pstmt.executeQuery();
+    		if(rs.next()) { //현재 테이블에서 데이터가 한개라도 존재한다면
+    			number=rs.getInt(1)+1;//필드명이 아니기때문에 select ~ from사이에 나오는순서
+    		}else {//맨 처음에 레코드가 한개라도 없는 경우->무조건 number=1
+    			number=1;
+    		}
+    		
+    		//만약에 답변글이라면
+    		if(num!=0) {
+    			;
+    		}else { //신규글이라면
+    			ref=number;//ref=1,2,3,4,5
+    			re_step=0;
+    			re_level=0;
+    		}
+    	//12개 ->num,reg_date,readcount(생략)->sysdate ,now()<-?대신에
+        sql="insert into board(writer,email,subject,passwd,reg_date,";
+        sql+=" ref,re_step,re_level,content,ip)values(?,?,?,?,?,?,?,?,?,?)";
+        pstmt=con.prepareStatement(sql);
+        pstmt.setString(1, article.getWriter());//작성자
+        pstmt.setString(2, article.getEmail());//이메일
+        pstmt.setString(3, article.getSubject());//글제목
+        pstmt.setString(4, article.getPasswd());//암호
+        pstmt.setTimestamp(5, article.getReg_date());
+        //------ref,re_step,re_level->신규글 또는 답변글에 맞는 계산값이 적용
+        pstmt.setInt(6, ref);//pstmt.setInt(6, article.getRef());X
+        pstmt.setInt(7, re_step);//0
+        pstmt.setInt(8, re_level);//0
+        //-------------------------------------------------------------------------
+        pstmt.setString(9, article.getContent());//글내용
+        pstmt.setString(10, article.getIp());//request.getRemoteAddr(); //jsp
+        int insert=pstmt.executeUpdate();
+        System.out.println("게시판의 글쓰기 성공유무(insert)="+insert);
+    	}catch(Exception e) {
+    		System.out.println("insertArticle()메서드 에러유발"+e);
+    	}finally {
+    		pool.freeConnection(con, pstmt, rs);
+    	}
+    }
+    

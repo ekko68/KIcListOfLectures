@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//$.ajax(1.url(요청문서),2.매개변수(생략가능),3.콜백함수)
+	//~aa2.jsp?name='test'&age=23&addr='서울시'
+	$.ajax({
+		 url:'aa2.jsp', //{1.url(속성명):value값만 변경가능}
+	     data:{name:'test',age:23},//2.data:{매개변수명:값,매개변수명2:값2,,,}
+	     success:function(args){//3.success:성공적으로 보내준경우 익명함수(매개)
+	    	 $('body').append(args)
+	     }//success
+	})//$.ajax
+})
+
+</script>
+</head>
+<body>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

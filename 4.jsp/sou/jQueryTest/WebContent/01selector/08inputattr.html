@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(입력양식필터 속성)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	/*
+	입력양식에 관련된 속성 선택자
+	요소:button->input 태그중에서 type속성이 button인 경우
+	       비활성화(disabled) true <-->활성화(enabled)->true
+	요소:reset(초기화),요소:submit(전송)
+	요소:text->type속성이 text인 경우
+	요소:checkbox,->checked->false(체크하지 마라)->true(체크표시)
+	요소:file(파일첨부)
+	요소:image,요소:password,요소:radio
+	*/
+	//$('input[type=checked])
+	$('input:checked').attr('checked',false) //체크해제
+    $('input:disabled').attr('disabled',false) //비활성화 제거->활성화
+	//$('input:disabled').attr('enabled',true)
+	$('input:text').val('값을 입력하세요')
+	$('input:password').css('background','pink').val('값입력')
+	//$('input[type=button]').val('회원가입')
+	//$('input:button').val('회원가입2')
+})
+</script>
+</head>
+<body>
+<input type="text">
+<input type="password">
+<input type="button">
+<button>버튼2</button>
+<hr>
+<input type="checkbox" name="city" value="서울" checked>서울
+<input type="button" value="확인" disabled>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

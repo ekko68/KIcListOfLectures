@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(13serialize().html)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	$('#submit').click(function(){
+		$('#result').empty();//전에 부착된 내용을 새로 지우기
+		
+		//(2)
+		/* var form_data=$('form').serialize();//쿼리문자열 형태로 전달
+		$('#result').text(form_data) */
+		//seq=1&username=%ED%85%8C%EC%8A%A4%ED%8A%B8&password=1234&hobby=yoga&hobby=reading
+		// (1)
+		    var form_data=$('form').serializeArray();//json형식의 문자열로 변환  
+		   // $.each(form_data,function(index,value){
+			//$('#result').append(value.name+"="+value.value+"<br>")
+			//})
+			$.post('form.jsp',form_data,function(args){
+				$('#result').html(args)
+			})
+	})
+})
+</script>
+</head>
+<body>
+<form>
+<!-- {매개변수명:전달할값;매개변수명2:전달할값2;~}->
+    폼에 입력한 데이터를 JSON형식의 문자열로 변환->전송함수(serializeArray())
+ -->
+<input type="hidden" name="seq" value="1">
+<label>이름을 입력하세요:</label>
+<input type="text" name="username"><br>
+<label>패스워드를 입력하세요:</label>
+<input type="password" name="password"><br>
+<input type="checkbox" name="hobby" value="music">music
+<input type="checkbox" name="hobby" value="yoga">yoga
+<input type="checkbox" name="hobby" value="reading">reading<br>
+<input type="button" id="submit" value="전송">
+</form>
+<hr>
+<div id="result"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

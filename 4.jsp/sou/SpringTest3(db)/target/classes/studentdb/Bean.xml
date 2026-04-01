@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
+
+<!--1.DB연결(dataSource)  -->
+<bean id="dataSource" 
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+  <property name="driverClassName"  value="com.mysql.jdbc.Driver" />
+  <property name="url"  value="jdbc:mysql://localhost:3307/mydb" />
+  <property name="username"  value="root" />
+  <property name="password"  value="1234" />
+</bean>
+
+<!--2.DB연결시켜서 가져올 수 있는 빈즈객체  -->
+<bean id="studentJDBCTemplate"  class="studentdb.StudentJDBCTemplate">
+    <property name="dataSource" ref="dataSource" />
+</bean>
+
+</beans>
+
+
+
+
+

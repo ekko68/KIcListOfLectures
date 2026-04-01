@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+    <title>그리드의 변형레이아웃</title>
+
+    <!-- 부트스트랩 -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+     @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+     header{height:100px;background-color:rgba(125,211,242,0.5);
+                  border-radius:15px;padding:10px;margin:10px 0;
+                  font-family:'Nanum Gothic',sans-serif;
+                  text-align:center;
+     }
+     footer{ font-family:'Nanum Gothic',sans-serif; text-align:center;}
+     ul.nav {background-color:rgba(210,201,201,.5);padding:10px;
+                  border-radius:10px;}
+    </style>
+    <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
+    <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <h1>그리드 시스템</h1>
+    <h4 class="text-primary">html5의 태그를 이용</h4>
+    <h4 class="text-primary">2단 설정</h4>
+  <div class="container"> 
+  <header>
+       <h2>그리드 시스템을 이용한 레이아웃</h2>
+  </header>
+<div class="row">
+  <div class="col-md-3">
+     <ul class="nav">
+        <li>회원가입</li>
+        <li>회원로그인</li>
+        <li>게시판</li>
+        <li>설문조사</li>
+     </ul>
+  </div>
+  <div class="col-md-7 col-md-offset-2">
+     <p>
+       디지털 경제의 확산으로 우리 주변에는 규모를 가늠할 수 없을 정도로 많은 정보와
+        데이터가 생산되는 '빅데이터(Big Data)' 환경이 도래하고 있다. 
+        빅데이터란 과거 아날로그 환경에서 생성되던 데이터에 비하면 그 규모가 방대
+        하고, 생성 주기도 짧고, 형태도 수치 데이터뿐 아니라 문자와 영상 데이터를 
+        포함하는 대규모 데이터를 말한다.
+     </p>
+     <p>
+     PC와 인터넷, 모바일 기기 이용이 생활화되면서 사람들이 도처에 남긴 발자국
+     (데이터)은 기하급수적으로 증가하고 있다(정용찬, 2012a). 쇼핑의 예를 들어 
+     보자. 데이터의 관점에서 보면 과거에는 상점에서 물건을 살 때만 데이터가 
+     기록되었다. 반면 인터넷쇼핑몰의 경우에는 구매를 하지 않더라도 방문자가
+      돌아다닌 기록이 자동적으로 데이터로 저장된다.
+       어떤 상품에 관심이 있는지, 얼마 동안 쇼핑몰에 머물렀는지를 알 수 있다.
+      쇼핑뿐 아니라 은행, 증권과 같은 금융거래, 교육과 학습, 여가활동, 자료검색과
+       이메일 등 하루 대부분의 시간을 PC와 인터넷에 할애한다. 
+       사람과 기계, 기계와 기계가 서로 정보를 주고받는 사물지능통신
+       (M2M, Machine to Machine)의 확산도 디지털 정보가 폭발적으로 증가하게
+        되는 이유다.     
+     </p>
+  </div>
+</div>
+<hr>
+<footer>
+     홈페이지 하단부분입니다.(관리자 메일)
+</footer>
+</div>
+    
+    <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
+    <script src="../js/bootstrap.min.js"></script>
+  </body>
+</html>

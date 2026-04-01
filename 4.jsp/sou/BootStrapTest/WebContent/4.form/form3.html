@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 위 3개의 메타 태그는 *반드시* head 태그의 처음에 와야합니다; 어떤 다른 콘텐츠들은 반드시 이 태그들 *다음에* 와야 합니다 -->
+    <title>부트스트랩 101 템플릿</title>
+
+    <!-- 부트스트랩 -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/custom1.css" rel="stylesheet">
+    <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
+    <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+  
+          <h4 class="text-primary">부트스트랩의 폼양식 적용</h4>
+          <!-- 4.인라인 폼(label부분이 경우에 따라서는 감추는 역할)
+           .sr-only클래스 선택자(화면에 안보이게 설정)
+           (screen reader only) 장애인용 웹사이트에서 필요(label이 필요하기때문에)
+           -->
+          <form role="form" class="form-inline">
+          
+           <div class="form-group">
+               <label for="Name" class="sr-only">이름</label>
+               <input type="text" class="form-control" placeholder="이름">
+           </div>
+           
+           <div class="form-group">
+           <label for="emailaddress" class="sr-only">이메일</label>
+           <input type="email" class="form-control"  placeholder="이메일">
+           </div>
+           
+           <div class="form-group">
+           <button type="submit">확인</button>
+           </div>
+          </form>
+          <hr>
+          <!--
+             5.폼양식을 수평으로 정렬->label,input에 적용(그리드와 혼합)
+               class="form-horizontal"
+            -->
+          <h4 class="text-primary">부트스트랩의 수평폼</h4>
+          <form class="form-horizontal" role="form">
+           <div class="form-group">
+               <label for="Name" class="col-xs-2 col-lg-2 control-label">이름</label>
+               <div class="col-xs-10 col-lg-10">
+               <input type="text" class="form-control" placeholder="이름">
+               </div>
+           </div>
+           
+           <div class="form-group">
+           <label for="emailaddress" class="col-xs-2 col-lg-2 control-label">이메일</label>
+               <div class="col-xs-10 col-lg-10">
+              <input type="email" class="form-control"  placeholder="이메일">
+               </div>
+           </div>
+           
+           <div class="form-group">
+                <div class="col-xs-offset-2 col-xs-10 col-lg-offset-2 -col-lg-10">
+                <button type="submit">확인</button>
+                </div>
+           </div>
+          </form>
+          
+    </div>
+    <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요합니다) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!-- 모든 컴파일된 플러그인을 포함합니다 (아래), 원하지 않는다면 필요한 각각의 파일을 포함하세요 -->
+    <script src="../js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?tags=raccoon&tagmode=any&format=json&jsoncallback=?",
+			        function(data){
+		   $.each(data.items,function(i,item){
+			   $("<img/>").attr("src",item.media.m).appendTo("#images");
+			   /*
+			   if(i==4)
+				  return false;*/
+		   })
+	})
+})
+</script>
+</head>
+<body>
+ <div id="images"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

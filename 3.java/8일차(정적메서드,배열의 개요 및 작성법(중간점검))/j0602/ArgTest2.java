@@ -1,0 +1,47 @@
+package j0602;
+
+public class ArgTest2 {
+
+	//프로그램을 가동시키면 제일 먼저 Method Area(Static 영역) 메모리에 올라옴
+	public static void main(String x[]) { //동적배열
+		// TODO Auto-generated method stub
+         //String args[]=new String[3];//3개만 저장이 가능(정해진 갯수만 저장)
+		//합계->10,20,30->합계->60
+		int sum=0;//합계
+		/*
+		x[0]="10";
+		x[1]="20";
+		x[2]="30";
+		*/
+		//....
+		
+		String str=x[0]; //"10"->10
+		String str2=x[1];
+		String str3=x[2];
+		
+		//sum=(int)str+(int)str2+(int)str3;
+		
+		sum=Integer.parseInt(str)+Integer.parseInt(str2)+Integer.parseInt(str3);
+		String test=String.valueOf(sum);//"60" //String ->매개변수(int) ->반환값(String)
+		
+		System.out.println("str="+str);
+		System.out.println("str2="+str2);
+		System.out.println("str3="+str3);
+		System.out.println("sum="+sum);
+		System.out.println("test=>"+test);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

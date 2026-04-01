@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제($.post())</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//$.post()->$.ajax()를 실행->post방식으로 서버에 요청
+	//               서버에서 요청한 문서결과->콜백함수가 받아서
+	//               처리
+	//http://localhost:8090/jQueryTest/aa.jsp?name=?->url
+	$('#saveButton').click(function(){
+		var value=$('#name').val()
+		//alert(value)
+		//$.post(1.url(요청문서),
+		//2.전달할 매개변수명{매개변수명:전달할값}),3.콜백함수명,4.요청문서종류(생략))
+	    $.post('aa.jsp',{name:value},function(args){//<b>홍길동</b>,홍길동
+	    	//args-><%=name%>님 jQuery Ajax 환영합니다.
+	    	$('#resultDIV').html(args)
+	    })
+	})
+	//지우기
+	$('#clearButton').click(function(){
+		$('#resultDIV').empty();//내용만 제거
+	})
+})
+</script>
+</head>
+<body>
+  이름:<input type="text" id="name"><br><p>
+  <button id="saveButton">전송</button>
+  <button id="clearButton">지우기</button><p>
+  <div id="resultDIV"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

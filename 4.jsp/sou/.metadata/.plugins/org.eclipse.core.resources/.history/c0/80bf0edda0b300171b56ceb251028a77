@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,
+                                     maximum-scale=1.0,minimum-scale=1.0,
+                                     user-scalable=no">
+ <!-- 
+   width:넓이(픽셀) height:높이(픽셀)
+  initial-scale=1.0(초기배율(기본 꽉찬 화면),
+  maximum-scale=1.0(최대배율(범위 0~10.0),
+  minimum-scale=1.0(최소배율(기본값:0.25,범위 0~10.0),
+  user-scalable=no:확대/축소 여부)(yes/no)
+  -->
+<title>jquery예제</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	
+})
+</script>
+</head>
+<body>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

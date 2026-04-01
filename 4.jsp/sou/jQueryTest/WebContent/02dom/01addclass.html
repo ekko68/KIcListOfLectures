@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(each함수와 연관)</title>
+<style>
+  .high_light_0 {background:yellow;font-size:12pt;color:red}
+  .high_light_1 {background:orange}
+  .high_light_2 {background:blue}
+  .high_light_3 {background:green}
+  .high_light_4 {background:red}
+</style>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//$('h1:eq(0)').attr('class','high_light_0')
+	//$('h1:first').css('background','yellow').css(~)
+	//$('h1:first').addClass('high_light_0')//스타일적용시 클래스명으로 설정값
+	/*
+	   css()->속성명->속성값을 부여(하나씩 나열)
+	   addClass(클래스명)->한꺼번에 여러개의 스타일을 동시에 설정이 가능하다.
+	   <->removeClass(해제시키고자하는 클래스명)
+	*/
+	//$('h1').addClass('high_light_0') //$('h1').each() (1)<->removeClass(~)
+	$('h1').addClass(function(index){ //각 태그를 구분하는 인덱스번호
+		alert(index)//0,1,2,3,4
+		return 'high_light_'+index;
+	})
+})
+</script>
+</head>
+<body>
+  <!-- <h1 class="high_light_0">Item-0</h1> -->
+  <h1>Item-0</h1>
+  <h1>Item-1</h1>
+  <h1>Item-2</h1>
+  <h1>Item-3</h1>
+  <h1>Item-4</h1>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

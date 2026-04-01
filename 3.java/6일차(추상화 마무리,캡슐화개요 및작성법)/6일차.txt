@@ -1,0 +1,228 @@
+6일차(추상화 마무리,캡슐화개요 및작성법)
+
+ 객체지향언어의 4대 구성요소
+
+1.추상화->2.캡슐화->3.다형성->4.배열->5.상속성
+
+<과제>
+     Alpha.java로 저장
+A
+AA
+AAA
+AAAA
+AAAAA
+
+     Alpha.java로 저장
+  =>규칙성->알파벳순서로 출력 ->아스키코드 65(A)
+  =>행이 추가될때 마다 아스키코드 값이 하나씩 증가
+A
+BC
+DEF
+GHIJ
+KLMNO
+===========================
+public class Alpha2 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+        int i,j;//i(행),j(별)
+        //추가
+        char mnu='A';
+        for(i=1;i<=5;i++) { //행1~5
+        	for(j=1;j<=i;j++) {//별1~5
+        	System.out.print(mnu);//출력할때 의 전의 아스키코드 증가값을 출력
+        	 mnu++;//문자->내부 아스키코드값으로 기억(숫자)
+        	}
+        	System.out.println();//줄바꿈
+        }
+	}
+}
+
+===========================
+Star2.java로 Save as 해서 Star3.java로 저장
+----------------------
+1.행이 증가(1행~5행 증가)=> for(i=1;i<=5;i++) { /
+2.별이 하나씩 감소(5->4->3->2->1 j)
+            for(j=5;j>=i;j--) 불변
+
+3.규칙->행이 증가할때 마다
+  continue =>skip문->별을 출력하지 않고 skip
+                    if문->복잡
+
+***** ->1행 
+  **** ->공백을 출력(System.out.println("  "))
+    ***
+      **
+        *
+결론)각 행이 증가할때마다 공백출력,별도 출력
+   
+공백->1행->0(공백) 공백 출력X
+          2행->1  i> k
+          3행->2
+          4행->3
+          5행->4
+
+i=1일때 k=1  k<i (1<1) *****
+i=2일때 k=1  k<i (1<2)   ****
+                           2<2      ***
+i=3일때 k=1  k<i (1<3)
+                           2<3
+                           3<3
+
+public class Star3 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+        int i,j;//i(행),j(별)
+        for(i=1;i<=5;i++) { //행1~5
+        	//1.공백출력->k(공백)
+        	for(int k=1;k<i;k++) {
+        		System.out.println(" ");
+        	}
+        	//2.별을 출력
+        	for(j=5;j>=i;j--) {//별1~5
+        	System.out.print("*");
+        	}
+        	System.out.println();//줄바꿈
+        }
+	}
+}
+
+------------------------------------
+***실행상태 step씩 과정을 이클립스 디버그를 이용***
+------------------------------------------------
+1.break point(중단점)을 지정
+  잘 소스코드가 이해가 안되는 부분을 지정
+ dc->중단점으로 지정
+
+2.디버그모드로 실행(F8)->단계적으로 확인
+  ->단계적으로 실행과정을 보는 경우(변수의 값을 확인할때)
+
+  F5(step info)->메서드 내부에 들어가서 내부적인 값을
+                        확인(내부적으로 관련된 메서드 찾아서
+                               확인하고 싶을때 사용)
+
+  F6(step over)->메서드 내부에서 벗어나서 처리되는
+                         과정(메서드의 리턴값을 확인할때 사용)
+
+----------------------------------------------------------
+추상화->객체(저장하고 싶은 대상자)
+           ->byte,short,int,long,float,double,char,
+           ->boolean->저장X ===>기능은 저장X
+           ->메서드->움직임(속성(멤버변수)+기능(메서드))
+           ->클래스를 만들어내는 과정(객체생성하기위해)
+
+1.객체생성(자동차)->자동차만 따로 저장할 수있는 공간
+                             만들어 달라
+      Car morning,sonata,sm5(변수) 자동차가 저장
+           자동차의 정보가 저장된 주소값을 저장하는 변수
+      int su,su2,su3(숫자가 저장),,,
+
+ 객체=참조변수=레퍼런스변수=포인터변수
+ 객체명.멤버변수=저장할값
+ 객체명.메서드명(~)
+===============================
+TV(설계목적(저장)),TVHandling(main())->실행목적
+
+ 메서드를 작성하고 안하고의 차이점(p230)
+
+1.전에 만들었던 코드를 재 사용할 수가 있다.
+2.코드의 관리가 용이해진다.
+3.신뢰성이 높다.(에러를 잡기가 쉽다)
+-------------------------------------------------
+
+캡슐화->p348->접근지정자를 이용
+Encapuslation
+
+캡슐화->추상화가 끝난 다음에 사용
+            추상화만 하면 데이터 저장(올바른 값을 저장X)
+
+목적
+
+1.외부로 부터 데이터(멤버변수에 저장된 값)를 보호하기 위해서
+2.외부로 부터 데이터를 은닉(감추기)하기위해서 
+  =>데이터를 저장시킬때 올바른 값만 입력을 받기위해서 사용하는
+       기법을 말한다.(=>참조 무결성 강화규칙)
+
+ =>부팅에러(바이러스 감염,c:\windows->시스템파일 삭제)
+                                               ->숨김파일로 처리됨
+
+캡슐화를 적용시키는 방법
+
+1.모든 멤버변수 앞에 private를 붙이면 엉터리값의 저장을 막을수있다
+                            (외부로부터 값을 저장시키는 차단)
+//1.객체의 공통적인 속성(or 특성)
+	private String name;//차이름
+	private int output;//배기량
+	private int year;//년식
+	private String color;//차의 색깔
+	//상태
+	private int current_speed;//속도
+	private boolean sidong=false;//차의 시동유무
+
+   =>데이터 저장자체가 안된다.
+
+2)따로 멤버변수에 접근해서 데이터를 저장,조회해 줄 수 있는
+   메서드를 작성한다.(Setter,Getter 메서드를 작성)
+
+1)Setter Method(메서드명이 set으로 시작(저장목적)
+                        매개변수 O 반환값 X
+
+ public void set멤버변수명(자료형 매개변수명){
+        멤버변수=매개변수명
+}
+---------------------------------------------------------------
+2)Getter Method->저장된 멤버변수의 값을 불러올때 사용
+                       ->매개변수X  반환값 O
+
+public 반환값 get멤버변수명(){
+   return 멤버변수명;
+}
+====================================
+//---------------------------------------------------------
+	public void setName(String n) {
+		name=n;
+	}
+	public void setOutput(int ou) {
+		output=ou;
+	}
+	public void setYear(int y) {
+		year=y;
+	}
+	public void setColor(String c) {
+		color=c;
+	}
+	public void setCurrent_speed(int sp) {
+		current_speed=sp;
+	}
+	public void setSidong(boolean b) {
+		sidong=b;
+	}
+	//Getter 
+	public String getName() { return name;}
+	public int getOutput() {return output;}
+	public int getYear() { return year;}
+	public String getColor() {return color;}
+	public int getCurrent_speed() {return current_speed;}
+	public boolean getSidong() { return sidong;}
+------------------------------------------------------------------
+
+
+
+
+
+
+               
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,319 @@
+package hewon;
+
+//���� ȣ��Ǵ� �޼��带 �����ϴ� Ŭ����->DB�����Ų �� �޼��� ȣ��
+//DBConnectionMgr --->MemberDAO ���� ����(has a ����)
+import java.sql.*;//DB
+import java.util.*;//Vector,ArrayList
+
+public class MemberDAO {
+    //1.DBConnectionMgr��ü�� ����
+	private DBConnectionMgr pool=null;
+	
+	//2.�����ڸ� ���ؼ� ��ü�� ���´�.->����
+	public MemberDAO() {
+		try {
+			pool=DBConnectionMgr.getInstance();//�����޼���
+			System.out.println("pool=>"+pool);
+		}catch(Exception e) {
+			System.out.println("DB���� ����->"+e);
+		}
+	}//������
+	
+	//1)�䱸�м��� ���� ȸ���α����� üũ�� ���ִ� �޼��� �ʿ�
+	//int ,boolean(true,false)->nup,1234
+	//select id,passwd from member where id='nup' and passwd='1234'
+	public  boolean  loginCheck(String id,String passwd) {
+		//1.DB접근
+		Connection  con=null;
+		PreparedStatement pstmt=null;//stmt
+		ResultSet rs=null;//select구문
+		boolean check=false;
+		String sql="";//sql구문
+		//2.DB접속구문
+		try {
+			con=pool.getConnection();//
+			System.out.println("con=>"+con);
+			//secure coding이 적용이 안된 경우
+			sql="select id,passwd from member where id='"+id+"'"+" and passwd='"+passwd+"'";
+			System.out.println("loginCheck()의 sql=>"+sql);
+			pstmt=con.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			
+			//secure coding이 적용이 된 상태
+			/*sql="select id,passwd from member where id=? and passwd=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, passwd);
+			rs=pstmt.executeQuery();*/
+			check=rs.next();//데이터가 존재->true  데이터가 존재X->false
+		}catch(Exception e) {
+			System.out.println("loginCheck()메서드 오류->"+e);
+		}finally {//3.DB접속해제
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return check;
+	}
+	//2)ȸ������->�ߺ�id�� üũ�� ���ִ� �޼��� �ʿ�
+	//select id from member where id='kkk';
+	public boolean checkId(String id) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		boolean check=false;
+		String sql="";//�����ų sql����
+		//2.�����ų SQL������ �ʿ�
+		try {
+			con=pool.getConnection();
+			sql="select id from member where id=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs=pstmt.executeQuery();
+			check=rs.next();//�����Ͱ� ����->true ,������ ->false
+		}catch(Exception e) {
+			System.out.println("checkId()���� ��������->"+e);
+		}finally {//3.DB��������
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return check;
+	}
+	
+	//3)�����ȣ->�����ȣ�� �˻�->�ڵ����� �Է�
+	//select zipcode from zipcode where area3 like '����3��%';->String
+	//select zipcode,area1 from zipcode where area3 like '����3��%';->ZipcodeDTO
+	//select * from zipcode where area3 like '����3��%'; //�Ѱ��̻�->Vector or ArrayList
+	public  Vector<ZipcodeDTO>   zipcodeRead(String area3) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;//select
+		//�߰�
+		Vector<ZipcodeDTO> vecList=new Vector();
+		String sql="";//�����ų sql����
+		//2.�����ų SQL������ �ʿ�
+		try {
+			con=pool.getConnection();
+			sql="select * from zipcode where area3 like '"+area3+"%'";
+			pstmt=con.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			//���ڵ尡 �Ѱ� �̻�
+			while(rs.next()) {
+				//vector or ZipcodeDTO(�ʵ庰�� ����(Setter)->rs.getXXX(�ʵ��)
+				ZipcodeDTO tempZipcode=new ZipcodeDTO();
+				tempZipcode.setZipcode(rs.getString("zipcode"));//("142-890");
+				tempZipcode.setArea1(rs.getString("area1"));
+				tempZipcode.setArea2(rs.getString("area2"));
+				tempZipcode.setArea3(rs.getString("area3"));
+				tempZipcode.setArea4(rs.getString("area4"));
+				//vector or ArrayList�� ��� ����
+				vecList.add(tempZipcode);//�뷫 13���� ���ڵ尡 ������ �ȴ�.
+			}
+		}catch(Exception e) {
+			System.out.println("zipcodeRead() ���� ��������->"+e);
+		}finally {//3.DB��������
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vecList;
+	}
+	
+	//4)ȸ������->insert into values(?,?,?~?)
+	public boolean memberInsert(MemberDTO mem) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		//ResultSet rs=null;->select�� �ʿ�
+		boolean check=false;//ȸ������ ��������
+		String sql="";//�����ų sql����
+		//2.�����ų SQL������ �ʿ�
+		try {
+			con=pool.getConnection();
+			//Ʈ����� ó��
+			con.setAutoCommit(false);
+			//-------------------------------
+			sql="insert into member values(?,?,?,?,?,?,?,?)";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, mem.getMem_id());//~(1,'test')
+			pstmt.setString(2, mem.getMem_passwd());
+			pstmt.setString(3, mem.getMem_name());
+			pstmt.setString(4, mem.getMem_email());
+			pstmt.setString(5, mem.getMem_phone());
+			pstmt.setString(6, mem.getMem_zipcode());
+			pstmt.setString(7, mem.getMem_address());
+			pstmt.setString(8, mem.getMem_job());
+			
+			int insert=pstmt.executeUpdate();//��ȯ 1 (����),0 (����)
+			con.commit();//���������� insert�۵��ȴ�.
+			if(insert > 0) { //if(insert==1){
+				check=true;
+			}
+		}catch(Exception e) {
+			System.out.println("memberInsert()���� ��������->"+e);
+		}finally {//3.DB��������
+			pool.freeConnection(con, pstmt);
+		}
+		return check;
+	}
+	
+	//5)ȸ�������� ���� ������ ȸ�������� ��¸޼���->nup
+	//select * from member wher id='nup';
+	//select * from member->public ArrayList or Vector getMemberList(){}
+	public MemberDTO getMember(String mem_id) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		MemberDTO mem=null;//id���� �ش�Ǵ� ���ڵ��Ѱ��� ����
+		String sql="";//�����ų sql����
+		//2.�����ų SQL������ �ʿ�
+		try {
+			con=pool.getConnection();
+			sql="select * from member where id=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, mem_id); //~(1,'nup')
+			rs=pstmt.executeQuery();
+			//id���� �ش��ϴ� ���ڵ带 ã�Ҵٸ�?
+			//String name=rs.getString("name")
+			if(rs.next()) {    //while(rs.next()){}=>�������� ���ڵ带 ������
+				mem=new MemberDTO();
+				mem.setMem_id(rs.getString("id"));//~('nup')
+				mem.setMem_passwd(rs.getString("passwd"));
+				mem.setMem_name(rs.getString("name"));
+				mem.setMem_phone(rs.getString("phone"));
+				mem.setMem_zipcode(rs.getString("zipcode"));
+				mem.setMem_address(rs.getString("address"));
+				mem.setMem_email(rs.getString("e_mail"));
+				mem.setMem_job(rs.getString("job"));
+			}
+		}catch(Exception e) {
+			System.out.println("getMember()���� ��������->"+e);
+		}finally {//3.DB��������
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return mem; //return name;
+	}
+	//6)ȸ������->ȸ�����԰� �����ϴ�.
+	public boolean memberUpdate(MemberDTO mem) {
+		
+		System.out.println("mem.getMem_id()=>"+mem.getMem_id());
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		boolean check=false;//ȸ������ ��������
+		String sql="";//�����ų sql����
+		//2.�����ų SQL������ �ʿ�
+		try {
+			con=pool.getConnection();
+			//Ʈ����� ó��
+			con.setAutoCommit(false);
+			//-------------------------------
+			sql="update member set passwd=?,name=?,e_mail=?,phone=?,"
+					+ " zipcode=?,address=?, job=?  where id=?";
+			
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, mem.getMem_passwd());
+			pstmt.setString(2, mem.getMem_name());
+			pstmt.setString(3, mem.getMem_email());
+			pstmt.setString(4, mem.getMem_phone());
+			pstmt.setString(5, mem.getMem_zipcode());
+			pstmt.setString(6, mem.getMem_address());
+			pstmt.setString(7, mem.getMem_job());
+			pstmt.setString(8, mem.getMem_id());
+			
+			int update=pstmt.executeUpdate();//��ȯ 1 (����),0 (����)
+			con.commit();//���������� update�۵��ȴ�.
+			if(update == 1) { //if(update==1){
+				check=true; //��������
+			}
+		}catch(Exception e) {
+			System.out.println("memberUpdate()���� ��������->"+e);
+		}finally {//3.DB��������
+			pool.freeConnection(con, pstmt);//rs�� ����.(select�� �ƴ�)
+		}
+		return check;
+	}
+	
+	//7)ȸ��Ż��
+	//passwd->����ڷκ��� ���� �Է¹޴� ���, id->�Ķ���Ͱ����� ����
+	public int deleteMember(String id,String passwd) {
+		Connection con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null; //select passwd from member where id='nup'
+		String dbpasswd="";//DB�󿡼� ã�� ��ȣ�� ����
+		int x=-1;//ȸ�� Ż�� ����
+		
+		try {
+			con=pool.getConnection();
+			con.setAutoCommit(false);
+			//1.id���� �ش��ϴ� �Ǵ� ��ȣ���� ã��
+			pstmt=con.prepareStatement("select passwd from member where id=?");
+			pstmt.setString(1, id);
+			rs=pstmt.executeQuery();
+			//��ȣ�� �����Ѵٸ�
+			if(rs.next()) {
+				dbpasswd=rs.getString("passwd");//rs.getString(1);
+				System.out.println("dbpasswd="+dbpasswd);
+				//dbpasswd(DB�󿡼� ã�� ��ȣ)==passwd(����))
+				if(dbpasswd.equals(passwd)) {
+					pstmt=con.prepareStatement("delete from member where id=?");
+					pstmt.setString(1, id);
+					int delete=pstmt.executeUpdate();
+					con.commit();
+					System.out.println("delete(ȸ��Ż�� ��������)="+delete);
+					x=1;//ȸ��Ż�� ����
+				}else {//ȸ��Ż�� ����->��ȣ�� Ʋ�����
+					x=0;
+				}
+			}
+		}catch(Exception e) {
+			System.out.println("deleteMember()ȣ���=>"+e);
+		}finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return x;
+	}
+	
+	//8)ȸ������Ʈ->select * from member (��ǰ,ī�װ�,,,,)
+	public ArrayList<MemberDTO>  getMemberList(){
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		ArrayList<MemberDTO> memList=null;// ���ڵ��Ѱ��̻� �� ����
+		String sql="";//�����ų sql����
+		//2.�����ų SQL������ �ʿ�
+		try {
+			con=pool.getConnection();
+			sql="select * from member ";
+			pstmt=con.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			//id���� �ش��ϴ� ���ڵ带 ã�Ҵٸ�?
+			//String name=rs.getString("name")
+			while(rs.next()) {    //while(rs.next()){}=>�������� ���ڵ带 ������
+				MemberDTO mem=new MemberDTO();
+				mem.setMem_id(rs.getString("id"));//~('nup')
+				mem.setMem_passwd(rs.getString("passwd"));
+				mem.setMem_name(rs.getString("name"));
+				mem.setMem_phone(rs.getString("phone"));
+				mem.setMem_zipcode(rs.getString("zipcode"));
+				mem.setMem_address(rs.getString("address"));
+				mem.setMem_email(rs.getString("e_mail"));
+				mem.setMem_job(rs.getString("job"));
+				//ArrayList�� ���
+				memList.add(mem);
+			}
+		}catch(Exception e) {
+			System.out.println("getMemberList()���� ��������->"+e);
+		}finally {//3.DB��������
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return memList;
+		
+	}
+}
+
+
+
+
+
+
+
+

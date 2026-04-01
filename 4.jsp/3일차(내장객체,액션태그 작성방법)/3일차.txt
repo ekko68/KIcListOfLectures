@@ -1,0 +1,304 @@
+﻿3일차(내장객체,액션태그 작성밥)
+
+=>Jsp문법을 정리(4대구성요소 
+                          (스크립트릿,표현식,선언문,주석(지시어))
+=>서블릿 개요 및 작성법
+--------------------------------------------------------------
+서블릿(대부분 80%(자바소스)+20%(html,css,js~)
+       =>실행속도가 빠르다
+ =>Jsp(html,css,js+최소한의 자바코드)=>규모가 크게되면
+     중소규모 사이트(모델1)
+     중복소스 코드 늘어남-->서블릿+jsp(모델2)=>표준
+-----------------------------------------------------------
+jsp개발->내부적으로 자동적으로 서블릿으로 변환->실행
+                                             서블릿----------->실행
+---------------------------------------------------------------------
+자바스크립트->jQuery->angular,react(클래스(자바+자바스크립트)
+고급(클래스)
+----------------------------------------------------------------------
+자바스크립트의 이벤트처리 방식->함수 호출
+
+<a href="JavaScript:goBox()">표만들기</a>
+
+if(tr_cnt.options.selectedIndex==1) || 
+  if(tr_cnt.options.selectedIndex==2)
+ ,,,
+if(tr_cnt.options.selectedIndex==9)
+
+ 기본형식) window.document.폼객체명.입력양식객체명.속성명=값
+                객체명.함수명(~)
+
+   AB+AC+AD=>A(B+C+D)
+  with(공통인 부분){
+
+  }
+----------------------------------------------------
+********차이점
+<input type="submit" value="표만들기">
+  =>자동적으로 action="box_proc.jsp로 전송한다.
+
+<input type="button" value="표만들기" onclick="함수명()">
+  =>자동적으로 action="box_proc.jsp로 (전송 X)
+  =>document.폼객체명.submit()을 꼭 써줘야 된다.
+
+<a href="JavaScript:호출할 함수명(~)">표만들기</a>
+=>자동적으로 action="box_proc.jsp로  (전송 X)
+  =>document.폼객체명.submit()을 꼭 써줘야 된다.
+*********
+--------------------------------------------------------------------
+<button>표만들기</button>=>jQuery
+
+==============================
+jsp와 서블릿의 관계 확인
+
+box_proc.jsp로 구성=>응용 서블릿으로 변환
+
+사용자 정의 서블릿
+-----------------------------------------------------
+응용 서블릿의 특징
+
+import javax.servlet.*;
+import javax.servlet.http.*;  =>사용자 정의 서블릿과 동일
+               +
+1.import javax.servlet.jsp.*; //jsp를 위한 서블릿 패키지가 추가
+
+
+2.public final class=>상속 금지
+            -----
+3.org.apache.jasper.runtime.HttpJspBase
+                                           ========
+  HttpServlet을 상속-->HttpJspBase를 상속받게 되어있다.
+      부모                            자식
+
+4. 서블릿 실행 ->init()---->_jsp_Init()로 변경된다.
+    get or post->service()--->_jspService()로 변경된다.
+                        destroy()-->_jspDestroy() 변경
+------------------------------------------------------------
+웹상에서 요청->처리해주는 메서드
+service()--->_jspService()
+
+내장객체가 따로 만들어진다.=>8~9가지
+(=default객체(기본객체))
+
+   //내장객체 선언
+    PageContext pageContext;//서블릿을 관리하고 정보를 공유하도록 도와주는 객체
+
+ * HttpSession session = null;  //세션(회원 로그인 해서 결재할때)
+   ServletContext application; //application(모든 jsp페이지에서 공통으로
+                                                                 사용하는 객체)
+   ServletConfig config;//서블릿의 환경설정에 관여하는 객체
+ * JspWriter out = null; //출력객체( 데이터를 전송할때 필요)
+ * page = this; //jsp작성할때 마다 만들어진 객체
+  ---------------------------------------------------------------
+  JspWriter _jspx_out = null;
+  PageContext _jspx_page_context = null;
+
+  *HttpServletRequest request  ->요청객체
+  *HttpServletResponse response->응답객체
+
+try {
+	  //내장객체 생성부분
+      response.setContentType("text/html; charset=UTF-8");
+      pageContext = _jspxFactory.getPageContext(this, request, response,
+      			null, true, 8192, true);
+      _jspx_page_context = pageContext;
+      application = pageContext.getServletContext();
+      config = pageContext.getServletConfig();
+      session = pageContext.getSession();
+      out = pageContext.getOut();
+      _jspx_out = out;
+
+------------------------------------
+=>request,response,out,session
+-------------------------------------
+JspWork->새 프로젝트명 생성
+      |
+       -WebContent
+               |
+                -inobject->req.jsp
+--------------------------------------
+1.서버의 도메인 이름을 반환 <%=request.getServerName() %><br>
+2.서버의 포트 번호를 반환 <%=request.getServerPort() %><br>
+
+*3.요청된 URL에서 경로를 반환<%=request.getRequestURL() %><br>
+*4.요청된 URI에서 경로를 반환<%=request.getRequestURI() %><br>
+------------------------------------------------------------------------------
+ 3.요청된 URL에서 경로를 반환http://localhost:8090/JspWork/inobject/req.jsp
+                                          http프로토콜부터 요청문서까지의 경로 전체
+
+ 4.요청된 URI에서 경로를 반환/JspWork/inobject/req.jsp
+                                        =>/JspWork/inobject/req.jsp (모델2에서 경로)
+                                         서버포트이후 부터 요청문서까지의 경로
+
+*5.String getRemoteAddr()(원격ip 주소) <%=request.getRemoteAddr() %><br>
+
+6.클라이언트가 요청한 프로토콜을 반환 <%=request.getProtocol() %><br>
+*7.요청 방식(GET, POST)을 반환 <%=request.getMethod() %><br>
+------------------------------------------------------------------------------------------
+
+ 응답객체(=response)=>res.jsp
+ ==>문서의 타입및 한글처리
+ response.setContentType("text/html;charset=utf-8");
+ response.sendRedirect("경로포함해서 이동할 페이지명");//페이지 이동
+---------------------------------------------------------------------------
+
+웹프로그래밍=>******페이지 이동시키는 방법(jsp)******* =>기술 면접
+                  =>오라클->join,subQuery(실습)
+
+
+1.response객체->
+
+                                    ->http:// 반드시 줄것
+ //response.sendRedirect("http://www.chosun.com");  외부의 사이트로 이동
+     response.sendRedirect("./req.jsp"); //상대경로를 지정(내부 파일이동)
+    =>**URL창이 이동할 페이지로 전환이 되면서 이동이 된다.
+    =>데이터를 서로 공유할 수없다.
+
+2.forward액션태그==>모델2의 핵심
+    =>외부의 사이트로 이동X
+    =>자기 프로젝트의 다른 페이지로만 이동이 가능하다.(O)
+    =>**URL창이 이동할 페이지로 전환이 X **
+    결론) 데이터를 공유하면서 페이지를 이동시킬 수 가 있다.
+
+회원로그인->예매페이지 1-->예매페이지 2--->예매페이지 3
+                    지역                 상영관 시간        카드,무통장입금
+
+ 웹->페이지이동하면 전의 정보가 사라진다.=>세션처리
+
+  A.jsp=>B.jsp=>C.jsp
+ int su=100
+
+3.자바스크립트->location.href="이동할 페이지명"
+                        location.replace("http://~이동할 페이지명")
+                        history.back()->전의 페이지로 이동
+                        history.go(-1)->전의 페이지로 이동
+                        history.forward()->앞의 페이지로 이동
+=======================================
+액션태그=>어떤 기능(페이지 이동,외부의 파일을 불러오는 기능)을 가진 태그
+                 메인페이지(index.jsp->top.jsp,bottom.jsp,left,jsp,body.jsp)
+            =>객체를 생성,Setter,Getter->태그
+
+액션태그의 종류->5가지 종류
+  ->(useBean,setProperty,getProperty),
+  ->include,forward->메인페이지를 작성
+      ------------------------------------- -----------------
+
+  ->액션원소(p831)
+
+액션태그-> JspWork
+                      |
+                       -WebContent
+                                inobject
+                                action->form.jsp--->include.jsp---->sub.jsp
+                                               요청            응답페이지   응답페이지2
+                                   ex)      사장   ----->     부장-------->  과장
+                                                       <----부장(처리한 부분)            <-------
+                                                                     +
+                                                               과장(전송 받은 나머지부분)
+*****
+include액션태그를 사용(X) or (O)
+include지시어의 차이점
+
+공통점->둘다 외부의 파일의 내용을 불러와서 특정한 위치에 삽입한다.
+차이점->include 액션태그=>동적으로 변경된 내용을 특정한 위치에 삽입
+                                    =>angular or react (새로 고침 F5)
+
+            include 지시어->정적으로 문자열만 복사->특정한 위치에 삽입
+*****
+------------------------------------------------------------------------------
+
+형식) <jsp:include page="include.jsp"/> ->시작태그와 종료태그 사이에 내용이
+                                                                없음을 표시하는 구분=> />
+
+        <jsp:include page="include.jsp"  flush="false">
+
+        flush="false"==>입출력할때 화면에 출력하기전까지 버퍼에 쌓아놓음
+                                                                                8kb
+         지정한 페이지로 이동할때 현재 작업한 내용을 버퍼에 쌓아놓게 되는데
+         이 작업한 내용을 ->현재 브라우저에게 전부 전송하고 지정한 페이지로
+          이동유무를 결정해주는 속성(true->브라우저에게 전송 거의 사용X)
+           false->계속 보관하는 속성값
+
+        </jsp:include>
+
+        <식별자:액션태그명 액션태그의 속성명="속성값(경로포함해서 이동할페이지명)"~ />
+                                       속성명 순서는 정해져 있지 않음(순서 중요X)
+ 식별자->액션태그의 종류를 구분하는 인자로 사용된다.
+          ex) <c:out~>
+-----------------------------------------------------------------------------------
+  forward액션태그를 이용해서 페이지를 이동(모델2와 연관)
+                         form.jsp (save as)             include.jsp(save as)
+         forward->forward.jsp(이동할 페이지명)-->move.jsp-->a.jsp
+                                                                                         b.jsp
+
+HTTP Status 404 – Not Found ->경로포함해서 파일명이 틀린경우
+----------------------------------------------------------------------
+전철패스(수도권) 서울,경기일부
+
+  **A.jsp (int su=100;)=>현재 보고 있는 페이지에서만 변수사용(default page)
+ -------------------------
+  B.jsp->2.request(요청--->응답)->하나의 변수를 두페이지에서 공유해서 사용
+                                   <---
+--------------------->두페이지를 공유해서 사용(요청,응답)
+ 로그인을 해야 볼 수 있는 페이지-->회원제로 운영하는 사이트
+    10페이지->***세션처리 (session)
+
+  C.jsp->page
+  D.jsp->page
+-----------
+ 모든 페이지에서 다 공유해서 사용할 수 있는 사용범위->application(x)
+====>50 page로 작성된 사이트
+
+  int sum=100;
+  String str="shared!"
+
+  =>서버의 메모리에 저장->request.setAttribute(키,value값)
+                                       session.setAttribute(키,value값)=>세션처리
+
+ ex) request.setAttribute("total",su);//int->Integer->Object->형변환
+      request.setAttribute("cal",d);
+  --------------------------------------------------------------------------
+  move.jsp---------------->a.jsp (sum->100)
+                ---------------->b.jsp (str->출력)->shared!
+
+                                       request.getAttribute(키명)
+==========================================
+ 메인페이지 사용법->include,forward태그를 사용
+                             활용(ex 제약회사 홈페이지)
+
+ 자바빈즈의 개요 및 작성법->useBean,setProperty,getProperty
+ 쿠키와 세션->DB
+
+   ->자바빈즈를 이용한 과제?
+----------------------------------------------------------------------  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

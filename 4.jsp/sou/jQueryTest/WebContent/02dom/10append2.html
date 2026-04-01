@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(태그를 추가시키는 유형2)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	/*
+	 함수    설명
+	 $(A).append(B)->B를 A의 기존자식의 뒤에 추가
+	 $(A).prepend(B)->B를 A의 기존자식의 앞에 추가
+	 $(A).after(B)->B를 A뒤에 추가  (자식에 추가X)
+	 $(A).before(B)->B를 A앞에 추가 (자식에 추가X)
+	*/
+	
+	//(1)$('div').append('<h1>jQueryTest</h1>') 
+	//(2) $('div').prepend('<h1>jQueryTest</h1>')
+	
+	//(3)$('div').after('<h1>DOMTest </h1>') 
+	
+	//$('div').css('color','red').before('<h1>DOMTest</h1>')
+	$('img').attr('width',100).before('<h1>DOMTest</h1>') 
+})
+</script>
+</head>
+<body>
+      <!-- (4)<h1>DOMTest</h1> -->
+  <div>
+          <!-- (2)<h1>jQueryTest</h1> -->
+          <h1>8월의 금요일 오전?</h1>
+          <!-- (1) <h1>jQueryTest</h1> -->
+   </div>
+       <!-- (3)<h1>DOMTest</h1> -->
+   <h1>건강을 잘 챙기시길...!</h1>
+   <img src="../picCats/Persian.jpg">
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

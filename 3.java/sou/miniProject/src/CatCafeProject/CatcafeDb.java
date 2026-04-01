@@ -1,0 +1,486 @@
+package CatCafeProject;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.text.JTextComponent;
+//DB연동
+import java.sql.*;
+import java.awt.event.*;
+
+public class CatcafeDb extends JPanel implements ActionListener{
+
+	JTextArea taDbmemo;
+	//	
+	JButton btnDbCreate, btnDbDrop, btnClose, btnDbIn;
+	JTextField txtId, txtPw;
+		
+	private Connection conn;//연결객체
+	private Statement stmt;//sql 구문을 사용하기 위해 필요한 객체
+	int list;
+	String sql;//sql구문 저장
+	
+	
+	public CatcafeDb() {
+		//부착시킬 컴포넌트 리스트
+		design();
+		addListener();
+		//accDb(); //버튼클릭시 작동되도록 변경함
+	}
+	private void design() {
+		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JPanel dbIP=new JPanel();
+		dbIP.setBorder(new TitledBorder(new TitledBorder("ID, PW 입력"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		dbIP.setPreferredSize(new Dimension(400, 80));
+		FlowLayout fl_pIP1 = new FlowLayout(FlowLayout.CENTER);
+		JPanel pIP1=new JPanel(fl_pIP1);
+		pIP1.setBorder(new EmptyBorder(10, 0, 0, 0));
+		FlowLayout fl_pIP2 = new FlowLayout(FlowLayout.CENTER);
+		JPanel pIP2=new JPanel(fl_pIP2);
+		pIP2.setBorder(new EmptyBorder(10, 0, 0, 0));
+		
+		txtId = new JTextField("",12);
+		txtPw = new JTextField("",12);
+		
+		pIP1.add(new JLabel("ID:"));
+		pIP1.add(txtId);
+		pIP2.add(new JLabel("PW:"));
+		pIP2.add(txtPw);
+		dbIP.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		dbIP.add(pIP1); dbIP.add(pIP2);
+		this.add(dbIP);
+		
+		JPanel dbPn=new JPanel(new GridLayout(0,3));
+		dbPn.setBorder(new TitledBorder(new TitledBorder("DB입력 삭제"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		dbPn.setPreferredSize(new Dimension(400, 80));
+		FlowLayout fl_pPn1 = new FlowLayout(FlowLayout.CENTER);
+		JPanel pPn1=new JPanel(fl_pPn1);
+		pPn1.setBorder(new EmptyBorder(5, 0, 0, 0));
+		FlowLayout fl_pPn2 = new FlowLayout(FlowLayout.CENTER);
+		JPanel pPn2=new JPanel(fl_pPn2);
+		pPn2.setBorder(new EmptyBorder(5, 0, 0, 0));
+		FlowLayout fl_pPn3 = new FlowLayout(FlowLayout.CENTER);
+		JPanel pPn3=new JPanel(fl_pPn3);
+		pPn3.setBorder(new EmptyBorder(5, 0, 0, 0));
+		
+		btnDbCreate=new JButton("확인");
+		btnDbCreate.setMargin(new Insets(0, 10, 0, 10));
+		btnDbIn=new JButton("확인");
+		btnDbIn.setMargin(new Insets(0, 10, 0, 10));
+		btnDbDrop=new JButton("확인");
+		btnDbDrop.setMargin(new Insets(0, 10, 0, 10));
+		
+		pPn1.add(new JLabel("DB생성:"));
+		pPn1.add(btnDbCreate);
+		pPn2.add(new JLabel("DB입력:"));
+		pPn2.add(btnDbIn);
+		pPn3.add(new JLabel("DB삭제:"));
+		pPn3.add(btnDbDrop);
+
+		dbPn.add(pPn1); dbPn.add(pPn2); dbPn.add(pPn3);
+		this.add(dbPn);
+		
+		JPanel dbPn2=new JPanel(new GridLayout(0,1));
+		dbPn2.setBorder(new TitledBorder(new TitledBorder("DB결과"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+		dbPn2.setPreferredSize(new Dimension(400, 240));
+		
+		taDbmemo=new JTextArea(8,30);
+		taDbmemo.setText("DB 결과가 이곳에 출력됩니다.\n");
+		taDbmemo.setTabSize(10);
+		JScrollPane scroll=new JScrollPane(taDbmemo,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		taDbmemo.setEditable(false);
+		taDbmemo.setBackground(Color.lightGray);
+		
+		dbPn2.add(scroll); 
+		scroll.setBorder(BorderFactory.createEmptyBorder(1, 1, 5, 5));
+		
+		this.add(dbPn2);
+		
+		JPanel bottomPn=new JPanel();
+		FlowLayout flowLayout = (FlowLayout) bottomPn.getLayout();
+		flowLayout.setVgap(0);
+		flowLayout.setHgap(0);
+		bottomPn.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+		bottomPn.setPreferredSize(new Dimension(400, 40));
+		btnClose=new JButton("닫기");
+		
+		bottomPn.add(btnClose);
+		
+		this.add(bottomPn);
+		
+	}
+	private void addListener() {
+		btnDbCreate.addActionListener(this);
+		btnDbIn.addActionListener(this);
+		btnDbDrop.addActionListener(this);
+		btnClose.addActionListener(this);
+	}
+	private void accDb() {
+		try {
+			//1.오라클 드라이버 메모리에 올림
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			String url="jdbc:oracle:thin:@localhost:1521:orcl";//url주소값
+			//2.접속하기위한 메서드(1.접속url,2.계정명, 3.접속 암호)
+			conn=DriverManager.getConnection(url, txtId.getText(), txtPw.getText());
+			//추가(신규,수정 -> 레코드이동 -> 자동으로 스크롤 이동시 수정이 반영)
+			stmt=conn.createStatement();//웹에서는 사용안함
+
+			System.out.println("접속conn=>"+conn);
+		}catch(Exception e) {
+			System.out.println("DB접속 오류=>"+e);
+		}
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==btnDbCreate) {//입력버튼을 눌렀다면
+			accDb();
+			createCat();
+			createPeople();
+		}else if(e.getSource()==btnDbIn){//
+			accDb();
+			insertTable();
+		}else if(e.getSource()==btnDbDrop){//
+			accDb();
+			dropTable();
+		}else if(e.getSource()==btnClose) {
+			int re = JOptionPane.showConfirmDialog(this, "정말 종료할까요?","선택",JOptionPane.YES_NO_OPTION);
+			try {
+				if(re == JOptionPane.YES_OPTION) {
+					if(stmt!=null)stmt.close();
+					if(conn!=null)conn.close();
+				}
+				if(re == JOptionPane.NO_OPTION) return;
+			}catch(Exception e2) {
+				System.out.println("에러유발->e2"+e2);
+			}finally {
+				if(re == JOptionPane.YES_OPTION) {
+					CatcafeMain.cat_db.setEnabled(true);//대여메뉴 활성화
+					CatcafeMain.childWinDb.dispose();//메모리해제하고 종료
+				}
+				if(re == JOptionPane.NO_OPTION) return;
+			}
+		}
+	}
+	
+	private void createCat() {
+		try {
+			sql="CREATE TABLE Cat (" + 
+					"	no NUMBER NOT NULL, " + 
+					"	fk_Person_no NUMBER, " + 
+					"	kind VARCHAR2(100), " + 
+					"	name VARCHAR2(20), " + 
+					"	gender CHAR NOT NULL, " + 
+					"	birthday DATE, " + 
+					"	picPath VARCHAR2(255), " + 
+					"	isReleased CHAR NOT NULL, " + 
+					"	note VARCHAR2(255))";
+			int create= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat DB생성 성공유무(create)=>"+create);
+			
+			sql="COMMENT ON TABLE Cat IS '고양이정보'";
+			int comment1= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment1)=>"+comment1);
+			
+			sql="COMMENT ON COLUMN Cat.no IS '인덱스'";
+			int comment2= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment2)=>"+comment2);
+			
+			sql="COMMENT ON COLUMN Cat.fk_Person_no IS 'Person외래키'";
+			int comment3= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment3)=>"+comment3);
+			
+			sql="COMMENT ON COLUMN Cat.kind IS '품종'";
+			int comment4= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment4)=>"+comment4);
+			
+			sql="COMMENT ON COLUMN Cat.name IS '고양이명'";
+			int comment5= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment5)=>"+comment5);
+			
+			sql="COMMENT ON COLUMN Cat.gender IS '성별(여:F/남:M)'";
+			int comment6= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment6)=>"+comment6);
+			
+			sql="COMMENT ON COLUMN Cat.birthday IS '생일'";
+			int comment10= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment7)=>"+comment10);
+			
+			sql="COMMENT ON COLUMN Cat.picPath IS '고양이 사진 경로(C:/catCafe/picCats/)'";
+			int comment7= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment8)=>"+comment7);
+			
+			sql="COMMENT ON COLUMN Cat.isReleased IS '분양여부(Y/N)'";
+			int comment8= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment9)=>"+comment8);
+			
+			sql="COMMENT ON COLUMN Cat.note IS '비고란'";
+			int comment9= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(comment10)=>"+comment9);
+			
+			sql="CREATE UNIQUE INDEX PK_Cat ON Cat (no ASC)";
+			int create2= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(create2)=>"+create2);
+			
+			sql="ALTER TABLE Cat ADD CONSTRAINT PK_Cat PRIMARY KEY ( no )";
+			int alter= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("Cat데이터 입력 성공유무(alter)=>"+alter);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB Cat 테이블생성에 성공했습니다.\n");
+			
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(this, "고양이 테이블 생성실패");
+			System.out.println("고양이 테이블 생성실패"+e);
+		}
+		
+	}
+	private void createPeople() {
+		try {
+			sql="CREATE TABLE People (" + 
+					"	no NUMBER NOT NULL, " + 
+					"	name VARCHAR2(15) NOT NULL, " + 
+					"	tel VARCHAR2(15), " + 
+					"	addr VARCHAR2(255), " + 
+					"	suspend CHAR, " + 
+					"	note VARCHAR2(255) " + 
+					")";
+			int create= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People DB생성 성공유무(create)=>"+create);
+			
+			sql="COMMENT ON TABLE People IS '분양자정보'";
+			int comment1= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(comment1)=>"+comment1);
+			
+			sql="COMMENT ON COLUMN People.no IS '인덱스'";
+			int comment2= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(comment2)=>"+comment2);
+			
+			sql="COMMENT ON COLUMN People.name IS '고객명'";
+			int comment3= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(comment3)=>"+comment3);
+			
+			sql="COMMENT ON COLUMN People.tel IS '연락처'";
+			int comment4= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(comment4)=>"+comment4);
+			
+			sql="COMMENT ON COLUMN People.addr IS '주소'";
+			int comment5= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(comment5)=>"+comment5);
+			
+			sql="COMMENT ON COLUMN People.suspend IS '고양이 분양 보류(Y/N)'";
+			int comment6= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(comment6)=>"+comment6);
+			
+			sql="COMMENT ON COLUMN People.note IS '비고란'";
+			int comment7= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(comment7)=>"+comment7);
+				
+			sql="CREATE UNIQUE INDEX PK_People ON People (no ASC)";
+			int create2= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(create2)=>"+create2);
+			
+			sql="ALTER TABLE People ADD CONSTRAINT PK_People PRIMARY KEY ( no )";
+			int alter= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("People데이터 입력 성공유무(alter)=>"+alter);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB People 테이블 생성에 성공했습니다.\n");
+		
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(this, "People 테이블 생성실패");
+			System.out.println("People 테이블 생성실패"+e);
+		}
+		try {
+			sql="CREATE TABLE Research (" + 
+					"	no NUMBER NOT NULL, " + 
+					"	fk_People_no NUMBER, " + 
+					"	familyAgree CHAR, " + 
+					"	residence VARCHAR2(50), " + 
+					"	havePet CHAR, " + 
+					"	note VARCHAR2(255))";
+			int create= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 DB생성 성공유무(create)=>"+create);
+			
+			sql="COMMENT ON TABLE Research IS '설문조사'";
+			int comment1= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(comment1)=>"+comment1);
+			
+			sql="COMMENT ON COLUMN Research.no IS '인덱스'";
+			int comment2= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(comment2)=>"+comment2);
+			
+			sql="COMMENT ON COLUMN Research.fk_People_no IS 'Person외래키'";
+			int comment3= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(comment3)=>"+comment3);
+			
+			sql="COMMENT ON COLUMN Research.familyAgree IS '가족동의여부(Y/N)'";
+			int comment4= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(comment4)=>"+comment4);
+			
+			sql="COMMENT ON COLUMN Research.residence IS '주거형태'";
+			int comment5= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(comment5)=>"+comment5);
+			
+			sql="COMMENT ON COLUMN Research.havePet IS '다른 동물을 키우는지 여부(Y/N)'";
+			int comment6= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(comment6)=>"+comment6);
+			
+			sql="COMMENT ON COLUMN Research.note IS '비고란'";
+			int comment7= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(comment7)=>"+comment7);
+			
+			sql="CREATE UNIQUE INDEX PK_Research ON Research (no ASC)";
+			int create2= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(create2)=>"+create2);
+			
+			sql="ALTER TABLE Research ADD CONSTRAINT PK_Research PRIMARY KEY ( no )";
+			int alter= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("리서치 데이터 입력 성공유무(alter)=>"+alter);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB Research 테이블 생성에 성공했습니다.\n");
+			
+		}catch(Exception e2) {
+			JOptionPane.showMessageDialog(this, "리서치 테이블 생성실패");
+			System.out.println("리서치 테이블 생성실패"+e2);
+		}
+	}
+	private void insertTable() {
+		try {
+			//PEOPLE 기초 자료입력
+			sql="insert into people values(1,'공유','공유폴더에있음','아주 그냥 KBS에서 삼','N','2 번 고양이를 신청함 ')";
+			int PInsert1=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(PInsert1)=>"+PInsert1);
+			sql="insert into people values(2,'뱀파이어','PGPGPG','광명 고수 동굴','N','10 번 고양이를 신청함 ')";
+			int PInsert2=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(PInsert2)=>"+PInsert2);
+			sql="insert into people values(3,'박동긔','1661-2000','서울특별시 송파구 올림픽로 300 롯데월드 아쿠아리움','N','5 번 고양이를 신청함 ')";
+			int PInsert3=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(PInsert3)=>"+PInsert3);
+			sql="insert into people values(4,'긴팔원숭이','5975-8282-486','롯데월드 동물원 큰 나무 아래 401호','N','9 번 고양이를 신청함 ')";
+			int PInsert4=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(PInsert3)=>"+PInsert4);
+			sql="insert into people values(5,'채순실','검찰에게 압수됨','경기도 과천시 관문로 47 정부과천청사 1동 법무부 교정본부 안양교도소','N','8 번 고양이를 신청함 ')";
+			int PInsert5=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(PInsert3)=>"+PInsert5);
+			sql="insert into people values(6,'고메즈','1992-7-22-24','텍사스 그랜드프레리','N','7 번 고양이를 신청함 ')";
+			int PInsert6=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(PInsert3)=>"+PInsert6);
+			sql="insert into people values(7,'Sam Clafin','2010-2015-31','Samuel George Claflin 새뮤얼 조지 클라플린 서퍽 주 입스위치 잉글랜드','N','6 번 고양이를 신청함 ')";
+			int PInsert7=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(PInsert3)=>"+PInsert7);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB People 테이블 자료입력에 성공했습니다.\n");
+			
+			//CAT 기초 자료입력
+			sql="Insert into CAT values(1, null, 'Abyssinian', '뱅이', 'M', '2015-10-01', 'C:/catCafe/picCats/Abyssinian.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 구조:2015-10-01, 중성화 완료')";
+			int CInsert1=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert1)=>"+CInsert1);
+			sql="Insert into CAT values(2, null, 'AmericanShorthair', '타이거', 'F', '2015-10-01', 'C:/catCafe/picCats/AmericanShorthair.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 구조:2015-10-01, 중성화 완료')";
+			int CInsert2=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert2)=>"+CInsert2);
+			sql="Insert into CAT values(3, null, 'BritishShorthairs', '소미', 'F', '2015-08-01', 'C:/catCafe/picCats/BritishShorthairs.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 중성화 예정')";
+			int CInsert3=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert3)=>"+CInsert3);
+			sql="Insert into CAT values(4, null, 'exoticShorthair', '넙득이', 'M', '2016-09-11', 'C:/catCafe/picCats/exoticShorthair.jpg', 'N', '예방접종 3차 완료, 분양:2017-02-02, 중성화 예정')";
+			int CInsert4=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert4)=>"+CInsert4);
+			sql="Insert into CAT values(5, null, 'MaineCoon', '간지', 'M', '2016-10-01', 'C:/catCafe/picCats/MaineCoon.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 분양:2015-12-01, 중성화 완료')";
+			int CInsert5=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert5)=>"+CInsert5);
+			sql="Insert into CAT values(6, null, 'Persian', '안개', 'F', '2016-07-01', 'C:/catCafe/picCats/Persian.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 중성화 완료')";
+			int CInsert6=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert6)=>"+CInsert6);
+			sql="Insert into CAT values(7, null, 'ragdoll', '나비', 'F', '2017-01-03', 'C:/catCafe/picCats/ragdoll.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 구조:2017-01-03, 분양:2017-01-10, 중성화 완료')";
+			int CInsert7=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert7)=>"+CInsert7);
+			sql="Insert into CAT values(8, null, 'RussianBlue', '그랭', 'M', '2016-04-21', 'C:/catCafe/picCats/RussianBlue.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 구조:2016-04-21, 중성화 완료')";
+			int CInsert8=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert8)=>"+CInsert8);
+			sql="Insert into CAT values(9, null, 'siameze', '얼깜이', 'F', '2016-04-17', 'C:/catCafe/picCats/siameze.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 구조:2016-04-17, 중성화 완료')";
+			int CInsert9=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert9)=>"+CInsert9);
+			sql="Insert into CAT values(10, null, 'Sphinx', '스핑크', 'M', '2016-11-24', 'C:/catCafe/picCats/Sphinx.jpg', 'N', '예방접종 4차 완료 및 기생충 예방접종 완료, 구조:2016-11-24, 중성화 완료')";
+			int CInsert10=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(CInsert10)=>"+CInsert10);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB Cat 테이블 자료입력에 성공했습니다.\n");
+			
+			//RESEARCH 기초 자료입력
+			sql="insert into research values(1,1,'Y','KBS사옥','Y','메 모2 번 고양이를 신청함 ')";
+			int RInsert1=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(RInsert1)=>"+RInsert1);
+			sql="insert into research values(2,2,'N','동굴 ','Y','메 모10 번 고양이를 신청함 ')";
+			int RInsert2=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(RInsert1)=>"+RInsert2);
+			sql="insert into research values(3,3,'Y','단독 주택','Y','메 모5 번 고양이를 신청함 ')";
+			int RInsert3=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(RInsert1)=>"+RInsert3);
+			sql="insert into research values(4,4,'Y','기타 : 철창안','N','메 모9 번 고양이를 신청함 ')";
+			int RInsert4=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(RInsert1)=>"+RInsert4);
+			sql="insert into research values(5,5,'N','소리치다가 독방감','Y','메 모8 번 고양이를 신청함 ')";
+			int RInsert5=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(RInsert1)=>"+RInsert5);
+			sql="insert into research values(6,6,'Y','단독 주택 (수영장 포함)','Y','메 모7 번 고양이를 신청함 ')";
+			int RInsert6=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(RInsert1)=>"+RInsert6);
+			sql="insert into research values(7,7,'Y','아파트','Y','메 모6 번 고양이를 신청함 ')";
+			int RInsert7=stmt.executeUpdate(sql);
+			System.out.println("기초자료 입력 성공유무(RInsert1)=>"+RInsert7);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB Research 테이블 자료입력에 성공했습니다.\n");
+			
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(this, "기초자료 입력 실패");
+			System.out.println("기초자료 입력 실패=>"+e);
+		}
+	}
+	
+	private void dropTable() {
+		try {
+			sql="drop table CAT";
+			int delete= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("CAT DB삭제 성공유무(delete)=>"+delete);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB Cat 테이블 삭제에 성공했습니다.\n");
+			
+			sql="drop table RESEARCH";
+			int delete2= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("RESEARCH DB삭제 성공유무(delete2)=>"+delete2);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB Research 테이블 삭제에 성공했습니다.\n");
+			
+			sql="drop table PEOPLE";
+			int delete3= stmt.executeUpdate(sql);//1->성공, 0->실패
+			System.out.println("PEOPLE DB삭제 성공유무(delete3)=>"+delete3);
+			
+			list++;
+			taDbmemo.setText(taDbmemo.getText()+list+".DB People 테이블 삭제에 성공했습니다.\n");
+			
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(this, "테이블 삭제 실패");
+			System.out.println("테이블 삭제 실패=>"+e);
+		}
+	}
+	
+	public static void main(String[] args) {
+		CatcafeDb ccd=new CatcafeDb();
+		JFrame frame=new JFrame("DB입력,삭제");
+		frame.getContentPane().add(ccd);
+		frame.setResizable(false);
+		frame.setBounds(250,250,400,510);
+		frame.setVisible(true);
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+}

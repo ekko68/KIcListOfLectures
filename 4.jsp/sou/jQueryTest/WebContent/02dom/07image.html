@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(이미지속성부여)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//$('선택자').attr({속성명:속성값,속성명:속성값2,,}) 0(150) 1(300) 2(450)
+	//$('img').attr({width:250,height:250})(1)
+	$('img').attr({width:function(index){
+		                 return (index+1)*100
+	                 },
+		                height:function(index){
+		                 return (index+1)*100	
+		                }})
+    //특정태그의 속성값을 불러와서 화면에 출력
+    //형식) var 변수명=$('선택자').attr('속성명')->.each()
+    $('img').each(function(){
+    var src=$($(this)).attr('src')
+     alert(src)
+    })
+})
+</script>
+</head>
+<body>
+   <img src="../picCats/Persian.jpg">
+   <img src="../picCats/RussianBlue.jpg">
+   <img src="../picCats/BritishShorthairs.jpg">
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

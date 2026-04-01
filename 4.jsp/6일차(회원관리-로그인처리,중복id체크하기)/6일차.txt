@@ -1,0 +1,296 @@
+6일차(회원관리-로그인처리,중복id체크하기)
+                      ->우편번호 검색->회원가입->회원수정
+                      ->회원탈퇴->회원검색(우편번호 검색)
+                      ->이용약관처리
+----------------------------------------------------------
+//1.드라이버 메모리에 로드
+    	  Class.forName("oracle.jdbc.driver.OracleDriver");
+    	  //2.Connection객체를 얻어오기
+    	  con=DriverManager.getConnection(url,"test1","t1234");//scott,tiger
+    	  System.out.println("con=>"+con);
+
+//2.SQL구문 처리
+stmt=con.createStatement();//반환형
+    	  sql="create table MyTest(name varchar2(20),age number)";
+    	  stmt.executeUpdate(sql);
+    	  System.out.println("MyTest 테이블 생성 OK!");
+    	  //2.insert->pstmt
+    	  pstmt=con.prepareStatement("insert into MyTest values(?,?)");
+    	  //setString,setInt,setDouble,,,(?의순서,입력할값)
+    	  pstmt.setString(1,"Lee");//request.getParameter("name");
+    	  pstmt.setInt(2,34);
+    	  pstmt.execute();//executeUpdate()
+    	  //3.select->필드별로 출력하자
+    	  stmt2=con.createStatement();
+    	  String sql2="select * from MyTest";
+    	  //4.ResultSet 객체 필요
+    	  rs=stmt2.executeQuery(sql2);
+   %>
+
+3.     rs.close(); //con->stmt,pstmt,stmt2,rs
+         stmt2.close();
+         pstmt.close();
+         stmt.close();
+         con.close();
+--------------------------------------------------------
+->중복되고 반복적인 구문 =>설계
+--------------------------------------
+자바빈즈->3가지 
+
+member---zipcode
+
+1.DBConnectionMgr.java(url,account,pw)->DB연결빈
+2.테이블(20~) 설계->필드별로 저장,조회->DTO
+  ->member
+
+create table member(     
+ id varchar2(20) primary key, /* 회원id */pk
+ passwd varchar2(20) not null,  /* 암호 */
+ name   varchar2(20) not null,  /* 회원명 */
+ e_mail varchar2(20) ,             /* 이메일 */
+ phone varchar2(30)  not null, /* 전화번호 */
+ zipcode varchar2(10) ,           /* 우편번호 */
+ address varchar2(60) not null, /* 주소 */
+ job  varchar2(30)                    /* 직업 */
+ );
+
+ insert into member values('nup','1234','홍길동',
+        'test@daum.net','02-123-0987','132-098',
+        '서울시 강남구 대현빌딩 3층','프로그래머');
+
+ commit;
+
+public class MemberDTO {
+
+	private String mem_id;
+	private String mem_passwd;
+	private String mem_name;
+	private String mem_email;
+	private String mem_phone;
+	private String mem_zipcode;
+	private String mem_address;
+	private String mem_job;
+  ....
+
+**3.테이블관리->insert,update,delete,select->join~
+                 ->메서드 선언->웹상에서 호출->DAO
+
+  MemberDAO,~DAO
+==============================
+
+SQL> select id,passwd from member where id='nup' and passwd='1234';
+
+ rs.next()==>true
+ID                   PASSWD
+-------------------- --------------------
+nup                  1234
+
+file afiedt.buf(이)가 기록되었습니다
+
+  1* select id,passwd from member where id='nup' and passwd='1237'
+SQL> /
+
+선택된 레코드가 없습니다.==>false
+
+public  boolean  loginCheck(String id,String passwd) {
+		//1.DB연결코딩
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		boolean check=false;
+		String sql="";//실행시킬 sql구문
+		//2.실행시킬 SQL구문이 필요
+		try {
+			con=pool.getConnection();
+			System.out.println("con=>"+con);
+			sql="select id,passwd from member where id=? and passwd=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, passwd);
+			rs=pstmt.executeQuery();
+			check=rs.next();//데이터가 존재->true ,없으면 ->false
+		}catch(Exception e) {
+			System.out.println("loginCheck()실행 에러유발->"+e);
+		}finally {//3.DB연결해제
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return check;
+	}
+-------------------------------------------------------------------------
+
+ 인증전의 화면디자인->Login.jsp===>인증후의 화면디자인 LoginSuccess.jsp
+  세션의 처리유무에 따라서 
+--------------------------------------------------------------------------
+SQL> select id from member where id='kkk';
+
+선택된 레코드가 없습니다.
+
+SQL> select count(*) from member where id='kkk';
+
+  COUNT(*)
+----------
+         0
+  MemberDAO에서 메서드 선언
+
+1.중복id를 체크해주는 메서드를 작성
+//2)회원가입->중복id를 체크인 해주는 메서드 필요
+	//select id from member where id='kkk';
+	public boolean checkId(String id) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		boolean check=false;
+		String sql="";//실행시킬 sql구문
+		//2.실행시킬 SQL구문이 필요
+		try {
+			con=pool.getConnection();
+			sql="select id from member where id=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs=pstmt.executeQuery();
+			check=rs.next();//데이터가 존재->true ,없으면 ->false
+		}catch(Exception e) {
+			System.out.println("checkId()실행 에러유발->"+e);
+		}finally {//3.DB연결해제
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return check;
+	}
+----------------------------------------------------------------------------
+ **매개변수를 전달하는 방법**
+
+1.Login.jsp->LoginProc.jsp
+
+2.자바스크립트함수--->특정 jsp로 매개변수를 전달하는 경우
+--------------------------------------------------------------
+   Register.jsp
+<input type="button" value="ID중복확인" 
+       onClick="idCheck(this.form.mem_id.value)"></td>
+                        =>scripts.js(선언)
+
+2. script.js에서 호출할 함수명을 작성->중복id버튼을 클릭
+
+function idCheck(id){  //var idCheck=function(){}
+   if(id==""){
+	   alert("아이디를 먼저 입력하세요")
+	   document.regForm.mem_id.focus() //document.폼객체명.입력양식.함수명()
+   }else{ //=>window.open(불러올 문서명(jsp),창제목,창의옵션(넓이,높이,,,)
+	   //url="IdCheck.jsp"  IdCheck.jsp를 불러올 뿐 매개변수 전달 X
+	   url="IdCheck.jsp?mem_id="+id
+	   window.open(url,"post","left=350,top=250,width=300,height=150")
+   }
+}
+====================================
+우편번호를 검색
+
+1.우편번호 테이블을 작성
+
+CREATE TABLE zipcode (
+	zipcode             char(7)              NOT NULL  , /* 우편번호*/
+	area1               char(10)             NULL      ,  /* 시,도 */
+	area2               char(20)             NULL      , /*구 */
+	area3               char(40)             NULL      , /* 동이름(검색)*/
+	area4               char(20)             NULL        /* 나머지 주소*/
+);
+------------------------------------------------------------------
+2.우편번호 테이터를 4만개를 저장
+ 
+zipcode.txt파일을 오라클에서 불러와서 하나씩 실행시키는 방법
+
+c:\webtest\zipcode.txt를 복사한 뒤
+
+sql>@c:\webtest\zipcode.txt 
+
+
+1 개의 행이 만들어졌습니다.
+1 개의 행이 만들어졌습니다.
+,,,,
+
+SQL> commit; //실제반영
+
+커밋이 완료되었습니다.
+
+SQL> select count(*) from zipcode;
+
+  COUNT(*)
+----------
+     42619
+============================
+
+3.테이블당 DTO는 존재->ZipcodeDTO
+----------------------------------------
+
+package hewon;
+
+public class ZipcodeDTO {
+
+	private String zipcode;// 우편번호
+	private String area1;// 시,도
+	private String area2;// 구,소도시
+	private String area3;// 동,면,리
+	private String area4;// 나머지
+
+	public String getZipcode() {
+		return zipcode;
+	}
+,,,,
+==============================
+4.MemberDAO=>zipcode테이블->검색->레코드한개 이상=>웹에 출력
+                                    상품검색,회원검색,,,,
+===============================
+SQL> select * from zipcode where area3 like '%수유3동%';
+
+ZIPCODE AREA1      AREA2                AREA3
+------- ---------- -------------------- ---------------------
+
+AREA4
+--------------------
+142-890 서울       강북구               수유3동
+1번지
+
+142-872 서울       강북구               수유3동
+2
+,,,,
+13개
+
+public  Vector   zipcodeRead(String area3) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;//select
+		//추가
+		Vector vecList=new Vector();
+		String sql="";//실행시킬 sql구문
+		//2.실행시킬 SQL구문이 필요
+		try {
+			con=pool.getConnection();
+			sql="select * from zipcode where area3 like '"+area3+"%'";
+			pstmt=con.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			//레코드가 한개 이상
+			while(rs.next()) {
+				//vector or ZipcodeDTO(필드별로 저장(Setter)->rs.getXXX(필드명)
+				ZipcodeDTO tempZipcode=new ZipcodeDTO();
+				tempZipcode.setZipcode(rs.getString("zipcode"));//("142-890");
+				tempZipcode.setArea1(rs.getString("area1"));
+				tempZipcode.setArea2(rs.getString("area2"));
+				tempZipcode.setArea3(rs.getString("area3"));
+				tempZipcode.setArea4(rs.getString("area4"));
+				//vector or ArrayList에 담는 구문
+				vecList.add(tempZipcode);//대략 13개의 레코드가 저장이 된다.
+			}
+		}catch(Exception e) {
+			System.out.println("zipcodeRead() 실행 에러유발->"+e);
+		}finally {//3.DB연결해제
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return vecList;
+	}
+=========================================
+
+
+
+
+
+

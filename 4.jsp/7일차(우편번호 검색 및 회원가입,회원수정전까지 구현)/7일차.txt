@@ -1,0 +1,136 @@
+7일차(우편번호 검색 및 회원가입,회원수정전까지 구현)
+         -------------
+          회원검색(memsearch.jsp)
+
+->java()->web(취업)->spring(back)->angular,react(front)
+                 ======
+                  컬렉션(Vector~)
+                  메서드
+====================================
+팀->주제선정,요구사항~
+--------------------------
+
+  jspMember
+        |        DBConnectionMgr->
+
+               private String _driver = "oracle.jdbc.driver.OracleDriver",
+              _url = "jdbc:oracle:thin:@localhost:1521:orcl",
+              _user = "test1",//scott
+             _password = "t1234";//tiger
+          -src-MemberDTO(회원관리)->oracle
+                 ZipcodeDTO(우편번호)
+                 ==================
+                 MemberDAO->DB접속->메서드 선언
+                 ==================
+                 중복id체크,로그인체크,우편번호 체크
+                                                ---------------
+
+1.Register.jsp
+<td> <input type="text" name="mem_zipcode" size="7">
+                 <input type="button" value="우편번호찾기" 
+         onClick="zipCheck()">-->scripts.js
+</td>
+
+2.scripts.js
+
+function zipCheck(){
+    url="ZipCheck.jsp?check=y"
+    window.open(url,"post","toolbar=no,width=500,height=300," +
+    		"menubar=no,status=yes,scrollbars=yes")
+}
+-------------------------------------------------------
+3.ZipCheck.jsp 작성-><% ~ %>이 적용
+
+->ZipCheck.html=>ZipCheck.jsp확장자를 변경
+
+ZipCheck.jsp?area3='수유3동'&check=n
+<form name="zipForm" method="post"   
+                                                  action="ZipCheck.jsp">
+동이름 입력:<input type="text"   name="area3">
+형식)
+
+<input type="hidden" name="매개변수명"  value="전달할값">
+<input type="hidden" name="check"  value="n">
+
+
+
+pool=>hewon.DBConnectionMgr@40dfcae
+pool=>hewon.DBConnectionMgr@40dfcae
+check=y,area3=null==>검색전
+검색된 총레코드수(totalList)=>0
+pool=>hewon.DBConnectionMgr@40dfcae
+check=n,area3=??????3???==>수유3동
+검색된 총레코드수(totalList)=>0
+
+ Windows->web browser->chrome을 체크
+ =>실행 브라우저->chrome으로 변경돼서 출력
+============================-------------------
+회원가입 절차==>Register.jsp---->RegisterProc.jsp(다시 한번 확인)
+                                                              |
+                                                   MemberInsert.jsp(회원가입메서드
+                                                                              호출)
+-----------------------------------------------------------------------
+MemberDAO->회원가입 메서드->회원수정
+
+오라클에서 트랜잭션처리 (대용량)
+
+테이블을 여러개 작업-->{ A(insert)->,B(update) }
+                                       O ------->O
+                                       X -------->O
+
+->트랜잭션->insert,update,delete->여러개를 하나의 작업
+
+  con.setAutoCommit(false); //시작점,con.setAutoCommit(true);
+
+   insert
+   update
+   delete
+   ...
+  con.commit();  or con.rollback() 실행취소
+---------------------------------------------------
+//4)회원가입->insert into values(?,?,?~?)
+	public boolean memberInsert(MemberDTO mem) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		//ResultSet rs=null;->select만 필요
+		boolean check=false;//회원가입 성공유무
+		String sql="";//실행시킬 sql구문
+		//2.실행시킬 SQL구문이 필요
+		try {
+			con=pool.getConnection();
+			//트랜잭션 처리
+			con.setAutoCommit(false);
+			//-------------------------------
+			sql="insert into member values(?,?,?,?,?,?,?,?)";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, mem.getMem_id());//~(1,'test')
+			pstmt.setString(2, mem.getMem_passwd());
+			pstmt.setString(3, mem.getMem_name());
+			pstmt.setString(4, mem.getMem_email());
+			pstmt.setString(5, mem.getMem_phone());
+			pstmt.setString(6, mem.getMem_zipcode());
+			pstmt.setString(7, mem.getMem_address());
+			pstmt.setString(8, mem.getMem_job());
+			
+			int insert=pstmt.executeUpdate();//반환 1 (성공),0 (실패)
+			con.commit();//실질적으로 insert작동된다.
+			if(insert > 0) { //if(insert==1){
+				check=true;
+			}
+		}catch(Exception e) {
+			System.out.println("memberInsert()실행 에러유발->"+e);
+		}finally {//3.DB연결해제
+			pool.freeConnection(con, pstmt);
+		}
+		return check;
+	}
+=====================================
+
+
+
+
+
+
+
+

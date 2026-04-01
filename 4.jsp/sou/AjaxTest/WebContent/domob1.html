@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>자바스크립트의 객체생성방법(1)</title>
+<script>
+   //함수(생성자)를 선언->객체를 생성
+   //형식)function 함수명(매개변수,,,)->동적 멤버변수
+   //class Student { String name,int grade, String sung,String addr}
+   function Student(name,grade,sung,addr){
+	   //this.멤버변수=값
+	   this.name=name;//this.name="홍길동"
+	   this.grade=grade;
+	   this.sung=sung;
+	   this.addr=addr;
+   }
+</script>
+</head>
+<body>
+ <script>
+   //객체생성->클래스명 객체명=new 클래스명(=생성자)()->자바
+   //객체명=new 함수명(매개변수~)
+    hong=new Student("홍길동",1,"남","서울시 강남구 대현빌딩3층")
+    alert(hong.name+","+hong.grade+","+hong.sung+","+hong.addr)
+ </script>
+</body>
+</html>
+
+
+

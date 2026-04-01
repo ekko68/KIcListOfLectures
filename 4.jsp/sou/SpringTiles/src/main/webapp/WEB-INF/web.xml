@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         id="WebApp_ID" version="2.5">
+
+    <display-name>SpringTiles</display-name>
+    
+   <!--
+		- Location of the XML file that defines the root application context.
+		- Applied by ContextLoaderListener.
+	-->
+   <!--  <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/application-config.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener> -->
+   
+    <!--
+       스프링에서 web.xml에서 환경설정
+		1.컨트럴러 지정 2.외부의 환경설정 파일 불러오기 3.한글 filter설정
+	-->
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+    
+    <!-- 웹상에서의 한글처리(jsp)  -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>
+           org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    
+    <!-- 어떻게 요청시 한글이 지원이 되게 할것인가  -->
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    
+    
+    
+    
+    
+    
+    
+
+</web-app>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modules>
+  <module moduleId="org.eclipse.jst.jee.server:JspBoard" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:JspMember" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:ServletTest" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:JspStudy" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.j2ee.server:Springmvc3" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:BootStrapTest" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:jstltest" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:jQueryMobile" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:BootStrapTest2" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:WebSecure" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:JspStudy2" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:jQueryTest" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:AngularWeb" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:JspWork" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:SpringBoard" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:Springmvc2" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:JspBoard2" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:ServletTest2" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:Springmvc" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:jtest" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:j2test" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:JspWork3" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:SpringMybatis" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:AjaxTest" serverId="Tomcat v8.5 Server at localhost"/>
+  <module moduleId="org.eclipse.jst.jee.server:JspWork2" serverId="Tomcat v8.5 Server at localhost"/>
+</modules>

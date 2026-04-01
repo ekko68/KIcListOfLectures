@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+<title>01ready()함수</title>
+<script>
+/*
+     function test(){
+    	 alert("jquery소개")
+     }
+     window.on이벤트종류명=함수명 or 익명함수
+  
+  (2) 불러오는 문서의 내용이 복잡 속도가 느려지는 단점
+    window.onload=function(){
+    	 alert("jQuery소개2")
+     }
+   (3) 속도가 빠른 jQuery ready함수를 이용
+  */
+  $(document).ready(function(){
+	  alert("ready()를 이용해서 함수를 호출!!")
+  })
+  $().ready(function(){
+	  alert("함수를 호출2!!")
+  })
+  $(function(){ //기준점
+	  alert("함수를 호출3!!")
+  })
+</script>
+</head>
+<!-- (1) <body onload="test()"> -->
+
+</body>
+</html>

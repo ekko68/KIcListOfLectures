@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(load())</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	$('#menu1').click(function(){
+		//형식)$('선택자').load('경로포함해서 불러올 문서명')
+		$('#message1').load('menu.html')
+		return false;//링크의 기본기능을 중지
+	})
+	//메뉴보기 삭제
+	$('#menu1-1').click(function(){
+		$('#message1').empty()//내용지우기
+		return false;//링크의 기본기능을 중지
+	})
+	//파일을 불러올때 특정한 태그만 불러오기
+	$('#menu2').click(function(){
+		//형식)$('선택자').load('경로포함해서 불러올 문서명 특정태그명')
+		$('#message2').load('menu.html li')
+		return false;//링크의 기본기능을 중지
+	})
+	//메뉴보기 삭제
+	$('#menu2-1').click(function(){
+		$('#message2').empty()//내용지우기
+		return false;//링크의 기본기능을 중지
+	})
+})
+</script>
+</head>
+<body>
+ <div>
+ <a href="#" id="menu1">메뉴보기1</a>
+ <a href="#" id="menu1-1">메뉴보기1 삭제</a>
+  <span id="message1"></span>
+ </div>
+ 
+ <a href="#" id="menu2">메뉴보기2</a>
+ <a href="#" id="menu2-1">메뉴보기2 삭제</a>
+  <span id="message2"></span>
+ </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

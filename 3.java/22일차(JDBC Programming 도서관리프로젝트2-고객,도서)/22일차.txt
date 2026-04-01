@@ -1,0 +1,285 @@
+22일차(JDBC Programming 도서관리프로젝트2-고객관리)->도서관리
+                                                                                (도서등록 차이)
+                                                                                 이미지 등록
+                                                   ->테이블명과 필드만 틀림
+팀->주제(목요일)=>다음 주 수요일
+   ->웹까지 
+============================================
+1.JavaBook 프로젝트 작성
+2.src=>j0623폴더 복사->붙여넣기
+3.bookimage->c:\에 복사=>붙여넣기
+4.오라클 드라이버를 jar파일 불러오기 ->프로젝트 오 click->build path
+5.테이블 생성->customer,book 테이블 생성
+   오라클 접속->scott/tiger=>sql.txt
+==========================
+Swing=>화면 디자인 용
+
+오라클에 테이블로 저장===>자바=>화면에 출력
+                        JDBC Programming(웹)
+
+1.import java.sql.*;//(1)DB연동
+ ->Connection con ->연결객체를 얻어온다.
+ ->url(컴퓨터의 url주소),계정명,암호
+
+2.
+ ->Statement or PreparedStatement 객체필요
+ ->SQL구문 한개당 객체도 한개씩 필요
+ ->PreparedStatement(권장)->속도가 빠름(?,?,?)
+
+insert,update,delete->executeUpdate()를 이용
+->테이블의 구조에 영향을 미치는 경우
+->create~alter,drop~
+
+select->executeQuery()를 이용=>ResultSet(테이블)
+->구조X                                         rs
+
+    DEPTNO DNAME          LOC
+---------- -------------- -----------
+        10 ACCOUNTING     NEW YORK ->rs.first()처음
+        20 RESEARCH       DALLAS->* rs.next()
+        30 SALES          CHICAGO->rs.previous() 이전
+        40 OPERATIONS     BOSTON->rs.last() 마지막
+
+          //(2) 고객DB정보 저장
+	private Connection conn;
+	private Statement stmt;//SQL문
+	private ResultSet rs;//select->표형태
+	String sql=null;//sql구문
+	//--------------------------------------------
+***********************************
+ 1. 레코드를 이동시키는 메서드를 호출(이벤트 처리)
+***********************************
+@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		//레코드 이동
+		try {
+			if(e.getSource()==btnF) { //<<
+				rs.first();//맨 처음 레코드로 이동
+				display();//첫번째 행에 대한 데이터를 다시 보여달라
+			}else if(e.getSource()==btnP) { //<
+				if(rs.isFirst()) return;//첫번째행->이전행으로 이동X
+				rs.previous();
+				display();
+			}else if(e.getSource()==btnN) { // > 다음레코드
+				if(rs.isLast()) return; //마지막 레코드라면 이동불가
+				rs.next();
+				display();
+			}else if(e.getSource()==btnL) {// >> 마지막 레코드
+				rs.last();
+				display();
+			}
+		}catch(Exception e2) {
+			System.out.println("레코드 이동 오류=>"+e2);
+		}
+	}
+--------------------------------------------------------------
+2.신규(insert),수정(update),삭제(delete),조회(select)
+
+private void insertCustomer() {
+		try {
+			//형식)insert into 테이블명 values(값,'값2','2017-06-23',,,,);
+			sql="insert into customer values("+
+			      txtCbun.getText()+",'"+
+				  txtCirum.getText()+"','"+
+			      txtCjunhwa.getText()+"','"+
+				  txtCjuso.getText()+"',0,'')";
+			System.out.println("sql=>"+sql);
+			int insert=stmt.executeUpdate(sql);//정수형값을 반환->1(성공),0(실패)
+			System.out.println("데이터성공유무(insert)=>"+insert);   
+			init();//DB데이터를 다시 오름차순으로 읽어들여라
+			rs.last();//추가후 전체 레코드수를 갱신(수정)하기위해서 이동
+			display();
+		}catch(Exception e) {
+			System.out.println("insertCustomer()메서드 호출시 문제발생=>"+e);
+		}
+	}
+
+=>신규버튼을 눌렀을때 ->확인할때 데이터 추가됨을 확인하자.
+=====================================
+if(e.getSource()==btnInsert) {//신규버튼을 눌렀다면
+			if(isInsert==false) {//Insert(신규)버튼을 누르지 않은상태에서 처음 누른경우
+				txtCirum.setEditable(true);//편집할 수있는  ->setEnabled(활성화)
+				txtCjunhwa.setEditable(true);//전번
+				txtCjuso.setEditable(true);//주소
+				//"34"->Integer.parseInt("34")->34(String.valueOf(34)->"34"
+				txtCbun.setText(String.valueOf(iLast+1));//iLast->총레코드수(맨마지막 레코드번호)+1
+			    txtCirum.setText(null);//아직 입력하지 않은 상태
+			    txtCjunhwa.setText(null);
+			    txtCjuso.setText(null);
+			    txtCdaesu.setText(null);//0
+			    taCmemo.setText(null);
+			    //버튼의 상태를 변경
+			    btnInsert.setText("취소");//버튼의 이름
+			    btnOk.setEnabled(true);//확인버튼을 활성화->누를수 있게된다.
+			    isInsert=true;//한번 클릭했다고 체크
+			}else { //isInsert=true인 상태(이미 한번 누른경우)->취소->신규
+				txtCirum.setEditable(false);//편집할 수없는  ->setEnabled(활성화)
+				txtCjunhwa.setEditable(false);//전번
+				txtCjuso.setEditable(false);
+				btnInsert.setText("신규");//버튼의 이름
+			    btnOk.setEnabled(false);//확인버튼을 비활성화->누를수 없게
+			    isInsert=false;
+			    display();//다시 한번 불러오기
+			}
+-------------------------------------------------------------------
+}else if(e.getSource()==btnOk) {//확인->실질적으로 데이터 입력된다.
+			insertCustomer();//데이터 입력시켜주는 메서드
+			//데이터 입력후 입력전의 상태로 다시 전환
+			txtCirum.setEditable(false);//편집할 수없는  ->setEnabled(활성화)
+			txtCjunhwa.setEditable(false);//전번
+			txtCjuso.setEditable(false);
+			btnInsert.setText("신규");//버튼의 이름
+		    btnOk.setEnabled(false);
+		}
+------------------------------------------------------------------
+sql=>insert into customer values(11,'테스트','02-123-0987','서울시 강남구 대현빌딩',0,'')
+데이터성공유무(insert)=>1
+
+SQL> select count(*) from customer;
+                  ======>레코드의 갯수를 셀때 사용
+  COUNT(*)
+----------
+        10
+
+SQL> /
+
+  COUNT(*)
+----------
+        11
+===========================
+//수정->insert와 거의 소스코드가 비슷(저장이 된다는 사실은 같다)
+	private void updateCustomer() {
+		try {
+			//형식)update 수정할 테이블명 set 수정할 필드명='수정할값'
+			//       ,수정필드2=값2 where 조건식(수정할 데이터 찾는 조건)
+			sql="update customer set c_irum='"+
+				  txtCirum.getText()+  //이름
+				  "',c_junhwa='"+txtCjunhwa.getText()+  //전번
+				  "',c_juso='"+txtCjuso.getText()+
+				  "' where c_bun="+txtCbun.getText();
+			System.out.println("수정한 sql=>"+sql);
+			//추가=>현재 행을 구해->이동
+			int currentRow=rs.getRow();//현재행을 구한다.
+			int update=stmt.executeUpdate(sql);//정수형값을 반환->1(성공),0(실패)
+			System.out.println("데이터수정 성공유무(update)=>"+update);   
+			//수정을 반영하기위해서 수정한 행으로 이동
+			//rs.absolute()메서드는 정해진 행으로 바로 이동시킬때 사용한다.
+			rs.absolute(currentRow);// rs.absolute(이동할행번호)->행번호로 이동
+			display();
+		}catch(Exception e) {
+			System.out.println("updateCustomer()메서드 호출시 문제발생=>"+e);
+		}
+	}
+-----------------------------------------------------------------------
+else if(e.getSource()==btnUpdate) {//수정버튼<-->완료
+		   if(isUpdate==false) {//수정버튼을 처음 누른경우
+			   txtCirum.setEditable(true);//편집상태로 변환
+			   txtCjunhwa.setEditable(true);//전번 변경
+			   txtCjuso.setEditable(true);//주소
+			   //이동버튼 불가->btnF.setEnabled(false);~
+			   btnUpdate.setText("완료");
+			   isUpdate=true;
+		   }else {//수정버튼을 두번째 누른경우(완료)->수정 마무리->수정
+			   updateCustomer();
+			   //다음번 레코드를 또 수정하기위해서 다시 수정모드 비활성화
+			   txtCirum.setEditable(false);//편집불가능
+			   txtCjunhwa.setEditable(false);//전번 변경
+			   txtCjuso.setEditable(false);//주소
+			   //이동버튼 가능->btnF.setEnabled(true);~
+			   btnUpdate.setText("수정");
+			   isUpdate=false;
+		   }
+		}
+----------------------------------------------------------------------
+SQL> select * from customer where c_bun=&bun;
+bun의 값을 입력하십시오: 11
+구   1: select * from customer where c_bun=&bun
+신   1: select * from customer where c_bun=11
+
+     C_BUN C_IRUM     C_JUNHWA
+---------- ---------- --------------
+C_JUSO                                                C_DAESU
+-------------------------------------------------- ----------
+C_MEMO
+-----------------------------------------------------------------
+
+        11 테스트2    02-456-0987
+             =====       ======
+서울시 강북구 대현빌딩                                      0
+          ====
+--------------------------------------------------------------------
+삭제시키는 경우
+
+private void deleteCustomer() {
+		try {
+			//1)삭제시킬 레코드가 없는 경우->삭제할 수없다는 에러메세지 출력
+			if(rs.getRow()==0) {//현재 삭제할 행이 없는 경우(행번호가 없는 경우)
+				JOptionPane.showMessageDialog(this,"삭제시킬 자료가 없습니다.");
+				return;
+			}
+			//2)현재 대여중인 고객은 삭제X->taCmemo항목에 빌린 책의 정보가 기록
+			if(taCmemo.getText().equals("") || taCmemo.getText()==null) {
+				//1~12->현재행을 구해서 현재행-1->행으로 이동
+				int currentRow=rs.getRow();//삭제시킬 행번호
+				sql="delete from customer where c_bun="+txtCbun.getText();
+				int delete=stmt.executeUpdate(sql);
+				System.out.println("데이터삭제성공유무(delete)->"+delete);
+				init();//고객테이블을 다시 정렬
+				if(currentRow==1) {
+					;//현재 상태 그대로 유지 (레코드 한개만 존재->이동X)
+				}else {//한개이상인 경우
+					rs.absolute(currentRow-1);//현재행-1 빠진 이전행으로 이동
+				}
+                                                       display();
+			}else {// 이미 대여중인 고객을 의미
+				JOptionPane.showMessageDialog(this,"도서반납 후에 삭제가능합니다");
+			}
+		}catch(Exception e) {
+			System.out.println("deleteCustomer()메서드=>"+e);
+		}
+	}
+========================================
+else if(e.getSource()==btnDel) {//삭제버튼
+			//사용자에게 진짜 삭제유무?=>confirm->showConfirmDialog()
+			//1.부모창(this) 2.메세지내용3.창의 제목 4.옵션(yes|no)
+			int re=JOptionPane.showConfirmDialog
+			            (this,"현재 고객자료를 정말로 삭제할까요?","삭제",
+					                           JOptionPane.YES_NO_OPTION);
+			if(re==JOptionPane.YES_OPTION) //예라고 눌렀다면
+				  deleteCustomer();
+		}
+
+-----------------------------------------------------------------
+//검색 메서드
+	private void findCustomer() {
+		//사용자로부터 값을 입력->JOptionPane.showInputDialog
+		//간단한 경고->JOptionPane.showMessageDialog
+		//yes|no?->JOptionPane.showConfirmDialog(1.부모창,2.메세지내용)
+		String re=JOptionPane.showInputDialog(this,"검색할 고객번호를 입력?");
+		if(re==null) return;//입력하지 않으면 취소
+		try {
+			rs.beforeFirst();//rs.Frist()보다 위에 커서를 이동->full Scan
+			int couFind=0;//동명이인->찾은 횟수
+			while(rs.next()) {//검색할 데이터가 있는동안
+				String str=rs.getString(1);//고객번호->내부적으로 하나씩 고객번호
+				if(re.equals(str)) {//내가 찾고자하는 고객번호=테이블의 고객번호가 맞다면
+				   txtCbun.setText(str);//찾고자하는 고객번호를 입력
+				   txtCirum.setText(rs.getString("c_irum"));
+				   txtCjunhwa.setText(rs.getString("c_junhwa"));
+				   txtCjuso.setText(rs.getString("c_juso"));
+				   txtCdaesu.setText(rs.getString("c_daesu"));//대여수
+				   taCmemo.setText(rs.getString("c_memo"));//메모내용
+				   couFind++;//찾은 횟수
+				   lblRec.setText(rs.getRow()+"/"+iTotal);//찾은행(5)/전체레코드수(11)
+				   break;//찾은 레코드를 발견했다면 더이상 while구문을 실행X
+				}
+			}//while
+			if(couFind==0) {//찾은 레코드가 없다면
+				JOptionPane.showMessageDialog(this, "검색자료를 찾을 수 없습니다");
+			}
+		}catch(Exception e) {
+			System.out.println("findCustomer()메서드 오류=>"+e);
+		}
+	}
+---------------------------------------------------

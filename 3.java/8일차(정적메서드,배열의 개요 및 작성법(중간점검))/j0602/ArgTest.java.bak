@@ -1,0 +1,18 @@
+
+
+public class ArgTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+         //int su,su2,su3;
+		//자료형 배열[]=new 자료형[갯수]//0,1,2
+		int su2;
+		//System.out.println("su2=>"+su2);
+		int []su=new int[3];
+		su[0]=10; su[1]=20;//su[2]=30
+		System.out.println("su[1]=>"+su[1]);
+		System.out.println("su[2]=>"+su[2]);
+	}
+}
+
+

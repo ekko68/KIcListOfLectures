@@ -1,0 +1,79 @@
+/* 부서 */
+CREATE TABLE dept (
+	deptno <지정 되지 않음> NOT NULL, /* 부서번호 */
+	dname VARCHAR2(50), /* 부서명 */
+	loc VARCHAR2(255) /* 부서위치 */
+);
+
+CREATE UNIQUE INDEX PK_dept
+	ON dept (
+		deptno ASC
+	);
+
+ALTER TABLE dept
+	ADD
+		CONSTRAINT PK_dept
+		PRIMARY KEY (
+			deptno
+		);
+
+/* 사원 */
+CREATE TABLE sawon (
+	bun NUMERIC(3) NOT NULL, /* 사원번호 */
+	name VARCHAR2(50) NOT NULL, /* 이름 */
+	addr VARCHAR2(255) NOT NULL, /* 주소 */
+	tel VARCHAR2(30) NOT NULL, /* 전화번호 */
+	deptno <지정 되지 않음> /* 부서번호 */
+);
+
+CREATE UNIQUE INDEX PK_sawon
+	ON sawon (
+		bun ASC
+	);
+
+ALTER TABLE sawon
+	ADD
+		CONSTRAINT PK_sawon
+		PRIMARY KEY (
+			bun
+		);
+
+/* 신체 */
+CREATE TABLE body (
+	bun NUMERIC(3) NOT NULL, /* 사원번호 */
+	height NUMBER(3,1), /* 키 */
+	weight NUMBER(3,1), /* 몸무게 */
+	blood VARCHAR2(5) /* 혈액형 */
+);
+
+CREATE UNIQUE INDEX PK_body
+	ON body (
+		bun ASC
+	);
+
+ALTER TABLE body
+	ADD
+		CONSTRAINT PK_body
+		PRIMARY KEY (
+			bun
+		);
+
+ALTER TABLE sawon
+	ADD
+		CONSTRAINT FK_dept_TO_sawon
+		FOREIGN KEY (
+			deptno
+		)
+		REFERENCES dept (
+			deptno
+		);
+
+ALTER TABLE body
+	ADD
+		CONSTRAINT FK_sawon_TO_body
+		FOREIGN KEY (
+			bun
+		)
+		REFERENCES sawon (
+			bun
+		);

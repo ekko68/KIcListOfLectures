@@ -1,0 +1,5 @@
+package sp.aop2;
+
+public class TestAspect {
+
+}

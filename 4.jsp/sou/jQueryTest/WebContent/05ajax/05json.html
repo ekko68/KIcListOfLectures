@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+ //Json표기법->키값:저장할값(숫자,문자열,논리적인값,객체,배열(객체묶음))
+ var myjson={
+		 "name":"홍길동",  /* key:value */
+		 "sung":"남자",
+		 "func":"function(){alert('test')}"  /* 함수정의 부분을 문자형태로 저장*/
+		 //var eval()함수->자바스크립트 코드(문자열)->자바스크립트구문 변환
+		 // "var re"+"sult=123"->eval("var result=123")->var result=123
+		 //var a=function(){alert('test')}   alert(a())
+ }
+ var myjson2={"number":123}  /* 객체명.키명(읽기),객체명.키명=값(저장) */
+ var myjson3={"temp":true}
+ //배열
+ var myjson4={"temp":["aaa","bbb","ccc"]} /* [] 배열을 의미 */
+ var mem={name:'홍길동',
+		                fColor:['파랑','녹색','빨강색']}
+ function print1(){
+	 var msg=mem.name+"님이 좋아하는 색깔은"+mem.fColor.length+"개이고,"
+	       msg+="그 중에서 제일 좋아하는 색깔은 "+mem.fColor[1]+"입니다."
+	      alert(msg)
+ }
+</script>
+</head>
+<body>
+<input type="button" value="test" onclick="print1()">
+<input type="button" value="이름변경" 
+           onclick="myjson.name='테스트';alert(myjson.name)   ">
+<input type="button" value="함수호출" 
+           onclick="alert(myjson.func);eval('a='+myjson.func);a()">
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

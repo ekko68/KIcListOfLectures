@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(객체확장)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	 var object1={}//빈객체 생성 //var object1=new Object();
+	 //동적으로 속성을 추가->객체명.속성=값
+	 object1.name='임시';
+	 object1.addr='서울시 강남구 대현빌딩3층';
+	 object1.age=34;
+	 alert(object1.name+'님의 주소는'+object1.addr
+			   +'이고 나이는 '+object1.age+'이군요!');
+	 //$.extends(기존객체명,객체명,객체명,,,,),$.each()->배열관리
+	 var object2={name:'테스트'};
+	 $.extend(object2,{
+		 region:'서울시 강북구',
+		 age:23
+	 })
+	 //출력
+	 var output='';
+	 //$.each(1.출력할객체,2.매개변수로 index와 value값을 갖는 함수)
+	 $.each(object2,function(key,item){
+		 output+=key+':'+item+'\n';
+	 })
+	 alert(output);
+})
+</script>
+</head>
+<body>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

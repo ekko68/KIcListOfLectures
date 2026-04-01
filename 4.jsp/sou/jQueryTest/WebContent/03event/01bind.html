@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(이벤트연결)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//형식)window.on이벤트종류명=호출할 함수명 또는 익명함수
+	//형식2)window.addEventListener(이벤트종류,실행할함수명)
+	//형식3)$(이벤트발생 대상자 선택자).bind(등록할 이벤트종류명,함수명)->react
+	//태그의 기본적인 기능(원래기능(링크(a)->이동))=>preventDefault 기능
+	//$('a').bind('click',function(){  (1)
+	   $('a').bind('click',function(event){ //(2)
+		//alert('이벤트 연습중.')
+		var href=$(this).attr('href')
+		//alert(href)
+		//$('img').attr('src',href)
+		$('img').attr('src',$(this).attr('href'))
+	//	return false (1)
+	    event.preventDefault()//(2)
+	})
+})
+</script>
+</head>
+<body>
+<ul>
+   <li><a href="../picCats/Persian.jpg">Persian</a></li>
+   <li><a href="../picCats/RussianBlue.jpg">RussianBlue</a></li>
+   <li><a href="../picCats/BritishShorthairs.jpg">BritishShorthairs</a></li>
+</ul>
+   <!-- <img src="../picCats/Persian.jpg"> -->
+   <img>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

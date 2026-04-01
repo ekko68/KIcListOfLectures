@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>객체생성방법2(함수선언호출)</title>
+<script>
+    window.onload=function(){
+    	//var 객체명=new Object()//(형이 정해져 있지 않다)java.lang.Object처럼->모든 객체
+       //Student st=new Student();//학생만 저장
+       var mem=new Object();
+       //객체명.속성명=저장할값
+       mem.id=1234;  //private int id=1234;
+       mem.name="테스트";//String name="테스트"
+       mem.hobby="바둑";//->음악감상
+       mem.sung="남자"
+       
+       //Setter Method->public void setId(int id){this.id=id;}
+       //형식) 객체명.함수명=function(매개변수명){this.멤버변수=값}
+       mem.setHobby=function(hobby){
+    	   this.hobby=hobby;//mem.hobby="음악감상"
+       }
+       //Getter Method->public 반환값 get멤버변수명(){ return this.멤버변수명}
+       //형식)객체명.함수명=function(){return this.멤버변수명}
+       mem.getHobby=function(){
+    	   return this.hobby;
+       }
+       //public void toString(){}
+       mem.toString=function(){
+    	   return this.id+", "+this.name+" ,"+this.hobby+", "+this.sung;
+       }
+       //객체명.함수명(저장할 값)
+       mem.setHobby("음악감상");
+       alert(mem.toString())
+    }
+</script>
+</head>
+<body>
+
+</body>
+</html>
+
+

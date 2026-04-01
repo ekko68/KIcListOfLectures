@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	$('#sel').change(function(event){//event객체를 매개변수로 전달받아처리
+		var imgSrc=$(event.target).val()//$(this).val()
+		//alert(imgSrc)
+		$('#img').attr('src',imgSrc)
+	})
+})
+</script>
+</head>
+<body>
+<form name="frm">
+  <table>
+    <tr>
+      <td>
+         <select id="sel">
+            <option value="../picCats/Persian.jpg">Persian
+            <option value="../picCats/RussianBlue.jpg">RussianBlue
+            <option value="../picCats/BritishShorthairs.jpg">BritishShorthairs
+         </select>
+      </td>
+      <td><img id="img"></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

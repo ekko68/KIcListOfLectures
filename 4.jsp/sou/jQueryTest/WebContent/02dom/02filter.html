@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//h3태그를 반복해서 읽어들였을때 class속성이 select인것을
+	//찾아서 특정스타일로 적용하라.->
+	//형식)$('선택자').filter('찾는조건에 해당선택자')
+	//$('h3:even').css({backgroundColor:'Black',color:'White'})
+	//1.filter(선택자(태그 or 속성선택자))
+	//$('h3').filter(':even').css({backgroundColor:'Black',color:'White'})
+	//2.filter(function)->내부함수를 이용해서 filter함수의 매개변수로 값을 전달
+	$('h3').filter(function(index){
+		               return index%2==1
+	                 }).css({backgroundColor:'Black',color:'White'})
+	//$('h3:first')=>$('h3').first(),$('h3:last')->$('h3').last()
+	//$('h3:eq(0)').css('background','orange')
+	$('h3').eq(0).css('background','orange')
+	$('h3').last().css('background','gray')
+	//제어문(if) 형식) $('선택자').is('찾을조건')
+	 $('h3').each(function(){
+		if($(this).is('.select')){ //$(this)->조건에 만족하는 h3
+			$(this).css('background','yellow')
+		}else{
+			$(this).css('background','green')
+		}
+	}) //for
+	alert($('h3#select').text())
+})
+</script>
+</head>
+<body>
+<h3>Header-1</h3>
+<h3 class="select">Header-2</h3>
+<h3 id="select">Header-3</h3>
+<h3>Header-4</h3>
+<h3>Header-5</h3>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

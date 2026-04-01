@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(xml문서를 읽어들여서 처리)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//1.url요청문서
+	$.ajax('getXml.jsp',{
+		      //data:~ 매개변수가 전달하지 않기때문에 생략가능
+		      success:function(data){
+		    	 //분리작업(파싱분석)parse->find() or filter()
+		    	 $(data).find('person').each(function(){
+		    		 var name='<li>'+$(this).find('name').text()+'</li>'
+		    		 var job='<li>'+$(this).find('job').text()+'</li>'
+		    		 var age='<li>'+$(this).find('age').text()+'</li>'
+		    		 //<div>에 출력
+		    		 $('#output').append('<ul>'+name+job+age+'</ul>')
+		    	 })//.each
+		      }//success
+	})//$.ajax
+})
+</script>
+</head>
+<body>
+  <div id="output">
+     <!-- <ul>
+        <li>홍길동 </li>
+        <li>학생 </li>
+        <li>23 </li>
+     </ul> -->
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(이벤트객체,이벤트연결해제)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	   //$('img').bind('dblclick',function(event){ //(2)
+		$('img').one('dblclick',function(event){ //(2)
+		//$('img').dblclick(function(e){}
+		//var $target=$(event.target) //이벤트를 발생시킨 객체를 의미=>$(this)
+		var $target=$(this)//e.target.value(input box)
+		alert($target.width()+","+$target.height())
+		$target.width($target.width()*2)
+		//$('선택자').unbind('해제시킬 이벤트종류명')~,unbind()->전부해제
+		//$target.unbind()
+	})
+})
+</script>
+</head>
+<body>
+   <img src="../picCats/Persian.jpg"> 
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

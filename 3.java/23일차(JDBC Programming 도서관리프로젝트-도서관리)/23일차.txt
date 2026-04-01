@@ -1,0 +1,264 @@
+23일차(JDBC Programming 도서관리 프로젝트-도서관리)
+ 화면구현->Swing을 사용
+----------------------------------------------------------
+=>도서관리->고객관리(Text)->신규등록,수정,삭제,조회
+          이미지 처리
+    ==========>파일선택 대화상자->JFileChooser
+    (도서 구매 등록)->도서 수정과 거의 유사
+-----------------------------------------------------------
+CREATE TABLE BOOK(
+  B_BUN     NUMBER              NOT NULL,
+  B_JEMOK   VARCHAR2(50)        NOT NULL,
+  B_JANG    VARCHAR2(20),
+  B_KUIPIL   DATE,
+  B_DAESU   NUMBER  DEFAULT 0   NOT NULL,
+  B_DAEYN   CHAR(1) DEFAULT 'n' NOT NULL,
+  B_DAEBUN  NUMBER,
+  B_DAEIL    DATE,
+  B_BANIL    DATE,
+  B_MEMO    VARCHAR2(4000),
+  B_IMAGE   VARCHAR2(50),
+  PRIMARY KEY (B_BUN)
+);
+
+//추가
+	private void addListener() {
+		btnInsert.addActionListener(this);//신규버튼
+		btnUpdate.addActionListener(this);//수정
+		btnDel.addActionListener(this);//삭제
+		btnFind.addActionListener(this);//검색
+		btnOption.addActionListener(this);//옵션은 그냥뭐
+		btnClose.addActionListener(this);//종료
+		btnF.addActionListener(this);//맨 처음레코드로 이동 <<
+		btnP.addActionListener(this);//이전  <
+		btnN.addActionListener(this);//다음 >
+		btnL.addActionListener(this);//마지막 레코드 >>
+	}
+	
+    private void accDb() {//접속
+    	try {
+			 //1.접속할 드라이버를 메모리에 올리기
+     	  Class.forName("oracle.jdbc.driver.OracleDriver");
+     	  String url="jdbc:oracle:thin:@localhost:1521:orcl";//url주소값
+     	  //2.접속하기위한 메서드(1.접속url ,2.계정명,3.접속 암호)
+     	  conn=DriverManager.getConnection(url, "test1", "t1234");
+     	  //추가 (신규,수정->레코드이동->자동으로 스크롤 이동시 수정이 반영)
+     	  stmt=conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+     			  ResultSet.CONCUR_UPDATABLE);
+     	  /*
+     	   * ResultSet.TYPE_SCROLL_SENSITIVE->양방향으로 스크롤이동시 업데이트반영
+     	   * ResultSet.CONCUR_UPDATABLE->현재 커서의 위치에서 정보업데이트 가능
+     	   */
+     	  System.out.println("접속conn=>"+conn);
+		}catch(Exception e) {
+			System.out.println("DB접속 오류=>"+e);
+		}
+    }
+    
+    private void init() { //정렬
+    	try {
+			sql="select  *  from book order by b_bun asc";
+			rs=stmt.executeQuery(sql);//stmt.executeUpdate(); insert,update,delete
+			//맨 마지막 레코드번호이동->현재행->마지막레코드수
+			rs.last();
+			iTotal=rs.getRow();//현재 행번호(맨 마지막 레코드번호)->9
+			iLast=rs.getInt("b_bun");//마지막 도서번호->+1(9+1=10)
+			//select max(b_bun) from book; 웹상에서는 이렇게 코딩
+			rs.first();//첫번째 레코드로 이동
+		}catch(Exception e) {
+			System.out.println("도서 테이블 불러오기 실패->"+e);
+		}
+    }
+    //DB에 있는 필드별로 데이터를 가져와서 화면에 출력
+    private void display() {//화면에 보여주기->이미지를 보여주기
+    	try {
+    		txtBbun.setText(rs.getString("b_bun"));//도서번호
+    		txtBjemok.setText(rs.getString("b_jemok"));//책제목
+    		txtBjang.setText(rs.getString("b_jang"));//장르
+    		//월-일-년도 시 분 초->날짜가 길면->10글자만 화면에 출력
+    		//substring(인수1,인수2-1 까지 불러오기)
+    		txtBkuil.setText(rs.getString("b_kuipil").substring(0,10));//0~9
+    		txtBdaesu.setText(rs.getString("b_daesu"));//대여수(=빌려간 수)
+    		//대여유무
+    		if(rs.getString("b_daeyn").equals("y")) {
+    			txtBdaeyn.setText("대여중");
+    			txtBdaeyn.setForeground(Color.RED);//빨간색으로 표시
+    		}else {//n
+    			txtBdaeyn.setText("비치중");
+    			txtBdaeyn.setForeground(Color.BLACK);//검정색으로 표시
+    		}
+    		//대여자 번호=고객번호
+    		txtBdaebun.setText(rs.getString("b_daebun"));
+    		//대여일자,반납일자->없으면 "",날짜->10글자만 화면에 출력
+    		if(rs.getString("b_daeil")==null) {
+    		    txtBdaeil.setText("");
+    		}else {//대여날짜가 존재한다면 10글자만 표시
+    		    txtBdaeil.setText(rs.getString("b_daeil").substring(0,10));
+    		}
+    		//반납일
+    		if(rs.getString("b_banil")==null) {
+    		    txtBbanil.setText("");
+    		}else {//반납날짜가 존재한다면 10글자만 표시
+    		    txtBbanil.setText(rs.getString("b_banil").substring(0,10));
+    		}
+    		//메모->이 책의 빌린사람번호 확인
+    		taBmemo.setText(rs.getString("b_memo"));
+    		lblRec.setText(rs.getRow()+"/"+iTotal);//현재행/총레코드수(총책수)
+    		//책의 이미지를 불러오기
+    		imgPath=rs.getString("b_image");//c:/bookimage/book6.jpg
+    		displayImage();//DB상의 이미지불러오기
+    	}catch(Exception e) {
+    		System.out.println("display()메서드 오류=>"+e);
+    	}
+    }
+    
+    //이미지경로를 지정해서 불러오기
+    private void displayImage() { //멤버변수에 존재->매개변수X
+    	    ImageIcon icon=createImageIcon(imgPath);//c:/bookimage/book6.jpg
+            //이미지를 화면에 보이기위해서->JLabel+ImageIcon결합
+    	    lblPic.setIcon(icon);//JLabel->c:/bookimage/book6.jpg
+    	    lblPic.setToolTipText("경로는 "+imgPath.toLowerCase());//소문자로출력
+    
+    	    //이미지를 못불러왔다면
+    	    if(icon!=null) {
+    	    	lblPic.setText(null);//글자대신에 이미지를 붙이기 위해서
+    	    }else {
+    	    	lblPic.setText("이미지 없음");//정보
+    	    }
+    }
+    //경로를 지정해 넣어주면 이미지를 만들어서 불러오는 메서드
+    private ImageIcon createImageIcon(String path) {
+    	if(path!=null) {//불러올 이미지의 경로가 들어가 있다면->이미지객체생성
+    		//swing->이미지를 생성->ImageIcon(경로)
+    		//ImageIcon 객체명=new ImageIcon(경로포함해서 파일명)
+    		return new ImageIcon(path);
+    	}else {
+    		System.out.println("이미지 불러오는데 실패(경로불분명)");
+    		return null;//이미지객체정보를 만들어서 줄 수가 없다는 표시
+    	}
+    }
+    
+    @Override
+    	public void actionPerformed(ActionEvent e) {
+    		// TODO Auto-generated method stub
+    	//레코드 이동
+    			try {
+    				if(e.getSource()==btnF) { //<<
+    					rs.first();//맨 처음 레코드로 이동
+    					display();//첫번째 행에 대한 데이터를 다시 보여달라
+    				}else if(e.getSource()==btnP) { //<
+    					if(rs.isFirst()) return;//첫번째행->이전행으로 이동X
+    					rs.previous();
+    					display();
+    				}else if(e.getSource()==btnN) { // > 다음레코드
+    					if(rs.isLast()) return; //마지막 레코드라면 이동불가
+    					rs.next();
+    					display();
+    				}else if(e.getSource()==btnL) {// >> 마지막 레코드
+    					rs.last();
+    					display();
+    				}
+    			}catch(Exception e2) {
+    				System.out.println("레코드 이동 오류=>"+e2);
+    			}
+    			//신규,수정,삭제,조회,종료
+    			//신규->맨처음 레코드입력->저장
+    			if(e.getSource()==btnInsert) {//신규버튼을 눌렀다면
+    				if(isInsert==false) {//Insert(신규)버튼을 누르지 않은상태에서 처음 누른경우
+    					txtBbun.setText(iLast+1+"");
+    					imgPath=null;//새로운 이미지 불러올 정보(경로포함 파일명)
+    					
+    					//iLast->총레코드수(맨마지막 레코드번호)+1
+    				    txtBjemok.setText(null);//제목
+    				    txtBjang.setText(null);//장르
+    				    //구입날짜->자동으로 오늘날짜 계산
+    				    Calendar cal=Calendar.getInstance();
+    				    String imsi=cal.get(Calendar.YEAR)+"-"+ //2017-
+    				                      (cal.get(Calendar.MONTH)+1)+"-"+//2017-6
+    				    		            cal.get(Calendar.DATE);//2017-6-27
+    				    //언어처리->편리성 추구
+    				    txtBkuil.setText(imsi);//자동으로 오늘 날짜가 출력
+    				    txtBdaesu.setText("0");//대여수 0
+    				    txtBdaeyn.setText("n");//대여유무->n
+    				    txtBdaebun.setText("0");//고객번호는 처음에는 0
+    				    txtBdaeil.setText(null);//대여일
+    				    txtBbanil.setText(null);//반납일
+    				    taBmemo.setBackground(Color.WHITE);//대여자정보,책의상태
+    				    //입력가능하게 설정
+    				    taBmemo.setEditable(true);//편집할 수있는  ->setEnabled(활성화)
+    					txtBjemok.setEditable(true);//제목
+    					txtBjang.setEditable(true);//장르
+    					txtBkuil.setEditable(true);//장르
+    					//제목에 커서입력
+    					txtBjemok.requestFocus();
+    					//이미지를 새로 삽입
+    				    imageIn();
+    				    //버튼의 상태를 변경
+    				    btnInsert.setText("확인");//버튼의 이름
+    				    isInsert=true;//한번 클릭했다고 체크
+    				}else { //isInsert=true인 상태(이미 한번 누른경우)->확인
+    					taBmemo.setBackground(Color.LIGHT_GRAY);//회색
+    					taBmemo.setEditable(false);//
+    					txtBjemok.setEditable(false);//제목
+    					txtBjang.setEditable(false);//장르
+    					txtBkuil.setEditable(false);//구입
+    					btnInsert.setText("신규");
+    				    isInsert=false;//원래 초기화->다시 다음번 책을 입력하기위해서
+    				    //insertBook()호출
+    				    insertBook();
+    				} 
+    			}else if(e.getSource()==btnin) {//이미지 추가->수정과 같다
+    				file=null;//불러올 이미지의 파일 정보
+    				//파일 대화상자->JFileChooser
+    				JFileChooser fileChooser=new JFileChooser();
+    				//파일표시
+    				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    				int result=fileChooser.showOpenDialog(this);
+    				if(result==JFileChooser.CANCEL_OPTION) {//취소를 선택했다면
+    					file=null;
+    				}else {//불러올 이미지 파일선택했다면
+    					file=fileChooser.getSelectedFile();//당신이 선택한 이미지파일명
+    					imgPath=file.getPath().replace("\\", "/"); // \->\\ or /인식
+    					System.out.println
+    					("선택한 이미지 파일 경로 확인(imgPath)=>"+imgPath);
+    					displayImage();//이미지+JLabel->화면에 출력
+    				}
+    				//전의 설정정보 해제
+    				picPn.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+    				lblPic.setVisible(true);//새로 부착된 이미지
+    				btnin.setVisible(false);//추가버튼은 안보이게 
+    				picPn.add("Center", lblPic);//JLabel+imageicon이 결합이 된 상태
+    			}else if(e.getSource()==btnUpdate) {//수정버튼<-->완료
+    			  
+    			}else if(e.getSource()==btnDel) {//삭제버튼
+    				//사용자에게 진짜 삭제유무?=>confirm->showConfirmDialog()
+    				//1.부모창(this) 2.메세지내용3.창의 제목 4.옵션(yes|no)
+    				int re=JOptionPane.showConfirmDialog
+    				            (this,"현재 도서자료를 정말로 삭제할까요?","삭제",
+    						                           JOptionPane.YES_NO_OPTION);
+    				if(re==JOptionPane.YES_OPTION); //예라고 눌렀다면
+    					 // deleteBook();
+    			}else if(e.getSource()==btnFind) {//검색버튼
+    				      //findBook();
+    			}else if(e.getSource()==btnOption) {//옵션버튼
+    				//나중에 필요하면 추가
+    			}else if(e.getSource()==btnClose) {//종료버튼
+    				//닫기->DB연동부분 다 초기화작업후(메모리 삭제후 종료)
+    				try { //DB연결순서와 정반대로 메모리를 해제한다.
+    					if(rs!=null) rs.close();
+    					if(stmt!=null) stmt.close();
+    					if(conn!=null) conn.close();
+    				}catch(Exception e2) {
+    					System.out.println("메모리 해제가 실패=>"+e2);
+    				}finally {//예외 발생유무와 상관없이 항상 처리되어야할 문장기술
+    					//BookMain의 메뉴(book_book)=>활성화(setEnabled(true|false))
+    				    BookMain.book_book.setEnabled(true);//도서메뉴 활성화
+    				    BookMain.childWinBook.dispose();//자식창종료(메모리해제)
+    				}//finally
+    			}	
+    }
+  ====================================
+접속conn=>oracle.jdbc.driver.T4CConnection@136432db
+선택한 이미지 파일 경로 확인(imgPath)=>C:/bookimage/imagenull.jpg
+insert sql=>insert into book values(11,'연습3','추리소설','2017-6-27','0','n','0','','','','C:/bookimage/imagenull.jpg')
+데이터 입력성공유무(insert)=>1

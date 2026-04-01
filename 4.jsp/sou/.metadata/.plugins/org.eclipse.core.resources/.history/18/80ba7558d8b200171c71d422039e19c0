@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- @Autowired을 자동으로 등록-->
+<!-- <context:annotation-config /> -->
+
+<!-- (4) viewResolver(위치(prefix),이동할 페이지의 확장자 를 지정) -->
+<bean id="viewResolover"
+class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+  <property name="viewClass" 
+                  value="org.springframework.web.servlet.view.JstlView" />
+  <property name="prefix" value="/" />
+  <property name="suffix" value=".jsp" />
+</bean>
+
+<!-- 요청명령어를 등록->어느 컨트롤러 클래스가 처리(/hello.do->TestController)
+  name="/hello.do" 이 생략  @RequestMapping("/hello.do")
+-->
+<bean  class="dr.mini.controller.TestController" 
+           p:model-ref="myModel"/>
+
+<!--핵심클래스의 객체생성  -->
+<bean name="myModel" class="lee.model.MyModel" />
+
+</beans>
+
+
+
+
+
+
+

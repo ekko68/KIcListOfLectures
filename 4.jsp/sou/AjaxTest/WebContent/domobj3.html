@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>key,value값을 이용한 객체생성3(JSON표기법)</title>
+<script>
+ /* 
+ 형식)->angluar의 선언적 프로그래밍->selector:'app-root'
+    var(=let) 객체명={
+    	  속성명(=멤버변수명):값,
+    	  속성명2:속성값,
+    	  ,,,
+    	  함수명:function(매개변수~){~}
+    }
+ */
+    var person={
+		  name:'홍길동', //key(속성명):값(value)
+		  age:23,
+		  eat:function(food){  //public void eat(String food)
+			  alert(this.name+'은 오늘'+food+'은 먹습니다')
+		  }
+ }
+ //객체명.속성명
+ document.write(person.name);
+ person.eat('도시락')
+ 
+</script>
+</head>
+<body>
+
+</body>
+</html>
+
+

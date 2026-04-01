@@ -1,0 +1,147 @@
+20일차(네트워크 마무리 및 자바총정리)
+=>응용SW기초 활용 과목
+=>프로그래밍 활용(자바)
+===================
+->객관식 문제 풀이(필수)
+
+다음주 월요일 ->개별 상담
+---------------------------
+=>다음주 월요일 Q & A 시험
+-----------------------------
+=>채팅을 정리+시큐어코딩(자바,웹) 가미
+-----------------------------
+시큐어코딩=>국책사업(의무)=>
+
+1.해킹 방지 목적
+
+s=new Socket("192.168.0.57",5432);//노출X
+=>환경설정 파일(ip,port,계정id,passwd)을  저장=>암호화
+=>소스코드 상으로 불러와서 작업=>
+
+2.프로그램의 안정성때문에 
+
+재귀메서드->탈출조건을 먼저 작성(규칙)
+===========================
+Protest.java
+
+시큐어코딩을 적용
+===========
+#Chatting Server Port Number
+port=1
+ip=192.168.0.57
+
+==>port.properties파일로 저장
+==========================
+서버쪽 추가 소스코딩하는 부분
+
+//-------------------------------------------------
+	public ChatGUIServer() throws Exception{ //생성자->초기화
+		//서버를 가동->클라이언트가 접속할때 기다린다.(무한 루프)
+		Properties props=new Properties();
+		FileInputStream in=new FileInputStream
+				("C:/webtest/3.java/sou/JavaProject/src/port.properties");
+		String service="";//불러올 포트번호를 저장
+		//입출력->파일을 불러올 수 있는 상태인지 체크->available()->-1(X)
+		//파일의 정보를 가지고 있으면서 현재 불러올수 있다면
+		if(in!=null && in.available()>0) {
+			props.load(in);
+			service=props.getProperty("port");//"1"
+		}
+		if("".equals(service)) {//정상적으로 port속성을 못 불러오는 경우
+			service="5432";
+		}
+		int port=Integer.parseInt(service);//"1"->1
+		switch(port) {
+		case 1:
+			        port=5432;
+			        break;
+		case 2:
+	                port=5000;
+	                break;
+		case 3:
+	                port=5500;
+	                break;
+	    default:
+	    	        port=3000;
+	    	        break;
+		}
+		
+		System.out.println("port=>"+port);
+		//---------------------------------------------------------------
+		v=new Vector();//생성자에서는 다른 클래스 객체명 사용가능->클라이언트저장
+		try {
+			//ss=new ServerSocket(5432);//책 7777=>포트번호
+			ss=new ServerSocket(port);
+			System.out.println("ss=>"+ss);
+			System.out.println("채팅서버 가동중.....");
+=======================================
+클라이언트 쪽 
+
+try{
+		   //--------------------------------------------------------------
+		    Properties props=new Properties();
+			FileInputStream in=new FileInputStream
+					("C:/webtest/3.java/sou/JavaProject/src/port.properties");
+			String ip="";//불러올 ip주소를 저장
+			//입출력->파일을 불러올 수 있는 상태인지 체크->available()->-1(X)
+			//파일의 정보를 가지고 있으면서 현재 불러올수 있다면
+			if(in!=null && in.available()>0) {
+				props.load(in);
+				ip=props.getProperty("ip");//"1"
+				//port=props.getProperty("port");//5432
+			}
+		   //---------------------------------------------------------------
+		   //1.접속할 컴퓨터ip주소(서버)->192.168.0.57,포트번호(5432)
+		   //s=new Socket("192.168.0.57",5432); ->나중에는 지워야 된다.
+		   s=new Socket(ip,5432);//~(ip,port); 권장
+------------------------------------------------------------
+p691
+ 열거형 ->JDK 1.5->5.0버전에 추가
+
+ 변수선언->상수형으로 변수를 선언->final 변수명=3//상수
+
+ static ->공유 (각 객체에서 공통적으로 사용할 변수)
+
+ static final=>정적 상수(프로그램에서 공통적으로 사용되는 
+                                   상수)=>클래스명.정적상수명
+
+ =>여러개를 사용하는 경우->소스코드가 증가
+-------------------------------------------------
+=>열거형->배열처럼->나열
+ enum 열거형이름(=배열이름) {상수명1,상수명2,,,n}
+=>열거형=>배열과 비슷
+=>AWT->빨강색->Color.RED
+
+ Day=>요일(월~일),날짜(1~12월)=>상수값으로 저장
+->static final->
+==================================
+//public class Day {}
+//열거형=>모든 클래스에서 공통적으로 사용하고자하는 멤버변수(상수화)
+//ex) 요일,월=>형식) public enum 열거형명
+public enum Day {
+	//내부적으로 0부터 시작
+     SUN,MON,TUE,WED,THU,FRI,SAT
+     //public static final int SUN=0;,,,,
+     //public static final int MON=1;
+}
+----------------------------------------
+프로젝트->주제(도서관리)->2~3개 테이블
+           ->웹와 연관
+-------------------------------------------
+JInternalFrame,JTable=>JTableTest.java
+===============
+JTableTest2.java(실시간으로 입력->JTable에
+                                          데이터가 입력)
+
+=>오라클=>
+C:\oracle\product\11.2.0\dbhome_1\jdbc\lib
+=>ojdbc6.jar (11g에 연결하기위해 필요로하는
+                      자바라이브러리 파일)
+
+
+
+
+
+
+
+

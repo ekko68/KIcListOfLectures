@@ -1,0 +1,252 @@
+8일차(회원수정 및 회원탈퇴 구현)
+
+=>회원로그인->회원가입(중복id 체크,우편번호 검색)
+=>회원수정 및 회원탈퇴=>회원검색(우편번호 검색을 참조)
+                                      회원리스트
+
+프로젝트 주제발표 (다음주 금요일 발표->ppt 5~6) 발표자 (2주)
+                                                      5:10
+ 주제->금지 주제(ex 영화 예매 사이트)->2개이상
+  =>배운것을 전부 사용할 수있으면서 실력을 업그레이드 할 수있는
+       주제를 선택할것.
+======================================
+  =>쇼핑몰=>15~20개
+
+
+회원수정->주소변경,전번 변경->로그인해서 수정
+회원탈퇴----------------------->로그인
+============================
+1)Login.jsp에서 메뉴항목을 추가
+ 페이지를 전환->
+
+*****매개변수를 전달하는 방법****(기술면접시)
+*************************************
+
+1.링크문자열을 이용해서 페이지 전환할때 사용
+ <a href="DelCheckForm.jsp?mem_id=<%=mem_id%>">회원탈퇴</a>
+
+2.Request객체 또는 Session객체를 이용한 데이터 공유방법
+<a href="MemberUpdate.jsp">회원수정</a>
+ =>String mem_id=(String)session.getAttribute("idKey")
+      
+3.<form>태그내부에 <input type="hidden"~>값을 전달하는 경우
+   형식) <input type="hidden" name="전달할매개변수명" value="전달할값">
+ex)<input type="hidden" name="mem_id" value="<%=mem_id%>" >
+
+  <input type="hidden" name="mem_id" value="<%=mem_id%>" >
+    대신에 action속성값에 
+     action="이동할페이지명?매개변수명=전달할값&매개변수명2=값2,,,
+4.action="delePro.jsp?mem_id=<%=mem_id%>
+==============================================
+
+회원수정->MemberUpdate.jsp(수정할 데이터를 보여줄 페이지)
+               MemberUpdateProc.jsp(수정할 메서드 호출->테이블 반영)
+
+MemberDAO->회원수정할 데이터 보여줄 메서드,회원수정하는 메서드
+
+//5)회원수정을 위한 계정별 회원정보를 출력메서드->nup
+	//select * from member wher id='nup';
+	//select * from member->public ArrayList or Vector getMemberList(){}
+	public MemberDTO getMember(String mem_id) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		MemberDTO mem=null;//id값에 해당되는 레코드한개의 정보
+		String sql="";//실행시킬 sql구문
+		//2.실행시킬 SQL구문이 필요
+		try {
+			con=pool.getConnection();
+			sql="select * from member where id=?";
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, mem_id); //~(1,'nup')
+			rs=pstmt.executeQuery();
+			//id값에 해당하는 레코드를 찾았다면?
+			//String name=rs.getString("name")
+			if(rs.next()) {    //while(rs.next()){}=>여러개의 레코드를 담을때
+				mem=new MemberDTO();
+				mem.setMem_id(rs.getString("id"));//~('nup')
+				mem.setMem_passwd(rs.getString("passwd"));
+				mem.setMem_name(rs.getString("name"));
+				mem.setMem_phone(rs.getString("phone"));
+				mem.setMem_zipcode(rs.getString("zipcode"));
+				mem.setMem_address(rs.getString("address"));
+				mem.setMem_email(rs.getString("e_mail"));
+				mem.setMem_job(rs.getString("job"));
+			}
+		}catch(Exception e) {
+			System.out.println("getMember()실행 에러유발->"+e);
+		}finally {//3.DB연결해제
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return mem; //return name;
+	}
+	//6)회원수정->회원가입과 동일하다.
+	public boolean memberUpdate(MemberDTO mem) {
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		boolean check=false;//회원수정 성공유무
+		String sql="";//실행시킬 sql구문
+		//2.실행시킬 SQL구문이 필요
+		try {
+			con=pool.getConnection();
+			//트랜잭션 처리
+			con.setAutoCommit(false);
+			//-------------------------------
+			sql="update member set passwd=?,name=?,e_mail=?,phone=?,"
+					+ " zipcode=?,address=?, job=?  where id=?";
+			
+			pstmt=con.prepareStatement(sql);
+			pstmt.setString(1, mem.getMem_passwd());
+			pstmt.setString(2, mem.getMem_name());
+			pstmt.setString(3, mem.getMem_email());
+			pstmt.setString(4, mem.getMem_phone());
+			pstmt.setString(5, mem.getMem_zipcode());
+			pstmt.setString(6, mem.getMem_address());
+			pstmt.setString(7, mem.getMem_job());
+			pstmt.setString(8, mem.getMem_id());
+			
+			int update=pstmt.executeUpdate();//반환 1 (성공),0 (실패)
+			con.commit();//실질적으로 update작동된다.
+			if(update == 1) { //if(update==1){
+				check=true; //수정성공
+			}
+		}catch(Exception e) {
+			System.out.println("memberUpdate()실행 에러유발->"+e);
+		}finally {//3.DB연결해제
+			pool.freeConnection(con, pstmt);//rs는 없다.(select가 아님)
+		}
+		return check;
+	}
+	
+	//7)회원탈퇴
+	
+	//8)회원리스트->select * from member (상품,카테고리,,,,)
+	public ArrayList<MemberDTO>  getMemberList(){
+		
+		Connection  con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		ArrayList<MemberDTO> memList=null;// 레코드한개이상 의 정보
+		String sql="";//실행시킬 sql구문
+		//2.실행시킬 SQL구문이 필요
+		try {
+			con=pool.getConnection();
+			sql="select * from member ";
+			pstmt=con.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			//id값에 해당하는 레코드를 찾았다면?
+			//String name=rs.getString("name")
+			while(rs.next()) {    //while(rs.next()){}=>여러개의 레코드를 담을때
+				MemberDTO mem=new MemberDTO();
+				mem.setMem_id(rs.getString("id"));//~('nup')
+				mem.setMem_passwd(rs.getString("passwd"));
+				mem.setMem_name(rs.getString("name"));
+				mem.setMem_phone(rs.getString("phone"));
+				mem.setMem_zipcode(rs.getString("zipcode"));
+				mem.setMem_address(rs.getString("address"));
+				mem.setMem_email(rs.getString("e_mail"));
+				mem.setMem_job(rs.getString("job"));
+				//ArrayList에 담기
+				memList.add(mem);
+			}
+		}catch(Exception e) {
+			System.out.println("getMemberList()실행 에러유발->"+e);
+		}finally {//3.DB연결해제
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return memList;
+		
+	}
+}
+--------------------------------------------------------------
+Register.jsp의 save as =>MemberUpdate.jsp,
+                                      MemberUpdateProc.jsp구현
+  Register.jsp-->RegisterProc.jsp
+=>MemberUpdateProc.jsp=>
+
+public void setMem_id(String mem_id) {
+		this.mem_id = mem_id;
+		System.out.println("setMem_id()호출됨=>"+mem_id);
+	}
+
+============================================
+회원탈퇴
+
+1.DelCheckForm.jsp?mem_id=nup(암호?)
+                               |
+2.DelCheckProc.jsp(회원삭제시켜주는 메서드 호출)
+  
+  select passwd from where id='nup'   == 웹상에 입력한 암호
+  delete from member where id='nup'
+====================================
+MemberDAO->회원탈퇴
+
+//7)회원탈퇴
+	//passwd->사용자로부터 직접 입력받는 경우, id->파라미터값으로 전달
+	public int deleteMember(String id,String passwd) {
+		Connection con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null; //select passwd from member where id='nup'
+		String dbpasswd="";//DB상에서 찾은 암호를 저장
+		int x=-1;//회원 탈퇴 유무
+		
+		try {
+			con=pool.getConnection();
+			con.setAutoCommit(false);
+			//1.id값에 해당하는 되는 암호먼저 찾기
+			pstmt=con.prepareStatement("select passwd from member where id=?");
+			pstmt.setString(1, id);
+			rs=pstmt.executeQuery();
+			//암호가 존재한다면
+			if(rs.next()) {
+				dbpasswd=rs.getString("passwd");//rs.getString(1);
+				System.out.println("dbpasswd="+dbpasswd);
+				//dbpasswd(DB상에서 찾은 암호)==passwd(웹상))
+				if(dbpasswd.equals(passwd)) {
+					pstmt=con.prepareStatement("delete from member where id=?");
+					pstmt.setString(1, id);
+					int delete=pstmt.executeUpdate();
+					con.commit();
+					System.out.println("delete(회원탈퇴 성공유무)="+delete);
+					x=1;//회원탈퇴 성공
+				}else {//회원탈퇴 실패->암호가 틀린경우
+					x=0;
+				}
+			}
+		}catch(Exception e) {
+			System.out.println("deleteMember()호출됨=>"+e);
+		}finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return x;
+	}
+------------------------------------------------------------------
+MemberUpdateProc.jsp의 save as =>
+ delePro.jsp=>mem_id,passwd=>deleteMember
+
+ ->이용약관(agreement.jsp)
+
+//회원가입버튼을 눌렀을때 Register.jsp로 이동
+function memberReg(){
+	//document.location="Register.jsp"
+	document.location="agreement.jsp" //->Register.jsp
+   //response.sendRedirect(~) X
+}
+=========================================
+
+
+
+
+
+
+
+
+
+
+                                 
+
+
+
+

@@ -1,0 +1,282 @@
+15일차(모델2로 작성한 게시판-글쓰기,글상세보기,글수정하기,글삭제)
+
+ ->전체적인 흐름 파악(모델2)
+
+1.글쓰기
+http://localhost:8090/JspBoard2/writeForm.do
+ 링크 문자열->요청                     java.lang.NullPointerException
+
+**연결하는 방법**
+
+1.요청명령어를 등록(commandPro.properties)
+
+/writeForm.do=action.WriteFormAction ->/writeForm.jsp이동
+/writePro.do=action.WriteProAction
+
+2.
+@Override
+	public String requestPro(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		// TODO Auto-generated method stub
+		//1.요청에 따른 처리 결과 수행
+		 //list.jsp(글쓰기)->신규글   ,content.jsp(글상세보기)->글쓰기(답변글)
+		 int num=0,ref=1,re_step=0,re_level=0;  //writePro.jsp전달
+		  
+		  //content.do에서 num이하가 넘어온 것이라면 답변글이다
+		  if(request.getParameter("num")!=null){
+			  num=Integer.parseInt(request.getParameter("num"));
+			  ref=Integer.parseInt(request.getParameter("ref"));
+			  re_step=Integer.parseInt(request.getParameter("re_step"));
+			  re_level=Integer.parseInt(request.getParameter("re_level"));
+			  System.out.println("content.jsp에서 넘어온 매개변수값 확인");
+			  System.out.println
+			   ("num="+num+",ref="+ref+",re_step="+re_step+",re_level="+re_level);
+		  }
+		 
+		//2.수행결과(변수 선언,매개변수)->request영역에 저장
+		request.setAttribute("num", num);//${num}
+		request.setAttribute("ref", ref);
+		request.setAttribute("re_step", re_step);
+		request.setAttribute("re_level", re_level);
+		//3. return 경로포함해서 이동할 페이지명
+		return "/writeForm.jsp";
+	}
+=============================
+3.writeForm.jsp 작성
+
+ [re]____
+request.getContextPath()->/JspBoard2
+실질적인 command=>/writePro.do
+com=>null  =>/writePro.do요청 했을때 관련된 명령어 처리클래스가 존재
+                         하지 않기때문에 관련된 객체를 얻어올 수가 없는 상태라는
+                          에러메세지
+
+1.요청명령어 등록 X  or 클래스 이름이 오타
+---------------------------------------------
+
+ 요청명령어->글쓰기까지 등록
+/writePro.do=action.WriteProAction->작성->writePro.jsp로 이동
+-----------------------------------------
+                                 BoardDAO->메서드가 존재한다면
+
+WriteProAction
+
+public class WriteProAction implements CommandAction {
+
+	@Override
+	public String requestPro(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		// TODO Auto-generated method stub
+		
+	     //한글처리
+	     request.setCharacterEncoding("utf-8");
+	     //BoardDTO->SetterMethod 호출(5개)+hidden(4개)
+	     //BoardDTO article=new BoardDTO();
+	     //property="*" =>매개변수로 전달받은 경우에만 적용이 된다.
+       BoardDTO article=new BoardDTO();
+       article.setNum(Integer.parseInt(request.getParameter("num")));
+       article.setWriter(request.getParameter("writer"));
+       article.setEmail(request.getParameter("email"));
+       article.setSubject(request.getParameter("subject"));
+       article.setPasswd(request.getParameter("passwd"));
+       article.setReg_date(new Timestamp(System.currentTimeMillis()));
+       article.setRef(Integer.parseInt(request.getParameter("ref")));
+       article.setRe_step(Integer.parseInt(request.getParameter("re_step")));
+       article.setRe_level(Integer.parseInt(request.getParameter("re_level")));
+       article.setContent(request.getParameter("content"));
+	   article.setIp(request.getRemoteAddr());
+	   
+	   BoardDAO dbPro=new BoardDAO();
+	   dbPro.insertArticle(article);
+	   
+		return "/writePro.jsp";
+	}
+
+}
+========================================
+3.글상세보기 및 답변달기
+
+1) 요청명령어 등록=>list.jsp (/JspBoard2/content.do?)
+ /content.do=action.ContentAction ==>스프링(xml에서 작성)
+
+2)ContentAction 작성<---content.jsp
+         자바코드(분리)  forward(컨트롤러)
+@Override
+	public String requestPro(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		// TODO Auto-generated method stub
+		//list.jsp에서 링크 content.do?num=3&pageNum=1
+		  int num=Integer.parseInt(request.getParameter("num"));
+		  String pageNum=request.getParameter("pageNum");
+		  
+		  BoardDAO dbPro=new BoardDAO();
+		  //update board set readcount=readcount+1 where num=?
+		  //select * from board where num=?
+		  BoardDTO article=dbPro.getArticle(num);
+		  //링크문자열의 길이를 줄이기위해서
+		  int ref=article.getRef();
+		  int re_step=article.getRe_step();
+		  int re_level=article.getRe_level();
+		  System.out.println("content.do의 매개변수");
+		  System.out.println("ref->"+ref+",re_step->"+re_step+",re_level->"+re_level);
+		 
+		  request.setAttribute("num", num);
+		  request.setAttribute("pageNum", pageNum);
+		  request.setAttribute("article", article);
+		  //ref,re_step,re_level 도 전달 X 코딩X->article안에 포함되어있기 때문에
+		return "/content.jsp";
+	}
+
+3)content.jsp=>화면 디자인만 출력
+
+***
+NumberFormatException =>파라미터값이 전달이 잘 안될경우 발생
+
+ Integer.parseInt("3a ")=>NumberFormatException 변환이 제대로 안될때
+***
+
+http://localhost:8090/JspBoard2/writeForm.do?num= 21&ref=21&re_step=0&re_level=0
+                                                                               ==공백 조심할것.
+===========================================
+http://localhost:8090/JspBoard2/updateForm.do?num=30&pageNum=1
+
+javax.servlet.ServletException: java.lang.NullPointerException
+ =>/updateForm.do=>요청명령어에 해당하는 해당클래스 객체를 얻어오지
+                                  못한 에러유발
+------------------------------------------------------------------------------
+	controller.ControllerAction.requestPro(ControllerAction.java:116)
+	controller.ControllerAction.doGet(ControllerAction.java:81)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:635)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
+	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52
+
+실질적인 command=>/updateForm.do
+com=>null =>UpdateFormAction클래스 객체
+==============================
+
+1.글수정하기
+
+/updateForm.do=action.UpdateFormAction
+#/updatePro.do=action.UpdateProAction
+
+2.UpdateFormAction 클래스 작성->updateForm.jsp의 자바코드를 복사
+               ->파라미터값 ->request에 저장->"/updateForm.jsp
+
+public String requestPro(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		// TODO Auto-generated method stub
+		    int num=Integer.parseInt(request.getParameter("num"));
+		    String pageNum=request.getParameter("pageNum");
+		    BoardDAO dbPro=new BoardDAO();
+		    //select * from board where num=?
+		    BoardDTO article=dbPro.updateGetArticle(num);
+		    
+		    //메모리에 저장->공유해서 이동(forward)
+		    request.setAttribute("pageNum", pageNum);//${pageNum}
+		    request.setAttribute("article", article);//num->getNum()
+		    
+		return "/updateForm.jsp";
+	}
+
+3.updateForm.jsp->글상세보기와 동일->${~}
+==========================================
+글수정=>1.요청명령어 등록
+
+/updatePro.do=action.UpdateProAction
+=========================
+
+2.UpdateProAction->updateArticle()호출->updatePro.jsp->수정페이지로 이동
+------------------------------------------------------------------------------------
+
+@Override
+	public String requestPro(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+
+	     //한글처리
+	     request.setCharacterEncoding("utf-8");
+	     String pageNum=request.getParameter("pageNum");
+	     
+      BoardDTO article=new BoardDTO();
+      article.setNum(Integer.parseInt(request.getParameter("num")));
+      article.setWriter(request.getParameter("writer"));
+      article.setEmail(request.getParameter("email"));
+      article.setSubject(request.getParameter("subject"));
+      article.setContent(request.getParameter("content"));
+      article.setPasswd(request.getParameter("passwd"));//웹상에서 입력한 암호
+    
+	   BoardDAO dbPro=new BoardDAO();
+	   int check=dbPro.updateArticle(article);
+	   
+	   //2개의 공유값이 필요
+	   request.setAttribute("pageNum", pageNum);
+	   request.setAttribute("check", check);
+	   
+		return "/updatePro.jsp";
+	}
+=========================================
+updatePro.jsp
+
+<c:if test="${check==1}">
+<meta http-equiv="Refresh" 
+            content="0;url=/JspBoard2/list.do?pageNum=${pageNum}">
+</c:if>
+<c:if test="${check==0}">
+   <script>
+           alert("비밀번호가 맞지않습니다.\n다시 확인요망!")
+           history.go(-1)
+   </script>
+</c:if>
+====================================
+게시판의 글 삭제하는 경우
+
+1.요청명령어 등록
+
+/deleteForm.do=action.DeleteFormAction =>deleteForm.jsp
+/deletePro.do=action.DeleteProAction->deletePro.jsp
+                                                           ========
+                                                            updatePro.jsp와 동일
+                                                            (save as)
+=====================================
+/deleteForm.do=action.DeleteFormAction 
+/deletePro.do=action.DeleteProAction
+
+2.DeleteFormAction->deleteForm.jsp로 이동
+
+@Override
+	public String requestPro(HttpServletRequest request, HttpServletResponse response) throws Throwable {
+		// TODO Auto-generated method stub
+		//content.do->삭제->deleteForm.do?num=2&pageNum=1->deletePro.jsp
+		  int num=Integer.parseInt(request.getParameter("num"));
+		  String pageNum=request.getParameter("pageNum");
+		  
+		  //메모리에 저장
+		  request.setAttribute("num",num);
+		  request.setAttribute("pageNum",pageNum);//${pageNum}
+		  
+		return "/deleteForm.jsp";
+	}
+---------------------------------------------------------------
+deleteForm.jsp로 이동->
+------------------------------------------
+   String pageNum=request.getParameter("pageNum");//삭제페이지
+	     int num=Integer.parseInt(request.getParameter("num"));//삭제게시물번호
+	     String passwd=request.getParameter("passwd");//웹상에서 입력한 암호
+    
+	   BoardDAO dbPro=new BoardDAO();
+	   //select passwd from board where num=?
+	   //delete from board where num=?
+	   int check=dbPro.deleteArticle(num,passwd);
+	   
+	   //2개의 공유값이 필요
+	   request.setAttribute("pageNum", pageNum);
+	   request.setAttribute("check", check);
+	   
+		return "/deletePro.jsp";
+------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+

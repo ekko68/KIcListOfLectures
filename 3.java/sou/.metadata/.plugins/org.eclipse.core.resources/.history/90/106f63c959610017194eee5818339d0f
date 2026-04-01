@@ -1,0 +1,1116 @@
+package CatCafeProject;
+import java.awt.*;
+import java.sql.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.util.*;
+
+import java.awt.event.*;
+
+import javax.swing.GroupLayout.Alignment;
+
+//(JInternalFrame + 부착시킬 컴포넌트 구성(JPanel))
+public class CatCafePerson extends JPanel implements ActionListener{
+	//            고객번호  cat번호  고객이름   주소        전화번호
+	JTextField txtPbun,txtCbun,txtPname,txtPjuso,txtPtel;
+	JTextArea note; //입양 신청 메모
+	//            신규       확인      수정         삭제       검색      종료
+	JButton BtnNew,BtnOk,BtnUpdate,BtnDel,BtnFind,BtnClose;
+	//     고양이 이미지 lbl
+	JLabel lblRec,lblCatImage;
+	
+	String imgPath,Pno;
+	
+	int iTotal = 0;	// 자료의 갯수
+	int iLast = 0; 	// 마지막 레코드 번호
+	int iFirst = 0;  // 첫 번째 레코드 번호
+	boolean isInsert = false;	// New 버튼 눌림 여부 (토글 버튼)
+	boolean isUpdate = false;	// Update 버튼 눌림 여부
+	boolean isFind = false; // Find버튼 눌림여부
+	boolean isSelect = false; // ★Re_select 눌림 여부 -> 안하면 아무것도 안됨
+	int isr1=0,isr2=0,isr3=0; //설문조사 3버튼 default 값
+	
+	
+	//고객 정보 DB 저장
+	//Connection 
+	private Connection conn;
+	private Statement stmt; //SQL문
+	private ResultSet rs,rs_re,rs_cat; // select -> 표형태
+	                 // 기본,   설문조사 rs
+	String sql = null,sql2 =null, sql3=null; //sql 구문
+	private JPanel panel;
+	private JLabel no_1;
+	private JTextField familyAgree;
+	private JLabel no_2;
+	private JTextField residence;
+	private JLabel no_3;
+	private JTextField havePet;
+	private JButton Btn_r1;
+	private JButton Btn_r2;
+	private JButton Btn_r3;
+	private Panel panel_1;
+	private Panel panel_2;
+	private Panel panel_3;
+	private JButton Btn_Pbun_select;
+	private JButton Btn_Cbun_select;
+	private JButton Btn_Pname_select;
+	private JPanel containJpanel;
+	private JPanel Right;
+	private JPanel panel_4;
+	private JTextField txtsuspend;
+	private JLabel lblNewLabel;
+	private JPanel panel_5;
+	private JLabel label;
+	private JTextField txtRe_no;
+	private JPanel panel_6;
+	private JButton Btn_re_select;
+	private JLabel lblNewLabel_1;
+	private JPanel panel_7;
+	//-------------------------------------------------------
+	
+	
+	// 생성자
+	public CatCafePerson(){
+		design();
+		//추가
+		addListener(); //각 버튼의 이벤트 처리
+		accDb(); //DB접속
+		init(); // 테이블 불러오기 (select) -> 오름차순으로 정렬 (order by)
+		display();
+		//init_re();
+		//display_re();
+	}
+	
+	//추가 
+	private void accDb() {
+		try {
+			// 1. 접속할 드라이버 종류를 정하기 (메모리에 올림)
+			Class.forName("oracle.jdbc.driver.OracleDriver"); // ("oracle jdbc의 package 이름 . 드라이버")
+			// 2. 접속하기위한 메소드 실제 DB의 (1.접속 url, 2. 계정명, 3.password)
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl", "scott", "tiger");
+			// 추가 -> 확인이 아니라, (신규, 수정),(레코드 이동)을 누르더라도, 자동으로 스크롤 이동시 수정이 반영될 수 있도록
+			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			/*
+			 * web에서는 사용 안함 ResultSet.TYPE_SCROLL_SENSITIVE -> 양방향으로 스크롤 이동시 업데이트 반영
+			 * ResultSet.CONCUR_UPDATABLE -> 커서 위치에서 정보 업데이트 가능
+			 */
+			System.out.println("접속 con : " + conn);
+		} catch (Exception e) {
+			System.out.println("DB연결 테스트 실패 : " + e);
+		}
+	} //DB접속
+	private void init() {
+		try {
+			sql = "select * from People order by no asc";
+			rs = stmt.executeQuery(sql);
+			//총 레코드 개수 출력 -> if 맨 마지막 레코드 번호로 이동 -> 총 레코드수와 같다.
+			rs.last();
+			iTotal= rs.getRow(); //현재의 행 번호 출력
+			/*
+			 * 총 레코드수 -> select count(*) from customer;
+			 * 마지막 레코드 번호 -> select max(c_bun) from customer;
+			 */
+			iLast = rs.getInt("no"); //마지막 고객번호 -> 신규 고객에게 번호 부여 -> 마지막 고객번호 +1
+			rs.first(); //첫 번째 레코드로 이동
+			iFirst = rs.getRow();
+		}catch(Exception e) {System.out.println("People테이블 불러오기 실패"+e);}
+	} // 고객 테이블 Load
+	
+	private void init_re() {    //-------------------------------------------------------------------init_re()
+		try {
+			sql2 = "select * from research order by no asc";
+			rs_re= stmt.executeQuery(sql);
+			//총 레코드 개수 출력 -> if 맨 마지막 레코드 번호로 이동 -> 총 레코드수와 같다.
+			rs_re.last();
+			rs_re.first(); //첫 번째 레코드로 이동
+		}catch(Exception e) {System.out.println("research table 불러오기 실패"+e);}
+	}
+	
+	private void display() { //현재 DB에 접속한 행을 보여주는 매소드  //----------------------------------display()
+		try {
+			//형식) 필드값 불러오기 -> .getString("필드명"), .getInt("필드명")
+			txtPbun.setText(rs.getString("no")); //고객번호
+			txtPname.setText(rs.getString("name")); // 고객이름
+			//txtCbun.setText(rs.getString("name")); //고양이 번호
+			txtPtel.setText(rs.getString("tel")); //전화번호
+			txtPjuso.setText(rs.getString("addr")); //주소
+			txtsuspend.setText(rs.getString("suspend")); //고양이 분양여부
+			note.setText("메 모"+rs.getString("note"));
+			
+			
+			lblRec.setText(rs.getRow() + "/" + iTotal);// 현재행/총레코드수(총책수)
+			//설문조사 번호
+			txtRe_no.setText(rs.getString("no"));
+		}catch(Exception e) {System.out.println("display 오류 "+e);}
+	}
+	
+	private void display_re() {//설문조사 display() 구문 : rs_re 사용  //---------------------------------------re_display()
+		try {
+			familyAgree.setText(rs_re.getString("familyAgree")); // 가족 동의 유무 Y/N Char
+			residence.setText(rs_re.getString("residence")); // 주거 형태 
+			havePet.setText(rs_re.getString("havePet")); // 반려동물 유무
+		}catch(Exception e) {System.out.println("설문조사 display() 오류 : "+e);	}
+		
+		
+	}
+
+	//추가
+	private void addListener() {	//각 버튼의 이벤트 처리
+		BtnNew.addActionListener(this); //신규버튼
+		BtnOk.addActionListener(this); //확인버튼 -> 비활성화 -> (신규버튼을 누르면) 활성화
+		BtnUpdate.addActionListener(this); // 수정
+		BtnDel.addActionListener(this); //삭제
+		BtnFind.addActionListener(this);
+		BtnClose.addActionListener(this);
+		
+		//입양 신청서
+		Btn_Pbun_select.addActionListener(this); //고객 번호 검색 버튼
+		Btn_Pname_select.addActionListener(this); //고객 이름 검색 버튼
+		Btn_Cbun_select.addActionListener(this); //고양이 번호 검색 -> 이미지만 불러온다.
+		
+		//설문조사 번호로 검색버튼
+		Btn_re_select.addActionListener(this);
+		
+		//설문조사
+		Btn_r1.addActionListener(this); // 입양 가족동의 Y/N 버튼
+		Btn_r2.addActionListener(this); // 주거형태 VARCHAR2 종류 -> Editable(true)로 변경
+		Btn_r3.addActionListener(this); // 현재 키우는 반려동물 유무 Y/N 버튼
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+		//신규
+		if(e.getSource() == BtnNew) { //---------------------------------------------------------------------------------------------BtnNew
+			if(isInsert==false) { //처음 Insert(신규) 버튼을 누르지 않은 상태에서 처음 누른 경우
+			// ~setEditable(true) -> 커서 입력 가능상태
+			clearButton();
+				
+			txtCbun.setEditable(true);
+			txtPname.setEditable(true);
+			txtPjuso.setEditable(true);
+			txtPtel.setEditable(true);
+			residence.setEditable(true);
+			note.setEditable(true);
+			txtsuspend.setText("N");
+			//
+			txtPbun.setText(String.valueOf(iLast+1)); // iLast 마지막 레코드수
+			txtRe_no.setText(String.valueOf(iLast+1)); // 설문조사 번호와 고객 번호 일치하게 넣어주기
+			//
+			txtCbun.setText(null);
+			txtPname.setText(null);
+			txtPjuso.setText(null);
+			txtPtel.setText(null); //0
+			note.setText("메 모");
+			
+			BtnOk.setEnabled(true);
+			
+			//비활성화 시킬 버튼
+			BtnUpdate.setEnabled(false);
+			BtnDel.setEnabled(false);
+			BtnFind.setEnabled(false);
+			//활성화 시킬 버튼
+			Btn_r1.setEnabled(true);
+			Btn_r2.setEnabled(true);
+			Btn_r3.setEnabled(true);
+			Btn_Cbun_select.setEnabled(true);
+			
+			
+			BtnNew.setText("취소");
+			
+			isInsert=true; // 한번 클릭했으니 체크
+			}else if(isInsert == true){ 
+				clearButton();
+				txtCbun.setEditable(false);
+				txtPname.setEditable(false);
+				txtPjuso.setEditable(false);
+				txtPtel.setEditable(false);
+				residence.setEditable(false);
+				note.setEditable(false);
+				note.setText("메 모");
+				
+				//
+				txtPbun.setText(String.valueOf(iFirst)); // iLast 마지막 레코드수
+				txtRe_no.setText(String.valueOf(iFirst)); // 설문조사 번호와 고객 번호 일치하게 넣어주기
+				//
+				
+				BtnOk.setEnabled(false);
+				//비활성화 된 버튼 활성화
+				BtnUpdate.setEnabled(true);
+				BtnDel.setEnabled(true);
+				BtnFind.setEnabled(true);
+				//설문조사 비활성화
+				Btn_r1.setEnabled(false);
+				Btn_r2.setEnabled(false);
+				Btn_r3.setEnabled(false);
+				note.setEditable(false);
+				Btn_Cbun_select.setEnabled(false);
+				
+				BtnNew.setText("신규");
+				isInsert=false;
+				display();
+			}
+		}
+		else if(e.getSource()==BtnOk) { //확인 버튼 //---------------------------------------------------------------------------------------------BtnOk
+		
+					if( txtPname.getText().equals("") || txtPjuso.getText().equals("")) {
+						JOptionPane.showMessageDialog(this, "고객 이름과 주소를 확인하세요!");
+						return;					
+					}else if((isr1 * isr2 * isr3) !=0) {		
+								insertPeople(); //데이터 입력시켜주는 메소드
+								clearButton();
+								txtCbun.setEditable(false);
+								txtPname.setEditable(false);
+								txtPjuso.setEditable(false);
+								txtPtel.setEditable(false);
+								residence.setEditable(false);
+								note.setText("메 모");
+								
+								//버튼 비활성화
+								BtnOk.setEnabled(false);
+								Btn_Cbun_select.setEnabled(false);
+								BtnUpdate.setEnabled(true);
+								BtnDel.setEnabled(true);
+								BtnFind.setEnabled(true);
+								
+								//설문조사 비활성화
+								Btn_r1.setEnabled(false);
+								Btn_r2.setEnabled(false);
+								Btn_r3.setEnabled(false);
+								note.setEditable(false);
+								
+								BtnNew.setText("신규");
+								
+								isInsert=false;
+						}else if( (isr1 * isr2 * isr3) == 0){
+							JOptionPane.showMessageDialog(this, "반드시 설문조사를 해주세요!");
+							return;
+						}
+					
+			
+		}
+		else if(e.getSource()==BtnUpdate) { //---------------------------------------------------------------------------------------------BtnUpdate
+			if(isUpdate==false) { //처음 Insert(신규) 버튼을 누르지 않은 상태에서 처음 누른 경우
+				// ~setEditable(true) -> 커서 입력 가능상태
+				clearButton();
+				txtPbun.setEditable(false);
+				txtCbun.setEditable(true);
+				txtPname.setEditable(true);
+				txtPjuso.setEditable(true);
+				txtPtel.setEditable(true);
+				residence.setEditable(true);
+				
+
+				//비활성화 버튼
+				BtnNew.setEnabled(false);
+				BtnFind.setEnabled(false);
+				//설문조사 활성화
+				Btn_r1.setEnabled(true);
+				Btn_r2.setEnabled(true);
+				Btn_r3.setEnabled(true);
+				note.setEditable(true);
+				Btn_re_select.setEnabled(true);
+			
+				BtnUpdate.setText("완료");
+				isUpdate=true; // 한번 클릭했으니 체크
+			}else if(isUpdate == true){
+				 		if(isSelect==true) {
+							updatePeople();
+							txtPbun.setEditable(false);
+							txtCbun.setEditable(false);
+							txtPname.setEditable(false);
+							txtPjuso.setEditable(false);
+							txtPtel.setEditable(false);
+							residence.setEditable(false);
+							
+			
+							//활성화 버튼
+							BtnNew.setEnabled(true);
+							BtnDel.setEnabled(true);
+							BtnFind.setEnabled(true);
+							
+							//설문조사 비활성화
+							Btn_r1.setEnabled(false);
+							Btn_r2.setEnabled(false);
+							Btn_r3.setEnabled(false);
+							note.setEditable(false);
+							Btn_re_select.setEnabled(false);
+							isSelect=false;
+							
+							BtnUpdate.setText("수정");
+							isUpdate=false; // 한번 클릭했으니 체크
+				 		}else {
+				 			JOptionPane.showMessageDialog(this, "반드시 설문 조사 검색 버튼을 눌러주세요!");
+				 		}
+			}
+		} //수정
+		else if(e.getSource()==BtnDel) { //---------------------------------------------------------------------------------------------BtnDel
+			//사용자에게 삭제 유무 묻기 
+			//C에서는 confirm, java에서는 showConfirmDialog()
+			// 1. 띄울 창, 2.메세지 내용, 3.창의 제목, 4. 옵션
+			
+			if(isSelect==true) {
+						int re= JOptionPane.showConfirmDialog(this, "정말로 "+txtPbun.getText()+ "번 고객 정보를 삭제하시겠습니까?",
+										"레코드 삭제",JOptionPane.YES_NO_OPTION);
+						if(re==JOptionPane.YES_OPTION) {
+							deletePeople();
+							txtPbun.setEditable(false);
+							txtCbun.setEditable(false);
+							txtPname.setEditable(false);
+							txtPjuso.setEditable(false);
+							txtPtel.setEditable(false);
+							residence.setEditable(false);
+							txtRe_no.setEditable(false);
+							
+							//활성화
+							BtnNew.setEnabled(true);
+							BtnFind.setEnabled(true);
+							
+							//비활성화 시킬 버튼
+							Btn_Pbun_select.setEnabled(false);
+							Btn_Pname_select.setEnabled(false);
+							Btn_re_select.setEnabled(false);
+							Btn_r1.setEnabled(false);
+							Btn_r2.setEnabled(false);
+							Btn_r3.setEnabled(false);
+							
+							BtnUpdate.setText("수정");
+							BtnFind.setText("검색 기능");
+							
+							clearButton();
+							
+							isUpdate=false;
+							isFind=false;
+							isSelect=false;
+						}		
+			}else {
+				JOptionPane.showMessageDialog(this, "반드시 설문 조사 번호를 검색해주세요.");
+			}
+		} //삭제
+		else if(e.getSource()==BtnFind) { //---------------------------------------------------------------------------------------------BtnFind
+			if(isFind==false) { //
+				// ~setEditable(true) -> 커서 입력 가능상태
+				txtPbun.setEditable(true);
+				txtCbun.setEditable(true);
+				txtPname.setEditable(true);
+				txtPjuso.setEditable(true);
+				txtPtel.setEditable(true);
+				residence.setEditable(false);
+				
+				//clear
+				txtPbun.setText(null);
+				txtCbun.setText(null);
+				txtPname.setText(null);
+				txtPjuso.setText(null);
+				txtPtel.setText(null); //0
+				note.setText("메 모");
+				imgPath = "C:/catCafe/picCats/noCat.jpg";					
+				displayImage();
+				
+				
+				//활성화버튼
+				Btn_Pbun_select.setEnabled(true);
+				Btn_Pname_select.setEnabled(true);
+				Btn_re_select.setEnabled(true);
+				Btn_Cbun_select.setEnabled(true);
+
+				//비활성화 버튼
+				BtnNew.setEnabled(false);
+				BtnUpdate.setEnabled(false);
+				
+				BtnUpdate.setText("수정");
+				isUpdate=false;
+				BtnFind.setText("검색 취소");
+				
+				isFind=true; // 한번 클릭했으니 체크
+				
+			}else if(isFind == true){
+				txtPbun.setEditable(false);
+				txtCbun.setEditable(false);
+				txtPname.setEditable(false);
+				txtPjuso.setEditable(false);
+				txtPtel.setEditable(false);
+				txtRe_no.setEditable(false);
+				
+				//활성화 버튼
+				BtnNew.setEnabled(true);
+				BtnUpdate.setEnabled(true);
+				
+				//비활성화 버튼
+				Btn_Pbun_select.setEnabled(false);
+				Btn_Cbun_select.setEnabled(false);
+				Btn_Pname_select.setEnabled(false);
+				Btn_re_select.setEnabled(false);
+				
+				BtnFind.setText("검색 기능");
+				
+				//설문조사 텍스트에 설명 보여주기
+				familyAgree.setText("입양의 가족 동의 여부");
+				residence.setText("주거의 형태");
+				havePet.setText("현재 반려동물을 키우고 계십니까?");
+				
+				isSelect=false;
+				isFind=false; // 한번 클릭했으니 체크
+			}
+		} //검색		
+		else if(e.getSource()==BtnClose) { //---------------------------------------------------------------------------------------------BtnClose
+			int re = JOptionPane.showConfirmDialog(this, "정말 종료할까요?","선택",JOptionPane.YES_NO_OPTION);
+			try { //열어준 순서대로 닫기
+				if(rs!=null || rs_re!=null || rs_cat!=null) { rs.close(); rs_re.close(); rs_cat.close();}
+				if(stmt!=null) stmt.close();
+				if(conn!=null) conn.close();				
+			}catch(Exception e2) { System.out.println("메모리 해제에 실패 : "+e2);}
+			finally { //예외 발생유무와 상관없이 항상 처리되어야 할 구문		
+				if(re == JOptionPane.YES_OPTION) {
+					CatcafeMain.cat_person.setEnabled(true);//대여메뉴 활성화
+					CatcafeMain.childWinPerson.dispose();//메모리해제하고 종료
+				}
+				if(re == JOptionPane.NO_OPTION) return;
+				// ★dispose() 메모리 해제하면서 창 닫는 메소드
+			}
+		} //닫기 -> DB연동부분 다 초기화 작업후 (메모리 삭제후 종료)
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		else if(e.getSource()==Btn_r1) { //가족동의 버튼 //---------------------------------------------------------------------------------------------Btn_r1
+			isr1 +=1;
+			if(isr1==1) {
+				familyAgree.setText("Y");
+				Btn_r1.setText("비동의");
+			}else if(isr1 == 2) {
+				familyAgree.setText("N");
+				Btn_r1.setText("동의");
+			}else if(isr1 == 3) {
+				isr1 = isr1 -2;
+				familyAgree.setText("Y");
+				Btn_r1.setText("비동의");
+			}				
+		}else if(e.getSource()==Btn_r2) {// 주거 형태 버튼 //1.아파트 -> 2.단독 주택 -> 3.기타 -> -3 //----------------------------------------------------Btn_r2
+			isr2 +=1;
+			if(isr2==1) {
+				residence.setText("아파트");
+			}else if(isr2 == 2) {
+				residence.setText("단독 주택");
+			}else if(isr2 == 3) {
+				residence.setText("기타 : 직접 입력");
+			}else if(isr2 == 4) {
+				isr2 = isr2 - 3;
+				residence.setText("아파트");
+			}
+		}else if(e.getSource()==Btn_r3) {// 반려동물 유무 //---------------------------------------------------------------------------------------------Btn_r3
+			isr3 +=1;
+			if(isr3==1) {
+				havePet.setText("Y");
+				Btn_r3.setText("아니오");
+			}else if(isr3 == 2) {
+				havePet.setText("N");
+				Btn_r3.setText("  예  ");
+			}else if(isr3 == 3) {
+				isr3 = isr3 -2;
+				havePet.setText("Y");
+				Btn_r3.setText("아니오");
+			}				
+		}
+		
+		
+		//---------------------------------------------- 검색 버튼 ------------------------------------------------------------------------------------검색버튼
+		else if(e.getSource()==Btn_Pbun_select) {
+				if(txtPbun.getText().equals(null)) {JOptionPane.showMessageDialog(this,"검색할 고객 번호를 입력하세요!");}
+				
+				sql = "select * from people where no="+txtPbun.getText();
+				findPeople();
+				System.out.println(txtsuspend.getText());
+				if(txtsuspend.getText().equals("Y")) {
+					sql3 = "select * from cat where fk_Person_no="+txtPbun.getText();
+					findCat();
+					System.out.println("고양이 정보 검색 실행함");
+				}else {
+					txtCbun.setText(null);
+					imgPath = "C:/catCafe/picCats/noCat.jpg";					
+					displayImage();
+				}
+		}
+		else if(e.getSource()==Btn_Pname_select) {
+			if(txtPname.getText().equals(null)) {JOptionPane.showMessageDialog(this,"검색할 고객 이름을 입력하세요!");}
+			
+			sql = "select * from people where name="+"'"+txtPname.getText()+"'";
+			findPeople();
+			
+			System.out.println(txtsuspend.getText());
+			if(txtsuspend.getText().equals("Y")) {
+				try {
+				sql = "select no from people where name="+"'"+txtPname.getText()+"'";
+				rs = stmt.executeQuery(sql);
+				while(rs.next()) {
+					Pno = rs.getString("no");				
+				}
+				
+				sql3 = "select * from cat where fk_Person_no="+Pno;
+				findCat();
+				System.out.println("고양이 정보 검색 실행함");
+				}catch(Exception e2) {System.out.println("고양이 검색 실패 : "+e2);}
+			}else {
+				txtCbun.setText(null);
+				imgPath = "C:/catCafe/picCats/noCat.jpg";					
+				displayImage();
+			}
+		}
+		else if(e.getSource()==Btn_re_select) {
+			isSelect=true;
+			sql2 = "select * from research order by no asc";
+			findResearch();
+		}
+		else if(e.getSource()==Btn_Cbun_select) {       //--------------------------------------------------------------고양이 검색
+			if(txtCbun.getText().equals("")){
+				JOptionPane.showMessageDialog(this, "고양이 번호를 입력 해 주세요.");
+			}
+					if(isInsert==true) {
+							try {
+								sql = "select * from cat where no="+txtCbun.getText();
+								rs_cat = stmt.executeQuery(sql);
+								if(rs_cat.next()) {
+									imgPath = rs_cat.getString("picpath");	
+									displayImage();
+								}else {
+									txtCbun.setText(null);
+									JOptionPane.showMessageDialog(this, "올바른 고양이 번호가 아닙니다.");
+									rs_cat.close();
+								}
+							}catch(Exception e2) {System.out.println("고양이 검색 실패"+e2);}
+					}
+					//신규 버튼으로 들어가지 않았을 시의 고양이 번호 검색 구문
+					// 고양이 번호 검색 -> 분양여부 Y 일 때 -> 주인 찾기
+					else {
+						sql3 = "select fk_Person_no from cat where no="+txtCbun.getText();
+						try {
+							rs_cat = stmt.executeQuery(sql3);
+							while(rs_cat.next()) {							
+								Pno = rs_cat.getString("fk_Person_no");// 주인번호
+							}
+							
+							if(Pno!=null) { //주인이 있다면
+										sql3 = "select * from cat where fk_Person_no="+Pno;
+										findCat();
+										System.out.println("고양이 정보 검색 실행함");
+							
+										sql = "select * from people where no="+Pno;
+										rs = stmt.executeQuery(sql);										
+										while(rs.next()) {										
+												txtPbun.setText(rs.getString("no"));
+												txtPname.setText(rs.getString("name"));
+												txtPtel.setText(rs.getString("tel"));
+												txtPjuso.setText(rs.getString("addr"));
+												txtsuspend.setText(rs.getString("suspend"));
+												note.setText(rs.getString("note"));
+												
+												txtRe_no.setText(rs.getString("no"));
+										}
+							}else { //주인이 없다면
+								JOptionPane.showMessageDialog(this, "해당 고양이는 분양되지 않은 상태입니다");
+								txtCbun.setText(null);
+								lblCatImage.setIcon(null);
+								lblCatImage.setText("분양한 고양이 없음");
+								txtPbun.setText(null);
+								txtPname.setText(null);
+								txtPtel.setText(null);
+								txtPjuso.setText(null);
+								txtRe_no.setText(null);
+							}
+						}catch(Exception e2) {System.out.println("고양이의 주인 검색 실패 : "+e2);}
+					}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	//위에서 DB와 연결->insert,update,delete,select을 처리해주는 각 메서드 작성
+		private void insertPeople() {  //----------------------------------------------------------------------------------------------- 각종 메소드 구문
+			try { //형식 ) insert into 테이블명 values(값,'값2','2017-06-23',,,);
+				sql="insert into people values("+
+						txtPbun.getText()+","+
+						"'"+txtPname.getText()+"'"+","+
+						"'"+txtPtel.getText()+"'"+","+
+						"'"+txtPjuso.getText()+"'"+","+
+						"'"+txtsuspend.getText()+"'"+","+
+						"'"+txtCbun.getText()+" 번 고양이를 신청함 '"+")";
+				System.out.println("sql : "+sql);
+				int insert=stmt.executeUpdate(sql); //정수형 값을 반환 -> 1성공 0 실패
+				System.out.println("데이터 성공유무 "+insert);
+				init();//DB데이터를 다시 오름차순으로 읽어들여라
+				rs.last();//추가후 전체레코드 수를 갱신(수정)하기 위해서 이동
+				display();
+				
+				sql2="insert into research values("+
+						txtRe_no.getText()+","+
+						txtRe_no.getText()+","+
+						"'"+familyAgree.getText()+"'"+","+
+						"'"+residence.getText()+"'"+","+
+						"'"+havePet.getText()+"'"+","+
+						"'"+note.getText()+"')";
+				System.out.println("설문조사 sql2 : "+sql2);
+				int insert2=stmt.executeUpdate(sql2);
+				System.out.println("설문조사 데이터 성공유무 "+insert2);
+				init_re();
+				rs_re.last();
+				display_re();
+						
+			}catch(Exception e) {System.out.println("insertPeople() 메소드 호출시 문제 발생 : "+e);}
+		}
+		//수정
+		private void updatePeople() {			
+			try { //형식) update 수정할 테이블명 set 수정할 필드명 = '수정할 값',
+					 //수정필드2=값2 where 조건식(수정할 데이터 찾는 조건) 
+				sql="update people set "+
+						"name="+"'"+txtPname.getText()+"'"+","+
+						"tel="+"'"+txtPtel.getText()+"'"+","+
+						"addr="+"'"+txtPjuso.getText()+"'"+","+						
+						"note="+"'"+txtCbun.getText()+" 번 고양이를 신청함 '"+
+						" where no="+txtPbun.getText();
+				System.out.println("sql : "+sql);
+				int currentRow=rs_re.getRow(); //현재 행을 구함
+				System.out.println("현재 row : "+currentRow);
+				int update=stmt.executeUpdate(sql); //정수형 값을 반환 -> 1성공 0 실패
+				System.out.println("데이터 수정 성공유무 "+update);
+				//수정을 반영하기 위해서 수정한 행으로 이동
+				init();
+				boolean a = rs.absolute(currentRow); // ★absolute(이동할 행번호)
+				System.out.println("a의 유무 : "+a);
+				
+				display();
+				
+				sql2="update research set "+
+						"familyAgree="+"'"+familyAgree.getText()+"'"+","+
+						"residence="+"'"+residence.getText()+"'"+","+
+						"havePet="+"'"+havePet.getText()+"'"+","+
+						"note="+"'"+note.getText()+"'"+
+						" where no="+txtPbun.getText();
+				System.out.println("설문조사 sql2 : "+sql2);
+				int insert2=stmt.executeUpdate(sql2);
+				System.out.println("설문조사 데이터 성공유무 "+insert2);
+				init_re();
+				rs_re.absolute(currentRow);
+				display_re();
+
+			}catch(Exception e) {System.out.println("updatePeople() 메소드 호출시 문제 발생 : "+e);
+			JOptionPane.showMessageDialog(this, "고객 번호를 입력하시지 않으면 \n 정상적으로 수정되지 않습니다!");}			
+		}
+		//삭제 -> 이미 대여중인 고객은 반납을 다 한 뒤에 삭제할 수 있도록 처리
+	private void deletePeople() {
+		try {
+			// 1) 삭제시킬 레코드가 없는 경우 -> 삭제할 수 없다는 에러메세지 출력
+			if (rs.getRow() == 0) {// 현재 삭제할 행이 없는 경우
+				JOptionPane.showMessageDialog(this, "삭제시킬 자료가 없습니다.");
+				return;
+			}
+
+			if (txtPbun.getText() != "") {
+				// 삭제 시키는 경우
+				// 현재행 -1 이동으로 display 해줌.
+				int currentRow = rs.getRow(); // 삭제시킬 행번호
+				System.out.println("현재 row : "+rs.getRow());
+				sql = "delete from people where no=" + txtPbun.getText();
+				int delete = stmt.executeUpdate(sql);
+				System.out.println("고객데이터 삭제 성공 유무 : " + delete);
+				sql2 = "delete from research where no=" + txtRe_no.getText();
+				int delete2 = stmt.executeUpdate(sql2);
+				System.out.println("리서치 데이터 삭제 성공 유무 : " + delete2);
+				
+				if (currentRow == 0) { // 레코드 0개만 존재
+					; // 현재 상태 그대로 유지
+				} else {
+					init(); // 고객테이블을 다시 정렬
+					rs.first(); // 현재 행에서 -1 이전행으로 이동해서 display로 보여줌
+				}
+				display();
+			}
+
+		} catch (Exception e) {
+			System.out.println("deletePeople() 메소드 호출시 문제 발생 : " + e);
+			JOptionPane.showMessageDialog(this, "고객 번호를 입력하시지 않으면 \n 정상적으로 삭제되지 않습니다!");
+		}
+	}
+		
+		
+		//------------------------------------------------------------------------------------------------------------------------------------------검색
+		private void findPeople() { //사용자로부터 값을 입력 -> JOptionPane.showInputDialog
+			try {
+				rs = stmt.executeQuery(sql);   //where no = txtPbun;
+				rs.beforeFirst(); // 맨 처음 보다 -1에 커서 위치.
+				
+				int couFind = 0;
+				while(rs.next()) {//검색할 데이터가 있는 동안
+					
+						txtPbun.setText(rs.getString("no")); //고객번호
+						txtPname.setText(rs.getString("name")); // 고객이름
+						//txtCbun.setText(rs.getString("name")); //고양이 번호
+						txtPtel.setText(rs.getString("tel")); //전화번호
+						txtPjuso.setText(rs.getString("addr")); //주소
+						txtsuspend.setText(rs.getString("suspend")); //고양이 분양여부
+						note.setText("메 모"+rs.getString("note"));						
+						
+						//설문조사 번호
+						txtRe_no.setText(rs.getString("no"));
+
+						couFind++;
+					break;
+				}
+				if(couFind==0) { //찾은 레코드가 없다면
+					JOptionPane.showMessageDialog(this, "찾으시는 고객은 등록되지 않은 회원입니다. ");
+				}//while
+			}catch(Exception e) {System.out.println("findPeople() 메소드 호출시 문제 발생 : "+e);}			
+		}
+		
+		private void findResearch() {
+			try {
+				rs_re = stmt.executeQuery(sql2); // 데이터 전체검색
+				rs_re.last();
+				int iTotal2= rs_re.getRow();
+				
+				rs_re.first();
+				rs_re.beforeFirst(); // 맨 처음 보다 -1에 커서 위치.
+				
+				int couFind = 0;
+				int now=0;
+				while(rs_re.next()) {//검색할 데이터가 있는 동안
+					
+					String str=rs_re.getString("no"); //고객번호
+					System.out.println("string str : " +str);
+					System.out.printf("txtRe_no : %s , %b", txtRe_no.getText(),txtRe_no.getText().equals(str));
+					if(txtRe_no.getText().equals(str)) {
+					
+					familyAgree.setText(rs_re.getString("familyAgree")); // 가족 동의 유무 Y/N Char
+					residence.setText(rs_re.getString("residence")); // 주거 형태 
+					havePet.setText(rs_re.getString("havePet")); // 반려동물 유무
+					
+					now = rs_re.getRow();
+					System.out.println(now);
+					couFind++;
+					break;
+					}					
+				}
+				lblRec.setText(now + "/" + iTotal2);// 현재행/총레코드수(총책수)
+				
+				if(couFind==0) { //찾은 레코드가 없다면
+					JOptionPane.showMessageDialog(this, "찾으시는 설문조사 자료가 없습니다.");
+				}//while
+			}catch(Exception e) {System.out.println("findResearch() 메소드 호출시 문제 발생 : "+e);}
+		}
+		
+		private void findCat() {
+			try {
+				rs_cat = stmt.executeQuery(sql3);
+				while(rs_cat.next()) {
+				txtCbun.setText(rs_cat.getString("no"));
+				System.out.println("가져온 고양이 번호 : " +rs_cat.getString("no"));
+				
+				imgPath = rs_cat.getString("picpath");	
+				displayImage();
+				break;
+				}
+			}catch(Exception e) {System.out.println("findCat() 오류 : "+e);}
+		}
+	
+	
+		
+		//-----------------------------------------------이미지-----------------------------------------------------------------------//
+		
+		// 이미지경로를 지정해서 불러오기
+		private void displayImage() {  
+			ImageIcon icon = createImageIcon(imgPath);
+			// 이미지를 화면에 display하기
+			
+			
+			ImageIcon oldImg = new ImageIcon(imgPath);
+			Image oldimg = oldImg.getImage();
+			
+			Image newImage = oldimg.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+
+			//변경 되서 나올 Icon 객체
+			ImageIcon newicon = new ImageIcon(newImage);
+			
+			//lblCatImage.setIcon(icon);//원래 이미지 JLabel에 이미지 출력
+			lblCatImage.setIcon(newicon);// 변경됨 이미지를 JLabel에 이미지 출력
+			lblCatImage.setToolTipText("경로는 " + imgPath.toLowerCase()); // 마우스를 올렸을때 나올 텍스트
+
+			if (icon != null) {
+				lblCatImage.setText(null);// 글자대신 이미지를 붙이기 위해서
+			} else {
+				lblCatImage.setText("이미지 없음");
+			}
+		}
+
+		// ★경로를 지정해서 넣어주면, 이미지를 만들어서 불러오는 메소드★
+		private ImageIcon createImageIcon(String path) {
+			if (path != null) {// 불러올 이미지 경로가 들어가 있으면 -> 출력
+				// swing -> 이미지 전용 객체 -> ImageIcon(경로)
+				// ImageIcon 객체명 = new ImageIcon(경로 포함해서 파일명)
+				return new ImageIcon(path);
+			} else {
+				System.out.println("이미지 불러오기 실패 : 경로 확인요망");
+				return null;
+			}
+
+		}
+		
+		private void clearButton() {					
+			Btn_r1.setEnabled(false);
+			Btn_r2.setEnabled(false);
+			Btn_r3.setEnabled(false);
+			
+			isr1=0;isr2=0;isr3=0;
+			
+			residence.setEditable(false);
+			
+			familyAgree.setText("입양의 가족 동의 여부");
+			residence.setText("주거의 형태");
+			havePet.setText("현재 반려동물을 키우고 계십니까?");
+		}
+		
+		//----------------------------------------------------------------------------------------------------------------------------------------//
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//고객정보 대화상자의 화면 디자인
+		public void design(){
+			this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+			BtnFind=new JButton("\uAC80\uC0C9 \uAE30\uB2A5");
+			BtnClose=new JButton("닫기");
+			containJpanel = new JPanel();
+			add(containJpanel);
+			GridBagLayout gbl_containJpanel = new GridBagLayout();
+			gbl_containJpanel.columnWidths = new int[] {368, 150};
+			gbl_containJpanel.rowHeights = new int[] {200, 0, 30, 0};
+			gbl_containJpanel.columnWeights = new double[]{1.0, 1.0};
+			gbl_containJpanel.rowWeights = new double[]{0.0, 1.0, 1.0, Double.MIN_VALUE};
+			containJpanel.setLayout(gbl_containJpanel);
+			//containJpanel=new GridBagConstraints();
+			//고객정보 패널========================
+			JPanel customerPn=new JPanel(new GridLayout(0,1));
+			customerPn.setBorder(new TitledBorder(new TitledBorder("입양 신청서"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+			JPanel cPn1=new JPanel(new FlowLayout(FlowLayout.LEFT));
+			txtPbun=new JTextField("",5);
+			txtPbun.setEditable(false);
+			txtCbun=new JTextField("",5);
+			txtCbun.setEditable(false);
+			cPn1.add(new JLabel("\uACE0\uAC1D \uBC88\uD638 :"));
+			cPn1.add(txtPbun);
+			Btn_Pbun_select = new JButton("\uAC80\uC0C9");
+			Btn_Pbun_select.setEnabled(false);
+			cPn1.add(Btn_Pbun_select);
+			cPn1.add(new JLabel("                   \uACE0\uC591\uC774 \uBC88\uD638 :"));
+			cPn1.add(txtCbun);
+			customerPn.add(cPn1);  
+			Btn_Cbun_select = new JButton("\uAC80\uC0C9");
+			Btn_Cbun_select.setEnabled(false);
+			cPn1.add(Btn_Cbun_select);
+			JPanel cPn2=new JPanel(new FlowLayout(FlowLayout.LEFT));
+			txtPname=new JTextField("",5);
+			txtPname.setEditable(false);
+			txtPtel=new JTextField("",20);
+			txtPtel.setEditable(false);
+			cPn2.add(new JLabel("\uACE0\uAC1D \uC774\uB984 :"));
+			cPn2.add(txtPname);
+			Btn_Pname_select = new JButton("\uAC80\uC0C9");
+			Btn_Pname_select.setEnabled(false);
+			cPn2.add(Btn_Pname_select);
+			cPn2.add(new JLabel("                   \uC5F0\uB77D\uCC98 :"));
+			cPn2.add(txtPtel);
+			customerPn.add(cPn2); 
+			JPanel cPn3=new JPanel(new FlowLayout(FlowLayout.LEFT));
+			txtPjuso=new JTextField("",44);
+			txtPjuso.setEditable(false);
+			cPn3.add(new JLabel("주소 :"));
+			cPn3.add(txtPjuso);
+			customerPn.add(cPn3);
+			GridBagConstraints gbc_customerPn = new GridBagConstraints();
+			gbc_customerPn.fill = GridBagConstraints.BOTH;
+			gbc_customerPn.insets = new Insets(0, 0, 5, 5);
+			gbc_customerPn.gridx = 0;
+			gbc_customerPn.gridy = 0;
+			containJpanel.add(customerPn, gbc_customerPn);
+			JPanel Right=new JPanel();
+			Right.setBorder(new TitledBorder(new TitledBorder("고양이 이미지"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+			GridBagConstraints gbc_Right = new GridBagConstraints();
+			gbc_Right.insets = new Insets(0, 0, 5, 0);
+			gbc_Right.fill = GridBagConstraints.BOTH;
+			gbc_Right.gridx = 1;
+			gbc_Right.gridy = 0;
+			containJpanel.add(Right, gbc_Right);
+			Right.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			Right.setLayout(new GridLayout(0, 1, 0, 0));
+			lblCatImage = new JLabel("고양이 선택 (=ΦÅΦ=)");
+			Right.add(lblCatImage);
+			lblCatImage.setHorizontalAlignment(JLabel.CENTER);
+			panel_6 = new JPanel();
+			GridBagConstraints gbc_panel_6 = new GridBagConstraints();
+			gbc_panel_6.insets = new Insets(0, 0, 5, 5);
+			gbc_panel_6.fill = GridBagConstraints.HORIZONTAL;
+			gbc_panel_6.gridx = 0;
+			gbc_panel_6.gridy = 1;
+			containJpanel.add(panel_6, gbc_panel_6);
+			GridBagLayout gbl_panel_6 = new GridBagLayout();
+			gbl_panel_6.columnWidths = new int[]{573, 0};
+			gbl_panel_6.rowHeights = new int[] {0};
+			gbl_panel_6.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+			gbl_panel_6.rowWeights = new double[]{0.0};
+			panel_6.setLayout(gbl_panel_6);
+			panel_5 = new JPanel();
+			GridBagConstraints gbc_panel_5 = new GridBagConstraints();
+			gbc_panel_5.fill = GridBagConstraints.BOTH;
+			gbc_panel_5.insets = new Insets(0, 0, 5, 0);
+			gbc_panel_5.gridx = 0;
+			gbc_panel_5.gridy = 0;
+			panel_6.add(panel_5, gbc_panel_5);
+			panel_5.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+			label = new JLabel("\uC124\uBB38 \uC870\uC0AC \uBC88\uD638");
+			panel_5.add(label);
+			txtRe_no = new JTextField();
+			txtRe_no.setText((String) null);
+			txtRe_no.setEditable(false);
+			txtRe_no.setColumns(10);
+			panel_5.add(txtRe_no);
+			Btn_re_select = new JButton("\uAC80\uC0C9");
+			Btn_re_select.setEnabled(false);
+			panel_5.add(Btn_re_select);
+			lblNewLabel_1 = new JLabel("       ");
+			panel_5.add(lblNewLabel_1);
+			lblRec = new JLabel(" 0 / 0 ", JLabel.CENTER);
+			panel_5.add(lblRec);
+			panel_4 = new JPanel();
+			GridBagConstraints gbc_panel_4 = new GridBagConstraints();
+			gbc_panel_4.gridheight = 0;
+			gbc_panel_4.gridwidth = 0;
+			gbc_panel_4.anchor = GridBagConstraints.NORTH;
+			gbc_panel_4.fill = GridBagConstraints.HORIZONTAL;
+			gbc_panel_4.gridx = 1;
+			gbc_panel_4.gridy = 1;
+			containJpanel.add(panel_4, gbc_panel_4);
+			panel_4.setLayout(new BorderLayout(0, 0));
+			lblNewLabel = new JLabel("고객의 입양유무");
+			panel_4.add(lblNewLabel, BorderLayout.NORTH);
+			txtsuspend = new JTextField();
+			txtsuspend.setEditable(false);
+			panel_4.add(txtsuspend, BorderLayout.SOUTH);
+			txtsuspend.setColumns(10);
+			       //명령 버튼 패널========================
+			JPanel bottomPn1=new JPanel();
+			bottomPn1.setBorder(new TitledBorder(new TitledBorder("설문조사"), "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.LEFT));
+			//bottomPn1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+			JPanel bottomPn2=new JPanel();
+			BtnNew=new JButton("신규");
+			bottomPn2.add(BtnNew);
+			BtnOk=new JButton("확인");
+			bottomPn2.add(BtnOk);
+			BtnOk.setEnabled(false); //신규버튼을 누르기 전까지는 비활성화 상태
+			bottomPn2.add(BtnFind);
+			BtnUpdate=new JButton("수정");
+			bottomPn2.add(BtnUpdate);
+			BtnDel=new JButton("삭제");
+			bottomPn2.add(BtnDel);
+			JLabel lbl2=new JLabel("                          "); 
+			bottomPn2.add(lbl2);
+			bottomPn2.add(BtnClose);
+			this.add(bottomPn1);
+			//bottomPn1.setBackground(Color.GREEN);
+			bottomPn1.setLayout(new GridLayout(0, 2, 0, 0));
+			panel = new JPanel();
+			//panel.setBackground(Color.ORANGE);
+			bottomPn1.add(panel);
+			panel.setLayout(new GridLayout(3, 1));
+			panel_1 = new Panel();
+			panel.add(panel_1);
+			panel_1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+			no_1 = new JLabel("1", SwingConstants.CENTER);
+			panel_1.add(no_1);
+			familyAgree = new JTextField("입양의 가족 동의 여부",18);
+			familyAgree.setEditable(false);
+			familyAgree.setHorizontalAlignment(SwingConstants.LEFT);
+			panel_1.add(familyAgree);
+			Btn_r1 = new JButton("동의");
+			Btn_r1.setEnabled(false);
+			panel_1.add(Btn_r1);
+			panel_2 = new Panel();
+			FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
+			flowLayout.setAlignment(FlowLayout.LEFT);
+			panel.add(panel_2);
+			no_2 = new JLabel("2", SwingConstants.CENTER);
+			panel_2.add(no_2);
+			residence = new JTextField("주거의 형태",18);
+			residence.setEditable(false);
+			panel_2.add(residence);
+			Btn_r2 = new JButton("종류");
+			Btn_r2.setEnabled(false);
+			panel_2.add(Btn_r2);
+			panel_3 = new Panel();
+			FlowLayout flowLayout_1 = (FlowLayout) panel_3.getLayout();
+			flowLayout_1.setAlignment(FlowLayout.LEFT);
+			panel.add(panel_3);
+			no_3 = new JLabel("3", SwingConstants.CENTER);
+			panel_3.add(no_3);
+			havePet = new JTextField("현재 반려동물을 키우고 계십니까?",18);
+			havePet.setEditable(false);
+			panel_3.add(havePet);
+			Btn_r3 = new JButton("  예   ");
+			Btn_r3.setEnabled(false);
+			panel_3.add(Btn_r3);
+			panel_7 = new JPanel();
+			bottomPn1.add(panel_7);
+			note=new JTextArea(2,28);
+			note.setPreferredSize(new Dimension(200, 95));
+			panel_7.add(note);
+			note.setEditable(false);
+			//Pnote.setBackground(Color.lightGray); //전체 배경 색깔 (회색)
+			note.setText("메 모");
+			this.add(bottomPn2);
+			this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+			}
+		
+		
+		
+		
+		
+		
+		
+		//---------------------------------------------------------------------------------------------------------
+		
+		
+	public static void main(String[] args) {
+		CatCafePerson catPerson=new CatCafePerson();
+		JFrame frame=new JFrame("고객 관리창");
+		frame.getContentPane().add(catPerson);  //JFrame + JPanel(화면 디자인)
+		frame.setBounds(200,200,750,540); // x, y, w, h
+		frame.setVisible(true);
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	
+	
+}

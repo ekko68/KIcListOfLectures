@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	/*
+	 함수    설명
+	 $(A).appendTo(B)->A를 B의 기존자식의 뒤에 추가
+	 $(A).prependTo(B)->A를 B의 기존자식의 앞에 추가
+	 $(A).insertAfter(B)->A를 B뒤에 추가  (자식에 추가X)
+	 $(A).insertBefore(B)->A를 B앞에 추가 (자식에 추가X)
+	*/
+	/* (1)
+	$('<h1>jQueryTest</h1>').appendTo('div') 
+	     (2)
+	$('<h1>jQueryTest</h1>').prependTo('div')
+	     (3)
+	$('<h1>DOMTest </h1>').insertAfter('div') */
+	$('<h1>DOMTest </h1>').css('color','red').insertBefore('div')
+	$('img').attr('width',100).insertBefore('div')
+})
+</script>
+</head>
+<body>
+      <!-- (4)<h1>DOMTest </h1> -->
+  <div>
+          <!-- (2)<h1>jQueryTest</h1> -->
+          <h1>안녕하세요?</h1>
+          <!-- (1) <h1>jQueryTest</h1> -->
+   </div>
+       <!-- (3)<h1>DOMTest </h1> -->
+   <h1>반가워요!</h1>
+   <img src="../picCats/Persian.jpg">
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

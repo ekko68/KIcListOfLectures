@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(key)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//사용자가 글자를 입력했을때 keyUp
+	$('input').keyup(function(){
+		var value=$(this).val()//입력받은 값
+		report(value)
+	})
+	//버튼을 눌렀을때
+	$('button').click(function(){
+		$('input').val('val메서드 연습중')//입력받는 양식태그
+	})
+	//div태그에 입력받은 값을 넣어주는 함수 작성
+	function report(msg){
+		$('#console').text(msg)//<->$('#console').text()
+	}
+})
+</script>
+</head>
+<body>
+<button>reset</button><p>
+<input type="text" value="val메서드 연습중" size="80">
+<div id="console"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

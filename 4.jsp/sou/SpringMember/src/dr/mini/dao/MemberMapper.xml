@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+      
+<mapper namespace="MemberDao">  
+  
+  <!-- 1.페이징처리해주는 SQL구문 
+     rownum->내부적으로 자동으로 순번을 매기면서 출력시켜주는 오라클의 내장번호
+  -->
+  <select id="getMemberList"  parameterType="java.util.Map" resultType="MemberCommand">
+      select *
+         from (select
+                   a.*, rownum rnum
+                from (select  * from member1
+                order by reg_date desc) a )
+      <![CDATA[
+      where rnum>=#{start} and rnum<=#{end}
+         ]]>       
+  </select>
+  
+  <!-- 2.총레코드수-->
+  <select id="getMemberCount" resultType="Integer">
+     select count(*) from member1
+  </select>
+  
+  <!-- 3.테이블에 데이터입력(insert) -->
+  <insert id="insertMember" 
+             parameterType="MemberCommand">
+    insert into member1(id,name,passwd,reg_date)
+    values(#{id},#{name},#{passwd},sysdate)
+  </insert>
+  
+  <!-- 4.회원정보보기 -->
+  <select id="getMember" resultType="MemberCommand"
+             parameterType="String">
+      select * from member1 where id=#{id}
+  </select>
+  
+  <!-- 5.회원정보수정하기 -->
+  <update id="updateMember" 
+               parameterType="MemberCommand">
+      update member1 set passwd=#{passwd},
+                 name=#{name}  where id=#{id}
+  </update>
+  
+  <!-- 6.회원정보 삭제하기 -->
+  <delete id="deleteMember" parameterType="String">
+     delete from member1 where id=#{id}
+  </delete>
+  
+</mapper>
+
+
+
+
+
+
+

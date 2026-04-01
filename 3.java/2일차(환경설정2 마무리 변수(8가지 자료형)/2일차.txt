@@ -1,0 +1,363 @@
+2일차(환경설정2(편집기) 마무리,변수(8가지 자료형)
+
+자바 프로그램을 개발하기위한 구축(환경설정)
+
+1.JDK 설치(자바)->오라클 사에서 다운로드
+
+   Windows x64 198.03 MB   jdk-8u131-windows-x64.exe 
+    -------------------------------------------------------------
+   ->64bit 다운로드
+
+2. 설치경로->환경설정(javac.exe, java.exe)->p8 도스모드 실행
+
+C:\Users\kitcoop>javac =>인식이 된 경우
+=>경로에 상관없이 javac.exe or java.exe파일을 사용하기위해서
+  는 path환경변수에 등록(자바 설치 경로를 등록)
+                               .;c:\jdk1.8\bin;
+                                =경로 구분자
+
+Usage: javac <options> <source files>
+where possible options include:
+  -g                         Generate all debugging info
+  -g:none                    Generate no debugging info
+  -g:{lines,vars,source}     Generate only some debugging info
+  -nowarn                    Generate no warnings
+  -verbose                   Output messages about what the compiler is doing
+  -deprecation               Output source locations where deprecated APIs are u
+sed
+  -classpath <path>          Specify where to find user class files and annotati
+on processors
+  -cp <path>                 Specify where to find user class files and annotati
+on processors
+  -sourcepath <path>         Specify where to find input source files
+  -bootclasspath <path>      Override location of bootstrap class files
+  -extdirs <dirs>            Override location of installed extensions
+  -endorseddirs <dirs>       Override location of endorsed standards path
+  -proc:{none,only}          Control whether annotation processing and/or compil
+ation is done.
+  -processor <class1>[,<class2>,<class3>...] Names of the annotation processors
+to run; bypasses default discovery process
+  -processorpath <path>      Specify where to find annotation processors
+  -parameters                Generate metadata for reflection on method paramete
+rs
+  -d <directory>             Specify where to place generated class files
+  -s <directory>             Specify where to place generated source files
+  -h <directory>             Specify where to place generated native header file
+s
+  -implicit:{none,class}     Specify whether or not to generate class files for
+implicitly referenced files
+  -encoding <encoding>       Specify character encoding used by source files
+  -source <release>          Provide source compatibility with specified release
+
+  -target <release>          Generate class files for specific VM version
+  -profile <profile>         Check that API used is available in the specified p
+rofile
+  -version                   Version information
+  -help                      Print a synopsis of standard options
+  -Akey[=value]              Options to pass to annotation processors
+  -X                         Print a synopsis of nonstandard options
+  -J<flag>                   Pass <flag> directly to the runtime system
+  -Werror                    Terminate compilation if warnings occur
+  @<filename>                Read options and filenames from file
+
+
+C:\Users\kitcoop>
+====================================
+3.예제->Hello.java=>컴파일(컴퓨터가 인식가능한 문장변환)
+                                           2진수(0,1로 변환)->~.class
+               javac 소스파일명.java
+            ->실행->메모리에 ~class파일을 읽어들여서 실행->결과
+--------------------------------------------------------------
+              java 클래스파일명   (.class확장자 생략)
+===================================
+3.편집기 설치(EditPlus, Eclipse(대부분))->변수
+
+도구->기본설정
+
+사용자 도구->추가->프로그램 선택
+
+메뉴제목:컴파일 or compile
+명령->javac.exe가 있는 경로를 지정
+        c:\jdk1.8\bin\javac.exe
+인수->컴파일할 파일명을 지정
+       ->파일이름지정->$(FileName)
+디렉토리->파일디렉토리 지정->$(FileDir)
+=========================
+실행
+
+메뉴제목:실행 or run
+명령->javac.exe가 있는 경로를 지정
+        c:\jdk1.8\bin\java.exe
+*인수->컴파일할 파일명을 지정*
+          $(FileNameNoExt)
+     ->확장자를 뺀 파일명으로 지정
+   왜->확장자가 있으면 실행이 안되기때문에
+---------------------------------------------
+디렉토리->파일디렉토리 지정->$(FileDir)
+
+ 추상화,캡슐화,상속성,다형성->객체지향언어 4요소
+
+ 자바스크립트->객체지향언어X->TypeScript(EcmaScript6)
+                                           추상화,캡슐화,상속성,다형성-
+                                             angular2,react.js
+
+자바의 특징
+
+=============================
+자바프로그램을 작성할때는 운영체제에 독립적이나
+->자바파일을 작성->운영체제에 상관없이 다 작성
+
+실행할때에는 운영체제에 의존적이다.
+
+리눅스에서 실행->리눅스용 JDK가 필요
+맥 실행---------->맥용JDK설치(필요)
+
+==============================
+프로그램 작성시
+
+1.사용자로부터 값을 입력을 받을때 변수 필요->출력하기전
+2.계산을 할때(1~100까지 합계,,,)
+3.현재 프로그램의 실행상태를 기억을 할 필요가 있을때
+ex)그림판 처음실행->사용자가 아직은 마우스버튼을 아직
+                             누르지 않은 상태로 기억
+    boolean으로 저장
+
+문자,            숫자(int),논리값(참,거짓)->Boolean
+char,string
+
+변수->컴퓨터에게 어떤 자료를 저장시킬것인지를 지정해주는것
+         (메모리에 공간을 하나 만들어준다)
+
+변수이름=> var age=25(자바스크립트)->정수
+
+ 값(문자,숫자,날짜,논리적인값)->자료형을 정해준다.
+
+ 자료형(=데이터형)=>저장할 데이터의 종류와 크기를 지정
+ -----------------------------------------------------------
+ 8가지->기본 자료형
+
+1.수치형->정수->byte->short->int->long
+               
+
+ *1)byte->(-128~127)만 저장->저장공간(l byte)
+            ->자바에서 데이터 전송단위(채팅->문자열)->입출력
+               -----------------------------------------
+     용량->8bit->1 byte->kbyte->MByte->G~
+
+    2)short->2byte공간 크기(-32768~32767)
+   *3)int->4byte공간 크기(-2147483648~2147483647)
+                                 -21억~21억
+            자바에서의 연산단위로 사용(+,-,*,/)
+            =================
+     *4)long->8byte 기억크기=>저장하는 값뒤에 L or l 표시
+
+    =>VarTest.java
+
+  실수(소수점)-> 
+    *float =>4byte ex) float f=5.3;   =>소수점 뒤에 F or f
+                                            double   float로 저장
+                               ex) float f=5.3f;
+
+    *double=>8byte =>자바에서는 소수점이 있는 실수값은
+                                  무조건 double형으로 인식한다.
+  --------------------------------
+ 데이터 저장시키는 순서
+  -------------------------------------->
+ byte->short->int->long->float->double
+   1         2       4       8        4         8
+
+ long                      <                   float
+122233333333                          122233333333.7
+
+float->소수점 둘째자리까지 저장하는 경우에 사용
+          소수점 둘째자리 이상의 자릿수를 저장하는 실수
+       ->double(정밀한 값)=>VarTest2.java
+-------------------------------------------------------
+2.문자형->문자하나 저장->char->char str='a';
+                                     (2byte) 0~65535 까지 저장 가능
+
+->아스키코드값(0~255)->가장 기본적인 문자
+                  A->65, B->66, C->67  
+                  a->97  b->98
+
+->유니코드값->아스키코드값 이상의 문자를 저장시킬때 사용하는
+                     전세계 언어의 코드값(비영어권)
+----------------------------------------------------------------
+               *문자열->문자하나이상 나열->'ab' (X)=>"ab"
+                        ->String str2="abc";
+                 ----------------------------------------
+               *자바에서 문자열은 기본자료형이 아니다
+                                          참조 자료형이다.=>객체로 저장
+                 ----------------------------------------
+
+  자바스크립트->'ab'  or "ab" 다 된다.(일관성이 없다.)
+                     document.write("~"); or ;을 쓰지 않아도 된다.
+-----------------------------------------------------------------
+3.논리형->boolean->참과 거짓을 판별할 수있는것을 논리값
+                             true or false 둘중에 하나값만 저장
+
+   =======>VarTest3.java
+=====================================
+8가지외에 나머지 전부 객체로 저장(참조 자료형)
+-------------------------------------------------
+
+에디터 플러스의 에러잡는방법 (=>디버깅 방법)
+
+ 콘솔창의 에러메세지를 더블클릭==>에러가 발생된 문장으로 커서이동
+=>앞,뒤의 라인을 확인(대부분이 오타)
+========================================
+
+  AB+AC+AD=>A(B+C+D)=>int num3=5,num4=6~
+
+에러메세지 번역
+
+int su1;
+//VarTest5.java:7: error: variable su1 might not have been initialized
+System.out.println("su1=>"+su1);
+-----------------------------------------------------------------
+ Eclipse 버전->www.eclipse.org(개발툴 다운로드)
+
+ 파일을 다운로드->압축풀면 끝->환경설정
+-------------------------------------------
+1.IDE /Tools 링크문자열 클릭->
+
+최신버전 다운로드
+
+Java IDE->Java만 가능->웹X(plugin 설치 O)
+Java EE->Java+Web 기능이 이미 내장된 버전
+=>web전용버전
+
+=>eclipse폴더 생성->반디집에서 현재폴더에
+                             알아서 풀기
+=>eclipse.exe(바로가기 만들기)
+
+  현재 작업디렉토리를 선택하라.
+1.C:\Users\kitcoop\eclipse-workspace
+                =====>계정이름
+
+  작업디렉토리를 설정->예제 저장 위치
+   C:\webtest\3.java\sou
+
+1.Eclipse 사용법(작업디렉토리 설정)
+ =>Eclipse를 실행하고 나서 다시 새 작업디렉토리를
+       작업=>File->switch workspace->other
+                                경로를 다시 재 설정하면
+                                 이클립스를 다시 재부팅
+------------------------------------------------------
+2.프로젝트 먼저 생성->내부적으로 세부적인 작업 가능
+
+ 오click->new->project
+  java project 선택->실행
+
+  프로젝트 선택->JavaProject
+                       --------------지정
+
+ Java 설치->Eclipse 압축풀기
+                  javaw.exe 필요
+=>선행 먼저 자바설치가 필수
+===================
+Default output folder
+                   src->소스파일이 저장
+                         ~.java
+
+ JavaProject/bin->~.class가 저장
+----------------------------------------
+ Java Perspective(창)
+
+글꼴 설정->windows->preprience
+             General
+                  |
+                  Appearance
+                       -Colors and Fonts
+                               |
+                                -basic
+                                   Text Font
+                      (Verdana->적절한 글꼴
+                         크기(26)
+------------------------------------------
+Editors
+        Text Editors
+                show line numbers 체크
+                됐는지 확인(라인번호 설정)
+-----------------------------------------
+이클립스->따로 컴파일과정이 없이 저장하면 바로 컴파일된다.
+   ctrl+s(단축키)
+
+
+패키지(package)->프로젝트를 할때 파일을 탐색기의 폴더처럼
+                         나누어서 기능별로 파일을 저장
+
+0525-예제
+0526-예제
+
+*패키지를 이용해서 관리하는 방법*
+
+1.패키지를 처음부터 만들어서 관리->drag & drop(파일)
+
+식별자->변수,클래스,메서드,패키지를 만
+           들때 사용하는 규칙
+
+1.첫글자는 절대로 숫자가 오면 안된다.
+2.특수문자는 _,$만 가능하다.
+3.영문자+숫자+특수기호를 조합
+4.대,소문자는 반드시 구분
+=========================
+2.자바 파일에 직접 package명령어를 이용해서 사용
+
+클래스위에 //package 최상위패키지명.하위패키지명...;
+package j0525.sub.abc;
+
+   j0525
+      sub
+         abc
+=================================
+3.처음부터 클래스를 작성할때 패키지도 같이 작성하는 방법
+
+ j0526
+   Op1.java
+=================================
+연산자->제어문->if~switch~case
+-----------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 2 elements to &apos;JavaProject/src/j0622&apos;&#x0D;&#x0A;- Original project: &apos;JavaProject&apos;&#x0D;&#x0A;- Destination element: &apos;JavaProject/src/j0622&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     j0621.ChatGUIClient.java&#x0D;&#x0A;     j0621.ChatGUIServer.java" description="Copy compilation units" destination="/src&lt;j0622" element1="/src&lt;j0621{ChatGUIClient.java" element2="/src&lt;j0621{ChatGUIServer.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1498096099073" units="2" version="1.0"/>
+</session>

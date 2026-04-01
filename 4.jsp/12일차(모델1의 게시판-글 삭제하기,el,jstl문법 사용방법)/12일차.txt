@@ -1,0 +1,198 @@
+12일차(모델1의 게시판-글 삭제하기,el,jstl문법 사용방법)
+
+글삭제 요청
+http://localhost:8090/JspBoard/deleteForm.jsp?num=21&pageNum=1
+
+->삭제폼(deleteForm.jsp) 암호->deletePro.jsp(암호체크->삭제->페이지이동)
+                                                                     암호실패->재입력
+                                               ->updatePro.jsp로 편집
+==========================================
+BoardDAO
+
+삭제메서드 선언
+
+// 글 삭제시켜주는 메서드->회원 탈퇴(삭제)=>암호를 물어본다.(deletePro.jsp)
+	public int deleteArticle(int num, String passwd) { // 암호를 찾기위한 num
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;// passwd를 조회할 >select
+		String dbpasswd = null;// db에서 찾은 암호를 저장
+		String sql = "";
+		int x = -1;// 게시물의 삭제성공유무
+
+		try {
+			con = pool.getConnection();
+			sql = "select passwd from board where num=?";
+			pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, num);// 여러개를 입력->필드별로 Getter호출
+			rs = pstmt.executeQuery();
+			pstmt.close();//메모리 해제 후
+			
+			if (rs.next()) { // 현재 테이블에서 데이터가 한개라도 존재한다면
+				dbpasswd = rs.getString("passwd");
+				System.out.println("dbpasswd=>" + dbpasswd);
+				// db상의 암호=웹상에 입력한 암호가 맞다면
+				if (dbpasswd.equals(passwd)) {
+					sql = "delete from board  where num=?";
+					pstmt = con.prepareStatement(sql);
+					pstmt.setInt(1, num);
+					int delete = pstmt.executeUpdate();
+					System.out.println("게시판의 글삭제 성공유무(delete)="+delete);
+					x = 1; //삭제성공
+				} else {
+					x = 0;// 삭제실패
+				}
+			} // if(rs.next())
+		} catch (Exception e) {
+			System.out.println("deleteArticle()메서드 에러유발" + e);
+		} finally {
+			pool.freeConnection(con, pstmt, rs);
+		}
+		return x;
+	}
+========================================
+jstltest=>프로젝트(p 921)
+
+el,jstl 문법=>기본적으로 제공된 액션태그(include,forward,useBean,
+                                                           setProperty,getProperty) 5개
+                    액션태그 2                                    내장
+
+el(Expression Language)->변수의 값을 출력,객체의 멤버변수의 값출력
+    표현언어->출력문(변수의 값,수식계산,객체의속성값 출력)
+
+형식) ${표현식}  =>out.println(변수명); out.println(str);
+                             <%=str %> =>${변수명}
+
+   ex) <%=article.getNum()%>=>${article.num}
+                                                    ${article['num']}
+                                                    ${article["num"]}
+           out.println(4+5); <%=4+5%>  ${4+5}
+
+  page----------->pageScope
+  request
+  session
+  application
+--------------------------------------------------------------------
+ jstl(Jsp Standard Tag Library)=>액션태그를 사용할 수있도록 해주는 
+                                                  라이브러리 형태로 제공
+
+  jstl.jar, standard.jar->웹상에서 다운로드 받음
+ 
+**
+C:\Tomcat 8.5\lib ->복사 ->모든 프로젝트에서 불러다 사용
+ 특정 프로젝트에서만 사용-> WEB-INF
+                                             |
+                                              -lib에 복사
+---------------------------------------------------
+  p930 http://jakarta.apache.org
+
+ ***core=>변수선언,객체의 값을 불러오기,제어문,,, p937
+ fmt->날짜,시간,통화 부분
+====
+ sql
+ xml
+
+setTag.jsp
+
+<%@taglib prefix="식별자(액션태그의 종류)"  
+                 uri="액션태그의 선언문(core)" %>
+<%@taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
+
+<jsp:useBean ~>
+
+<c:set~>
+식별자:액션태그 종류명   속성명=값 ,,,
+
+<%=request.getParameter("name") %><p>
+ 이름은(el) ${param.name}
+
+<%=request.getParameter("addr") %><p>
+${param.addr}  ==>angular {{속성명}}
+
+param의 el의 내장객체 =>형식) ${param.매개변수명}
+
+jstl태그중에서는 기존의 다른 태그에서 만들어진 객체를 다른 액션태그에서
+불러올때 (참조할때)  target="${객체명}"  =>객체로 인식
+---------------------------------------------------------------------
+
+<!-- 
+    try~catch-><c:catch var="예외처리객체명">
+                           예외 가능성 있는 구문
+                      </c:catch>
+      <c:if test="${조건식}">
+             실행구문
+      </c:if>
+   -->
+
+ 이름은(표현식) <%=name%><p>
+ 이름은(직접) <%=request.getParameter("name") %><p>
+ 이름은(el) ${param.name}
+-------------------------------------------------------------------
+ifTag.jsp
+-----------
+request.setAttribute(key,value);
+
+not empty->비어있는 X
+
+**
+<c:if test="${ex!=null}">
+===================
+<c:if test="${not empty ex}">
+**
+
+<%-- <c:if test="${ex!=null}"> --%>
+ <c:if test="${not empty ex}">
+   예외가 발생하였습니다.<br>
+   ${ex}
+ </c:if>
+
+============
+ if (조건식)
+   실행문
+ else
+   실행문2
+=============
+<c:if test="${ex!=null}">
+   실행
+</c:if>
+
+<c:if test="${ex==null}">
+   실행
+</c:if>
+================
+다중 if =>p940==>switch ~case <c:choose>이용
+
+ifTag.jsp->save as  chooseTag.jsp
+
+
+<c:choose>
+   <c:when test="조건식">
+
+   </c:when>
+</c:choose>
+
+
+  request.getParameter("name")==>bk
+
+  ${param.nam}=='bk'
+
+  request.getParameter("age")==18
+
+http://localhost:8090/jstltest/chooseTag.jsp?name=bk
+http://localhost:8090/jstltest/chooseTag.jsp?age=20
+
+==================================
+jstlcore.jsp=>scope,<c:out value=~>
+
+  >,<
+
+ param.jsp
+-------------
+모델1 종료
+----------
+
+
+
+
+

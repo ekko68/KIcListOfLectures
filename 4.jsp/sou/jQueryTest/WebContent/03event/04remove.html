@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(특정태그의 내용을 삭제(remove,empty))</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//$('#button1').bind('click',function(){
+	$('#button1').click(function(){
+		$('#div1').remove()//$(선택자).remove()->전체 내용 삭제(ex 폴더의 파일까지)
+	})
+	//
+	$('#button2').click(function(){
+		$('#div1').empty()//$(선택자).empty()->특정태그의 자식태그을 모두 제거
+	})
+	//
+	$('#button3').click(function(){
+		$('.test').empty()//특정 자식태그의 내용 삭제
+	})
+})
+</script>
+</head>
+<body>
+  <div id="div1" style="height:100px;width:300px; 
+                                   border:1px solid black;background-color:yellow" >
+     <p class="test" style="height:50px;width:50px; 
+                                   border:1px solid red;background-color:yellow">
+          div first</p>
+     <p>div second</p>                              
+  </div><br>
+  <button id="button1">Remove div</button>
+  <button id="button2">Empty div</button>
+  <button id="button3">Empty p</button>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

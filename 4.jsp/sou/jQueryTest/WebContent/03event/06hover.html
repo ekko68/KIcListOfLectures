@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(hover함수)</title>
+<style>
+   .reverse {background:black;color:white}
+</style>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//형식)$('선택자').hover(mouseover|function(){},mouseout|function(){})
+	$('h1').hover(function(){
+		$(this).addClass('reverse')
+	},function(){
+		$(this).removeClass('reverse')
+	})
+})
+</script>
+</head>
+<body>
+<h1>header-0</h1>
+<h1>header-1</h1>
+<h1>header-2</h1>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

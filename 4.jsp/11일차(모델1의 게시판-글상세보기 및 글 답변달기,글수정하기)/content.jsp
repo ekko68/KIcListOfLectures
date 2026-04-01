@@ -1,0 +1,65 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    import="lys.board.*,java.text.SimpleDateFormat" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>게시판</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<%
+  //list.jsp에서 링크 content.jsp?num=3&pageNum=1
+  int num=Integer.parseInt(request.getParameter("num"));
+  String pageNum=request.getParameter("pageNum");
+  
+
+%>
+<body bgcolor="#e0ffff">  
+<center><b>글내용 보기</b>
+<br>
+<form>
+<table width="500" border="1" cellspacing="0" cellpadding="0"  bgcolor="#e0ffff" align="center">  
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">글번호</td>
+    <td align="center" width="125" align="center">
+	     3</td>
+    <td align="center" width="125" bgcolor="#b0e0e6">조회수</td>
+    <td align="center" width="125" align="center">
+	     5</td>
+  </tr>
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">작성자</td>
+    <td align="center" width="125" align="center">
+	     홍길동</td>
+    <td align="center" width="125" bgcolor="#b0e0e6" >작성일</td>
+    <td align="center" width="125" align="center">
+	     2006-12-27</td>
+  </tr>
+  <tr height="30">
+    <td align="center" width="125" bgcolor="#b0e0e6">글제목</td>
+    <td align="center" width="375" align="center" colspan="3">
+	     게시판의 글 내용보기</td>
+  </tr>
+  <tr>
+    <td align="center" width="125" bgcolor="#b0e0e6">글내용</td>
+    <td align="left" width="375" colspan="3"><pre>게시판의 글내용보기</pre></td>
+  </tr>
+  <tr height="30">      
+    <td colspan="4" bgcolor="#b0e0e6" align="right" > 
+	  <input type="button" value="글수정" 
+       onclick="document.location.href='updateForm.jsp?num=2&pageNum=1'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	  <input type="button" value="글삭제" 
+       onclick="document.location.href='deleteForm.jsp?num=3&pageNum=2'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+      <input type="button" value="답글쓰기" 
+       onclick="document.location.href='writeForm.jsp?num=4&ref=0&re_step=0&re_level=0'">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+       <input type="button" value="글목록" 
+       onclick="document.location.href='list.jsp?pageNum=1'">
+    </td>
+  </tr>
+</table>    
+</form>      
+</body>
+</html>      

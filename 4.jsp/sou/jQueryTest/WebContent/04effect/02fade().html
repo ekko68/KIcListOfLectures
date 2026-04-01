@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(불투명도 조절)</title>
+<style type="text/css">
+ p {position:relative;width:400px;height:90px;}
+ div {position:absolute;width:400px;height:65px;
+         font-size:36px;text-align:center;
+         color:yellow;background:red;
+         padding-top:25px;
+         top:0;left:0; display:none; 
+         }
+ span {display:none}
+</style>
+
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//fadeIn(유지시간,처리해야할함수명)->서서히 화면이 보이는 경우
+	$('#fadeIn').click(function(){
+		$('div').fadeIn(3000,function(){//3초
+			$('span').fadeIn(100)//0.1초
+		})
+	})
+	//fadeOut->불투명도 감소->서서히 사라짐(투명도)
+	$('#fadeOut').click(function(){
+		$('div').fadeOut(3000,function(){//3초
+			$('span').fadeIn(100)//0.1초
+		})
+	})
+	//fadeToggle->fadeIn,fadeOut이 번갈아 가면서 화면에 출력
+	//fadeToggle(유지시간,처리해야할함수명(익명함수))
+	$('#fadeToggle').click(function(){
+		$('div').fadeToggle(3000,function(){//3초
+			$('span').fadeIn(100)//0.1초
+		})
+	})
+})
+</script>
+</head>
+<body>
+<p>
+불투명도를 점점 높여서 보이게 설정
+speed를 fast,normal,slow또는 0이상의 숫자(밀리세컨드단위)를 준다
+애니매이션이 끝난후에 사용자정의 함수를 지정
+</p>
+<div><span>Success!</span></div>
+<button id="fadeIn">fadeIn</button>
+<button id="fadeOut">fadeOut</button>
+<button id="fadeToggle">fadeToggle</button>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,313 @@
+14일차(객체형변환,라이브러리(앵글러,리액트),예외처리,입출력 개요및 작성법)
+           ====== ====== 앵글러 라이브러리 모듈
+
+화면구현->application(Swing)->이벤트처리 방식
+---------------------------------------------------
+Swing으로 전환->
+
+ JFrame객체명.getContentPane().setBackground
+ JFrame객체명.getContentPane().setLayout
+
+*다른 컴포넌트에는 getContentPane()이 적용X (사용 불가)
+====================================
+자바에서의 형변환
+                             자동형변환
+                          ----------------------------->
+1.기본형 형변환->byte->short->int->long->float->double
+                                   char
+                          <-----------------------강제형변환(=명시적인형변환)
+                              ex) float f=(float)3.4;      boolean
+
+**2.객체형 형변환 종류->인터페이스,배열,클래스에 적용(Swing)**
+      (=참조형)
+
+   p383  instanceof 연산자
+   p387  
+ 
+    Fightable f=(Fightable)new Fighter();
+                      =======    클래스형
+    인터페이스형
+
+객체형변환-->상속관계(부모-자식클래스)때문에 존재
+
+1)자동 객체형변환
+2)명시적인 객체형변환
+
+ 부모클래스
+         자식클래스
+==================================
+
+도형(Shape)(1,2)
+      점(Point)(1,2)+(3,4)변수,메서드
+            선(Line)(1,2,3,4)+(5,6)
+               다각형(Square)(1,2,3,4,5,6)+(7,8)
+
+ 자식클래스->부모클래스로 자동형변환이 일어난다.
+ 부모클래스->자식클래스->자동형변환X
+
+     (점)도형->점
+    (선(Point))도형(Shape)->선(Point)
+
+  instanceof연산자
+
+  형식) if(객체명 instanceof 클래스명)=>true
+         ex) 모닝,소나타 instanceof Car==>True 
+                X====>False
+================================
+객체형변환=>상속관계때문에 =>기존 클래스의 재사용,개발시간 단축
+      |
+ 효율적인 운영가능->CastTest.java
+
+package j0614;
+//객체형변환(자동,명시적인 형변환)
+//직원->세금율을 계산->출력(taxRate)
+//각 업무별로 직원의 세금율이 다르기 때문에 따로 따로 메서드를 작성->구현
+//클래스->비슷한 기능을 가진 메서드 여러개->메서드명 통합(구분->오버로딩)
+class Employee{
+	
+	public void taxRate(Employee e) { //객체 자동 형변환(Manager,Engineer)
+		if(e instanceof Manager) { //팀장
+			Manager m=(Manager)e; //내부적으로 자식에 맞게 자식형으로 형변환준다
+			System.out.println("Manager에 맞는세금 구하기");
+		}else if(e instanceof Engineer) {//엔지니어
+			Engineer en=(Engineer)e;
+			System.out.println("Engineer에 맞는 세금 계산하기");
+		}else if(e instanceof Employee) {//일반직원
+			System.out.println("Employee에 맞는 세금 계산하기");
+		}
+	}
+	/* 업무별로 세금율이 다다르기에 직원의 수가 많고 업무가 복잡
+	 * 중복된 코딩이 반복적으로 사용할 수없다(단점)
+	 * 상속관계-->가장 최상위 부모클래스형으로 형변환->메서드내부에 따로계산
+	public void taxRate(Manager e) {}
+	public void taxRate(Engineer e) {}
+	*/
+}
+//팀장의 역할+직원의 역할
+class Manager extends Employee{
+	//public void taxRate(Manager e) {}
+}
+
+//엔지니어로의 역할+직원의 역할
+class Engineer extends Employee{
+	//public void taxRate(Engineer e) {}
+}
+
+public class CastTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+          Employee emp=new Employee();
+          Manager man=new Manager();
+          Engineer eng=new Engineer();
+          //세금율->taxRate()
+          emp.taxRate(emp);
+          man.taxRate(man);
+          eng.taxRate(eng);
+	}
+}
+-------------------------------------------------------
+앵글러->모듈,서비스(클래스)-->컴포넌트 불러와서 작업
+                                  라이브러리 개념
+        ->import
+
+----------------------------------------------------------------
+프로그램상에서 자주 사용,반복적인 구문,업무상 필요로하는 메서드
+를 가진 클래스들의 집합체=>클래스들을 묶어서 압축->~.jar
+
+   import
+-------------------------------------------------------------
+   j0614
+      abc  ->Chongmu.java
+                 Developer.java
+
+  위치에 상관없이 언제든지 불러올 수 있다.->import
+                 Test2.java(main())
+        
+  **라이브러리를 만드는 조건**
+
+package j0614.abc;
+//언제든지 위치를 알고있으면 불러다 사용
+//1.public class로 작성
+//2.,멤버변수,메서드는 반드시 public 접근지정자를 부여->작성
+public class Chongmu {
+     public String str="abc";
+     public void print() {
+    	 System.out.println("str=>"+str);
+     }
+}
+
+***라이브러리를 만드는 작성 순서 및 적용 방법***
+
+1.라이브러리(공유해서 사용할 수있도록)로 만들 클래스를 작성
+2.패키지 컴파일을 시킨다.->콘솔에서도 패키지 컴파일 만드는 방법
+3.압축->jar파일로 실행->콘솔로 작업->~.jar파일 생성
+4.이클립스에서 불러다 사용한다.->jar경로 지정
+5.라이브러리를 불러오고자하는 클래스
+  ->import 최상위패키지.하위패키지명.불러올 클래스명 or *;
+======================================
+
+ javac 소스파일명.java -->javac *.java
+ 패키지 컴파일
+ ->형식) javac -d .(패키지가 처음 만들어질 위치) 소스파일명(*).java
+  . (현재폴더) ..(상위폴더)
+
+C:\webtest\3.java\abc>javac -d . *.java
+
+C:\webtest\3.java\abc>jar/help  =>자바명령어/help
+                                                     자바명령어에 대한 옵션을 확인
+====================================
+      형식) jar 옵션(-cvf) 압축파일명.jar 압축할 대상자(j0618)
+잘못된 옵션: /
+사용법: jar {ctxui}[vfmn0PMe] [jar-file] [manifest-file] [entry-point] [-C
+files ...
+옵션:
+    -c  새 아카이브를 생성합니다.->아카이브(압축)
+    ---------------------------------
+    -t  아카이브에 대한 목차를 나열합니다.
+    -x  명명된(또는 모든) 파일을 아카이브에서 추출합니다.
+    -u  기존 아카이브를 업데이트합니다.
+     ---------------------------------------------
+    -v  표준 출력에 상세 정보 출력을 생성합니다.->과정출력
+    -f  아카이브 파일 이름을 지정합니다.->생성할 압축파일명
+     ----------------------------------------------
+    -m  지정된 Manifest 파일의 Manifest 정보를 포함합니다.
+    -n  새 아카이브를 생성한 후 Pack200 정규화를 수행합니다.
+    -e  jar 실행 파일에 번들로 제공된 독립형 애플리케이션의
+        애플리케이션 시작 지점을 지정합니다.
+    -0  저장 전용: ZIP 압축을 사용하지 않습니다.
+    -P  파일 이름에서 선행 '/'(절대 경로) 및 ".."(상위 디렉토리) 구성 요소를
+지합니다.
+    -M  항목에 대해 Manifest 파일을 생성하지 않습니다.
+    -i  지정된 jar 파일에 대한 인덱스 정보를 생성합니다.
+    -C  지정된 디렉토리로 변경하고 다음 파일을 포함합니다.
+특정 파일이 디렉토리일 경우 순환적으로 처리됩니다.
+Manifest 파일 이름, 아카이브 파일 이름 및 시작 지점 이름은
+'m', 'f' 및 'e' 플래그와 동일한 순서로 지정됩니다.
+
+예 1: classes.jar라는 아카이브에 두 클래스 파일을 아카이브하는 방법:
+       jar cvf classes.jar Foo.class Bar.class
+예 2: 기존 Manifest 파일 'mymanifest'를 사용하여
+           foo/ 디렉토리의 모든 파일을 'classes.jar'로 아카이브하는 방법:
+       jar cvfm classes.jar mymanifest -C foo/ .
+
+C:\webtest\3.java\abc>
+
+C:\webtest\3.java\abc>jar cvf ch2.jar j0614
+Manifest를 추가함
+추가하는 중: j0614/(입력 = 0) (출력 = 0)(0%를 저장함)
+추가하는 중: j0614/abc/(입력 = 0) (출력 = 0)(0%를 저장함)
+추가하는 중: j0614/abc/Chongmu.class(입력 = 628) (출력 = 387)(38%를 감소함)
+추가하는 중: j0614/abc/Developer.class(입력 = 757) (출력 = 459)(39%를 감소함)
+---------------------------------------------------------------------
+
+C:\jdk1.8\jre\lib->rt.jar(자바에서 사용되는 모든 패키지)
+                                   import이용
+
+입출력->import java.io.*  //->rt.jar
+========================
+import j0614.abc.*;
+
+public class Test2 {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+           Chongmu ch=new Chongmu();
+           ch.print();//변경전 str출력
+           ch.str="라이브러리연습";
+           ch.print();//변경후 str출력
+           Developer de=new Developer();
+           de.setStr2("라이브러리연습");
+           de.print2();
+	}
+}
+============================
+*예외처리->**입출력->쓰레드->**자바의 자료구조(Collection)**
+->*네트워크->최종 프로젝트
+
+ HelloTest.java
+
+객체형변환
+라이브러리 작성
+예외처리
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 3
+	at j0614.HelloTest.main(HelloTest.java:9)
+
+예외=>정상적인 자바프로그램의 실행을 방해하는 에러들
+예외처리=>정상적인 자바프로그램의 실행을 방해하는 에러들을 만났을때
+                어떻게 에러가 나오지 않도록 정상적으로 실행하는 방법을
+                제시해주는 것
+
+1.물리적인 예외->눈에 보임(오타)->수정->컴파일
+2.논리적인 예외->눈에 안보임->논리적인 에러=>계산,설계X
+                     ->RuntimeException
+                     =>breakpoint 설정(디버그모드)
+                          중단점을 기준->F8키 순서대로 실행
+                          변수값을 체크
+====================================
+p 415 예외처리 클래스 계층도
+
+                      Object
+                          |
+                      Throwable
+                          |
+              Exception     Error
+                    |
+   non-RuntimeException, RuntimeException
+     컴파일 오류(오류,오타)
+------------------------------------------------------
+1.NullPointerException->웹프로그래밍
+                                ->객체를 생성하지 않고 메서드호출하는 경우
+                                ->JButton b1=new JButton();
+                                   JButton b1=new JButton();//b2=null
+
+2.ArithmeticException->5/0->수학적인 오류
+3.ClassCastException->객체형변환 오류
+                                   ->JButton b=(JButton)o;
+                                                         JTextField
+4.IndexOutOfBoundsException->배열첨자 오류발생
+5.입출력오류->파일을 불러올때 오류발생
+..
+
+예외처리 방법->1.try~catch==>자바스크립트 적용(p416)
+                      2.메서드 명(~) throws 발생한 예외처리클래스명(p427),,,
+
+ public void go() throws ArrayIndexOutOfBoundsException
+ ->go메서드를 호출한 main()에게 ArrayIndexOutOfBoundsException
+     예외처리를 해주세요
+-----------------------------------------------------------------
+   =>HelloTest2.java
+
+  직접->try{
+            예외가 발생 가능성이 있는 구문
+          }catch(발생된 예외처리클래스명 예외객체명(e)){
+            예외처리 구문                         ======>예외발생 정보
+            1.e.getMessage()->가장 간단한 에러메세지 출력(비추)
+            2.e.toString()->권장(보편)->에러발생 메세지 이유
+            3.e.printStackTrace();//관련된 클래스정보까지 같이 출력
+
+         }catch(발생된 예외처리클래스명 예외객체명){
+            예외처리 구문
+         }finally{//p434
+           예외발생 구문과 상관없이 반드시 처리해야할 구문이 있다면
+           여기에 기술(DB연동 해제)->메모리 해제구문
+         }
+------------------------------------------------------------------
+    ExceptionTotal.java
+지침서
+   try{
+
+   }catch(구체적인 예외처리 클래스 e){
+
+   },,,,
+   }catch(Exception e){ //맨앞에 위치하면 뒤의 예외처리는 처리
+                                     를 하지 못하는 관계로 반드시
+                                   Exception클래스는 다른 클래스보다 맨
+                                    마지막에 위치해야 한다.
+        //위에 언급된 예외처리클래스외의 다른 예외처리해준다.
+    }
+
+
+
+
+
+

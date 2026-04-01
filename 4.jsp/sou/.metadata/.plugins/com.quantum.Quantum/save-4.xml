@@ -1,0 +1,156 @@
+<?xml version="1.0" ?>
+<SAVED_DATA>
+	<bookmarks>
+		<jdbcDriver className="org.apache.derby.jdbc.EmbeddedDriver" name="org.apache.derby.jdbc.EmbeddedDriver" type="DERBY" version="">
+			<jar fileName="C:/webtest/3.java/eclipse/plugins/com.quantum.derby_3.3.10/lib/derby.jar" />
+		</jdbcDriver>
+		<jdbcDriver className="com.mysql.jdbc.Driver" name="MySQL-AB JDBC Driver" type="MYSQL" version="mysql-connector-java-5.1.12 ( Revision: ${bzr.revision-id} )">
+			<jar fileName="C:\webtest\4.jsp\5일차(자바빈즈 정리및 쿠키와 세션,JDBC Programming)\DB자료\mysql-connector-java-5.1.12-bin.jar" />
+		</jdbcDriver>
+		<jdbcDriver className="oracle.jdbc.driver.OracleDriver" name="Oracle JDBC driver" type="ORACLE" version="11.2.0.1.0">
+			<jar fileName="C:\Tomcat 8.5\lib\ojdbc6.jar" />
+		</jdbcDriver>
+		<bookmark>
+			<name>(Internal) Derby</name>
+			<username>QUANTUM</username>
+			<password />
+			<prompt>false</prompt>
+			<connect>jdbc:derby:C:/webtest/3.java/eclipse/plugins/com.quantum.derby_3.3.10/data/quantum</connect>
+			<autoCommit>true</autoCommit>
+			<autoCommitPreference>Always True</autoCommitPreference>
+			<autoCommitIgnoreView>false</autoCommitIgnoreView>
+			<quoteAll>false</quoteAll>
+			<sendQueryAsIs>false</sendQueryAsIs>
+			<stripNewline>false</stripNewline>
+			<shutdownOnDisconnect>true</shutdownOnDisconnect>
+			<defaultEncoding />
+			<driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
+			<type>DERBY</type>
+			<substituteVariables>false</substituteVariables>
+			<variablesRegexp>\$\{(.*?)\}</variablesRegexp>
+			<driverLocation>C:/webtest/3.java/eclipse/plugins/com.quantum.derby_3.3.10/lib/derby.jar</driverLocation>
+			<Other_Schemas schemaRule="useAll" />
+			<quickList />
+			<queryList />
+		</bookmark>
+		<bookmark>
+			<name>myoracletest</name>
+			<username>test1</username>
+			<password>t1234</password>
+			<prompt>false</prompt>
+			<connect>jdbc:oracle:thin:@localhost:1521:orcl</connect>
+			<autoCommit>true</autoCommit>
+			<autoCommitPreference>Always True</autoCommitPreference>
+			<autoCommitIgnoreView>false</autoCommitIgnoreView>
+			<quoteAll>false</quoteAll>
+			<sendQueryAsIs>false</sendQueryAsIs>
+			<stripNewline>false</stripNewline>
+			<shutdownOnDisconnect>false</shutdownOnDisconnect>
+			<defaultEncoding />
+			<driver>oracle.jdbc.driver.OracleDriver</driver>
+			<type>ORACLE</type>
+			<substituteVariables>false</substituteVariables>
+			<variablesRegexp>\$\{(.*?)\}</variablesRegexp>
+			<driverLocation>C:\Tomcat 8.5\lib\ojdbc6.jar</driverLocation>
+			<Other_Schemas schemaRule="useAll" />
+			<quickList />
+			<queryList>
+				<query>
+					<queryString>select * from member</queryString>
+				</query>
+				<query>
+					<queryString>select * from tab</queryString>
+				</query>
+			</queryList>
+		</bookmark>
+		<bookmark>
+			<name>mysqltest</name>
+			<username>root</username>
+			<password>1234</password>
+			<prompt>false</prompt>
+			<connect>jdbc:mysql://localhost:3307/mydb</connect>
+			<autoCommit>true</autoCommit>
+			<autoCommitPreference>Always True</autoCommitPreference>
+			<autoCommitIgnoreView>false</autoCommitIgnoreView>
+			<quoteAll>false</quoteAll>
+			<sendQueryAsIs>false</sendQueryAsIs>
+			<stripNewline>false</stripNewline>
+			<shutdownOnDisconnect>false</shutdownOnDisconnect>
+			<defaultEncoding />
+			<driver>com.mysql.jdbc.Driver</driver>
+			<type>MYSQL</type>
+			<substituteVariables>false</substituteVariables>
+			<variablesRegexp>\$\{(.*?)\}</variablesRegexp>
+			<driverLocation>C:\webtest\4.jsp\5일차(자바빈즈 정리및 쿠키와 세션,JDBC Programming)\DB자료\mysql-connector-java-5.1.12-bin.jar</driverLocation>
+			<Other_Schemas schemaRule="useAll" />
+			<quickList />
+			<queryList>
+				<query>
+					<queryString>insert into test(id,name,passwd) values(2,'kkk','pass')</queryString>
+				</query>
+				<query>
+					<queryString>insert into test(id,name,passwd) values(3,'imsi','testkim')</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id=1</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id=4</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id=4 or 1=1</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id=4 or 1</queryString>
+				</query>
+				<query>
+					<queryString>select  * from student</queryString>
+				</query>
+				<query>
+					<queryString>select * from test</queryString>
+				</query>
+				<query>
+					<queryString>select  id,name from student</queryString>
+				</query>
+				<query>
+					<queryString>select * from test order by 1</queryString>
+				</query>
+				<query>
+					<queryString>select * from test order by 2</queryString>
+				</query>
+				<query>
+					<queryString>select * from test order by 3</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id =1</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id =1 
+union all select null,null,null</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id =1 
+  union all select null,@@version,null</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id =1 
+  union all select @@version,null,null</queryString>
+				</query>
+				<query>
+					<queryString>desc information_schema.schemata</queryString>
+				</query>
+				<query>
+					<queryString>select * from information_schema.schemata</queryString>
+				</query>
+				<query>
+					<queryString>desc information_schema.tables</queryString>
+				</query>
+				<query>
+					<queryString>select * from test where id=1
+union select null,null,group_concat(table_name)
+from information_schema.tables where version=10</queryString>
+				</query>
+			</queryList>
+		</bookmark>
+	</bookmarks>
+</SAVED_DATA>

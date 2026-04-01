@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(each함수를 이용)</title>
+<style>
+    .fromjQuery0 {color:red}
+    .fromjQuery1 {color:pink}
+    .fromjQuery2 {color:blue}
+    .fromjQuery3 {color:yellow}
+</style>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+ var i=0 //첨자로 적용
+$(function(){ 
+	//1.형식)$(선택자).attr('속성명','속성값')
+	//$('li').attr('class','fromjQuery0')
+	//같은 태그를 어떻게 구분해서 스타일을 적용?->반복적으로 스타일
+	//2.형식)$(선택자).each(호출할 사용자정의 함수명 | 익명함수(function(){}))
+	$('li').each(forEach)
+})
+
+function forEach(){
+	//$('li').attr('class','fromjQuery'+i)
+	//$(this)->현재 선택해서 읽어들이는 태그객체를 가리키는 예약어(이벤트처리)
+	$(this).attr('class','fromjQuery'+i)
+	alert(i)
+	i++;//0->1->2->3
+}
+</script>
+</head>
+<body>
+    <ul><!-- 태그정보.setAttribute('속성명','값')-->
+        <li>jQuery each()연습</li>
+        <li>jQuery each()연습2</li>
+        <li>jQuery each()연습3</li>
+        <li>jQuery each()연습4</li>
+    </ul>
+   <!-- 
+      <ul> (1)
+        <li class="fromjQuery0">jQuery each()연습</li>
+        <li class="fromjQuery1">jQuery each()연습2</li>
+        <li class="fromjQuery2">jQuery each()연습3</li>
+        <li class="fromjQuery3">jQuery each()연습4</li>
+    </ul> -->
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

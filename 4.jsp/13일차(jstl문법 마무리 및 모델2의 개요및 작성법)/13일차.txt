@@ -1,0 +1,252 @@
+13일차(jstl 문법 마무리 및 모델2의 개요(MVC) 및 작성법)
+ 주제: 모델1->모델2(기준)->스프링 프로젝트+angular,react
+            모델2로 프로젝트 작업->스프링 변환
+================================
+
+<c:forEach var="초기변수명" begin="시작값" end="종료값" step="증가치">
+    출력문 ${}  <c:out value="${출력변수}" />
+</c:forEach>
+
+객체의 값을 출력시켜주는 for문
+ items="${출력할 값이 저장된 객체명(배열 or 컬렉션)}"
+
+ import.jsp
+
+<!-- url속성->접속할 사이트주소 u->접속한 사이트의 정보(변수) -->
+
+escapeXml="true"->태그자체를 문자열로 인식->문자형태로 출력
+escapeXml="false">=>본문내용 그대로 
+***
+ <c:import>태그=> <jsp:include page="~.jsp" flush="false" />
+  와 유사한 기능을 가진 액션태그(실행 결과를 삽입)
+  
+escapeXml="true"->태그자체를 문자열로 인식->문자형태로 출력
+escapeXml="false">=>본문내용 그대로(실행결과) 
+***
+
+fmt->숫자,시간,날짜 출력형식을 지정
+=======================
+jstlfmt.jsp 저장
+----------------
+SimpleDataFormat~ 자바에서 출력에 관련된 클래스이용
+
+** 객체생성하는 액션태그**
+
+<jsp:useBean id="now" class="java.util.Date" />
+<c:out value="${now}"/>
+
+<c:set var="now" value="<%=new java.util.Date()%>">
+-----------------------------------------------------------------
+10장. MVC 구조 (모델2) ==>스프링(MVC구조 모양으로 되어있다.)
+
+Model(모델)=>데이터가 저장되는 부분=>빈즈부분(DB)
+                     BoardDTO,BoardDAO=>테이블갯수,필드갯수 증가
+
+View(화면 출력)->html,css,js,jsp파일+자바코드<% ~ %>
+Controller
+
+모델2->무조건 el,jstl을 사용한다는 것을 의미하지 않는다.
+            화면 편리성을 추구
+
+컨트롤러를 배운다는 말과 같다.
+=======================
+모델1  요청(jsp, html)
+          버튼,링크문자열클릭--------->list.jsp(자바코드+화면출력
+                                                                              html,css)
+http://localhost:8090/JspBoard/list.jsp
+
+**********
+ 모델1의 장점
+**********
+
+  1.중소규모의 사이트 작성에 적합
+  2.적은인원으로도 구성이 가능(4~5)
+
+*********
+ 모델1의 단점 
+*********
+
+          페이지가 많아지면 유지보수가 어려워진다.
+ 1. jsp=>자바소스코드+화면출력(html) ->혼영=>유지보수가 어려워진다.
+ 2. 중복된 코드가 많아진다.(페이지별로)
+
+    클--------list.jsp-------------->서(list.jsp(자바코드+html실행)
+                                                        M,V이 섞여있는 구조
+                                                        C,V
+   ex)회원제로 운영->20페이지다
+   <%
+       String mem_id=(String)session.getAttribute("idKey");
+    %>
+   <% if (mem_id!=null) %>
+--------------------------------------------------------------------------
+******
+모델2
+
+모델2의 장점
+
+1.대규모 사이트에 작성하는데 적합한 구조(대기업)
+2.역할이 분담이 나누어져 있어서 유지보수가 쉽다.
+
+단점
+
+1.개개인의 실력이 향상을 요구->서블릿이 중심
+2.구성원이 10인 이상을 요구
+************************************
+
+M->데이터 저장부분
+
+V->처리결과를 받아서 출력만 담당
+      1)요청을 받는 부분->Controller에게 전담
+      2)뷰에서 존재하는 자바코드->요청명령어 클래스에서 처리
+
+C-->1)요청을 받아서  그요청에 맞는 요청명령어 클래스를 선택->처리
+                                                               |
+                                                   빈즈메서드 호출(getArticles())
+                                                          DB접속
+========================================
+모델1 게시판-->모델2로 게시판
+
+ServletTest2
+
+요청->서블릿이 요청을 받아서 그 요청에 해당하는 jsp로 페이지를 이동
+-----------------------------------------------------------------------
+            SimpleController------------->simpleview.jsp
+                요청에 따라서  ------------->화면에 보여주는 부분이 다르다.
+
+요청을 할때 요청명령어->처리되는 결과도 다르고->보여주는 페이지도 다르다.
+type=null
+type=date
+type=greeting
+
+http://localhost:8090/ServletTest2/SimpleController?type=greeting
+==========================================
+MVC 모델 설계->컨트롤러=>스프링이 이미 만들어져 있다.
+                         작성
+
+==================================
+모델1 게시판->모델2로 변환
+=================
+
+요청명령어?->게시판의 글목록보기
+                   글쓰기,상세보기,글수정,글삭제
+                   글검색=>6개-->처리해주는 클래스도 6개->객체->메서드 필요
+
+->~.do(스프링)
+~.mov
+~.nhn
+======================================
+1.요청명령어->컨트롤러에 요청명령어를 구분소스 계속 작성...
+
+                       if(글목록을 요청) { if(type.equals("/list.do")
+			글목록에 해당클래스 생성->메서드호출
+                                     new ListAction();  ->list()
+		}else if(type.equals("/writePro.do") {
+			글쓰기에 해당클래스 생성->메서드호출
+                                     new WriteAction()->write()
+		}else {
+			resultObject="Invalid Type";
+		}
+                          ,,,,
+
+****2.컨트롤러 하나 ->소스계속해서 X
+
+ 동일한 소스->그대로 사용=>인터페이스를 이용->요청명령어만 따로 작성
+---------------------------------------------------------------------------
+  JspBoard2
+       |
+        -src
+           controller
+                ControllerAction(4)=>시작
+          action
+              CommandAction->requestPro(request,response)
+                           상속-------->계속사용(5)
+       |
+        -WebContent->list.jsp~(el,jstl로 모두 변경)
+                 |
+                  -WEB-INF->commandPro.properties(2)
+                                 /가상경로/~/요청명령어=패키지명.명령어처리클래스
+
+                              #key(command~.do)=value(package...classname)
+                               /list.do=action.ListAction
+
+                               #/notice/list.do=
+
+                               #/member/list.do
+                           web.xml(3)->컨트롤러 역할을 해주는 서블릿을 지정
+                                        ->commandPro.properties 읽어들일 수 있도록
+                                           환경설정을 해야 한다.
+==========================================
+ <!--컨트롤러역할을 하는 서블릿의 이름,요청경로를 지정  -->
+  <servlet>
+     <servlet-name>서블릿클래스명 동일</servlet-name>
+     <servlet-class>패키지명..실행시킬 서블릿클래스명</servlet-class>
+                ->서블릿이 실행이 될때 맨 처음 초기화 작업을 할때 필요로하는 태그
+     <init-param>
+          <param-name>propertyConfig(파라미터매개변수명)</param-name>
+          <param-value>C:/webtest/4.jsp/sou/JspBoard2/WebContent/WEB-INF/commandPro.properties</param-value>
+     </init-param> ->매개변수에 따른 경로 포함해서 불러올 파일명(절대경로)
+  </servlet>
+  
+  <!-- 어떻게 요청이 들어왔을때 처리할 것인가?  -->
+  <servlet-mapping>
+     <servlet-name>서블릿클래스명 동일</servlet-name>
+     <url-pattern>요청명령어를 지정(*.do)</url-pattern>
+  </servlet-mapping>
+==========================================
+ 적용예)
+=====
+ <!--컨트롤러역할을 하는 서블릿의 이름,요청경로를 지정  -->
+  <servlet>
+     <servlet-name>ControllerAction</servlet-name>
+     <servlet-class>controller.ControllerAction</servlet-class>
+     <init-param>
+          <param-name>propertyConfig</param-name>
+          <param-value>C:/webtest/4.jsp/sou/JspBoard2/WebContent/WEB-INF/commandPro.properties</param-value>
+     </init-param>
+  </servlet>
+  
+  <!-- 어떻게 요청이 들어왔을때 처리할 것인가?  -->
+  <servlet-mapping>
+     <servlet-name>ControllerAction</servlet-name>
+     <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+==========================================
+                          
+                         |
+                          -lib->standard.jar,jstl.jar복사(1)
+
+(5)
+
+package action;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+//요청명령어에 따라서 처리해주는 모든 클래스의 공통메서드(인터페이스)
+public interface CommandAction {
+	//이동할 페이지의 경로와 페이지명이 필요->반환=>ModelAndView(스프링)
+    public String requestPro(HttpServletRequest request,
+    		                              HttpServletResponse response)
+                                          throws Throwable;
+}
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

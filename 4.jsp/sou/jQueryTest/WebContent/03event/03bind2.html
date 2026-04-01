@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(03bind2.html)</title>
+<style>
+  p {margin:4px;font-size:16px;
+       font-weight:bolder;cursor:pointer /* 마우스 모양*/
+   }
+   .blue {color:blue}
+</style>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	$('img').bind({
+		//형식) 등록할 이벤트명:function()(익명){}
+		mouseout:function(){
+			       $('img').attr('src','../picCats/Persian.jpg') 
+	                     },
+		mouseover:function(){
+			       $('img').attr('src','../picCats/RussianBlue.jpg') 
+			            },
+		click:function()	{
+			       alert('bind함수를 이용한 연결테스트입니다.')
+		         }
+		   })
+})
+</script>
+</head>
+<body>
+   <img src="../picCats/Persian.jpg" width="200" height="200">
+   <!-- <img src="../picCats/RussianBlue.jpg" width="200" height="200">
+   <img src="../picCats/BritishShorthairs.jpg" width="200" height="200"> -->
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

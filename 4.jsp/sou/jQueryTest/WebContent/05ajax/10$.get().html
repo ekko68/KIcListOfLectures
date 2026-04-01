@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jquery예제(10$.get().html)</title>
+<script type="text/javascript"
+            src="http://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script>
+$(function(){ 
+	//json or xml
+	//$.post()->post방식으로 요청,$.get('요청문서',function( 매개변수){})
+	$.get('item.xml',function(data){
+		$('#treeData').append('<tr><td>id</td><td>name</td>'
+		                                 +'<td>price</td><td>description</td></tr>')		
+		   //$.each(function(매개변수)) or $('선택자').each(function(){})  
+		   $(data).find('item').each(function(){
+			   var $item=$(this);//현재 선택돼서 불러올 item객체
+			   /*
+			    <item id="1" name="레몬">
+                <price>3000</price>
+			   */
+			   $('#treeData').append('<tr><td>'
+				 +$item.attr('id')+'</td><td>'
+				 +$item.attr('name')+'</td><td>'
+				 +$item.find('price').text()+'</td><td>'
+				 +$item.find('description').text()+'</td></tr>') 
+		   })//each
+	})//$.get()
+})
+</script>
+</head>
+<body>
+  <table id="treeData"></table>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

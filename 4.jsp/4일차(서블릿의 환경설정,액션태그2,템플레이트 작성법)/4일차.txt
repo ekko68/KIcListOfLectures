@@ -1,0 +1,156 @@
+4일차(서블릿의 환경설정(web.xml)=>웹프로그래밍->xml(환경설정)
+         Template 작성법(메인페이지(include,forward),
+         자바빈즈 작성법(useBean,setProperty,getProperty)
+---------------------------------------------------------------
+**
+xml 문법 정리 참조할것.
+**
+xml의 태그는 내마음대로 작성이 가능하지만=>java=>xml (표준화)
+->DTD선언문 표시->web.xml
+
+<!-- 서블릿의 정보를 기록(p419) -->
+형식)
+  <!--실행시킬 서블릿의 이름과 별칭을 부여  -->
+  <servlet>
+     <servlet-name>실행시킬 서블릿의 별칭부여</servlet-name>
+     <servlet-class>패키지명...실행시킬 서블릿클래스 full이름</servlet-class>
+  </servlet>
+  
+  <!-- 웹상에서 어떻게 하면 서블릿을 실행시킬 수있는지에 대한 정보  -->
+  <servlet-mapping>
+       <servlet-name>실행시킬 서블릿의 별칭부여</servlet-name>
+       <url-pattern>웹상에서 실행되는 서블릿의 url경로 지정</url-pattern>
+  </servlet-mapping>
+
+<!-- 메인페이지 지정 -->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+-------------------------------------------------------------------------------
+<!-- 서블릿의 정보를 기록(p419) -->
+  <!--실행시킬 서블릿의 이름과 별칭을 부여  -->
+  <servlet>
+     <servlet-name>Hello</servlet-name>
+     <servlet-class>HelloServlet</servlet-class>
+  </servlet>
+  
+  <!-- 웹상에서 어떻게 하면 서블릿을 실행시킬 수있는지에 대한 정보  -->
+  <servlet-mapping>
+       <servlet-name>Hello</servlet-name>
+       <url-pattern>/test/Hello</url-pattern>
+  </servlet-mapping>
+-----------------------------------------------------------------------
+ JspWork2
+      |
+       -WebContent(/)->index.jsp(1) or main.jsp=>web.xml에 지정
+                |
+            /edu/
+                 -module->top.jsp,bottom.jsp ,~Left.jsp(상단,하단,좌측)
+                  template->template.jsp(3)->실질적인 메인페이지
+                  view->indexControl.jsp(2)
+
+  index.jsp--->indexControl.jsp->template.jsp
+              param                   param
+       
+=======================================
+ 제약회사의 홈페이지를 작성
+
+  상단메뉴
+
+   회사메뉴  제품소개   연구개발   묻고 답하기   자료실
+      intro      product   research    faq             file
+     인사말    신제품      연구개발     FAQ          제품설명서
+     intro_01.jsp
+     연혁       주력제품  
+      intro_02.jsp                  
+      비전
+    찾아오시는길
+
+=>불러올 파일명_번호_서브번호2.jsp
+
+<jsp:forward page="/view/indexControl.jsp">
+  <jsp:param name="매개변수명" value="전달할값" />
+  <jsp:param name="PAGENUM" value="01" />
+</jsp:forward>
+===============================
+<jsp:forward page="/view/indexControl.jsp">
+  <jsp:param name="CONTROL" value="intro" />
+  <jsp:param name="PAGENUM" value="01" />
+</jsp:forward>
+
+액션태그->include,forward,plugin(X)-->애플릿의 잔재
+                                       -----------------------------
+               useBean,setProperty,getProperty=>쿠키,세션->DB(JDBC)
+               --------------------------------------
+
+ JspWork
+      |
+       -src->클래스(서블릿),자바빈즈(Setter,Getter)->패키지명.BeanTest
+        -WebContent
+                  |
+                   -action
+                     forward                         자바빈즈사용
+                     beans->bean.jsp,   form.jsp->bean2.jsp      bean3.jsp
+                                  자바빈즈X      액션태그x                     액션태그 O
+--------------------------------------------------------------
+ 디자인영역+프로그램=>혼합(디자인 복잡)=>자바코드=>클래스 뽑아내서
+                                                                 작업(자바빈즈)
+자바빈즈=>웹상에서 불러다 사용하는 클래스(DTO)
+
+ ********자바빈즈 3가지********
+
+1.객체를 생성->useBean 태그
+
+ //BeanTest bt=new BeanTest();
+
+<jsp:useBean id="객체명"  class="패키지명.클래스명"  scope="사용범위" />
+                                                                                page->현재 jsp내에서만(default)
+                                                                                request->한페이지 이상
+ <jsp:useBean id="bt" class="test.BeanTest" scope="page" />
+                                                                               session->로그인한 동안
+                                                                                application->모든 페이지
+
+2. //bt.setStr(str);
+   // bt.setAddr(addr); ->p840
+
+               setStr(저장할값)
+형식) <jsp:setProperty name="객체명" property="멤버변수명(str)"  
+                                  value="저장할값" />->Setter 호출
+
+        <jsp:setProperty name="bt" property="str"  value="<%=변수명%>" />
+
+3.Getter Method를 대신 사용할 수 있는 태그
+<%=bt.getStr() %>
+형식)
+<jsp:getProperty name="객체명 " property="멤버변수명" />
+ <jsp:getProperty name="bt " property="str" />
+
+========================================
+ 자바코드를 작성하는 경우와 액션태그를 사용하는 차이점?
+
+<%-- <jsp:useBean id="bt" class="test.BeanTest" scope="page" /> --%>
+
+ 액션태그를 주석달때에는 <%--    --%> ctrl+shift+/
+
+회원가입->20개 입력을 받아서 저장    
+ 
+          String str=request.getParameter("str");
+          String addr=request.getParameter("addr");
+          ....
+
+          BeanTest bt=new BeanTest();
+          bt.setStr(str);
+          ,,,==============>20줄
+
+       ->한줄-><jsp:setProperty name="객체명" property="*" />
+  ->입력받은 갯수만큼-->Setter Method=>30개 자동으로 호출
+
+
+
+
+
+
+
+
+
+
